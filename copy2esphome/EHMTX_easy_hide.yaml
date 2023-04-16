@@ -10,8 +10,8 @@ blueprint:
         device:
           integration: esphome
     trigger_sensor:
-      name: which state to show
-      description: This sensor state will be displayed
+      name: which statechange triggers
+      description: this entity triggers
       selector:
         entity:
           domain: sensor
@@ -32,7 +32,7 @@ blueprint:
     
 variables:
   display: !input ehmtx_device
-  sercice: !input element
+  service: !input element
 
 trigger:
   - platform: state
@@ -40,4 +40,3 @@ trigger:
 
 action:
   - service: esphome.{{ device_attr(display, "name") }}_{{service}}
-    data:

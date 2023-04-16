@@ -47,7 +47,7 @@ blueprint:
 variables:
   display: !input ehmtx_device
   element_color: !input element_color
-  sercice: !input element
+  myservice: !input element
   value: !input gauge_value
 
 trigger:
@@ -55,7 +55,7 @@ trigger:
     entity_id: !input trigger_sensor
 
 action:
-  - service: esphome.{{ device_attr(display, "name") }}_{{service}}
+  - service: esphome.{{ device_attr(display, "name") }}_{{ myservice }}
     data:
       r: |-
         {{ element_color[0] }}

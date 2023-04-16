@@ -1,3 +1,5 @@
+# This is a work in progress. Don't use it for production!
+
 # EspHoMaTriX version 2 (EHMTXv2)
 
 A simple but very flexible DIY status display, build with a flexible 8x32 RGB LED panel implemented with [esphome.io](https://esphome.io)

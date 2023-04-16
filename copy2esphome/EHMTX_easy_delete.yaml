@@ -10,8 +10,8 @@ blueprint:
         device:
           integration: esphome
     trigger_sensor:
-      name: which state to show
-      description: This sensor state will be displayed
+      name: which state change triggers
+      description: this entity triggers
       selector:
         entity:
           domain: sensor
@@ -23,18 +23,18 @@ blueprint:
           mode: dropdown
           options:
             - label: MODE_ICONSCREEN
-              value: 5
+              value: "5"
             - label: MODE_BLANK
-              value: 1
+              value: "1"
             - label: MODE_CLOCK
-              value: 2 
+              value: "2" 
             - label: MODE_DATE 
-              value: 3
+              value: "3"
             - label: MODE_FULLSCREEN
-              value: 4
+              value: "4"
             - label: MODE_TEXT 
-              value: 6
-      default: 5
+              value: "6"
+      default: "5"
     icon_name:
       name: the icon
       selector:
@@ -69,5 +69,5 @@ action:
     - service: esphome.{{ device_attr(display, "name") }}_del_screen
       data:
         icon_name: !input icon_name
-        mode: {{ !input screen_mode }}
+        mode: !input screen_mode 
   
