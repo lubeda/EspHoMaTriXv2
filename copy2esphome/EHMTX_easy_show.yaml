@@ -1,0 +1,58 @@
+blueprint:
+  name: |-
+    ehmtxv2: show screen elements to 8x32 RGB-display
+  description: add a gauge,indicator or alarm element to your display
+  domain: automation
+  input:
+    ehmtx_device:
+      name: which device to display at
+      selector:
+        device:
+          integration: esphome
+    element:
+      name: the element
+      selector:
+        select:
+          custom_value: true
+          mode: dropdown
+          options:
+           - label: alarm
+             value: show_alarm
+           - label: gauge
+             value: show_gauge
+           - label: indicator
+             value: show_indicator
+          default: show_indicator
+    gauge_value:
+      name: the value on the gauge
+      selector:
+        number:
+          mode: slider
+          min: 0
+          max: 100
+    element_color:
+      name: The color for the element
+      description: the color 
+      selector:
+        color_rgb:
+      default: [240, 40, 40]
+    
+variables:
+  display: !input ehmtx_device
+  element_color: !input element_color
+  sercice: !input element
+  value: !input gauge_value
+
+trigger:
+  - platform: state
+    entity_id: !input trigger_sensor
+
+action:
+  - service: esphome.{{ device_attr(display, "name") }}_{{service}}
+    data:
+      r: |-
+        {{ element_color[0] }}
+      g: |-
+        {{ element_color[1] }}
+      b: |-
+        {{ element_color[2] }}

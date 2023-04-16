@@ -1,6 +1,6 @@
 blueprint:
   name: |-
-    ehmtxv2':' delete screen from 8x32 RGB-display
+    ehmtxv2: delete screen from 8x32 RGB-display
   description: This blueprint is triggered by a state change. If the state is between certain values it will be displayed with special colors or no state change will be displayed
   domain: automation
   input:
@@ -35,87 +35,8 @@ blueprint:
         select:
           mode: dropdown
           options:
-            [
-              "*",
-              "error",
-              "github",
-              "precipitation",
-              "nina",
-              "waschmaschine",
-              "car",
-              "lamp",
-              "sonos",
-              "print3d",
-              "internet",
-              "speaker",
-              "alien",
-              "temp",
-              "garage",
-              "door",
-              "wind",
-              "rain",
-              "shop",
-              "phone",
-              "fire",
-              "alexa",
-              "tv",
-              "frost",
-              "muell",
-              "cookit",
-              "nature",
-              "work",
-              "bike",
-              "school",
-              "amazon",
-              "post",
-              "money",
-              "power",
-              "solar",
-              "yoga",
-              "startrek",
-              "energy",
-              "sun",
-              "diesel",
-              "benzine10",
-              "vacuum",
-              "rainprecip",
-              "iss",
-              "thunder",
-              "nina_warning",
-              "birthday",
-              "firework",
-              "coffee",
-              "lightning",
-              "xmastree",
-              "sauna",
-              "trash_grey",
-              "trash_blue",
-              "trash_yell",
-              "trash_brow",
-              "weather_clear_night",
-              "weather_cloudy",
-              "weather_fog",
-              "weather_lightingrainy",
-              "weather_partlycloudy",
-              "weather_pouring",
-              "weather_rainy",
-              "weather_snowy",
-              "weather_snowy_rainy",
-              "weather_sunny",
-              "f_mario",
-              "f_onair",
-              "f_bat",
-              "f_matrix",
-              "f_invaders",
-              "f_amongus",
-              "theodor",
-              "f_sleeping",
-              "mops",
-              "girl",
-              "timer",
-              "lasticon",
-            ]
-      default: homeassistant
+            ["*","error","home_assistant","temperature","lightbulb","music","phone","car","sleep8x32",]
+      default: home_assistant
     low_value:
       name: below this vaule is a special color
       selector:

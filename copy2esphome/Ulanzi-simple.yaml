@@ -18,7 +18,8 @@ substitutions:
 external_components:
   - source:
       type: git
-      url: https://github.com/lubeda/EsphoMaTrix
+      url: https://github.com/lubeda/EspHoMaTriXv2
+      ref: release
     refresh: 60s 
     components: [ ehmtx ]   
 
@@ -33,13 +34,11 @@ esp32:
   board: esp32dev
 
 font:
-  - file: MatrixClock-Chunky8.bdf
+  - file: EHMTXv2.ttf
     id: default_font
     glyphs:  |
-      !?"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnÖÄÜöäüopqrstuvwxyz@<>ß§/
-  - file: MatrixClock-Chunky6.bdf
-    id: special_font
-
+      !?"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnÖÄÜöäüopqrstuvwxyz@<>ß§€/
+  
 binary_sensor:
   - platform: status
     name: "$devicename Status"
@@ -61,9 +60,8 @@ binary_sensor:
     name: "Right button"
 
 logger:
-  level: WARNING
+  level: DEBUG
 
-# Enable Home Assistant API
 api:
   services:
     - service: alarm
@@ -72,14 +70,15 @@ api:
         text: string
       then:
         lambda: |-
-          id(rgb8x32)->add_icon_screen(icon_name,text, 5, 30, true, true, 200, 50, 50);
-          id(rgb8x32)->force_icon_screen(icon_name);
+          id(rgb8x32)->icon_screen(icon_name,text, 5, 30, true, 200, 50, 50);
+          id(rgb8x32)->force_screen(icon_name);
     - service: screen
       variables:
         icon_name: string
         text: string
       then:
-          id(rgb8x32)->add_icon_screen(icon_name,text, 5, 20, false, true, 240, 240, 240);
+        lambda: |-
+          id(rgb8x32)->icon_screen(icon_name,text);
     - service: tune
       variables:
         tune: string
@@ -127,6 +126,19 @@ sensor:
     filters:
       - lambda: |-
           return (x / 10000.0) * 2000000.0 - 15 ;
+    on_value_range:
+      - below: 100.0
+        then:
+          lambda: |-       
+            id(rgb8x32)->set_brightness(20);
+      - below: 250.0
+        then:
+          lambda: |-       
+            id(rgb8x32)->set_brightness(40);
+      - above: 250.0
+        then:
+          lambda: |-       
+            id(rgb8x32)->set_brightness(80);
       
 ota:
   password: !secret ota_password
@@ -160,7 +172,7 @@ light:
     pin: $ledpin
     num_leds: 256
     color_correct: [30%, 30%, 30%]
-    gamma_correction: 1.0
+    gamma_correct: 2.0
     name: "$devicename Light"
     restore_mode: ALWAYS_OFF
     
@@ -179,7 +191,6 @@ display:
     addressable_light_id: ehmtx_light
     width: 32
     height: 8
-    internal: true
     pixel_mapper: |-
       if (y % 2 == 0) {
         return (y * 32) + x;
@@ -194,14 +205,32 @@ display:
       
 ehmtx:
   id: rgb8x32
-  clock_time: 8
+  clock_time: 10
   screen_time: 10
-  hold_time: 27
+  hold_time: 30
   icons2html: true
-  yoffset: 7
+  default_font_yoffset: 6
   matrix_component: ehmtx_display
   time_component: ehmtx_time
   time_format: "%H:%M"
+  date_format: "%d.%m."
   show_seconds: false
-  font_id: special_font
-  icons:  !include ehmtx_icons.yaml
+  default_font_id: default_font
+  special_font_id: default_font # for starters yust one font
+  icons: 
+    - id: error
+      lameid: 40530
+    - id: home_assistant
+      lameid: 47693
+    - id: temperature
+      lameid: 2056
+    - id: lightbulb
+      lameid: 1762
+    - id: music
+      lameid: 45625
+    - id: phone
+      lameid: 1232
+    - id: car
+      lameid: 2819
+    - id: sleep8x32
+      url: https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif 

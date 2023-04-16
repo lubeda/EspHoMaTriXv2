@@ -16,7 +16,9 @@ There are some "RGB-matrix" status displays/clocks out there, the commercial one
 - [Ulanzi TC001](https://www.aliexpress.com/item/1005005008682055.html) commercial ~ 50€
 - [Awtrix](https://awtrixdocs.blueforcer.de/#/) (project has been discontinued after more than 4 years now in August 2022)
 - [PixelIt](https://docs.bastelbunker.de/pixelit/) (project is under active development)
-- [Awtrix-Light](https://github.com/Blueforcer/awtrix-light) From the developer of Awtrix, optimized for the Ulanzi TC001 Hardware
+- [Awtrix-Light](https://github.com/Blueforcer/awtrix-light) From the developer of Awtrix, optimized for the Ulanzi TC001 
+Hardware
+- [lamatrix](https://github.com/noahwilliamsson/lamatrix/tree/master) micropython based an around 5 years old
 
 The solutions have their pros and cons. I tried some and used AwTrix for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of mqtt. But it had to be extensible, e.g. for the use as poolthermometer or as mediaplayer. All done by the magical power of esphome.
 
@@ -29,7 +31,6 @@ Another german tutorial video focused at the Ulanzi [Smarte Pixel Clock über Ho
 See this [nice article](https://blakadder.com/esphome-pixel-clock/) about EsphoMaTrix on a Ulanzi TC001 from [blakadder](https://github.com/blakadder).
 
 Short video on Instagram [@blak_adder](https://www.instagram.com/reel/CpYVByRIaSI)
-https://www.instagram.com/reel/CpYVByRIaSI
 
 See this english discussions:
 [Share your projects](https://community.home-assistant.io/t/esphomatrix-a-simple-clock-status-display/425325)
@@ -82,7 +83,7 @@ The device should boot
 
 ![boot](images/booting.png)
 
-and after a while (~30 seconds) it should display the correct time 
+and after a while (~30 seconds) it should display the correct time
 
 ![clock screen](images/clock_screen.png).
 
@@ -97,7 +98,7 @@ This is for the more advanced users. If you unterstand the concept of esphome yo
 You can add screens to a queue and all this screens are displayed one after another.
 ![timing](./images/timingv2.png)
 Each screen can display different informations or is of a different kind. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue the date and time screens are displayed. Some screens can show additional features like an alarm or indicator see [elements](#elements).
-You can add screens from home assistant with services or from esphome via yaml. 
+You can add screens from home assistant with services or from esphome via yaml.
 
 #### Screen types
 
@@ -137,7 +138,7 @@ void icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, in
 
 For 8x32 icons or animations
 
-<img src="https://raw.githubusercontent.com/lubeda/EsphoMaTrix/2023.5.b1/images/fullscreen.png" width=320 height=80 alt="Fullscreen">
+![fullscreen](./images/fullscreen.png)
 
 ###### service
 
@@ -148,7 +149,6 @@ For 8x32 icons or animations
 ```c
 void EHMTX::fullscreen(std::string iconname, int lifetime, int screen_time)
 ```
-
 
 #### Installation
 
@@ -303,6 +303,8 @@ Download and install all needed icons (.jpg/.png) and animations (.gif) under th
 
 You can also specify an URL to directly download the image file. The URLs will only be downloaded once at compile time, so there is no additional traffic on the hosting website.
 
+The [icons](awtrix.blueforcer.de/icons) and [animations](https://awtrix.blueforcer.de/animations) from the awtrix and atrix-light could be used, but have to be scaled down to 8x32 or 8x8 pixels. Check the licence befor using them!
+
 There are maximum 90 icons possible.
 
 ***Sample***
@@ -375,19 +377,19 @@ ehmtx:
 
 **screen_time** (optional, seconds): default duration to display a screen or a clock/date sequence, a long text will be scrolled at least `scroll_count` times (default: 10 seconds). This may be overwritten by the add_screen service.
 
-**hold_time** (optional, seconds): extends the display time of the current screen in seconds (default=20). Used in services or automations, see `hold_screen` 
+**hold_time** (optional, seconds): extends the display time of the current screen in seconds (default=20). Used in services or automations, see `hold_screen`
 
 **date_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%d.%m."` (use `"%m.%d."` for the US)
 
-**show_seconds** (optional, boolean): toggle an indicator for seconds while the clock is displayed (default: false)) 
+**show_seconds** (optional, boolean): toggle an indicator for seconds while the clock is displayed (default: false))
 
 **time_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M"` (use `"%I:%M%p"` for the US)
 
-**default_font_yoffset** (optional, pixel): yoffset the text is aligned BASELINE_LEFT, the baseline defaults to `6` 
+**default_font_yoffset** (optional, pixel): yoffset the text is aligned BASELINE_LEFT, the baseline defaults to `6`
 
 **default_font_xoffset** (optional, pixel): xoffset the text is aligned BASELINE_LEFT, the left defaults to `1`
 
-**special_font_yoffset** (optional, pixel): yoffset the text is aligned BASELINE_LEFT, the baseline defaults to `6` 
+**special_font_yoffset** (optional, pixel): yoffset the text is aligned BASELINE_LEFT, the baseline defaults to `6`
 
 **special_font_xoffset** (optional, pixel): xoffset the text is aligned BASELINE_LEFT, the left defaults to `1`
 
@@ -403,11 +405,11 @@ ehmtx:
 
 **week_start_monday** (optional, bool): default monday is first day of week, false => Sunday
 
-**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` from the [display](https://esphome.io/components/display/addressable_light.html) 
+**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` from the [display](https://esphome.io/components/display/addressable_light.html)
 
 **frame_interval** (optional, ms): the interval in ms to display the next animation/icon frame (default = 192), should be a multiple of the ```update_interval``` from the [display](https://esphome.io/components/display/addressable_light.html). Can be overwritten per icon/gif see [icons](#icons-and-animations) parameter `frame_duration`
 
-**icons2html** (optional, boolean): If true, generate the html (_filename_.html) file to show all included icons.  (default = `false`)
+**icons2html** (optional, boolean): If true, generate the html (*filename*.html) file to show all included icons.  (default = `false`)
 
 ***Example output:***
 ![icon preview](./images/icons_preview.png)
@@ -436,7 +438,7 @@ You can add screens locally and display data directly from any local sensor. See
 
 ##### Lambda
 
-Take care that the ```char text[30];``` has enough space to store the formated text. 
+Take care that the ```char text[30];``` has enough space to store the formated text.
 
 ```yaml
 sensor:
@@ -451,7 +453,6 @@ sensor:
           // 5 Minutes,each time at least 11 seconds,no alarm
            id(rgb8x32)->icon_screen("sun", text); // uses default values for color etc.
 ```
-
 
 #### Set (alarm/clock/gauge/text/today/weekday) color action
 
@@ -474,7 +475,7 @@ Force the selected [icon_screen](#icon-screen) ```icon_name``` to be displayed n
 
 ##### Change configuration during runtime
 
-_Configuration variables/functions:_
+*Configuration variables/functions:*
 
 Experienced programmers can use this public methods:
 
@@ -544,7 +545,7 @@ ehmtx:
 
 Sets the overall brightness of the display (`0..255`)
 
-_parameters:_
+*parameters:*
 
 - ```brightness```: from dark to bright (`0..255`) (default = `80`) as set in the light component by ```color_correct: [30%, 30%, 30%]```
 
@@ -564,7 +565,6 @@ number:
         id(rgb8x32)->set_brightness(x);
 ```
 
-
 **(D)** Service **del_screen**
 
 Removes a screen from the display by icon name. If this screen is actually display while sending this command the screen will be displayed until its "show_screen"-time has ended.
@@ -573,7 +573,7 @@ optionally you can suffix a * to the icon name to perform a wildcard delete whic
 
 For example if you have multiple icons named weather_sunny, weather_rain & weather_cloudy, you can issue a del_screen weather_* to remove whichever screen is currently in a slot and replace it with a new weather screen.
 
-_parameters:_
+*parameters:*
 
 - ```icon_name```: Icon `id` defined in the yaml (see installation)
 - ```mode```: The mode is for internal purposes use 5 for icon_screen
@@ -584,7 +584,7 @@ Turns indicator on/off
 
 Display a colored corner on all screens and the clock. You can define the color by parameter.
 
-_parameters:_
+*parameters:*
 
 - ```r``` red in 0..255
 - ```g``` green in 0..255
@@ -637,7 +637,7 @@ Displays the current screen for configured ammount (see **hold_time**) (default=
 
 e.g. on the Ulanzi TC001
 
-```
+```yaml
 binary_sensor:
   - platform: gpio
     pin:
@@ -670,7 +670,7 @@ Service **show_gauge** / **del_gauge_off**
 **(D)** Turns gauge on/off
 Displays a colored gauge at the left side of the display. You can define the color by parameter.
 
-_parameters:_
+*parameters:*
 
 - ```percent``` gauge percentage
 
@@ -877,7 +877,6 @@ sensor:
 
 ## Breaking changes
 
-
 ## Usage
 
 The integration works with the Home Assistant api so, after boot of the device, it takes a few seconds until the service calls start working. If you see a growing green rectangle after boot you have to wait a bit until the api is connected  etc.
@@ -897,6 +896,7 @@ THE SOFTWARE IS PROVIDED "AS IS", use at your own risk!
 - **[wsbtak](https://github.com/wsbtak)** for the work on the ulanzi hardware
 - **[ofirsnb](https://github.com/ofirsnb)** for his contributions
 - **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts
+- **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif)** for his 8x32 gif animation
 - ** everbody that found bugs/issues and reported them!
 
 ## Special thanks to all sponsors
