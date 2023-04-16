@@ -35,6 +35,7 @@ esp32:
 
 font:
   - file: EHMTXv2.ttf
+    size: 16
     id: default_font
     glyphs:  |
       !?"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnÖÄÜöäüopqrstuvwxyz@<>ß§€/
@@ -234,3 +235,9 @@ ehmtx:
       lameid: 2819
     - id: sleep8x32
       url: https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif 
+  on_next_screen:
+    - homeassistant.event:
+        event: ehmtxv2.new_screen
+        data_template:
+          iconname: !lambda "return x.c_str();"
+          text: !lambda "return y.c_str();"

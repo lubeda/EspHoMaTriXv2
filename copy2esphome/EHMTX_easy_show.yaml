@@ -9,6 +9,12 @@ blueprint:
       selector:
         device:
           integration: esphome
+    trigger_sensor:
+      name: which state to show
+      description: This sensor state will be displayed
+      selector:
+        entity:
+          domain: sensor
     element:
       name: the element
       selector:
@@ -22,7 +28,7 @@ blueprint:
              value: show_gauge
            - label: indicator
              value: show_indicator
-          default: show_indicator
+      default: show_indicator
     gauge_value:
       name: the value on the gauge
       selector:
@@ -30,6 +36,7 @@ blueprint:
           mode: slider
           min: 0
           max: 100
+      default: 50
     element_color:
       name: The color for the element
       description: the color 

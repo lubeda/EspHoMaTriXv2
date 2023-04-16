@@ -9,6 +9,12 @@ blueprint:
       selector:
         device:
           integration: esphome
+    trigger_sensor:
+      name: which state to show
+      description: This sensor state will be displayed
+      selector:
+        entity:
+          domain: sensor
     element:
       name: the element
       selector:
@@ -22,19 +28,11 @@ blueprint:
              value: hide_gauge
            - label: indicator
              value: hide_indicator
-          default: hide_indicator
-    element_color:
-      name: The color for the element
-      description: the color 
-      selector:
-        color_rgb:
-      default: [240, 40, 40]
+      default: hide_indicator
     
 variables:
   display: !input ehmtx_device
-  element_color: !input element_color
   sercice: !input element
-  value: !input gauge_value
 
 trigger:
   - platform: state
@@ -43,10 +41,3 @@ trigger:
 action:
   - service: esphome.{{ device_attr(display, "name") }}_{{service}}
     data:
-      value: {{ value }}
-      r: |-
-        {{ element_color[0] }}
-      g: |-
-        {{ element_color[1] }}
-      b: |-
-        {{ element_color[2] }}

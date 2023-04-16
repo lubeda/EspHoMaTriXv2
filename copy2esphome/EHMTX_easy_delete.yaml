@@ -9,26 +9,32 @@ blueprint:
       selector:
         device:
           integration: esphome
-    mode:
+    trigger_sensor:
+      name: which state to show
+      description: This sensor state will be displayed
+      selector:
+        entity:
+          domain: sensor
+    screen_mode:
       name: the mode
       selector:
         select:
           custom_value: true
           mode: dropdown
           options:
-           - label: MODE_ICONSCREEN
-             value: 5
-           - label: MODE_BLANK
-             value: 1
-           - label: MODE_CLOCK
-             value: 2 
-          - label: MODE_DATE 
-            value: 3
-          - label: MODE_FULLSCREEN
-            value: 4
-          - label: MODE_TEXT 
-            value: 6
-          default: 5
+            - label: MODE_ICONSCREEN
+              value: 5
+            - label: MODE_BLANK
+              value: 1
+            - label: MODE_CLOCK
+              value: 2 
+            - label: MODE_DATE 
+              value: 3
+            - label: MODE_FULLSCREEN
+              value: 4
+            - label: MODE_TEXT 
+              value: 6
+      default: 5
     icon_name:
       name: the icon
       selector:
@@ -50,84 +56,18 @@ blueprint:
       selector:
         color_rgb:
       default: [40, 240, 40]
-    high_value:
-      name: upper limit
-      selector:
-        number:
-          mode: box
-          min: -10000
-          max: +10000
-    high_color:
-      name: High Color
-      description: Text color for values above the defined value
-      selector:
-        color_rgb:
-      default: [240, 40, 40]
-    default_font:
-      name: true uses the default, false the specialer font
-      selector:
-        boolean:
-      default: true
 
 variables:
   display: !input ehmtx_device
-  def_color: !input default_color
-  lo_color: !input low_color
-  hi_color: !input high_color
 
 trigger:
   - platform: state
     entity_id: !input trigger_sensor
 
 action:
-  - choose:
-      - conditions:
-          - condition: numeric_state
-            entity_id: !input trigger_sensor
-            below: !input low_value
-        sequence:
-          - service: esphome.{{ device_attr(display, "name") }}_icon_screen
-            data:
-              icon_name: !input icon_name
-              screen_time: !input screen_time
-              lifetime: !input lifetime
-              text: "{{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}"
-              default_font: !input default_font
-              r: |-
-                {{ lo_color[0] }}
-              g: |-
-                {{ lo_color[1] }}
-              b: |-
-                {{ lo_color[2] }}
-      - conditions:
-          - condition: numeric_state
-            entity_id: !input trigger_sensor
-            above: !input high_value
-        sequence:
-          - service: esphome.{{ device_attr(display, "name") }}_icon_screen
-            data:
-              icon_name: !input icon_name
-              screen_time: !input screen_time
-              lifetime: !input lifetime
-              text: "{{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}"
-              default_font: !input default_font
-              r: |-
-                {{ hi_color[0] }}
-              g: |-
-                {{ hi_color[1] }}
-              b: |-
-                {{ hi_color[2] }}
-    default:
-      - service: esphome.{{ device_attr(display, "name") }}_icon_screen
-        data:
-          icon_name: !input icon_name
-          screen_time: !input screen_time
-          lifetime: !input lifetime
-          text: "{{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}"
-          default_font: !input default_font
-          r: |-
-            {{ def_color[0] }}
-          g: |-
-            {{ def_color[1] }}
-          b: |-
-            {{ def_color[2] }}
+  sequence:
+    - service: esphome.{{ device_attr(display, "name") }}_del_screen
+      data:
+        icon_name: !input icon_name
+        mode: {{ !input screen_mode }}
+  
