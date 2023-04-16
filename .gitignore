@@ -1,0 +1,23 @@
+components/ehmtx/__init__ copy._py
+components/ehmtx/__pycache__/__init__.cpython-39.pyc
+venv
+.esphome/
+_icons/
+_fonts/
+secrets.yaml
+esphome.ps1
+dev_*.yaml
+ehmtx8266.yaml
+info.de.md
+components/ehmtx/select/__pycache__/__init__.cpython-39.pyc
+ehmtx8266-rgb565.yaml
+icons.html
+components/ehmtx/__init__ copy.py
+ehmtx8266-rgb565.yaml.html
+ehmtx8266-rgb565-font.yaml
+components/ehmtx/EHMTX_icons._cpp
+.vscode/settings.json
+ehmtx8266-select.yaml
+svganimtest.html
+servicetest
+.DS_Store

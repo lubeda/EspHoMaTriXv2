@@ -1,0 +1,239 @@
+blueprint:
+  name: |-
+    ehmtxv2: show state with unit on on 8x32 RGB-display
+  description: This blueprint is triggered by a state change. If the state is between certain values it will be displayed with special colors or no state change will be displayed
+  domain: automation
+  input:
+    ehmtx_device:
+      name: which device to display at
+      selector:
+        device:
+          integration: esphome
+    trigger_sensor:
+      name: which state to show
+      description: This sensor state will be displayed
+      selector:
+        entity:
+          domain: sensor
+    default_color:
+      name: default text color
+      description: this is the default textcolor for values within the low and the high value
+      selector:
+        color_rgb:
+      default: [240, 240, 240]
+    lifetime:
+      name: how many minutes is this screen in the loop
+      selector:
+        number:
+          min: 1
+          max: 1440
+          step: 1
+      default: 2
+    screen_time:
+      name: minimum display time per loop in seconds
+      selector:
+        number:
+          min: 6
+          max: 120
+          step: 2
+      default: 12
+    icon_name:
+      name: the icon
+      selector:
+        select:
+          mode: dropdown
+          options:
+            [
+              "error",
+              "lamp",
+              "sonos",
+              "print3d",
+              "internet",
+              "speaker",
+              "alien",
+              "temp",
+              "garage",
+              "door",
+              "wind",
+              "rain",
+              "shop",
+              "phone",
+              "fire",
+              "alexa",
+              "tv",
+              "frost",
+              "muell",
+              "cookit",
+              "nature",
+              "work",
+              "bike",
+              "school",
+              "amazon",
+              "post",
+              "money",
+              "power",
+              "solar",
+              "yoga",
+              "startrek",
+              "energy",
+              "sun",
+              "diesel",
+              "benzine10",
+              "vacuum",
+              "rainprecip",
+              "iss",
+              "thunder",
+              "nina_warning",
+              "birthday",
+              "firework",
+              "coffee",
+              "lightning",
+              "xmastree",
+              "sauna",
+              "trash_grey",
+              "trash_blue",
+              "trash_yell",
+              "trash_brow",
+              "weather_clear_night",
+              "weather_cloudy",
+              "weather_fog",
+              "weather_lightingrainy",
+              "weather_partlycloudy",
+              "weather_pouring",
+              "weather_rainy",
+              "weather_snowy",
+              "weather_snowy_rainy",
+              "weather_sunny",
+              "f_mario",
+              "f_onair",
+              "f_bat",
+              "f_matrix",
+              "f_invaders",
+              "f_amongus",
+              "theodor",
+              "f_sleeping",
+              "mops",
+              "girl",
+              "timer",
+              "lasticon",
+            ]
+      default: homeassistant
+    use_colors:
+      name: Use colors based on state values
+      selector:
+        boolean:
+      default: true
+    low_value:
+      name: below this vaule is a special color
+      selector:
+        number:
+          mode: box
+          min: -10000
+          max: +10000
+      default: 0
+    low_color:
+      name: Low color
+      description: the color for values below the limit
+      selector:
+        color_rgb:
+      default: [40, 240, 40]
+    high_value:
+      name: upper limit
+      selector:
+        number:
+          mode: box
+          min: -10000
+          max: +10000
+      default: 0
+    high_color:
+      name: High Color
+      description: Text color for values above the defined value
+      selector:
+        color_rgb:
+      default: [240, 40, 40]
+    default_font:
+      name: true uses the default, false the specialer font
+      selector:
+        boolean:
+      default: true
+
+variables:
+  display: !input ehmtx_device
+  def_color: !input default_color
+  lo_color: !input low_color
+  hi_color: !input high_color
+
+trigger:
+  - platform: state
+    entity_id: !input trigger_sensor
+ 
+action:
+  - if:
+      - condition: template
+        value_template: "{{ not use_colors }}"
+    then:
+      - service: esphome.{{ device_attr(display, "name") }}_icon_screen
+        data:
+          icon_name: !input icon_name
+          screen_time: !input screen_time
+          lifetime: !input lifetime
+          text: "{{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}"
+          default_font: !input default_font
+          r: |-
+            {{ def_color[0] }}
+          g: |-
+            {{ def_color[1] }}
+          b: |-
+            {{ def_color[2] }}
+    else:
+      - choose:
+          - conditions:
+              - condition: numeric_state
+                entity_id: !input trigger_sensor
+                below: !input low_value
+            sequence:
+              - service: esphome.{{ device_attr(display, "name") }}_icon_screen
+                data:
+                  icon_name: !input icon_name
+                  screen_time: !input screen_time
+                  lifetime: !input lifetime
+                  text: "{{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}"
+                  default_font: !input default_font
+                  r: |-
+                    {{ lo_color[0] }}
+                  g: |-
+                    {{ lo_color[1] }}
+                  b: |-
+                    {{ lo_color[2] }}
+          - conditions:
+              - condition: numeric_state
+                entity_id: !input trigger_sensor
+                above: !input high_value
+            sequence:
+              - service: esphome.{{ device_attr(display, "name") }}_icon_screen
+                data:
+                  icon_name: !input icon_name
+                  screen_time: !input screen_time
+                  lifetime: !input lifetime
+                  text: "{{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}"
+                  default_font: !input default_font
+                  r: |-
+                    {{ hi_color[0] }}
+                  g: |-
+                    {{ hi_color[1] }}
+                  b: |-
+                    {{ hi_color[2] }}
+        default:
+          - service: esphome.{{ device_attr(display, "name") }}_icon_screen
+            data:
+              icon_name: !input icon_name
+              screen_time: !input screen_time
+              lifetime: !input lifetime
+              text: "{{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}"
+              default_font: !input default_font
+              r: |-
+                {{ def_color[0] }}
+              g: |-
+                {{ def_color[1] }}
+              b: |-
+                {{ def_color[2] }}

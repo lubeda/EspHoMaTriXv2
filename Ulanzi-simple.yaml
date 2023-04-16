@@ -1,0 +1,207 @@
+substitutions:
+  devicename: ulanzi
+  ledpin: GPIO32 
+  buzzerpin: GPIO15
+  friendly_name: LED Matrix
+  board: esp32dev
+  # Pin definition from https://github.com/aptonline/PixelIt_Ulanzi 
+  battery_pin: GPIO34 
+  ldr_pin: GPIO35 
+  matrix_pin: GPIO32 
+  left_button_pin: GPIO26 
+  mid_button_pin: GPIO27 
+  right_button_pin: GPIO14 
+  buzzer_pin: GPIO15 
+  scl_pin: GPIO22 
+  sda_pin: GPIO21 
+
+external_components:
+  - source:
+      type: git
+      url: https://github.com/lubeda/EsphoMaTrix
+    refresh: 60s 
+    components: [ ehmtx ]   
+
+esphome:
+  comment: "ehmtx from LuBeDa"
+  name: $devicename 
+  on_boot:
+    then:
+      - ds1307.read_time:
+  
+esp32:
+  board: esp32dev
+
+font:
+  - file: MatrixClock-Chunky8.bdf
+    id: default_font
+    glyphs:  |
+      !?"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnÖÄÜöäüopqrstuvwxyz@<>ß§/
+  - file: MatrixClock-Chunky6.bdf
+    id: special_font
+
+binary_sensor:
+  - platform: status
+    name: "$devicename Status"
+  - platform: gpio
+    pin:
+      number: $left_button_pin
+      inverted: true
+    name: "Left button"
+  - platform: gpio
+    pin: 
+      inverted: true
+      number: $mid_button_pin
+      mode: INPUT_PULLUP
+    name: "Middle button"
+  - platform: gpio
+    pin: 
+      number: $right_button_pin
+      inverted: true
+    name: "Right button"
+
+logger:
+  level: WARNING
+
+# Enable Home Assistant API
+api:
+  services:
+    - service: alarm
+      variables:
+        icon_name: string
+        text: string
+      then:
+        lambda: |-
+          id(rgb8x32)->add_icon_screen(icon_name,text, 5, 30, true, true, 200, 50, 50);
+          id(rgb8x32)->force_icon_screen(icon_name);
+    - service: screen
+      variables:
+        icon_name: string
+        text: string
+      then:
+          id(rgb8x32)->add_icon_screen(icon_name,text, 5, 20, false, true, 240, 240, 240);
+    - service: tune
+      variables:
+        tune: string
+      then:
+        - rtttl.play:
+            rtttl: !lambda 'return tune;'
+
+sensor:
+  - platform: sht3xd
+    temperature:
+      name: "$devicename Temperature"
+    humidity:
+      name: "$devicename Relative Humidity"
+    update_interval: 60s
+  - platform: adc
+    pin: $battery_pin
+    name: "$devicename Battery"
+    id: battery_voltage
+    update_interval: 10s
+    device_class: battery
+    accuracy_decimals: 0
+    attenuation: auto
+    filters:
+      - sliding_window_moving_average:
+          window_size: 15
+          send_every: 15
+          send_first_at: 1
+      - multiply: 1.6
+      - lambda: |-
+          auto r = ((x - 3) / 0.69 * 100.00);
+          if (r >= 100) return 100;
+          if (r > 0) return r;
+          if (r <= 0) return 1;
+          return 0;
+    unit_of_measurement: '%'
+  - platform: adc
+    id: light_sensor
+    name: "$devicename Illuminance"
+    pin: $ldr_pin
+    update_interval: 10s
+    attenuation: auto
+    unit_of_measurement: lx
+    device_class: illuminance
+    accuracy_decimals: 0
+    filters:
+      - lambda: |-
+          return (x / 10000.0) * 2000000.0 - 15 ;
+      
+ota:
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+web_server:
+
+output:
+  - platform: ledc
+    pin: $buzzerpin
+    id: rtttl_out
+
+rtttl:
+  output: rtttl_out
+
+i2c:
+  sda: $sda_pin
+  scl: $scl_pin
+  scan: true
+  id: i2cbus
+
+light:
+  - platform: neopixelbus
+    id: ehmtx_light
+    type: GRB
+    internal: true
+    variant: WS2812
+    pin: $ledpin
+    num_leds: 256
+    color_correct: [30%, 30%, 30%]
+    gamma_correction: 1.0
+    name: "$devicename Light"
+    restore_mode: ALWAYS_OFF
+    
+time:
+  - platform: homeassistant
+    on_time_sync:
+      then:
+        ds1307.write_time:
+  - platform: ds1307
+    update_interval: never
+    id: ehmtx_time
+
+display:
+  - platform: addressable_light
+    id: ehmtx_display
+    addressable_light_id: ehmtx_light
+    width: 32
+    height: 8
+    internal: true
+    pixel_mapper: |-
+      if (y % 2 == 0) {
+        return (y * 32) + x;
+      }
+      return (y * 32) + (31 - x);
+    rotation: 0°
+    update_interval: 16ms
+    auto_clear_enabled: true
+    lambda: |-
+      id(rgb8x32)->tick();
+      id(rgb8x32)->draw();
+      
+ehmtx:
+  id: rgb8x32
+  clock_time: 8
+  screen_time: 10
+  hold_time: 27
+  icons2html: true
+  yoffset: 7
+  matrix_component: ehmtx_display
+  time_component: ehmtx_time
+  time_format: "%H:%M"
+  show_seconds: false
+  font_id: special_font
+  icons:  !include ehmtx_icons.yaml
