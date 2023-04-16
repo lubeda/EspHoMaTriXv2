@@ -1,5 +1,5 @@
 substitutions:
-  devicename: ulanzi
+  devicename: ulanzi-simple
   ledpin: GPIO32 
   buzzerpin: GPIO15
   friendly_name: LED Matrix
@@ -24,7 +24,7 @@ external_components:
     components: [ ehmtx ]   
 
 esphome:
-  comment: "ehmtx from LuBeDa"
+  comment: "EHMTXv2 from LuBeDa"
   name: $devicename 
   on_boot:
     then:

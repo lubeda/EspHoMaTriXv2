@@ -12,7 +12,7 @@
 - [x] force_screen with * and filter by type do delete all clocks etc.
 - [x] gauge mit farbe und del_gaugeall clocks etc.
 - [ ] second point moveable
-- [ ] second point to clock screen
+- [ ] second point to clock screen only
 
 ## ux
 

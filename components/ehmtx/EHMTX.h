@@ -126,7 +126,7 @@ namespace esphome
     void set_clock_color(int r=C_RED, int g=C_GREEN, int b=C_BLUE);
     void set_today_color(int r, int g, int b);
     void set_weekday_color(int r, int g, int b);
-    void show_alarm(int r=C_RED, int g=C_GREEN, int b=C_BLUE);
+    void show_alarm(int r=CA_RED, int g=C_GREEN, int b=C_BLUE);
     void show_gauge(int v,int r=C_RED, int g=C_GREEN, int b=C_BLUE); // int because of register_service
     void hide_gauge();
     void hide_indicator();

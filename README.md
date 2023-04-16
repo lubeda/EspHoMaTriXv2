@@ -1,5 +1,9 @@
 # This is a work in progress. Don't use it for production!
 
+## Important information
+
+If you like my work please donate me a star on github and consider sponsoring me!!
+
 # EspHoMaTriX version 2 (EHMTXv2)
 
 A simple but very flexible DIY status display, build with a flexible 8x32 RGB LED panel implemented with [esphome.io](https://esphome.io)
@@ -12,7 +16,7 @@ If you like my work please donate me a star on github and consider sponsoring me
 
 ## Introduction
 
-There are some "RGB-matrix" status displays/clocks out there, the commercial one from Lametric and some very good DIY-alternatives.
+There are some "RGB-matrices" status displays/clocks out there, the commercial ones from Lametric and ulanzi, also some very good DIY-alternatives.
 
 - [LaMetric](https://lametric.com/en-US/) commercial ~ 199€
 - [Ulanzi TC001](https://www.aliexpress.com/item/1005005008682055.html) commercial ~ 50€
@@ -22,7 +26,9 @@ There are some "RGB-matrix" status displays/clocks out there, the commercial one
 Hardware
 - [lamatrix](https://github.com/noahwilliamsson/lamatrix/tree/master) micropython based an around 5 years old
 
-The solutions have their pros and cons. I tried some and used AwTrix for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of mqtt. But it had to be extensible, e.g. for the use as poolthermometer or as mediaplayer. All done by the magical power of esphome.
+The solutions have their pros and cons. I tried some and used AwTrix for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of mqtt.
+
+But it had to be extensible, e.g. for the use as poolthermometer or as mediaplayer. All done by the magical power of esphome.
 
 ### ehmtx in the media
 
@@ -45,18 +51,18 @@ Or in german:
 
 ### Features
 
-Based a on a 8x32 RGB flexible matrix it displays a clock, the date and up to 24 other 'screens' provided by Home Assistant. Each screen (value/text) can be associated with a 8x8 bit RGB icon or gif animation (see [installation](#installation)). The values/text can be updated or deleted from the display queue. Each screen has a lifetime, if not refreshed in its lifetime, it will disappear. Even 8x32 gif animations are possible. You can control nearly everything of the component.
+Based a on a 8x32 RGB matrix it displays a clock, the date and up to 24 other 'screens' provided by Home Assistant. Each screen (value/text) can be associated with a 8x8 bit RGB icon or gif animation (see [installation](#installation)). The values/text can be updated or deleted from the display queue. Each screen has a lifetime, if not refreshed in its lifetime, it will disappear. Even 8x32 gif animations are possible. You can control nearly everything of the component.
 
 ### State
 
-After the [old](https://github.com/lubeda/EsphoMaTrix) component became favorite there where some feature request which showed that my old code was a mess. I reworked the whole code and restructered it, so it is hopefully
+After the [old](https://github.com/lubeda/EsphoMaTrix) component became favorite, there where some feature requests, which showed that my old code was a mess. I reworked the whole code and restructered it, so it is now hopefully
  more extensible.
 
 ## How to use
 
 ### The easy way
 
-There is a little hype around the Ulanzi TC001 pixel clock. This hardware can be used with **EspHoMaTriX v2** (with some limitations). You can connect the device and flash it via USB-C. As a starting point you can use the [``UlanziTC001-simple.yaml``](https://github.com/lubeda/EspHoMaTriXv2/blob/main/UlanziTC001-simple.yaml). To control it from Home Assistant you can use the provided [blueprint](https://github.com/lubeda/EspHoMaTriXv2/blob/main/BP colored state.yaml)
+There is a little hype around the Ulanzi TC001 pixel clock. This hardware can be used with **EspHoMaTriX v2**.
 
 ### Steps (easy)
 
@@ -64,20 +70,20 @@ There is a little hype around the Ulanzi TC001 pixel clock. This hardware can be
 
 Copy these files:
 
-- UlanziTC001-simple.yaml
-- ehmtxfont.ttf
+- ulanzi-simple.yaml
+- EHMTXv2.ttf
 
-to your esphome directory (usually /config/esphome).
+to your esphome directory (usually /config/esphome). In your esphome dashboard you will find a new device named `ulanzi-simple`.
 
 #### Step 2
 
-connect your ulanzi device to your host with USB-C and flash the firmware
+connect your ulanzi device to your host with USB-C and flash the firmware.
 
 #### Step 3
 
-Copy EHMTXv2-colored-states.yaml to your blueprint path (usually /config/blueprints) in an subfolder ehmtxv2.
+Copy `EHMTX_easy_state.yaml` to your blueprint path (usually /config/blueprints/automation/) in an subfolder named  `ehmtxv2`.
 
-Reload your automations and have fun after configuring some states with this blueprint.
+Reload your automations and have fun after configuring some automations with this blueprint.
 
 ### result
 
@@ -93,7 +99,7 @@ If not check the esphome logs for further investigations.
 
 ### The funny but more elaborate way
 
-This is for the more advanced users. If you unterstand the concept of esphome you can't do nearly everything with this component.
+This is for the more advanced users. If you unterstand the concept of esphome you can't display nearly everything with this component.
 
 #### Concept
 
@@ -150,6 +156,95 @@ For 8x32 icons or animations
 
 ```c
 void EHMTX::fullscreen(std::string iconname, int lifetime, int screen_time)
+```
+
+#### Elements
+
+![elements](./images/elements.png)
+
+##### alarm
+
+The alarm is displayed in the upper right corner at all screentypes! You can set its color.
+
+###### service
+
+{ "r", "g", "b"}
+
+###### api
+
+```c
+void EHMTX::show_alarm(int r, int g, int b);
+```
+
+r,g,b: 0-255 color components
+
+To remove it call:
+
+###### service
+
+hide_alarm 
+
+###### api
+
+```c
+void EHMTX::hide_alarm();
+```
+
+##### indicator
+
+The indicator is in the lower left corner but not displayed in fullscreen 8x32 animations. You can set its color.
+
+###### service
+
+show_indicator { "r", "g", "b"}
+
+###### api
+
+```c
+void EHMTX::show_indicator(int r, int g, int b);
+```
+
+r,g,b: 0-255 color components
+
+To remove it call:
+
+###### service
+
+hide_indicator
+
+###### api
+
+```c
+void EHMTX::hide_indicator();
+```
+
+##### gauge
+
+The gauge is displayed in the left most column. You can set its color und its value from 0-100, the resolution is limited to 8 pixels, so it is not a precision gauge.
+
+###### service
+
+show_gauge {"value","r", "g", "b"}
+
+###### api
+
+```c
+void EHMTX::show_gauge(int value, int r, int g, int b);
+```
+
+value: 0-100 (resolution: one pixel per 12,5%)
+r,g,b: 0-255 color components
+
+To remove it call:
+
+###### service
+
+hide_gauge
+
+###### api
+
+```c
+void EHMTX::hide_gauge();
 ```
 
 #### Installation
@@ -286,14 +381,18 @@ Since it is a clock you need a time component e.g. [homeassistant](https://espho
 
 #### Font
 
-Download a small "pixel" TTF-font, i use ["monobit.ttf"](https://www.google.com/search?q=monobit.ttf). You can modify this font with [FontForge](https://fontforge.org/) and added **€** on base of a **E** and so on. Due to copyright I can't provide my modified version :-(. Not all fonts are suitable for this minimalistic display. There are public domain fonts wich work well on the display e.g. [DMDSmall](https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=5993), details on alternative fonts are [here](https://blakadder.com/esphome-pixel-clock/#fonts).
+In the easy configutation is a ttf-font included, it is based on this [font](https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=13768). Or you can search a font you like more.
 
-DarkPoet78 is providing special fonts for 8x32 matrices in his [repo](https://github.com/darkpoet78/MatrixClockFonts)
+Not all fonts are suitable for this minimalistic display. There are public domain fonts wich work well on the display e.g. [DMDSmall](https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=5993), details on alternative fonts are [here](https://blakadder.com/esphome-pixel-clock/#fonts).
+
+You can configure two fonts if you like.
+
+DarkPoet78 is also providing special fonts for 8x32 matrices in his [repo](https://github.com/darkpoet78/MatrixClockFonts)
 
 ```yaml
 font:
-  - file: monobit.ttf
-    id: EHMTX_font
+  - file: EHMTXv2.ttf
+    id: default_font
     size: 16
     glyphs:  |
       !"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz€@
@@ -383,7 +482,7 @@ ehmtx:
 
 **date_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%d.%m."` (use `"%m.%d."` for the US)
 
-**show_seconds** (optional, boolean): toggle an indicator for seconds while the clock is displayed (default: false))
+**show_seconds** (optional, boolean): toggle an indicator for seconds while the clock is displayed (default: false)
 
 **time_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M"` (use `"%I:%M%p"` for the US)
 
@@ -578,19 +677,16 @@ For example if you have multiple icons named weather_sunny, weather_rain & weath
 *parameters:*
 
 - ```icon_name```: Icon `id` defined in the yaml (see installation)
-- ```mode```: The mode is for internal purposes use 5 for icon_screen
+- ```mode```: The mode is for internal purposes use `5`  for icon_screen
 
-**(D)** Service **indicator_on** / **indicator_off**
-
-Turns indicator on/off
-
-Display a colored corner on all screens and the clock. You can define the color by parameter.
-
-*parameters:*
-
-- ```r``` red in 0..255
-- ```g``` green in 0..255
-- ```b``` blue in 0..255
+|mode|value|
+|----|----|
+|MODE_BLANK|1|
+|MODE_CLOCK | 2|
+| MODE_DATE | 3|
+| MODE_FULLSCREEN | 4|
+|MODE_ICONSCREEN | 5|
+|MODE_TEXT | 6|
 
 **(D)** Service **display_on** / **display_off**
 
@@ -618,7 +714,7 @@ switch:
 
 Service **skip_screen**
 
-If there is more than one screen in the queue, skip to the next screen.
+If there is more than one screen in the queue, it skip the actual displayed screen to the next screen.
 
 e.g. on the Ulanzi TC001
 
@@ -667,15 +763,6 @@ This service displays the running queue and a list of icons in the logs
 [13:10:10][I][EHMTX:186]: status icon: 4 name: rain
 ```
 
-Service **show_gauge** / **del_gauge_off**
-
-**(D)** Turns gauge on/off
-Displays a colored gauge at the left side of the display. You can define the color by parameter.
-
-*parameters:*
-
-- ```percent``` gauge percentage
-
 ## Integration in Home Assistant
 
 To control your display it has to be integrated in Home Assistant. Then it provides a number of services, all prefixed with the configured `devicename` e.g. "ehmtx". See the default services marked as **(D)** [above](#services), but you can add your own (see alarm and screen).
@@ -684,32 +771,6 @@ To control your display it has to be integrated in Home Assistant. Then it provi
 
 All communication with Home Assistant use the homeasistant-api. The services can be provided by default or also defined additionally in the yaml. To define the additional services you need the id of the ehmtx-component e.g. ```id(rgb8x32)```.
 
-#### Overview of default services
-  
-These services are the same as the local services, so you can adapt the documentation there
-
-  |name|parameter|
-  |----|----|
-  |`get_status`|*none*|
-  |`set_display_on`|*none*|
-  |`set_display_off`|*none*|
-  |`show_all_icons`|*none*|
-  |`hold_screen`|*none*|
-  |`set_indicator_on`| {"r", "g", "b"}|
-  |`set_indicator_off`|*none*|
-  |`set_gauge_value`| {"percent"}|
-  |`set_gauge_off`|*none*|
-  |`set_alarm_color`| {"r", "g", "b"}|
-  |`set_text_color` | {"r", "g", "b"}|
-  |`set_clock_color`| {"r", "g", "b"}|
-  |`set_today_color`| {"r", "g", "b"}|
-  |`set_gauge_color`| {"r", "g", "b"}|
-  |`set_weekday_color` |{"r", "g", "b"}|
-  |`set_screen_color` |{"icon_name","r", "g", "b"}|
-  |`add_screen`  |{"icon_name", "text", "lifetime","screen_time", "alarm"}|
-  |`force_screen`| {"icon_name"}|
-  |`del_screen`| {"icon_name"}|
-  |`set_brightness`| {"value"}|
 
 ### Use in Home Assistant automations
 
@@ -730,7 +791,7 @@ trigger:
     id: cover
 condition: []
 action:
-  - service: esphome.ehmtx8266_screen
+  - service: esphome.ehmtx8266_icon_screen
     data:
       icon_name: '{{trigger.id}}'
       text: >-
@@ -879,11 +940,11 @@ sensor:
 
 ## Breaking changes
 
+**nothing yet, since it is new** 
+
 ## Usage
 
 The integration works with the Home Assistant api so, after boot of the device, it takes a few seconds until the service calls start working. If you see a growing green rectangle after boot you have to wait a bit until the api is connected  etc.
-
-![timing](./images/booting.png)
 
 ## Disclaimer
 
