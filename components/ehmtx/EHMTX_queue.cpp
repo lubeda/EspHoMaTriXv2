@@ -69,6 +69,18 @@ namespace esphome
 
   void EHMTX_queue::update_screen()
   {
+     if (millis() - this->config_->last_scroll_time >= this->config_->scroll_interval )
+     {
+      this->config_->hue_++;
+      if (this->config_->hue_ == 360) 
+      {
+          this->config_->hue_ = 0;
+      }
+      float red,	green,blue ;
+      esphome::hsv_to_rgb	(	this->config_->hue_,0.8,0.8,red,green,	blue );
+      this->config_->rainbow_color = Color(uint8_t (255 * red),uint8_t (255 * green),uint8_t (255 * blue));
+     }
+
     if (this->mode == MODE_ICONSCREEN)
     {
       if (millis() - this->config_->last_scroll_time >= this->config_->scroll_interval && this->pixels_ > TEXTSTARTOFFSET)
@@ -206,7 +218,7 @@ namespace esphome
       break;
     case MODE_TIMER:
       this->config_->display->image(0, 0, this->config_->icons[this->icon]);
-      this->config_->display->print(9+xoffset, yoffset, font, this->text_color, esphome::display::TextAlign::BASELINE_LEFT,
+      this->config_->display->print(9+xoffset, yoffset, font, this->config_->rainbow_color, esphome::display::TextAlign::BASELINE_LEFT,
                                     this->text.c_str());
       break;
     default:

@@ -9,6 +9,7 @@ namespace esphome
     this->display_indicator = false;
     this->display_alarm = false;
     this->icon_count = 0;
+    this->hue_ = 0;
     this->text_color = Color(C_RED, C_GREEN, C_BLUE);
     this->today_color = Color(C_RED, C_GREEN, C_BLUE);
     this->weekday_color = Color(CD_RED, CD_GREEN, CD_BLUE);
@@ -315,6 +316,7 @@ namespace esphome
     }
     void EHMTX::tick()
     {
+      
       if (this->is_running)
       {
         time_t ts = this->clock->now().timestamp;

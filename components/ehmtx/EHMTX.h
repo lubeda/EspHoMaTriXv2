@@ -52,7 +52,8 @@ namespace esphome
     void setup() override;
     EHMTX();
     Color text_color, alarm_color, gauge_color,indicator_color,clock_color;
-    Color today_color,weekday_color;
+    Color today_color,weekday_color,rainbow_color;
+    int hue_;
     void dump_config();
     std::string time_fmt;
     std::string date_fmt;
