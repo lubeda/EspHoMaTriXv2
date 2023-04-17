@@ -116,8 +116,10 @@ You can add screens from home assistant with services or from esphome via yaml.
 
 ###### service
 
+```c
 clock_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
 date_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
+```
 
 ###### api
 
@@ -134,7 +136,9 @@ void date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool def
 
 ###### service
 
+```c
 icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
+```
 
 ###### api
 
@@ -150,7 +154,9 @@ For 8x32 icons or animations
 
 ###### service
 
+```c
 fullscreen => {"icon_name", "lifetime", "screen_time"}
+```
 
 ###### api
 
@@ -168,7 +174,9 @@ The alarm is displayed in the upper right corner at all screentypes! You can set
 
 ###### service
 
+```c
 show_alarm => { "r", "g", "b"}
+```
 
 ###### api
 
@@ -182,7 +190,9 @@ To remove it call:
 
 ###### service
 
+```c
 hide_alarm => no parameter
+```
 
 ###### api
 
@@ -196,7 +206,9 @@ The indicator is in the lower left corner but not displayed in fullscreen 8x32 a
 
 ###### service
 
-show_indicator { "r", "g", "b"}
+```c
+show_indicator => { "r", "g", "b"}
+```
 
 ###### api
 
@@ -210,7 +222,9 @@ To remove it call:
 
 ###### service
 
+```c
 hide_indicator => no parameter
+```
 
 ###### api
 
@@ -224,7 +238,9 @@ The gauge is displayed in the left most column. You can set its color und its va
 
 ###### service
 
+```c
 show_gauge => {"value","r", "g", "b"}
+```
 
 ###### api
 
@@ -239,7 +255,9 @@ To remove it call:
 
 ###### service
 
+```c
 hide_gauge => no parameter
+```
 
 ###### api
 
