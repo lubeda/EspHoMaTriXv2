@@ -99,7 +99,7 @@ If not check the esphome logs for further investigations.
 
 ### The funny but more elaborate way
 
-This is for the more advanced users. If you unterstand the concept of esphome you can't display nearly everything with this component.
+This is for the more advanced users. If you unterstand the concept of esphome, you can display nearly everything with this component.
 
 #### Concept
 
@@ -134,7 +134,7 @@ void date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool def
 
 ###### service
 
-{"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
+icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
 
 ###### api
 
@@ -150,7 +150,7 @@ For 8x32 icons or animations
 
 ###### service
 
-{"icon_name", "lifetime", "screen_time"}
+fullscreen => {"icon_name", "lifetime", "screen_time"}
 
 ###### api
 
@@ -168,7 +168,7 @@ The alarm is displayed in the upper right corner at all screentypes! You can set
 
 ###### service
 
-{ "r", "g", "b"}
+show_alarm => { "r", "g", "b"}
 
 ###### api
 
@@ -182,7 +182,7 @@ To remove it call:
 
 ###### service
 
-hide_alarm 
+hide_alarm => no parameter
 
 ###### api
 
@@ -210,7 +210,7 @@ To remove it call:
 
 ###### service
 
-hide_indicator
+hide_indicator => no parameter
 
 ###### api
 
@@ -224,7 +224,7 @@ The gauge is displayed in the left most column. You can set its color und its va
 
 ###### service
 
-show_gauge {"value","r", "g", "b"}
+show_gauge => {"value","r", "g", "b"}
 
 ###### api
 
@@ -239,7 +239,7 @@ To remove it call:
 
 ###### service
 
-hide_gauge
+hide_gauge => no parameter
 
 ###### api
 
