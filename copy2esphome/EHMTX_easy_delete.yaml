@@ -34,6 +34,10 @@ blueprint:
               value: "4"
             - label: MODE_TEXT 
               value: "6"
+            - label: MODE_RAINBOW_ICON 
+              value: "7"
+            - label: MODE_RAINBOW_TEXT 
+              value: "8"
       default: "5"
     icon_name:
       name: the icon

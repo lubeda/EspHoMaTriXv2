@@ -42,8 +42,11 @@ namespace esphome
     case MODE_TEXT:
       ESP_LOGD(TAG, "queue: show text text: %s for %d sec", this->text.c_str(), this->screen_time);
       break;
-    case MODE_TIMER:
-      ESP_LOGD(TAG, "queue: show timer text: %s for %d sec", this->text.c_str(), this->screen_time);
+    case MODE_RAINBOW_ICON:
+      ESP_LOGD(TAG, "queue: show rainbow icon: %s text: %s for %d sec",this->icon_name.c_str(), this->text.c_str(), this->screen_time);
+      break;
+    case MODE_RAINBOW_TEXT:
+      ESP_LOGD(TAG, "queue: show rainbow text: %s for %d sec", this->text.c_str(), this->screen_time);
       break;
     default:
       ESP_LOGD(TAG, "queue: UPPS");
@@ -81,7 +84,7 @@ namespace esphome
       this->config_->rainbow_color = Color(uint8_t (255 * red),uint8_t (255 * green),uint8_t (255 * blue));
      }
 
-    if (this->mode == MODE_ICONSCREEN)
+    if (this->mode == MODE_ICONSCREEN || this->mode == MODE_RAINBOW_ICON)
     {
       if (millis() - this->config_->last_scroll_time >= this->config_->scroll_interval && this->pixels_ > TEXTSTARTOFFSET)
       {
@@ -93,7 +96,7 @@ namespace esphome
         this->config_->last_scroll_time = millis();
       }
     }
-    if (this->mode == MODE_TEXT)
+    if (this->mode == MODE_TEXT || this->mode == MODE_RAINBOW_TEXT)
     {
       if (millis() - this->config_->last_scroll_time >= this->config_->scroll_interval && this->pixels_ >= 32)
       {
@@ -114,16 +117,13 @@ namespace esphome
     }
   }
 
-  void EHMTX_queue::draw_()
-  {
-  }
-
   void EHMTX_queue::draw()
   {
     display::Font *font = this->default_font ? this->config_->default_font : this->config_->special_font;
     int8_t yoffset = this->default_font ? this->config_->default_xoffset : this->config_->special_xoffset;
     int8_t xoffset = this->default_font ? this->config_->default_yoffset : this->config_->special_yoffset;
     int8_t extraoffset = 0;
+    Color color_=Color(40,140,0);
 
     switch (this->mode)
     {
@@ -168,7 +168,7 @@ namespace esphome
     case MODE_FULLSCREEN:
       this->config_->display->image(0, 0, this->config_->icons[this->icon]);
       break;
-    case MODE_ICONSCREEN:
+    case MODE_ICONSCREEN: case MODE_RAINBOW_ICON:
     {
       if (this->pixels_ > TEXTSTARTOFFSET)
       {
@@ -178,10 +178,11 @@ namespace esphome
       {
         extraoffset += 2;
       }
-
-      this->config_->display->print(this->centerx_ + TEXTSCROLLSTART - this->shiftx_ + extraoffset + xoffset, yoffset, font, this->text_color, esphome::display::TextAlign::BASELINE_LEFT,
+    
+      color_ = (this->mode == MODE_RAINBOW_TEXT)?this->config_->rainbow_color:this->text_color; 
+      this->config_->display->print(this->centerx_ + TEXTSCROLLSTART - this->shiftx_ + extraoffset + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                     this->text.c_str());
-
+     
       if (this->config_->display_alarm)
       {
         this->config_->display->draw_pixel_at(30, 0, this->config_->alarm_color);
@@ -202,7 +203,7 @@ namespace esphome
       }
     }
     break;
-    case MODE_TEXT:
+    case MODE_TEXT: case MODE_RAINBOW_TEXT:
       
       if (this->pixels_ > 32)
       {
@@ -212,13 +213,8 @@ namespace esphome
       {
         extraoffset += 2;
       }
-
-      this->config_->display->print(this->centerx_ - this->shiftx_ + xoffset + extraoffset, yoffset, font, this->text_color, esphome::display::TextAlign::BASELINE_LEFT,
-                                    this->text.c_str());
-      break;
-    case MODE_TIMER:
-      this->config_->display->image(0, 0, this->config_->icons[this->icon]);
-      this->config_->display->print(9+xoffset, yoffset, font, this->config_->rainbow_color, esphome::display::TextAlign::BASELINE_LEFT,
+      color_ = (this->mode== MODE_RAINBOW_TEXT)?this->config_->rainbow_color:this->text_color;
+      this->config_->display->print(this->centerx_ - this->shiftx_ + xoffset + extraoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                     this->text.c_str());
       break;
     default:
