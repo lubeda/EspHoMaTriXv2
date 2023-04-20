@@ -175,13 +175,13 @@ The alarm is displayed in the upper right corner at all screentypes! You can set
 ###### service
 
 ```c
-show_alarm => { "r", "g", "b"}
+show_alarm => { "r", "g", "b","s"}
 ```
 
 ###### api
 
 ```c
-void EHMTX::show_alarm(int r, int g, int b);
+void EHMTX::show_alarm(int r, int g, int b, int s=2);
 ```
 
 r,g,b: 0-255 color components
@@ -207,13 +207,13 @@ The indicator is in the lower left corner but not displayed in fullscreen 8x32 a
 ###### service
 
 ```c
-show_indicator => { "r", "g", "b"}
+show_indicator => { "r", "g", "b","s"}
 ```
 
 ###### api
 
 ```c
-void EHMTX::show_indicator(int r, int g, int b);
+void EHMTX::show_indicator(int r, int g, int ,int s=3);
 ```
 
 r,g,b: 0-255 color components

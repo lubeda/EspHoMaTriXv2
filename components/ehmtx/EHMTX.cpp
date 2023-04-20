@@ -6,8 +6,8 @@ namespace esphome
   {
     this->show_display = true;
     this->display_gauge = false;
-    this->display_indicator = false;
-    this->display_alarm = false;
+    this->display_indicator = 0;
+    this->display_alarm = 0;
     this->icon_count = 0;
     this->hue_ = 0;
     this->text_color = Color(C_RED, C_GREEN, C_BLUE);
@@ -38,16 +38,16 @@ namespace esphome
     this->date_fmt = s;
   }
 
-  void EHMTX::show_indicator(int r, int g, int b)
+  void EHMTX::show_indicator(int r, int g, int b,int s)
   {
     this->indicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
-    this->display_indicator = true;
-    ESP_LOGD(TAG, "show_indicator r: %d g: %d b: %d", r, g, b);
+    this->display_indicator = s;
+    ESP_LOGD(TAG, "show_indicator (%d)r: %d g: %d b: %d", s, r, g, b );
   }
 
   void EHMTX::hide_indicator()
   {
-    this->display_indicator = false;
+    this->display_indicator = 0;
     ESP_LOGD(TAG, "hide_indicator");
   }
 
@@ -169,8 +169,8 @@ namespace esphome
     register_service(&EHMTX::hide_gauge, "hide_gauge");
     register_service(&EHMTX::hide_alarm, "hide_alarm");
     register_service(&EHMTX::show_gauge, "show_gauge", {"percent", "r", "g", "b"});
-    register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b"});
-    register_service(&EHMTX::show_indicator, "show_indicator", {"r", "g", "b"});
+    register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b","s"});
+    register_service(&EHMTX::show_indicator, "show_indicator", {"r", "g", "b","s"});
 
     register_service(&EHMTX::set_text_color, "text_color", {"r", "g", "b"});
     register_service(&EHMTX::set_clock_color, "clock_color", {"r", "g", "b"});
@@ -194,16 +194,16 @@ namespace esphome
     this->is_running = true;
   }
 
-  void EHMTX::show_alarm(int r, int g, int b)
+  void EHMTX::show_alarm(int r, int g, int b, int s)
   {
     this->alarm_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
-    this->display_alarm = true;
-    ESP_LOGD(TAG, "show alarm color r: %d g: %d b: %d", r, g, b);
+    this->display_alarm = s;
+    ESP_LOGD(TAG, "show alarm color(%d) r: %d g: %d b: %d",s, r, g, b);
   }
 
   void EHMTX::hide_alarm()
   {
-    this->display_alarm = false;
+    this->display_alarm = 0;
     ESP_LOGD(TAG, "hide_alarm");
   }
 
@@ -321,6 +321,15 @@ namespace esphome
   void EHMTX::tick()
   {
 
+      this->hue_++;
+      if (this->hue_ == 360) 
+      {
+          this->hue_ = 0;
+      }
+      float red,green,blue ;
+      esphome::hsv_to_rgb	(	this->hue_,0.8,0.8,red,green,	blue );
+      this->rainbow_color = Color(uint8_t (255 * red),uint8_t (255 * green),uint8_t (255 * blue));
+
     if (this->is_running)
     {
       time_t ts = this->clock->now().timestamp;
@@ -364,8 +373,8 @@ namespace esphome
     }
     else
     {
-      uint8_t w = ((uint8_t)(32 / 14) * (this->boot_anim / 14)) % 32;
-      this->display->rectangle(0, 2, w, 4, Color(120, 190, 40));
+      uint8_t w = ((uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
+      this->display->rectangle(0, 2, w, 4, this->rainbow_color);// Color(120, 190, 40));
       this->boot_anim++;
     }
   }
@@ -397,14 +406,6 @@ namespace esphome
     ESP_LOGI(TAG, "status time format: %s", this->time_fmt.c_str());
     ESP_LOGI(TAG, "status text_color: RGB(%d,%d,%d)", this->text_color.r, this->text_color.g, this->text_color.b);
     ESP_LOGI(TAG, "status alarm_color: RGB(%d,%d,%d)", this->alarm_color.r, this->alarm_color.g, this->alarm_color.b);
-    if (this->display_indicator)
-    {
-      ESP_LOGI(TAG, "status indicator on");
-    }
-    else
-    {
-      ESP_LOGI(TAG, "status indicator off");
-    }
     if (this->show_display)
     {
       ESP_LOGI(TAG, "status display on");
@@ -450,6 +451,12 @@ namespace esphome
   {
     this->scroll_interval = si;
   }
+
+  void EHMTX::set_rainbow_interval(uint16_t si)
+  {
+    this->rainbow_interval = si;
+  }
+
 
   void EHMTX::del_screen(std::string icon_name, int mode)
   {
@@ -530,6 +537,8 @@ namespace esphome
     }
     screen->set_text(text, icon, w, lifetime, screen_time);
     screen->default_font = default_font;
+    screen->text = text;
+    screen->pixels_ = w;
     screen->mode = MODE_RAINBOW_ICON;
     screen->icon_name = iconname;
     ESP_LOGD(TAG, "rainbow_icon_screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
@@ -846,13 +855,21 @@ namespace esphome
       this->queue[this->screen_pointer]->draw();
       this->draw_gauge();
 
-      if (this->display_indicator)
-      {
-        this->display->line(31, 5, 29, 7, this->indicator_color);
-        this->display->draw_pixel_at(30, 7, this->indicator_color);
+        if (this->display_indicator>2)
+        {
+          this->display->line(31, 5, 29, 7, this->indicator_color);
+        }
+        
+        if (this->display_indicator>1){
+          this->display->draw_pixel_at(30, 7, this->indicator_color);
         this->display->draw_pixel_at(31, 6, this->indicator_color);
-        this->display->draw_pixel_at(31, 7, this->indicator_color);
-      }
+        }
+        
+        if (this->display_indicator>0)
+        {
+          this->display->draw_pixel_at(31, 7, this->indicator_color);
+        }
+        
     }
   }
 

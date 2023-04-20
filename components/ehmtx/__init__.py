@@ -67,6 +67,7 @@ CONF_SCROLLCOUNT = "scroll_count"
 CONF_MATRIXCOMPONENT = "matrix_component"
 CONF_HTML = "icons2html"
 CONF_SCROLLINTERVAL = "scroll_interval"
+CONF_RAINBOWINTERVAL = "rainbow_interval"
 CONF_FRAMEINTERVAL = "frame_interval"
 CONF_DEFAULT_FONT_ID = "default_font_id"
 CONF_DEFAULT_FONT = "default_font"
@@ -136,6 +137,8 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_HOLD_TIME, default="20"
     ): cv.templatable(cv.int_range(min=0, max=3600)),
     cv.Optional(CONF_SCROLLINTERVAL, default="80"
+                ): cv.templatable(cv.positive_int),
+    cv.Optional(CONF_RAINBOWINTERVAL, default="32"
                 ): cv.templatable(cv.positive_int),
     cv.Optional(CONF_SCROLLCOUNT, default="2"
                 ): cv.templatable(cv.positive_int),
@@ -386,6 +389,7 @@ async def to_code(config):
     cg.add(var.set_brightness(config[CONF_BRIGHTNESS]))
     cg.add(var.set_screen_time(config[CONF_SCREENTIME]))
     cg.add(var.set_scroll_interval(config[CONF_SCROLLINTERVAL]))
+    cg.add(var.set_rainbow_interval(config[CONF_SCROLLINTERVAL]))
     cg.add(var.set_scroll_count(config[CONF_SCROLLCOUNT]))
     cg.add(var.set_frame_interval(config[CONF_FRAMEINTERVAL]))
     cg.add(var.set_week_start(config[CONF_WEEK_START_MONDAY]))

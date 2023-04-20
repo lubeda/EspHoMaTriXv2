@@ -72,19 +72,20 @@ namespace esphome
 
   void EHMTX_queue::update_screen()
   {
-     if (millis() - this->config_->last_scroll_time >= this->config_->scroll_interval )
-     {
+     if (millis() - this->config_->last_rainbow_time >= this->config_->rainbow_interval )
+    {
       this->config_->hue_++;
       if (this->config_->hue_ == 360) 
       {
           this->config_->hue_ = 0;
       }
-      float red,	green,blue ;
+      float red,green,blue ;
       esphome::hsv_to_rgb	(	this->config_->hue_,0.8,0.8,red,green,	blue );
       this->config_->rainbow_color = Color(uint8_t (255 * red),uint8_t (255 * green),uint8_t (255 * blue));
-     }
+      this->config_->last_rainbow_time = millis();
+    }
 
-    if (this->mode == MODE_ICONSCREEN || this->mode == MODE_RAINBOW_ICON)
+    if ((this->mode == MODE_ICONSCREEN) || (this->mode == MODE_RAINBOW_ICON))
     {
       if (millis() - this->config_->last_scroll_time >= this->config_->scroll_interval && this->pixels_ > TEXTSTARTOFFSET)
       {
@@ -96,7 +97,7 @@ namespace esphome
         this->config_->last_scroll_time = millis();
       }
     }
-    if (this->mode == MODE_TEXT || this->mode == MODE_RAINBOW_TEXT)
+    if ((this->mode == MODE_TEXT) || (this->mode == MODE_RAINBOW_TEXT))
     {
       if (millis() - this->config_->last_scroll_time >= this->config_->scroll_interval && this->pixels_ >= 32)
       {
@@ -179,17 +180,25 @@ namespace esphome
         extraoffset += 2;
       }
     
-      color_ = (this->mode == MODE_RAINBOW_TEXT)?this->config_->rainbow_color:this->text_color; 
+      color_ = (this->mode == MODE_RAINBOW_ICON)?this->config_->rainbow_color:this->config_->text_color; 
+
       this->config_->display->print(this->centerx_ + TEXTSCROLLSTART - this->shiftx_ + extraoffset + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
-                                    this->text.c_str());
-     
-      if (this->config_->display_alarm)
-      {
+                                    this->text.c_str());   
+      
+        if (this->config_->display_alarm>2)
+        {
+          this->config_->display->line(31, 2, 29, 0, this->config_->alarm_color);
+        }
+        if (this->config_->display_alarm>1)
+        {
         this->config_->display->draw_pixel_at(30, 0, this->config_->alarm_color);
         this->config_->display->draw_pixel_at(31, 1, this->config_->alarm_color);
-        this->config_->display->draw_pixel_at(31, 0, this->config_->alarm_color);
-      }
-
+        }
+        if (this->config_->display_alarm>0)
+        {
+          this->config_->display->draw_pixel_at(31, 0, this->config_->alarm_color);
+        }
+        
       if (this->config_->display_gauge)
       {
         this->config_->draw_gauge();

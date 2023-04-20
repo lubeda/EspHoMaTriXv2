@@ -58,8 +58,8 @@ namespace esphome
     std::string time_fmt;
     std::string date_fmt;
 
-    bool display_indicator;
-    bool display_alarm;
+    int display_indicator;
+    int display_alarm;
     bool display_gauge;
     bool is_running=false;
     bool show_date;
@@ -84,11 +84,13 @@ namespace esphome
     bool string_has_ending(std::string const &fullString, std::string const &ending);
     bool show_seconds;
     uint16_t scroll_interval; // ms to between scrollsteps
+    uint16_t rainbow_interval; // ms to between scrollsteps
     uint16_t frame_interval;   // ms to next_frame()
     uint16_t hold_time;       // seconds display of screen_time to extend 
     uint16_t screen_time;      // seconds display of screen
     uint8_t icon_count;        // max iconnumber -1
     unsigned long last_scroll_time;
+    unsigned long last_rainbow_time;
     unsigned long last_anim_time;
     time_t next_action_time = 0; // when is the next screen change
     void draw_day_of_week();
@@ -119,15 +121,16 @@ namespace esphome
     void set_special_font(display::Font *font);
     void set_frame_interval(uint16_t interval);
     void set_scroll_interval(uint16_t interval);
+    void set_rainbow_interval(uint16_t interval);
     void set_scroll_count(uint8_t count);
     void set_time_format(std::string s);
     void set_date_format(std::string s);
-    void show_indicator(int r=C_RED, int g=C_GREEN, int b=C_BLUE);
+    void show_indicator(int r=C_RED, int g=C_GREEN, int b=C_BLUE,int s=3);
     void set_text_color(int r, int g, int b);
     void set_clock_color(int r=C_RED, int g=C_GREEN, int b=C_BLUE);
     void set_today_color(int r, int g, int b);
     void set_weekday_color(int r, int g, int b);
-    void show_alarm(int r=CA_RED, int g=C_GREEN, int b=C_BLUE);
+    void show_alarm(int r=CA_RED, int g=C_GREEN, int b=C_BLUE, int s= 2);
     void show_gauge(int v,int r=C_RED, int g=C_GREEN, int b=C_BLUE); // int because of register_service
     void hide_gauge();
     void hide_indicator();
