@@ -95,7 +95,6 @@ namespace esphome
     void draw_day_of_week();
     void show_all_icons();
     void tick();
-    void Ntick();
     void draw();
     void get_status();
     void queue_status();
@@ -146,6 +145,8 @@ namespace esphome
     void del_screen(std::string icon, int mode=MODE_ICONSCREEN);
     
     void draw_gauge();
+    void draw_alarm();
+    void draw_indicator();
 
     void add_on_next_screen_trigger(EHMTXNextScreenTrigger *t) { this->on_next_screen_triggers_.push_back(t); }
     void add_on_expired_screen_trigger(EHMTXExpiredScreenTrigger *t) { this->on_expired_screen_triggers_.push_back(t); }

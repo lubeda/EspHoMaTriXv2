@@ -51,7 +51,6 @@ NextClockTrigger = ehmtx_ns.class_(
 )
 
 CONF_CLOCKTIME = "clock_time"
-CONF_SCREENTIME = "screen_time"
 CONF_EHMTX = "ehmtx"
 CONF_URL = "url"
 CONF_FLAG = "flag"
@@ -144,9 +143,6 @@ EHMTX_SCHEMA = cv.Schema({
                 ): cv.templatable(cv.positive_int),
     cv.Optional(
         CONF_FRAMEINTERVAL, default="192"
-    ): cv.templatable(cv.positive_int),
-    cv.Optional(
-        CONF_SCREENTIME, default="8"
     ): cv.templatable(cv.positive_int),
     cv.Optional(CONF_BRIGHTNESS, default=80): cv.templatable(cv.int_range(min=0, max=255)),
     cv.Optional(CONF_ON_NEXT_SCREEN): automation.validate_automation(
@@ -387,7 +383,6 @@ async def to_code(config):
 
     cg.add(var.set_clock_time(config[CONF_CLOCKTIME]))
     cg.add(var.set_brightness(config[CONF_BRIGHTNESS]))
-    cg.add(var.set_screen_time(config[CONF_SCREENTIME]))
     cg.add(var.set_scroll_interval(config[CONF_SCROLLINTERVAL]))
     cg.add(var.set_rainbow_interval(config[CONF_SCROLLINTERVAL]))
     cg.add(var.set_scroll_count(config[CONF_SCROLLCOUNT]))

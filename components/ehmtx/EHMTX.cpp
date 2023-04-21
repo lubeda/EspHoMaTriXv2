@@ -42,13 +42,13 @@ namespace esphome
   {
     this->indicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
     this->display_indicator = s;
-    ESP_LOGD(TAG, "show_indicator (%d)r: %d g: %d b: %d", s, r, g, b );
+    ESP_LOGD(TAG, "show indicator size:%d r: %d g: %d b: %d", s, r, g, b );
   }
 
   void EHMTX::hide_indicator()
   {
     this->display_indicator = 0;
-    ESP_LOGD(TAG, "hide_indicator");
+    ESP_LOGD(TAG, "hide indicator");
   }
 
   void EHMTX::set_display_off()
@@ -113,11 +113,11 @@ namespace esphome
     {
       if (strcmp(this->queue[i]->icon_name.c_str(), name.c_str()) == 0)
       {
-        ESP_LOGD(TAG, "find_icon_in_queue: icon: %s at position %d", name.c_str(), i);
+        ESP_LOGD(TAG, "find icon in queue: icon: %s at position %d", name.c_str(), i);
         return i;
       }
     }
-    ESP_LOGW(TAG, "find_icon_in_queue: icon: %s not found", name.c_str());
+    ESP_LOGW(TAG, "find icon in queue: icon: %s not found", name.c_str());
     return MAXICONS;
   }
 
@@ -197,7 +197,7 @@ namespace esphome
   void EHMTX::hide_alarm()
   {
     this->display_alarm = 0;
-    ESP_LOGD(TAG, "hide_alarm");
+    ESP_LOGD(TAG, "hide alarm");
   }
 
   void EHMTX::blank_screen(int lifetime, int showtime)
@@ -257,7 +257,6 @@ namespace esphome
     }
     if (hit != MAXQUEUE)
     {
-      // ESP_LOGD(TAG, "find_oldest_queue_element: oldest screen is: %d", hit);
       this->queue[hit]->status();
     }
     return hit;
@@ -274,7 +273,7 @@ namespace esphome
         this->queue[i]->endtime = 0;
         if (this->queue[i]->mode != MODE_EMPTY)
         {
-          ESP_LOGD(TAG, "remove_expired_queue_element: removed slot %d: icon_name: %s text: %s", i, this->queue[i]->icon_name.c_str(), this->queue[i]->text.c_str());
+          ESP_LOGD(TAG, "remove expired queue element: removed slot %d: icon_name: %s text: %s", i, this->queue[i]->icon_name.c_str(), this->queue[i]->text.c_str());
           for (auto *t : on_expired_screen_triggers_)
           {
             infotext = "";
@@ -391,7 +390,6 @@ namespace esphome
     ESP_LOGI(TAG, "status brightness: %d (0..255)", this->brightness_);
     ESP_LOGI(TAG, "status date format: %s", this->date_fmt.c_str());
     ESP_LOGI(TAG, "status time format: %s", this->time_fmt.c_str());
-    ESP_LOGI(TAG, "status text_color: RGB(%d,%d,%d)", this->text_color.r, this->text_color.g, this->text_color.b);
     ESP_LOGI(TAG, "status alarm_color: RGB(%d,%d,%d)", this->alarm_color.r, this->alarm_color.g, this->alarm_color.b);
     if (this->show_display)
     {
@@ -498,7 +496,7 @@ namespace esphome
     screen->default_font = default_font;
     screen->mode = MODE_ICONSCREEN;
     screen->icon_name = iconname;
-    ESP_LOGD(TAG, "icon_screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
+    ESP_LOGD(TAG, "icon screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
     screen->status();
   }
 
@@ -809,7 +807,7 @@ namespace esphome
     ESP_LOGCONFIG(TAG, "Date format: %s", this->date_fmt.c_str());
     ESP_LOGCONFIG(TAG, "Time format: %s", this->time_fmt.c_str());
     ESP_LOGCONFIG(TAG, "Interval (ms) scroll: %d frame: %d", this->scroll_interval, this->frame_interval);
-    ESP_LOGCONFIG(TAG, "Displaytime (s) clock: %d screen: %d", this->clock_time, this->screen_time);
+    ESP_LOGCONFIG(TAG, "Displaytime (s) clock: %d", this->clock_time);
     if (this->show_day_of_week)
     {
       ESP_LOGCONFIG(TAG, "show day of week");
@@ -835,13 +833,23 @@ namespace esphome
     this->icon_count++;
   }
 
-  void EHMTX::draw()
-  {
-    if ((this->is_running) && (this->show_display) && (this->screen_pointer != MAXQUEUE))
-    {
-      this->queue[this->screen_pointer]->draw();
-      this->draw_gauge();
+void EHMTX::draw_alarm(){
+  if (this->display_alarm>2)
+        {
+          this->display->line(31, 2, 29, 0, this->alarm_color);
+        }
+        if (this->display_alarm>1)
+        {
+        this->display->draw_pixel_at(30, 0, this->alarm_color);
+        this->display->draw_pixel_at(31, 1, this->alarm_color);
+        }
+        if (this->display_alarm>0)
+        {
+          this->display->draw_pixel_at(31, 0, this->alarm_color);
+        }
+}
 
+void EHMTX::draw_indicator(){
         if (this->display_indicator>2)
         {
           this->display->line(31, 5, 29, 7, this->indicator_color);
@@ -856,7 +864,20 @@ namespace esphome
         {
           this->display->draw_pixel_at(31, 7, this->indicator_color);
         }
-        
+}
+  
+
+  void EHMTX::draw()
+  {
+    if ((this->is_running) && (this->show_display) && (this->screen_pointer != MAXQUEUE))
+    {
+      this->queue[this->screen_pointer]->draw();
+      this->draw_gauge();
+      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULLSCREEN) {
+        this->draw_indicator();
+      }
+      // this->draw_indicator();
+      this->draw_alarm();
     }
   }
 

@@ -25,28 +25,28 @@ namespace esphome
       ESP_LOGD(TAG, "queue: empty slot");
       break;
     case MODE_BLANK:
-      ESP_LOGD(TAG, "queue: show blank screen");
+      ESP_LOGD(TAG, "queue: blank screen");
       break;
     case MODE_CLOCK:
-      ESP_LOGD(TAG, "queue: show clock for %d sec", this->screen_time);
+      ESP_LOGD(TAG, "queue: clock for %d sec", this->screen_time);
       break;
     case MODE_DATE:
-      ESP_LOGD(TAG, "queue: show date for %d sec", this->screen_time);
+      ESP_LOGD(TAG, "queue: date for %d sec", this->screen_time);
       break;
     case MODE_FULLSCREEN:
-      ESP_LOGD(TAG, "queue: show fullscreen: %s for %d sec", this->icon_name.c_str(), this->screen_time);
+      ESP_LOGD(TAG, "queue: fullscreen: %s for %d sec", this->icon_name.c_str(), this->screen_time);
       break;
     case MODE_ICONSCREEN:
-      ESP_LOGD(TAG, "queue: show icon screen: %s text: %s for %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time);
+      ESP_LOGD(TAG, "queue: icon screen: %s text: %s for %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time);
       break;
     case MODE_TEXT:
-      ESP_LOGD(TAG, "queue: show text text: %s for %d sec", this->text.c_str(), this->screen_time);
+      ESP_LOGD(TAG, "queue: text text: %s for %d sec", this->text.c_str(), this->screen_time);
       break;
     case MODE_RAINBOW_ICON:
-      ESP_LOGD(TAG, "queue: show rainbow icon: %s text: %s for %d sec",this->icon_name.c_str(), this->text.c_str(), this->screen_time);
+      ESP_LOGD(TAG, "queue: rainbow icon: %s text: %s for %d sec",this->icon_name.c_str(), this->text.c_str(), this->screen_time);
       break;
     case MODE_RAINBOW_TEXT:
-      ESP_LOGD(TAG, "queue: show rainbow text: %s for %d sec", this->text.c_str(), this->screen_time);
+      ESP_LOGD(TAG, "queue: rainbow text: %s for %d sec", this->text.c_str(), this->screen_time);
       break;
     default:
       ESP_LOGD(TAG, "queue: UPPS");
@@ -185,23 +185,17 @@ namespace esphome
       this->config_->display->print(this->centerx_ + TEXTSCROLLSTART - this->shiftx_ + extraoffset + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                     this->text.c_str());   
       
-        if (this->config_->display_alarm>2)
-        {
-          this->config_->display->line(31, 2, 29, 0, this->config_->alarm_color);
-        }
-        if (this->config_->display_alarm>1)
-        {
-        this->config_->display->draw_pixel_at(30, 0, this->config_->alarm_color);
-        this->config_->display->draw_pixel_at(31, 1, this->config_->alarm_color);
-        }
-        if (this->config_->display_alarm>0)
-        {
-          this->config_->display->draw_pixel_at(31, 0, this->config_->alarm_color);
-        }
         
+      // this->config_->draw_alarm();
+      
+      // if (this->mode != MODE_CLOCK && this->mode != MODE_DATE && this->mode != MODE_FULLSCREEN) {
+      //   this->config_->draw_indicator();
+      // }
+      
+
       if (this->config_->display_gauge)
       {
-        this->config_->draw_gauge();
+       // this->config_->draw_gauge();
         this->config_->display->image(2, 0, this->config_->icons[this->icon]);
         this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
       }
@@ -252,7 +246,7 @@ namespace esphome
     this->shiftx_ = 0;
     float display_duration = ceil((this->config_->scroll_count * (TEXTSTARTOFFSET + pixel) * this->config_->scroll_interval) / 1000);
     this->screen_time = (display_duration > screen_time) ? display_duration : screen_time;
-    ESP_LOGD(TAG, "display text: %s pixels %d calculated: %d screen_time: %d default: %d", text.c_str(), pixel, this->screen_time, screen_time, this->config_->screen_time);
+    ESP_LOGD(TAG, "display text: %s pixels %d calculated: %d screen_time: %d", text.c_str(), pixel, this->screen_time, screen_time);
     this->endtime = this->config_->clock->now().timestamp + et * 60;
     this->icon = icon;
   }

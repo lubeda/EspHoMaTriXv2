@@ -15,6 +15,7 @@
 - [ ] seconds point moveable
 - [ ] seconds point to clock screen only
 - [x] rainbow icon and text
+- [ ] del_slot noch active?
 
 ## ux
 
