@@ -180,7 +180,7 @@ namespace esphome
         extraoffset += 2;
       }
     
-      color_ = (this->mode == MODE_RAINBOW_ICON)?this->config_->rainbow_color:this->config_->text_color; 
+      color_ = (this->mode == MODE_RAINBOW_ICON)?this->config_->rainbow_color:this->text_color; 
 
       this->config_->display->print(this->centerx_ + TEXTSCROLLSTART - this->shiftx_ + extraoffset + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                     this->text.c_str());   
@@ -195,7 +195,6 @@ namespace esphome
 
       if (this->config_->display_gauge)
       {
-       // this->config_->draw_gauge();
         this->config_->display->image(2, 0, this->config_->icons[this->icon]);
         this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
       }

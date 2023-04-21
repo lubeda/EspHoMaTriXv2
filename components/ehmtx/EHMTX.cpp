@@ -38,11 +38,11 @@ namespace esphome
     this->date_fmt = s;
   }
 
-  void EHMTX::show_indicator(int r, int g, int b,int s)
+  void EHMTX::show_indicator(int r, int g, int b, int s)
   {
     this->indicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
     this->display_indicator = s;
-    ESP_LOGD(TAG, "show indicator size:%d r: %d g: %d b: %d", s, r, g, b );
+    ESP_LOGD(TAG, "show indicator size:%d r: %d g: %d b: %d", s, r, g, b);
   }
 
   void EHMTX::hide_indicator()
@@ -127,14 +127,14 @@ namespace esphome
     ESP_LOGD(TAG, "hide gauge");
   }
 
-  void EHMTX::show_gauge(int percent, int r, int g, int)
+  void EHMTX::show_gauge(int percent, int r, int g, int b)
   {
     this->display_gauge = false;
     if (percent <= 100)
     {
+      this->gauge_color = Color(r, g, b);
       this->display_gauge = true;
-      this->gauge_value = percent; // (uint8_t)(100 - percent) * 7 / 100;
-      ESP_LOGD(TAG, "set gauge value: %d", percent);
+      this->gauge_value = (uint8_t)(100 - percent) * 7 / 100;
     }
   }
 
@@ -144,11 +144,7 @@ namespace esphome
     {
       this->display->line(0, 7, 0, 0, esphome::display::COLOR_OFF);
       this->display->line(1, 7, 1, 0, esphome::display::COLOR_OFF);
-      if (this->gauge_value > 11)
-      {
-        uint8_t height = 7 - (int)(this->gauge_value / 12.5);
-        this->display->line(0, 7, 0, height, this->gauge_color);
-      }
+      this->display->line(0, 7, 0, this->gauge_value, this->gauge_color);
     }
   }
 
@@ -163,8 +159,8 @@ namespace esphome
     register_service(&EHMTX::hide_gauge, "hide_gauge");
     register_service(&EHMTX::hide_alarm, "hide_alarm");
     register_service(&EHMTX::show_gauge, "show_gauge", {"percent", "r", "g", "b"});
-    register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b","s"});
-    register_service(&EHMTX::show_indicator, "show_indicator", {"r", "g", "b","s"});
+    register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b", "s"});
+    register_service(&EHMTX::show_indicator, "show_indicator", {"r", "g", "b", "s"});
 
     register_service(&EHMTX::set_clock_color, "clock_color", {"r", "g", "b"});
     register_service(&EHMTX::set_today_color, "today_color", {"r", "g", "b"});
@@ -191,7 +187,7 @@ namespace esphome
   {
     this->alarm_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
     this->display_alarm = s;
-    ESP_LOGD(TAG, "show alarm color(%d) r: %d g: %d b: %d",s, r, g, b);
+    ESP_LOGD(TAG, "show alarm color(%d) r: %d g: %d b: %d", s, r, g, b);
   }
 
   void EHMTX::hide_alarm()
@@ -313,14 +309,14 @@ namespace esphome
   void EHMTX::tick()
   {
 
-      this->hue_++;
-      if (this->hue_ == 360) 
-      {
-          this->hue_ = 0;
-      }
-      float red,green,blue ;
-      esphome::hsv_to_rgb	(	this->hue_,0.8,0.8,red,green,	blue );
-      this->rainbow_color = Color(uint8_t (255 * red),uint8_t (255 * green),uint8_t (255 * blue));
+    this->hue_++;
+    if (this->hue_ == 360)
+    {
+      this->hue_ = 0;
+    }
+    float red, green, blue;
+    esphome::hsv_to_rgb(this->hue_, 0.8, 0.8, red, green, blue);
+    this->rainbow_color = Color(uint8_t(255 * red), uint8_t(255 * green), uint8_t(255 * blue));
 
     if (this->is_running)
     {
@@ -366,7 +362,7 @@ namespace esphome
     else
     {
       uint8_t w = ((uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
-      this->display->rectangle(0, 2, w, 4, this->rainbow_color);// Color(120, 190, 40));
+      this->display->rectangle(0, 2, w, 4, this->rainbow_color); // Color(120, 190, 40));
       this->boot_anim++;
     }
   }
@@ -441,7 +437,6 @@ namespace esphome
   {
     this->rainbow_interval = si;
   }
-
 
   void EHMTX::del_screen(std::string icon_name, int mode)
   {
@@ -833,50 +828,55 @@ namespace esphome
     this->icon_count++;
   }
 
-void EHMTX::draw_alarm(){
-  if (this->display_alarm>2)
-        {
-          this->display->line(31, 2, 29, 0, this->alarm_color);
-        }
-        if (this->display_alarm>1)
-        {
-        this->display->draw_pixel_at(30, 0, this->alarm_color);
-        this->display->draw_pixel_at(31, 1, this->alarm_color);
-        }
-        if (this->display_alarm>0)
-        {
-          this->display->draw_pixel_at(31, 0, this->alarm_color);
-        }
-}
+  void EHMTX::draw_alarm()
+  {
+    if (this->display_alarm > 2)
+    {
+      this->display->line(31, 2, 29, 0, this->alarm_color);
+    }
+    if (this->display_alarm > 1)
+    {
+      this->display->draw_pixel_at(30, 0, this->alarm_color);
+      this->display->draw_pixel_at(31, 1, this->alarm_color);
+    }
+    if (this->display_alarm > 0)
+    {
+      this->display->draw_pixel_at(31, 0, this->alarm_color);
+    }
+  }
 
-void EHMTX::draw_indicator(){
-        if (this->display_indicator>2)
-        {
-          this->display->line(31, 5, 29, 7, this->indicator_color);
-        }
-        
-        if (this->display_indicator>1){
-          this->display->draw_pixel_at(30, 7, this->indicator_color);
-        this->display->draw_pixel_at(31, 6, this->indicator_color);
-        }
-        
-        if (this->display_indicator>0)
-        {
-          this->display->draw_pixel_at(31, 7, this->indicator_color);
-        }
-}
-  
+  void EHMTX::draw_indicator()
+  {
+    if (this->display_indicator > 2)
+    {
+      this->display->line(31, 5, 29, 7, this->indicator_color);
+    }
+
+    if (this->display_indicator > 1)
+    {
+      this->display->draw_pixel_at(30, 7, this->indicator_color);
+      this->display->draw_pixel_at(31, 6, this->indicator_color);
+    }
+
+    if (this->display_indicator > 0)
+    {
+      this->display->draw_pixel_at(31, 7, this->indicator_color);
+    }
+  }
 
   void EHMTX::draw()
   {
     if ((this->is_running) && (this->show_display) && (this->screen_pointer != MAXQUEUE))
     {
       this->queue[this->screen_pointer]->draw();
-      this->draw_gauge();
-      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULLSCREEN) {
+      if (this->queue[this->screen_pointer]->mode != MODE_FULLSCREEN)
+      {
+        this->draw_gauge();
+      }
+      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULLSCREEN)
+      {
         this->draw_indicator();
       }
-      // this->draw_indicator();
       this->draw_alarm();
     }
   }
