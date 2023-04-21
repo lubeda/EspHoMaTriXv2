@@ -6,13 +6,15 @@
 - [ ] indicator on all screen but fullscreen and clock
 - [ ] refreshing an icon screen should extend the display time
 - [ ] scroll left to right
+- [x] size of indicator and alarm
 - [x] center text
 - [x] alarm unabhängig von screen
 - [x] del_screen with * and filter by type do delete all clocks etc.
 - [x] force_screen with * and filter by type do delete all clocks etc.
 - [x] gauge mit farbe und del_gaugeall clocks etc.
-- [ ] second point moveable
-- [ ] second point to clock screen only
+- [ ] seconds point moveable
+- [ ] seconds point to clock screen only
+- [x] rainbow icon and text
 
 ## ux
 
@@ -20,7 +22,7 @@
 - [ ] Color in blueprints
 - [ ] all modes in one blueprint
 - [x] default values for all functions
-- [ ] provide sample font from [url](https://www.pentacom.jp/pentacom/bitfontmaker2/)
+- [x] provide sample font from [url](https://www.pentacom.jp/pentacom/bitfontmaker2/)
 - [x] start animation
 
 ## style

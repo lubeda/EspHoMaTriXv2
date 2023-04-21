@@ -256,12 +256,4 @@ namespace esphome
     this->endtime = this->config_->clock->now().timestamp + et * 60;
     this->icon = icon;
   }
-
-  void EHMTX_queue::set_text_color(uint8_t icon_id, Color text_color)
-  {
-    if (this->icon == icon_id)
-    {
-      this->text_color = text_color;
-    }
-  }
 }
