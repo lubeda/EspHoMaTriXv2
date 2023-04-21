@@ -381,70 +381,6 @@ sensor:
 
 ---
 
-#### Set (alarm/clock/gauge/text/today/weekday) color action
-
-Sets the color of the selected element
-
-##### Lambda set text color
-
-```yaml
-  lamda: 
-    id(rgb8x32)->set_text_color(200,45,12);
-```
-
-##### Action for set text color
-
-You have to use use id of your ehmtx component, e.g. `rgb8x32`
-
-```yaml
-     - ehmtx.***.color:
-        id: rgb8x32
-        red: !lambda return r;
-        green: !lambda return g;
-        blue: !lambda return b;
-```
-
-valid elements:
-
-- `ehmtx.alarm.color:`
-- `ehmtx.clock.color:`
-- `ehmtx.gauge.color:`
-- `ehmtx.text.color:`
-- `ehmtx.today.color:`
-- `ehmtx.weekday.color:`
-- ```red, green, blue```: the color components (`0..255`) *(default = `80`)*
-
----
-
-#### Set screen color action
-
-Sets the color of the **active** screen in the queue, so it's best to use it directly after add_screen.
-
-##### Lambda for set_screen
-
-```yaml
-  lamda: 
-    id(rgb8x32)->set_screen_color("sun",200,45,12);
-```
-
-##### Action for set_screen
-
-You have to use use id of your ehmtx component, e.g. `rgb8x32`
-
-```yaml
-     - ehmtx.screen.color:
-        id: rgb8x32
-        icon_name: sun
-        red: !lambda return r;
-        green: !lambda return g;
-        blue: !lambda return b;
-```
-
-- ```icon_name```: name of the actual icon/screen
-- ```red, green, blue```: the color components (`0..255`) _(default = `80`)_
-
----
-
 ##### Show date
 
 You can dynamically enable or disable the display of the date see parameter `show_date`.
@@ -506,7 +442,6 @@ Experienced programmers can use this public methods:
     void set_gauge_off();
     void set_gauge_value(int v); // valid: 0 - 100 int because of register_service
     void set_gauge_color(int r, int g, int b);
-    void set_text_color(int r, int g, int b);
     void set_clock_color(int r, int g, int b);
     void set_today_color(int r, int g, int b);
     void set_weekday_color(int r, int g, int b);
@@ -565,16 +500,6 @@ ehmtx:
     lambda: |-
         ESP_LOGD("TriggerTest","Iconname: %s",x.c_str());
         ESP_LOGI("TriggerTest","Text: %s",y.c_str());
-```
-
-##### Change the text color like crazy
-
-```yaml
-ehmtx:
-  ....
-  on_next_screen:
-    lambda: |-
-      id(rgb8x32)->set_text_color(rand() % 255, rand() % 255, rand() % 255);
 ```
 
 ##### Send an event to Home Assistant
@@ -843,8 +768,7 @@ These services are the same as the local services, so you can adapt the document
   |`set_gauge_value`| {"percent"}|
   |`set_gauge_off`|*none*|
   |`set_alarm_color`| {"r", "g", "b"}|
-  |`set_text_color` | {"r", "g", "b"}|
-  |`set_clock_color`| {"r", "g", "b"}|
+    |`set_clock_color`| {"r", "g", "b"}|
   |`set_today_color`| {"r", "g", "b"}|
   |`set_gauge_color`| {"r", "g", "b"}|
   |`set_weekday_color` |{"r", "g", "b"}|

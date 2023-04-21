@@ -575,15 +575,6 @@ sensor:
 
 #### Set (alarm/clock/gauge/text/today/weekday) color action
 
-Sets the default color of the selected element
-
-##### Lambda set text color
-
-```yaml
-  lamda: 
-    id(rgb8x32)->set_text_color(200,45,12);
-```
-
 ##### Force screen
 
 Force the selected [icon_screen](#icon-screen) ```icon_name``` to be displayed next. Afterwards the loop is continuing from this screen. e.g. helpfull for alarms. Or after an update of the value/text.

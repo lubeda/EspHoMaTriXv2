@@ -81,12 +81,6 @@ namespace esphome
     ESP_LOGD(TAG, "default clock color r: %d g: %d b: %d", r, g, b);
   }
 
-  void EHMTX::set_text_color(int r, int g, int b)
-  {
-    this->text_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
-    ESP_LOGD(TAG, "default text color r: %d g: %d b: %d", r, g, b);
-  }
-
   bool EHMTX::string_has_ending(std::string const &fullString, std::string const &ending)
   {
     if (fullString.length() >= ending.length())
@@ -172,7 +166,6 @@ namespace esphome
     register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b","s"});
     register_service(&EHMTX::show_indicator, "show_indicator", {"r", "g", "b","s"});
 
-    register_service(&EHMTX::set_text_color, "text_color", {"r", "g", "b"});
     register_service(&EHMTX::set_clock_color, "clock_color", {"r", "g", "b"});
     register_service(&EHMTX::set_today_color, "today_color", {"r", "g", "b"});
     register_service(&EHMTX::set_weekday_color, "weekday_color", {"r", "g", "b"});

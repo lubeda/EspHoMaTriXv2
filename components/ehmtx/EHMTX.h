@@ -126,7 +126,6 @@ namespace esphome
     void set_time_format(std::string s);
     void set_date_format(std::string s);
     void show_indicator(int r=C_RED, int g=C_GREEN, int b=C_BLUE,int s=3);
-    void set_text_color(int r, int g, int b);
     void set_clock_color(int r=C_RED, int g=C_GREEN, int b=C_BLUE);
     void set_today_color(int r, int g, int b);
     void set_weekday_color(int r, int g, int b);
@@ -189,7 +188,6 @@ namespace esphome
     bool del_slot(uint8_t _icon);
     void hold_slot(uint8_t _sec);
     void set_text(std::string text, uint8_t icon, uint16_t pixel, uint16_t et, uint16_t st);
-    void set_text_color(uint8_t icon_id,Color text_color);
   };
 
   class EHMTXNextScreenTrigger : public Trigger<std::string, std::string>
