@@ -87,7 +87,6 @@ namespace esphome
     uint16_t rainbow_interval; // ms to between scrollsteps
     uint16_t frame_interval;   // ms to next_frame()
     uint16_t hold_time;       // seconds display of screen_time to extend 
-    uint16_t screen_time;      // seconds display of screen
     uint8_t icon_count;        // max iconnumber -1
     unsigned long last_scroll_time;
     unsigned long last_rainbow_time;
@@ -103,7 +102,7 @@ namespace esphome
     void skip_screen();
     void hold_screen();
     void set_display(addressable_light::AddressableLightDisplay *disp);
-    void set_screen_time(uint16_t t);
+    
     void set_hold_time(uint16_t t);
     void set_clock_time(uint16_t t);
     void set_show_day_of_week(bool b);

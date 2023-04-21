@@ -372,12 +372,6 @@ namespace esphome
     }
   }
 
-  void EHMTX::set_screen_time(uint16_t t)
-  {
-    ESP_LOGD(TAG, "default screen time: %d", t);
-    this->screen_time = t;
-  }
-
   void EHMTX::skip_screen()
   {
     this->next_action_time = this->clock->now().timestamp - 1;
