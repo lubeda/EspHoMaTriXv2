@@ -2,7 +2,7 @@
 
 ## Important information
 
-If you like my work please donate me a star on github and consider sponsoring me!!
+If you like my work, please donate me a star on github and consider sponsoring me!!
 
 # EspHoMaTriX version 2 (EHMTXv2)
 
