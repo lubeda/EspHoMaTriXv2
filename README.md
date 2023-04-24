@@ -24,7 +24,7 @@ There are some "RGB-matrices" status displays/clocks out there, the commercial o
 - [Pixel It](https://docs.bastelbunker.de/pixelit/) (project is under active development)
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of Awtrix, optimized for the Ulanzi TC001
 Hardware
-- [lamatrix](https://github.com/noahwilliamsson/lamatrix/tree/master) micropython based an around 5 years old
+- [lamatrix](https://github.com/noahwilliamsson/lamatrix/tree/master) micropython based and around 5 years old
 
 The solutions have their pros and cons. I tried some and used AwTrix for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of MQTT.
 
