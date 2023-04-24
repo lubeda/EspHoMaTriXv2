@@ -45,6 +45,7 @@
 - [ ] remake documentation
 - [ ] more explanation for fonts
 - [ ] reference to https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=13768
+- [ ] sample yaml with voice
 
 ## noch prüfen
 
