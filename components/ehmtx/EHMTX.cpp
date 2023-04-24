@@ -24,8 +24,6 @@ namespace esphome
     {
       this->queue[i] = new EHMTX_queue(this);
     }
-
-    this->is_running = false;
   }
 
   void EHMTX::set_time_format(std::string s)
@@ -169,7 +167,7 @@ namespace esphome
     register_service(&EHMTX::del_screen, "del_screen", {"icon_name", "mode"});
     register_service(&EHMTX::force_screen, "force_screen", {"icon_name", "mode"});
 
-    register_service(&EHMTX::fullscreen, "fullscreen", {"icon_name", "lifetime", "screen_time"});
+    register_service(&EHMTX::full_screen, "full_screen", {"icon_name", "lifetime", "screen_time"});
     register_service(&EHMTX::icon_screen, "icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::text_screen, "text_screen", {"text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::clock_screen, "clock_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
@@ -179,8 +177,7 @@ namespace esphome
     register_service(&EHMTX::rainbow_text_screen, "rainbow_text_screen", {"text", "lifetime", "screen_time", "default_font"});
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
-
-    this->is_running = true;
+    ESP_LOGD(TAG, "Setup and running!");
   }
 
   void EHMTX::show_alarm(int r, int g, int b, int s)
@@ -206,6 +203,12 @@ namespace esphome
 
   void EHMTX::update() // called from polling component
   {
+    if (! this->is_running){
+      if (this->clock->now().timestamp > 6000) {
+        ESP_LOGD(TAG, "time sync => starting");
+        this->is_running = true;
+      }
+    }
   }
 
   void EHMTX::force_screen(std::string icon_name, int mode)
@@ -221,7 +224,7 @@ namespace esphome
       if (this->queue[i]->mode == mode)
       {
         bool force = true;
-        if ((mode == MODE_ICONSCREEN) || (mode == MODE_FULLSCREEN) || (mode == MODE_RAINBOW_ICON))
+        if ((mode == MODE_ICONSCREEN) || (mode == MODE_FULL_SCREEN) || (mode == MODE_RAINBOW_ICON))
         {
           if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
           {
@@ -285,8 +288,8 @@ namespace esphome
             case MODE_DATE:
               infotext = "clock";
               break;
-            case MODE_FULLSCREEN:
-              infotext = "fullscreen " + this->queue[i]->icon_name;
+            case MODE_FULL_SCREEN:
+              infotext = "full screen " + this->queue[i]->icon_name;
               break;
             case MODE_ICONSCREEN:
             case MODE_RAINBOW_ICON:
@@ -308,7 +311,6 @@ namespace esphome
   }
   void EHMTX::tick()
   {
-
     this->hue_++;
     if (this->hue_ == 360)
     {
@@ -317,10 +319,10 @@ namespace esphome
     float red, green, blue;
     esphome::hsv_to_rgb(this->hue_, 0.8, 0.8, red, green, blue);
     this->rainbow_color = Color(uint8_t(255 * red), uint8_t(255 * green), uint8_t(255 * blue));
+    time_t ts = this->clock->now().timestamp;
 
     if (this->is_running)
-    {
-      time_t ts = this->clock->now().timestamp;
+    { 
       if (ts > this->next_action_time)
       {
         this->remove_expired_queue_element();
@@ -361,7 +363,7 @@ namespace esphome
     }
     else
     {
-      uint8_t w = ((uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
+      uint8_t w = (1+(uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
       this->display->rectangle(0, 2, w, 4, this->rainbow_color); // Color(120, 190, 40));
       this->boot_anim++;
     }
@@ -445,7 +447,7 @@ namespace esphome
       if (this->queue[i]->mode == mode)
       {
         bool force = true;
-        if ((mode == MODE_ICONSCREEN) || (mode == MODE_FULLSCREEN) || (mode == MODE_RAINBOW_ICON))
+        if ((mode == MODE_ICONSCREEN) || (mode == MODE_FULL_SCREEN) || (mode == MODE_RAINBOW_ICON))
         {
           if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
           {
@@ -592,23 +594,23 @@ namespace esphome
     screen->status();
   }
 
-  void EHMTX::fullscreen(std::string iconname, int lifetime, int screen_time)
+  void EHMTX::full_screen(std::string iconname, int lifetime, int screen_time)
   {
     uint8_t icon = this->find_icon(iconname.c_str());
 
     if (icon >= this->icon_count)
     {
-      ESP_LOGW(TAG, "fullscreen: icon %d not found => default: 0", icon);
+      ESP_LOGW(TAG, "full screen: icon %d not found => default: 0", icon);
       icon = 0;
     }
     EHMTX_queue *screen = this->find_icon_queue_element(icon);
 
-    screen->mode = MODE_FULLSCREEN;
+    screen->mode = MODE_FULL_SCREEN;
     screen->icon = icon;
     screen->icon_name = iconname;
     screen->screen_time = screen_time;
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
-    ESP_LOGD(TAG, "fullscreen: icon: %d iconname: %s lifetime: %d screen_time:%d ", icon, iconname.c_str(), lifetime, screen_time);
+    ESP_LOGD(TAG, "full screen: icon: %d iconname: %s lifetime: %d screen_time:%d ", icon, iconname.c_str(), lifetime, screen_time);
     screen->status();
   }
 
@@ -869,11 +871,11 @@ namespace esphome
     if ((this->is_running) && (this->show_display) && (this->screen_pointer != MAXQUEUE))
     {
       this->queue[this->screen_pointer]->draw();
-      if (this->queue[this->screen_pointer]->mode != MODE_FULLSCREEN)
+      if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN)
       {
         this->draw_gauge();
       }
-      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULLSCREEN)
+      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN)
       {
         this->draw_indicator();
       }

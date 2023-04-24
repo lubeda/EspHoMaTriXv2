@@ -13,6 +13,7 @@ namespace esphome
     this->screen_time = 0;
     this->mode = MODE_EMPTY;
     this->icon_name = "";
+    this->icon = 0;
     this->text = "";
     this->default_font = true;
   }
@@ -33,8 +34,8 @@ namespace esphome
     case MODE_DATE:
       ESP_LOGD(TAG, "queue: date for %d sec", this->screen_time);
       break;
-    case MODE_FULLSCREEN:
-      ESP_LOGD(TAG, "queue: fullscreen: %s for %d sec", this->icon_name.c_str(), this->screen_time);
+    case MODE_FULL_SCREEN:
+      ESP_LOGD(TAG, "queue: full screen: %s for %d sec", this->icon_name.c_str(), this->screen_time);
       break;
     case MODE_ICONSCREEN:
       ESP_LOGD(TAG, "queue: icon screen: %s text: %s for %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time);
@@ -43,7 +44,7 @@ namespace esphome
       ESP_LOGD(TAG, "queue: text text: %s for %d sec", this->text.c_str(), this->screen_time);
       break;
     case MODE_RAINBOW_ICON:
-      ESP_LOGD(TAG, "queue: rainbow icon: %s text: %s for %d sec",this->icon_name.c_str(), this->text.c_str(), this->screen_time);
+      ESP_LOGD(TAG, "queue: rainbow icon: %s text: %s for %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time);
       break;
     case MODE_RAINBOW_TEXT:
       ESP_LOGD(TAG, "queue: rainbow text: %s for %d sec", this->text.c_str(), this->screen_time);
@@ -72,16 +73,16 @@ namespace esphome
 
   void EHMTX_queue::update_screen()
   {
-     if (millis() - this->config_->last_rainbow_time >= this->config_->rainbow_interval )
+    if (millis() - this->config_->last_rainbow_time >= this->config_->rainbow_interval)
     {
       this->config_->hue_++;
-      if (this->config_->hue_ == 360) 
+      if (this->config_->hue_ == 360)
       {
-          this->config_->hue_ = 0;
+        this->config_->hue_ = 0;
       }
-      float red,green,blue ;
-      esphome::hsv_to_rgb	(	this->config_->hue_,0.8,0.8,red,green,	blue );
-      this->config_->rainbow_color = Color(uint8_t (255 * red),uint8_t (255 * green),uint8_t (255 * blue));
+      float red, green, blue;
+      esphome::hsv_to_rgb(this->config_->hue_, 0.8, 0.8, red, green, blue);
+      this->config_->rainbow_color = Color(uint8_t(255 * red), uint8_t(255 * green), uint8_t(255 * blue));
       this->config_->last_rainbow_time = millis();
     }
 
@@ -110,7 +111,6 @@ namespace esphome
       }
     }
 
-
     if (millis() - this->config_->last_anim_time >= this->config_->icons[this->icon]->frame_duration)
     {
       this->config_->icons[this->icon]->next_frame();
@@ -124,105 +124,100 @@ namespace esphome
     int8_t yoffset = this->default_font ? this->config_->default_xoffset : this->config_->special_xoffset;
     int8_t xoffset = this->default_font ? this->config_->default_yoffset : this->config_->special_yoffset;
     int8_t extraoffset = 0;
-    Color color_=Color(40,140,0);
-
-    switch (this->mode)
+    Color color_;
+    if (this->config_->is_running)
     {
-    case MODE_EMPTY:
-      break;
-    case MODE_BLANK:
-      break;
-    case MODE_CLOCK:
-      if (this->config_->clock->now().timestamp > 6000) // valid time
+      switch (this->mode)
       {
-        time_t ts = this->config_->clock->now().timestamp;
-        this->config_->display->strftime(xoffset + 15, yoffset, font, this->text_color, display::TextAlign::BASELINE_CENTER, this->config_->time_fmt.c_str(),
-                                         this->config_->clock->now());
-        if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
+      case MODE_EMPTY:
+        break;
+      case MODE_BLANK:
+        break;
+      case MODE_CLOCK:
+        if (this->config_->clock->now().timestamp > 6000) // valid time
         {
-          this->config_->display->draw_pixel_at(0, 0, this->config_->clock_color);
+          time_t ts = this->config_->clock->now().timestamp;
+          this->config_->display->strftime(xoffset + 15, yoffset, font, this->text_color, display::TextAlign::BASELINE_CENTER, this->config_->time_fmt.c_str(),
+                                           this->config_->clock->now());
+          if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
+          {
+            this->config_->display->draw_pixel_at(0, 0, this->config_->clock_color);
+          }
+          this->config_->draw_day_of_week();
         }
-        this->config_->draw_day_of_week();
-      }
-      else
-      {
-        this->config_->display->print(15+xoffset, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!t!");
-      }
-      break;
-    case MODE_DATE:
-      if (this->config_->clock->now().timestamp > 6000) // valid time
-      {
-        time_t ts = this->config_->clock->now().timestamp;
-        this->config_->display->strftime(xoffset + 15, yoffset, font, this->text_color, display::TextAlign::BASELINE_CENTER, this->config_->date_fmt.c_str(),
-                                         this->config_->clock->now());
-        if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
+        else
         {
-          this->config_->display->draw_pixel_at(0, 0, this->config_->clock_color);
+          this->config_->display->print(15 + xoffset, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!t!");
         }
-        this->config_->draw_day_of_week();
-      }
-      else
-      {
-        this->config_->display->print(xoffset + 15, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!d!");
-      }
-      break;
-    case MODE_FULLSCREEN:
-      this->config_->display->image(0, 0, this->config_->icons[this->icon]);
-      break;
-    case MODE_ICONSCREEN: case MODE_RAINBOW_ICON:
-    {
-      if (this->pixels_ > TEXTSTARTOFFSET)
-      {
-        extraoffset = TEXTSTARTOFFSET;
-      }
-      if (this->config_->display_gauge)
-      {
-        extraoffset += 2;
-      }
-    
-      color_ = (this->mode == MODE_RAINBOW_ICON)?this->config_->rainbow_color:this->text_color; 
-
-      this->config_->display->print(this->centerx_ + TEXTSCROLLSTART - this->shiftx_ + extraoffset + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
-                                    this->text.c_str());   
-      
-        
-      // this->config_->draw_alarm();
-      
-      // if (this->mode != MODE_CLOCK && this->mode != MODE_DATE && this->mode != MODE_FULLSCREEN) {
-      //   this->config_->draw_indicator();
-      // }
-      
-
-      if (this->config_->display_gauge)
-      {
-        this->config_->display->image(2, 0, this->config_->icons[this->icon]);
-        this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
-      }
-      else
-      {
-        this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
+        break;
+      case MODE_DATE:
+        if (this->config_->clock->now().timestamp > 6000) // valid time
+        {
+          time_t ts = this->config_->clock->now().timestamp;
+          this->config_->display->strftime(xoffset + 15, yoffset, font, this->text_color, display::TextAlign::BASELINE_CENTER, this->config_->date_fmt.c_str(),
+                                           this->config_->clock->now());
+          if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
+          {
+            this->config_->display->draw_pixel_at(0, 0, this->config_->clock_color);
+          }
+          this->config_->draw_day_of_week();
+        }
+        else
+        {
+          this->config_->display->print(xoffset + 15, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!d!");
+        }
+        break;
+      case MODE_FULL_SCREEN:
         this->config_->display->image(0, 0, this->config_->icons[this->icon]);
-      }
-    }
-    break;
-    case MODE_TEXT: case MODE_RAINBOW_TEXT:
-      
-      if (this->pixels_ > 32)
+        break;
+      case MODE_ICONSCREEN:
+      case MODE_RAINBOW_ICON:
       {
-        extraoffset = 32;
+        if (this->pixels_ > TEXTSTARTOFFSET)
+        {
+          extraoffset = TEXTSTARTOFFSET;
+        }
+        if (this->config_->display_gauge)
+        {
+          extraoffset += 2;
+        }
+
+        color_ = (this->mode == MODE_RAINBOW_ICON) ? this->config_->rainbow_color : this->text_color;
+
+        this->config_->display->print(this->centerx_ + TEXTSCROLLSTART - this->shiftx_ + extraoffset + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+                                      this->text.c_str());
+        if (this->config_->display_gauge)
+        {
+          this->config_->display->image(2, 0, this->config_->icons[this->icon]);
+          this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
+        }
+        else
+        {
+          this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
+          this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+        }
       }
-      if (this->config_->display_gauge)
-      {
-        extraoffset += 2;
+      break;
+      case MODE_TEXT:
+      case MODE_RAINBOW_TEXT:
+
+        if (this->pixels_ > 32)
+        {
+          extraoffset = 32;
+        }
+        if (this->config_->display_gauge)
+        {
+          extraoffset += 2;
+        }
+        color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
+        this->config_->display->print(this->centerx_ - this->shiftx_ + xoffset + extraoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+                                      this->text.c_str());
+        break;
+      default:
+        break;
       }
-      color_ = (this->mode== MODE_RAINBOW_TEXT)?this->config_->rainbow_color:this->text_color;
-      this->config_->display->print(this->centerx_ - this->shiftx_ + xoffset + extraoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
-                                    this->text.c_str());
-      break;
-    default:
-      break;
-    }
-    this->update_screen();
+      this->update_screen();
+    } 
   }
 
   void EHMTX_queue::hold_slot(uint8_t _sec)

@@ -23,12 +23,12 @@ ICONWIDTH = 8
 ICONHEIGHT = 8
 ICONBUFFERSIZE = ICONWIDTH * ICONHEIGHT * 4
 SVG_ICONSTART = '<svg width="80px" height="80px" viewBox="0 0 80 80">'
-SVG_FULLSCREENSTART = '<svg width="320px" height="80px" viewBox="0 0 320 80">'
+SVG_FULL_SCREEN_START = '<svg width="320px" height="80px" viewBox="0 0 320 80">'
 SVG_END = "</svg>"
 
 logging.warning(f"")
 logging.warning(f"If you are upgrading EsphoMaTrix from a version before 2023.5.0,")
-logging.warning(f"you should read the section https://github.com/lubeda/EsphoMaTrix/#how-to-update for tipps.")
+logging.warning(f"you should read the manual https://github.com/lubeda/EspHoMaTriXv2 for tips.")
 logging.warning(f"")
 
 def rgb565_svg(x,y,r,g,b):
@@ -317,7 +317,7 @@ async def to_code(config):
                 if width == 8:  
                     html_string += SVG_ICONSTART
                 else:
-                    html_string += SVG_FULLSCREENSTART
+                    html_string += SVG_FULL_SCREEN_START
                 i = 0
                 for pix in pixels:
                     R = pix[0] >> 3
