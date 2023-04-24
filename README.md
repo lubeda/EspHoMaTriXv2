@@ -421,7 +421,7 @@ Download and install all needed icons (.jpg/.png) and animations (.GIF) under th
 
 You can also specify a URL to directly download the image file. The URLs will only be downloaded once at compile time, so there is no additional traffic on the hosting website.
 
-The [icons](awtrix.blueforcer.de/icons) and [animations](https://awtrix.blueforcer.de/animations) from the AWTRIX and AWTRIX-light could be used, but have to be scaled down to 8x32 or 8x8 pixels. Check the license before using them!
+The [icons](https://awtrix.blueforcer.de/icons) and [animations](https://awtrix.blueforcer.de/animations) from the AWTRIX and AWTRIX-light could be used, but have to be scaled down to 8x32 or 8x8 pixels. Check the license before using them!
 
 There are maximum 90 icons possible.
 
