@@ -16,6 +16,9 @@
 - [ ] seconds point to clock screen only
 - [x] rainbow icon and text
 - [ ] del_slot noch active?
+- [ ] CONF_ALARM weg?
+- [ ] reintroduce resize
+- [ ] 
 
 ## ux
 
