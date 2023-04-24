@@ -2,8 +2,8 @@
 
 ## function
 
-- [ ] alarm on all screen but fullscreen
-- [ ] indicator on all screen but fullscreen and clock
+- [x] alarm on all screen but fullscreen
+- [x] indicator on all screen but fullscreen and clock
 - [ ] refreshing an icon screen should extend the display time
 - [ ] scroll left to right
 - [x] size of indicator and alarm
@@ -25,6 +25,7 @@
 - [ ] blueprints
 - [ ] Color in blueprints
 - [ ] all modes in one blueprint
+- [ ] extem html with more bluepörint helpers
 - [x] default values for all functions
 - [x] provide sample font from [url](https://www.pentacom.jp/pentacom/bitfontmaker2/)
 - [x] start animation
