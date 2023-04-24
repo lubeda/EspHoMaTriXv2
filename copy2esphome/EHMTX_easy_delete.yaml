@@ -30,7 +30,7 @@ blueprint:
               value: "2" 
             - label: MODE_DATE 
               value: "3"
-            - label: MODE_FULLSCREEN
+            - label: MODE_FULL_SCREEN
               value: "4"
             - label: MODE_TEXT 
               value: "6"

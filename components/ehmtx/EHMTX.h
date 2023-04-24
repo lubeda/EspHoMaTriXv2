@@ -23,7 +23,7 @@ const uint8_t TEXTSTARTOFFSET = (32 - 8);
 const uint16_t TICKINTERVAL = 1000; // each 1000ms
 static const char *const EHMTX_VERSION = "Version: 2023.5.0";
 static const char *const TAG = "EHMTX";
-enum show_mode : uint8_t { MODE_EMPTY = 0,MODE_BLANK = 1, MODE_CLOCK = 2, MODE_DATE = 3, MODE_FULLSCREEN = 4, MODE_ICONSCREEN = 5, MODE_TEXT = 6 , MODE_RAINBOW_ICON = 7,MODE_RAINBOW_TEXT = 8 };
+enum show_mode : uint8_t { MODE_EMPTY = 0,MODE_BLANK = 1, MODE_CLOCK = 2, MODE_DATE = 3, MODE_FULL_SCREEN = 4, MODE_ICONSCREEN = 5, MODE_TEXT = 6 , MODE_RAINBOW_ICON = 7,MODE_RAINBOW_TEXT = 8 };
 
 namespace esphome
 {
@@ -133,7 +133,7 @@ namespace esphome
     void hide_indicator();
     void hide_alarm();
 
-    void fullscreen(std::string icon, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME);
+    void full_screen(std::string icon, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME);
     void icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
     void text_screen(std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true, int r=C_RED, int g=C_GREEN, int b=C_BLUE);
     void clock_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
