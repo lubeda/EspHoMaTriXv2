@@ -2,7 +2,7 @@
 
 ## Important information
 
-If you like my work please donate me a star on github and consider sponsoring me!!
+If you like my work, please donate me a star on github and consider sponsoring me!!
 
 # EspHoMaTriX version 2 (EHMTXv2)
 
@@ -24,7 +24,7 @@ There are some "RGB-matrices" status displays/clocks out there, the commercial o
 - [Pixel It](https://docs.bastelbunker.de/pixelit/) (project is under active development)
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of Awtrix, optimized for the Ulanzi TC001
 Hardware
-- [lamatrix](https://github.com/noahwilliamsson/lamatrix/tree/master) micropython based an around 5 years old
+- [lamatrix](https://github.com/noahwilliamsson/lamatrix/tree/master) micropython based and around 5 years old
 
 The solutions have their pros and cons. I tried some and used AwTrix for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of MQTT.
 
@@ -421,7 +421,7 @@ Download and install all needed icons (.jpg/.png) and animations (.GIF) under th
 
 You can also specify a URL to directly download the image file. The URLs will only be downloaded once at compile time, so there is no additional traffic on the hosting website.
 
-The [icons](awtrix.blueforcer.de/icons) and [animations](https://awtrix.blueforcer.de/animations) from the AWTRIX and AWTRIX-light could be used, but have to be scaled down to 8x32 or 8x8 pixels. Check the license before using them!
+The [icons](https://awtrix.blueforcer.de/icons) and [animations](https://awtrix.blueforcer.de/animations) from the AWTRIX and AWTRIX-light could be used, but have to be scaled down to 8x32 or 8x8 pixels. Check the license before using them!
 
 There are maximum 90 icons possible.
 
