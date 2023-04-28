@@ -544,6 +544,16 @@ See [icon details](#icons-and-animations)
 - **url** (Exclusive, url): a URL to download the icon
 - **lameid** (Exclusive, number): the ID from the LaMetric icon database
 
+- **resize** (Optional, "8x8" or "32x8"): If the source file hasn't the right dimensions.
+
+***Example***
+
+```yaml
+    - id: jackshome
+      url: https://awtrix.blueforcer.de/animations/JackHomePage
+      resize: 32x8
+```
+
 ## Control your display
 
 A lot of features are accessible with actions, you can use in your YAML.
