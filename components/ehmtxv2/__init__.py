@@ -15,7 +15,7 @@ from esphome.cpp_generator import RawExpression
 _LOGGER = logging.getLogger(__name__)
 
 DEPENDENCIES = ["display", "light", "api"]
-AUTO_LOAD = ["ehmtx"]
+AUTO_LOAD = ["ehmtxv2"]
 IMAGE_TYPE_RGB565 = 4
 MAXFRAMES = 110
 MAXICONS = 90

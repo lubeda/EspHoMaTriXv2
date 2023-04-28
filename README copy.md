@@ -2,7 +2,7 @@
 
 This version is a "work in progress". So every may change and every thing will break.
 
-# EspHoMaTriX (ehmtx)
+# EspHoMaTriXv2 (ehmtxv2)
 
 A simple DIY status display, build with a flexible 8x32 RGB LED panel implemented with [esphome.io](https://esphome.io)
 
@@ -225,14 +225,14 @@ See also [icon parameter](#icons)
 
 ## Configuration
 
-### ehmtx component
+### ehmtxv2 component
 
 This component is highly customizable.
 
 ***Example***
 
 ```
-ehmtx:
+ehmtxv2:
   id: rgb8x32
   time_component: ehmtx_time
   matrix_component: ehmtx_display
@@ -494,7 +494,7 @@ See the examples:
 ##### Write information to esphome log
 
 ```yaml
-ehmtx:
+ehmtxv2:
   ....
   on_next_screen:
     lambda: |-
