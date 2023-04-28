@@ -49,6 +49,9 @@ namespace esphome
     case MODE_RAINBOW_TEXT:
       ESP_LOGD(TAG, "queue: rainbow text: %s for %d sec", this->text.c_str(), this->screen_time);
       break;
+    case MODE_RAINBOW_CLOCK:
+      ESP_LOGD(TAG, "queue: clock for %d sec", this->screen_time);
+      break;
     default:
       ESP_LOGD(TAG, "queue: UPPS");
       break;
@@ -133,17 +136,21 @@ namespace esphome
         break;
       case MODE_BLANK:
         break;
+      case MODE_RAINBOW_CLOCK:
       case MODE_CLOCK:
         if (this->config_->clock->now().timestamp > 6000) // valid time
         {
+          color_ = (this->mode == MODE_RAINBOW_CLOCK) ? this->config_->rainbow_color : this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
-          this->config_->display->strftime(xoffset + 15, yoffset, font, this->text_color, display::TextAlign::BASELINE_CENTER, this->config_->time_fmt.c_str(),
+          this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, this->config_->time_fmt.c_str(),
                                            this->config_->clock->now());
           if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
           {
-            this->config_->display->draw_pixel_at(0, 0, this->config_->clock_color);
+            this->config_->display->draw_pixel_at(0, 0, color_);
           }
-          this->config_->draw_day_of_week();
+          if (this->mode != MODE_RAINBOW_CLOCK){
+            this->config_->draw_day_of_week();
+          }
         }
         else
         {

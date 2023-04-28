@@ -464,7 +464,7 @@ This component is highly customizable.
 ***Example***
 
 ```yaml
-ehmtx:
+ehmtxv2:
   id: rgb8x32
   clock_time: 7
   screen_time: 9
@@ -484,7 +484,7 @@ ehmtx:
   scroll_interval: 80 # milliseconds
   frame_interval: 192 # milliseconds
   icons: 
-     .....
+  .....
 ```
 
 ***Parameters***
@@ -618,7 +618,7 @@ See the examples:
 ##### Write information to esphome log
 
 ```yaml
-ehmtx:
+ehmtxv2:
   ....
   on_next_screen:
     lambda: |-
@@ -631,7 +631,7 @@ ehmtx:
 To send data back to home assistant you can use events.
 
 ```yaml
-ehmtx:
+ehmtxv2:
   ....
   on_next_screen:
     - homeassistant.event:
@@ -653,7 +653,7 @@ See the examples:
 ##### Change something for each clock circle
 
 ```yaml
-ehmtx:
+ehmtxv2:
   ....
   on_next_clock:
     lambda: |-

@@ -286,13 +286,11 @@ async def to_code(config):
             image = Image.open(io.BytesIO(r.content))
         
         width, height = image.size
-        logging.info(f"org width: {width} height: {height }")
 
         if CONF_RESIZE in conf:
             new_width_max, new_height_max = conf[CONF_RESIZE]
             ratio = min(new_width_max / width, new_height_max / height)
             width, height = int(width * ratio), int(height * ratio)
-            logging.info(f"==> width: {width} height: {height }")
 
         if hasattr(image, 'n_frames'):
             frames = min(image.n_frames, MAXFRAMES)
@@ -322,7 +320,7 @@ async def to_code(config):
                 frame = image.convert("RGB")
                 if CONF_RESIZE in conf:
                     frame = frame.resize([width, height])
-                    logging.info(f"dupti org width: {width} height: {height }")
+
                 pixels = list(frame.getdata())
 
                 
