@@ -21,3 +21,4 @@ ehmtx8266-select.yaml
 svganimtest.html
 servicetest
 .DS_Store
+components/ehmtxv2/animation.py

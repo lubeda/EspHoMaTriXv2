@@ -8,7 +8,7 @@ from esphome.components import display, font, time
 import esphome.components.image as espImage
 import esphome.config_validation as cv
 import esphome.codegen as cg
-from esphome.const import CONF_BLUE, CONF_GREEN, CONF_RED, CONF_FILE, CONF_ID, CONF_BRIGHTNESS, CONF_RAW_DATA_ID,  CONF_TIME, CONF_TRIGGER_ID
+from esphome.const import CONF_BLUE, CONF_GREEN, CONF_RED, CONF_RESIZE, CONF_FILE, CONF_ID, CONF_BRIGHTNESS, CONF_RAW_DATA_ID,  CONF_TIME, CONF_TRIGGER_ID
 from esphome.core import CORE, HexInt
 from esphome.cpp_generator import RawExpression
 
@@ -173,6 +173,7 @@ EHMTX_SCHEMA = cv.Schema({
                 cv.Exclusive(CONF_FILE,"uri"): cv.file_,
                 cv.Exclusive(CONF_URL,"uri"): cv.url,
                 cv.Exclusive(CONF_LAMEID,"uri"): cv.string,
+                cv.Optional(CONF_RESIZE): cv.dimensions,
                 cv.Optional(
                     CONF_FRAMEDURATION, default="0"
                 ): cv.templatable(cv.positive_int),
@@ -285,6 +286,13 @@ async def to_code(config):
             image = Image.open(io.BytesIO(r.content))
         
         width, height = image.size
+        logging.info(f"org width: {width} height: {height }")
+
+        if CONF_RESIZE in conf:
+            new_width_max, new_height_max = conf[CONF_RESIZE]
+            ratio = min(new_width_max / width, new_height_max / height)
+            width, height = int(width * ratio), int(height * ratio)
+            logging.info(f"==> width: {width} height: {height }")
 
         if hasattr(image, 'n_frames'):
             frames = min(image.n_frames, MAXFRAMES)
@@ -312,8 +320,13 @@ async def to_code(config):
                 
                 image.seek(frameIndex)
                 frame = image.convert("RGB")
+                if CONF_RESIZE in conf:
+                    frame = frame.resize([width, height])
+                    logging.info(f"dupti org width: {width} height: {height }")
                 pixels = list(frame.getdata())
-                width, height = image.size
+
+                
+                # width, height = image.size
                 if width == 8:  
                     html_string += SVG_ICONSTART
                 else:
