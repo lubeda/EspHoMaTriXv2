@@ -330,7 +330,7 @@ namespace esphome
         this->screen_pointer = find_oldest_queue_element();
         if (this->screen_pointer != MAXQUEUE)
         {
-          this->queue[this->screen_pointer]->reset_shiftx();
+          this->queue[this->screen_pointer]->shiftx_ = 0;
           this->queue[this->screen_pointer]->last_time = ts + this->queue[this->screen_pointer]->screen_time;
           if (this->queue[this->screen_pointer]->icon < this->icon_count)
           {
@@ -811,7 +811,7 @@ namespace esphome
 
   void EHMTX::dump_config()
   {
-    ESP_LOGCONFIG(TAG, "EspHoMatriX %s", EHMTX_VERSION);
+    ESP_LOGCONFIG(TAG, "EspHoMatriXv2 %s", EHMTX_VERSION);
     ESP_LOGCONFIG(TAG, "Boot anim: %d", this->boot_anim);
     ESP_LOGCONFIG(TAG, "Icons: %d of %d", this->icon_count, MAXICONS);
     ESP_LOGCONFIG(TAG, "Max screens: %d", MAXQUEUE);

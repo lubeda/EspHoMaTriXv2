@@ -85,7 +85,7 @@ CONF_SHOW_SECONDS = "show_seconds"
 CONF_WEEK_START_MONDAY = "week_start_monday"
 CONF_ICON = "icon_name"
 CONF_TEXT = "text"
-CONF_ALARM = "alarm"
+
 
 EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_ID): cv.declare_id(EHMTX_),

@@ -58,22 +58,6 @@ namespace esphome
     }
   }
 
-  bool EHMTX_queue::del_slot(uint8_t _icon)
-  {
-    if (this->icon == _icon)
-    {
-      this->endtime = 0;
-      ESP_LOGW(TAG, "delete screen icon: %d", _icon);
-      return true;
-    }
-    return false;
-  }
-
-  void EHMTX_queue::reset_shiftx()
-  {
-    this->shiftx_ = 0;
-  }
-
   void EHMTX_queue::update_screen()
   {
     if (millis() - this->config_->last_rainbow_time >= this->config_->rainbow_interval)

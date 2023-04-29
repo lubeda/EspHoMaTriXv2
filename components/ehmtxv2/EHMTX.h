@@ -182,10 +182,8 @@ namespace esphome
     void status();
     void draw();
     bool isfree();
-    void reset_shiftx();
     bool update_slot(uint8_t _icon);
     void update_screen();
-    bool del_slot(uint8_t _icon);
     void hold_slot(uint8_t _sec);
     void set_text(std::string text, uint8_t icon, uint16_t pixel, uint16_t et, uint16_t st);
   };

@@ -4,7 +4,7 @@
 
 - [x] alarm on all screen but fullscreen
 - [x] indicator on all screen but fullscreen and clock
-- [ ] refreshing an icon screen should extend the display time
+- [x] refreshing an icon screen should extend the display time
 - [ ] scroll left to right
 - [x] size of indicator and alarm
 - [x] center text
@@ -15,17 +15,16 @@
 - [ ] seconds point moveable
 - [ ] seconds point to clock screen only
 - [x] rainbow icon and text
-- [ ] del_slot noch active?
-- [ ] CONF_ALARM weg?
-- [ ] reintroduce resize
-- [ ] 
+- [x] del_slot noch active?
+- [x] CONF_ALARM weg?
+- [x] reintroduce resize
 
 ## ux
 
 - [ ] blueprints
 - [ ] Color in blueprints
 - [ ] all modes in one blueprint
-- [ ] extem html with more bluepörint helpers
+- [ ] external html with more blueprint helpers (icons and modes)
 - [x] default values for all functions
 - [x] provide sample font from [url](https://www.pentacom.jp/pentacom/bitfontmaker2/)
 - [x] start animation
@@ -50,4 +49,4 @@
 ## noch prüfen
 
 - [ ] Timer display with formation H:M:S
-- [ ] find a way for automastically add smalfont
+- [ ] find a way for automatically add smallfont
