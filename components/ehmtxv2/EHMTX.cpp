@@ -448,6 +448,7 @@ namespace esphome
       if (this->queue[i]->mode == mode)
       {
         bool force = true;
+        ESP_LOGW(TAG, "del_screen: icon %s in position: %d mode %d", icon_name.c_str(), i, mode);
         if ((mode == MODE_ICONSCREEN) || (mode == MODE_FULL_SCREEN) || (mode == MODE_RAINBOW_ICON))
         {
           if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
@@ -457,9 +458,9 @@ namespace esphome
         }
         if (force)
         {
+          ESP_LOGW(TAG, "del_screen: force");
           this->queue[i]->mode = MODE_EMPTY;
           this->queue[i]->endtime = 0;
-          ESP_LOGW(TAG, "del_screen: icon %s in position: %d mode %d", icon_name.c_str(), i, mode);
           if (i == this->screen_pointer)
           {
             this->next_action_time = this->clock->now().timestamp;

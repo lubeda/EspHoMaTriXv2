@@ -26,7 +26,7 @@ namespace esphome
       ESP_LOGD(TAG, "queue: empty slot");
       break;
     case MODE_BLANK:
-      ESP_LOGD(TAG, "queue: blank screen");
+      ESP_LOGD(TAG, "queue: blank screen for %d sec", this->screen_time);
       break;
     case MODE_CLOCK:
       ESP_LOGD(TAG, "queue: clock for %d sec", this->screen_time);
