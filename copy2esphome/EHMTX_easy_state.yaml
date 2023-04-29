@@ -15,6 +15,7 @@ blueprint:
       selector:
         entity:
           domain: sensor
+          multiple: true
     default_color:
       name: default text color
       description: this is the default textcolor for values within the low and the high value
@@ -102,6 +103,7 @@ trigger:
     entity_id: !input trigger_sensor
  
 action:
+  - mode: parallel
   - if:
       - condition: template
         value_template: "{{ not use_colors }}"
@@ -136,7 +138,12 @@ action:
                   icon_name: !input icon_name
                   screen_time: !input screen_time
                   lifetime: !input lifetime
-                  text: "{{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}"
+                  text: |-
+                    {% if bfriendly %}
+                      {{trigger.to_state.attributes.friendly_name}}: {{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}
+                    {% else %}
+                      {{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}
+                    {% endif %}
                   default_font: !input default_font
                   r: |-
                     {{ lo_color[0] }}
@@ -154,7 +161,12 @@ action:
                   icon_name: !input icon_name
                   screen_time: !input screen_time
                   lifetime: !input lifetime
-                  text: "{{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}"
+                  text: |-
+                    {% if bfriendly %}
+                      {{trigger.to_state.attributes.friendly_name}}: {{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}
+                    {% else %}
+                      {{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}
+                    {% endif %}
                   default_font: !input default_font
                   r: |-
                     {{ hi_color[0] }}
@@ -168,7 +180,12 @@ action:
               icon_name: !input icon_name
               screen_time: !input screen_time
               lifetime: !input lifetime
-              text: "{{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}"
+              text: |-
+                {% if bfriendly %}
+                  {{trigger.to_state.attributes.friendly_name}}: {{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}
+                {% else %}
+                  {{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}
+                {% endif %}
               default_font: !input default_font
               r: |-
                 {{ def_color[0] }}

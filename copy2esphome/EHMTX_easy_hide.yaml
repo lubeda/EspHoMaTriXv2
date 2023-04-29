@@ -39,4 +39,5 @@ trigger:
     entity_id: !input trigger_sensor
 
 action:
+  - mode: parallel
   - service: esphome.{{ device_attr(display, "name") }}_{{service}}

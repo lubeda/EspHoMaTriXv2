@@ -202,6 +202,9 @@ ehmtxv2:
   show_seconds: false
   default_font_id: default_font
   special_font_id: default_font # for starters yust one font
+  
+  # used in blueprints
+  # "error","home_assistant","temperature","lightbulb","music","phone","car","sleep8x32"
   icons: 
     - id: error
       lameid: 40530
@@ -217,8 +220,6 @@ ehmtxv2:
       lameid: 1232
     - id: car
       lameid: 2819
-    - id: sleep8x32
-      url: https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif 
     - id: sleep8x32
       url: https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif 
   on_next_screen:

@@ -61,6 +61,7 @@ trigger:
   - platform: state
     entity_id: !input trigger_sensor
 action:
+  - mode: parallel
   - if:
       - condition: template
         value_template: |- 

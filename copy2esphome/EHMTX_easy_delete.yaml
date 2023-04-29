@@ -71,9 +71,9 @@ trigger:
     entity_id: !input trigger_sensor
 
 action:
-  sequence:
-    - service: esphome.{{ device_attr(display, "name") }}_del_screen
-      data:
-        icon_name: !input icon_name
-        mode: !input screen_mode 
+  - mode: parallel
+  - service: esphome.{{ device_attr(display, "name") }}_del_screen
+    data:
+      icon_name: !input icon_name
+      mode: !input screen_mode 
   
