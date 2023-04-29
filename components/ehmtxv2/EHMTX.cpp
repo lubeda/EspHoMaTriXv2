@@ -36,11 +36,11 @@ namespace esphome
     this->date_fmt = s;
   }
 
-  void EHMTX::show_indicator(int r, int g, int b, int s)
+  void EHMTX::show_indicator(int r, int g, int b, int size)
   {
     this->indicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
-    this->display_indicator = s;
-    ESP_LOGD(TAG, "show indicator size:%d r: %d g: %d b: %d", s, r, g, b);
+    this->display_indicator = size;
+    ESP_LOGD(TAG, "show indicator size: %d r: %d g: %d b: %d", size, r, g, b);
   }
 
   void EHMTX::hide_indicator()
@@ -157,8 +157,8 @@ namespace esphome
     register_service(&EHMTX::hide_gauge, "hide_gauge");
     register_service(&EHMTX::hide_alarm, "hide_alarm");
     register_service(&EHMTX::show_gauge, "show_gauge", {"percent", "r", "g", "b"});
-    register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b", "s"});
-    register_service(&EHMTX::show_indicator, "show_indicator", {"r", "g", "b", "s"});
+    register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b", "size"});
+    register_service(&EHMTX::show_indicator, "show_indicator", {"r", "g", "b", "size"});
 
     register_service(&EHMTX::set_clock_color, "clock_color", {"r", "g", "b"});
     register_service(&EHMTX::set_today_color, "today_color", {"r", "g", "b"});
@@ -181,11 +181,11 @@ namespace esphome
     ESP_LOGD(TAG, "Setup and running!");
   }
 
-  void EHMTX::show_alarm(int r, int g, int b, int s)
+  void EHMTX::show_alarm(int r, int g, int b, int size)
   {
     this->alarm_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
-    this->display_alarm = s;
-    ESP_LOGD(TAG, "show alarm color(%d) r: %d g: %d b: %d", s, r, g, b);
+    this->display_alarm = size;
+    ESP_LOGD(TAG, "show alarm size: %d color r: %d g: %d b: %d", size, r, g, b);
   }
 
   void EHMTX::hide_alarm()

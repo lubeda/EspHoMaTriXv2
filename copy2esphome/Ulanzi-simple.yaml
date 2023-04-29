@@ -61,25 +61,9 @@ binary_sensor:
     name: "Right button"
 
 logger:
-  level: DEBUG
+  level: WARN
 
 api:
-  services:
-    - service: alarm
-      variables:
-        icon_name: string
-        text: string
-      then:
-        lambda: |-
-          id(rgb8x32)->icon_screen(icon_name,text, 5, 30, true, 200, 50, 50);
-          id(rgb8x32)->force_screen(icon_name);
-    - service: screen
-      variables:
-        icon_name: string
-        text: string
-      then:
-        lambda: |-
-          id(rgb8x32)->icon_screen(icon_name,text);
     - service: tune
       variables:
         tune: string
@@ -204,7 +188,7 @@ display:
       id(rgb8x32)->tick();
       id(rgb8x32)->draw();
       
-ehmtx:
+ehmtxv2:
   id: rgb8x32
   clock_time: 10
   screen_time: 10
@@ -233,6 +217,8 @@ ehmtx:
       lameid: 1232
     - id: car
       lameid: 2819
+    - id: sleep8x32
+      url: https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif 
     - id: sleep8x32
       url: https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif 
   on_next_screen:

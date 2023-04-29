@@ -11,7 +11,7 @@ blueprint:
           integration: esphome
     trigger_sensor:
       name: which state to show
-      description: This sensor state will be displayed
+      description: what triggers this automation?
       selector:
         entity:
           domain: sensor
@@ -37,29 +37,54 @@ blueprint:
           min: 0
           max: 100
       default: 50
+    size_value:
+      name: size of the alarm or indicator
+      selector:
+        number:
+          mode: slider
+          min: 1
+          max: 3
+      default: 2
     element_color:
       name: The color for the element
       description: the color 
       selector:
         color_rgb:
       default: [240, 40, 40]
-    
 variables:
   display: !input ehmtx_device
   element_color: !input element_color
   myservice: !input element
   value: !input gauge_value
-
+  size: !input size_value
 trigger:
   - platform: state
     entity_id: !input trigger_sensor
-
 action:
-  - service: esphome.{{ device_attr(display, "name") }}_{{ myservice }}
-    data:
-      r: |-
-        {{ element_color[0] }}
-      g: |-
-        {{ element_color[1] }}
-      b: |-
-        {{ element_color[2] }}
+  - if:
+      - condition: template
+        value_template: |- 
+          {{ myservice != "show_gauge" }}
+    then:
+      - service: esphome.{{ device_attr(display, "name") }}_{{ myservice }}
+        data:
+          r: |-
+            {{ element_color[0] }}
+          g: |-
+            {{ element_color[1] }}
+          b: |-
+            {{ element_color[2] }}
+          size: |-
+            {{ size }}
+    else:
+      - service: esphome.{{ device_attr(display, "name") }}_{{ myservice }}
+        data:
+          r: |-
+            {{ element_color[0] }}
+          g: |-
+            {{ element_color[1] }}
+          b: |-
+            {{ element_color[2] }}
+          percent: |-
+            {{ element_color[2] }}
+      

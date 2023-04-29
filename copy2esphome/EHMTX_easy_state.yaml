@@ -45,6 +45,11 @@ blueprint:
           options:
             ["error","home_assistant","temperature","lightbulb","music","phone","car","sleep8x32",]
       default: home_assistant
+    use_friendly:
+      name: use the triggers friendly name in display
+      selector:
+        boolean:
+      default: true
     default_font:
       name: true uses the default, false the special font
       selector:
@@ -54,7 +59,7 @@ blueprint:
       name: Use colors based on state values
       selector:
         boolean:
-      default: true
+      default: false
     low_value:
       name: below this vaule is a special color
       selector:
@@ -87,6 +92,7 @@ blueprint:
 
 variables:
   display: !input ehmtx_device
+  bfriendly: !input use_friendly
   def_color: !input default_color
   lo_color: !input low_color
   hi_color: !input high_color
@@ -105,7 +111,12 @@ action:
           icon_name: !input icon_name
           screen_time: !input screen_time
           lifetime: !input lifetime
-          text: "{{trigger.to_state.attributes.friendly_name}}: {{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}"
+          text: |-
+            {% if bfriendly %}
+              {{trigger.to_state.attributes.friendly_name}}: {{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}
+            {% else %}
+              {{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}
+            {% endif %}
           default_font: !input default_font
           r: |-
             {{ def_color[0] }}
