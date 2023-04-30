@@ -231,8 +231,6 @@ async def ehmtx_set_week_color_action_to_code(config, action_id, template_arg, a
 
     return var
 
-
-
 CODEOWNERS = ["@lubeda"]
 
 async def to_code(config):
