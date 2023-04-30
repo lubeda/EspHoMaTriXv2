@@ -1,5 +1,5 @@
 substitutions:
-  devicename: ulanzi-simple
+  devicename: 
   ledpin: GPIO32 
   buzzerpin: GPIO15
   friendly_name: LED Matrix
@@ -55,7 +55,7 @@ external_components:
       url: https://github.com/lubeda/EspHoMaTriXv2
       ref: release
     refresh: 60s 
-    components: [ ehmtx ]   
+    components: [ ehmtxv2 ]   
 
 esphome:
   comment: "EHMTXv2 from LuBeDa"
@@ -223,17 +223,13 @@ display:
 ehmtxv2:
   id: rgb8x32
   icons2html: true
-  default_font_yoffset: 6
   matrix_component: ehmtx_display
   time_component: ehmtx_time
   time_format: "%H:%M"
   date_format: "%d.%m."
   show_seconds: false
   default_font_id: default_font
-  special_font_id: default_font # for starters yust one font
-  
-  # used in blueprints
-  # "error","home_assistant","temperature","lightbulb","music","phone","car","sleep8x32"
+  special_font_id: default_font 
   icons: 
     - id: error
       lameid: 40530
