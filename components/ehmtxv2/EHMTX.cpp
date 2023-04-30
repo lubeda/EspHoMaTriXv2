@@ -8,6 +8,7 @@ namespace esphome
     this->display_gauge = false;
     this->display_indicator = 0;
     this->display_alarm = 0;
+    this->clock_time = 10;
     this->icon_count = 0;
     this->hue_ = 0;
     this->text_color = Color(C_RED, C_GREEN, C_BLUE);
@@ -38,9 +39,14 @@ namespace esphome
 
   void EHMTX::show_indicator(int r, int g, int b, int size)
   {
-    this->indicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
-    this->display_indicator = size;
+    if (size > 0 ) {
+      this->indicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+    this->display_indicator = size & 3;
     ESP_LOGD(TAG, "show indicator size: %d r: %d g: %d b: %d", size, r, g, b);
+    } else {
+      this->hide_indicator();
+    }
+    
   }
 
   void EHMTX::hide_indicator()
@@ -183,9 +189,13 @@ namespace esphome
 
   void EHMTX::show_alarm(int r, int g, int b, int size)
   {
-    this->alarm_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
-    this->display_alarm = size;
+    if (size > 0){
+      this->alarm_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+    this->display_alarm = size & 3;
     ESP_LOGD(TAG, "show alarm size: %d color r: %d g: %d b: %d", size, r, g, b);
+    } else {
+      this->hide_alarm();
+    }
   }
 
   void EHMTX::hide_alarm()

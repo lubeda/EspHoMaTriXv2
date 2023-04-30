@@ -38,7 +38,9 @@ After the [old](https://github.com/lubeda/EsphoMaTrix) component became favorite
 
 ### The easy way
 
-There is a little hype around the Ulanzi TC001 pixel clock. This hardware can be used with **EspHoMaTriX v2**.
+There is a little hype around the Ulanzi TC001 pixel clock. The easy way works with the Ulanzi TC001 hardware. For more customization and other hardware look [here](#the-funny-but-more-elaborate-way).
+
+In easy mode you'll have a clock with auto brightness control and after step 3 you can send states to the display an toggle on or off additional screen elements.
 
 #### Step 1
 
@@ -47,7 +49,7 @@ Copy these files from the source folder `copy2esphome`:
 - ulanzi-simple.yaml
 - EHMTXv2.ttf
 
-to your esphome directory (usually /config/esphome). In your esphome dashboard, you will find a new device named `ulanzi-simple`.
+to your esphome directory (usually /config/esphome). In your esphome dashboard, you will find a new device named `ulanzi-easy`.
 
 #### Step 2
 
@@ -55,7 +57,7 @@ Connect your ulanzi device to your host with USB-C and flash the firmware.
 
 #### Step 3
 
-Copy the blueprints `EHMTX_easy_*.yaml` to your blueprint path (usually /config/blueprints/automation/) in a subfolder named  `ehmtxv2`.
+Copy the blueprints `EHMTX_easy_*.yaml` to your blueprint path (usually /config/blueprints/automation/) in a subfolder named `ehmtxv2`.
 
 Reload your automations and have fun after configuring some automations with this blueprint.
 
@@ -65,7 +67,7 @@ The device should boot
 
 ![boot](images/booting.png)
 
-and after a while (~30 seconds) it should display the correct time
+and after a while (~30 seconds) it should display the correct time.
 
 ![clock screen](images/clock_screen.png).
 
@@ -79,10 +81,10 @@ This is for the more advanced users. If you understand the concept of esphome, y
 
 You can add screens to a queue and all these screens are displayed one after another.
 ![timing](./images/timingv2.png)
-Each screen can display different information or is of a different kind. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the date and time screens are displayed. Some screens can show additional features like an alarm or indicator see [elements](#display_elements).
-You can add screens from home assistant with services or from esphome via YAML.
+Each screen can display different information or animation or text, even in rainbox color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the date and time screens are displayed. Some screens can show additional features like an alarm or indicator see [elements](#display-elements).
+You can add screens from home assistant with service-calls or from esphome via lambdas in your YAML.
 
-#### Screen types
+#### Screen types a.k.a. what is possible
 
 ##### Date/Time screen
 
@@ -94,7 +96,7 @@ You can call this from e.g. the [developer tools service](https://my.home-assist
 
 ```c
 clock_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
-rainbow_clock_screen 0> {"lifetime", "screen_time", "default_font"}
+rainbow_clock_screen => {"lifetime", "screen_time", "default_font"}
 date_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
 ```
 
@@ -167,7 +169,7 @@ void EHMTX::show_alarm(int r, int g, int b, int size=2);
 ```
 
 r,g,b: 0-255 color components
-size: 1-3 
+size: 0-3 (zero turns it off)
 
 To remove it, call:
 
@@ -177,7 +179,7 @@ To remove it, call:
 hide_alarm => no parameter
 ```
 
-###### API
+###### Lambda
 
 ```c
 void hide_alarm();
@@ -200,7 +202,7 @@ void show_indicator(int r, int g, int ,int size=3);
 ```
 
 r,g,b: 0-255 color components
-size: 1-3 
+size: 0-3 (zero turns it off)
 
 To remove it, call:
 
@@ -210,7 +212,7 @@ To remove it, call:
 hide_indicator => no parameter
 ```
 
-###### API
+###### Lambda
 
 ```c
 void hide_indicator();
@@ -249,13 +251,11 @@ hide_gauge => no parameter
 void hide_gauge();
 ```
 
-#### Installation
-
-##### **EspHoMaTriXv2** custom component
+#### Installation of **EspHoMaTriXv2** custom component
 
 **EspHoMaTriXv2** is a custom component, you have to include it in your YAML configuration. To always use the newest features you should use the repo, to use a stable version, you copy a working version to your esphome installation.
 
-###### local use
+##### use of local copy
 
 If you download the components-folder from the repo and install it in your esphome you have a stable installation. But if there are new features, you won't see them. If needed, customize the YAML to your folder structure.
 
@@ -275,10 +275,10 @@ external_components:
   - source:
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: release # optional select a special branch or tag
+      ref: stable # optional select a special branch or tag
 ```
 
-##### Addressable_light component
+#### Addressable_light component
 
 The **EspHoMaTriXv2** component requires a 8x32 pixel addressable_light, it is referenced by the id `matrix_component`.
 
@@ -286,7 +286,7 @@ See the default [options](https://esphome.io/components/display/index.html)
 
 There are some different matrices-types on the market, to adapt them to **EspHoMaTriXv2** you have to find the proper pixel mapper. If there is garbage on your display, try the other `pixel_mapper`. Here are the most common types for flexible 8x32 matrices:
 
-#### Type 1
+##### Type 1
 
 Common for 8x32 RGB flexible matrices.
 
@@ -304,7 +304,7 @@ display:
     .....
 ```
 
-#### Type 2 (e.g. Ulanzi TC001)
+##### Type 2 (e.g. Ulanzi TC001)
 
 Under the display tag, specify this pixel mapper:
 
@@ -320,7 +320,7 @@ display:
     .....
 ```
 
-#### Type 3 (daisy chained 8x8 panels)
+##### Type 3 (daisy chained 8x8 panels)
 
 ```yaml
 display:
@@ -331,7 +331,7 @@ display:
     .....
 ```
 
-#### How to configure the pixel_mapper
+##### How to configure the pixel_mapper
 
 You have to configure this `lambda` under the `display:` section to use the **EspHoMaTriXv2** component
 
@@ -391,6 +391,8 @@ You can configure two fonts if you like.
 
 DarkPoet78 is also providing special fonts for 8x32 matrices in his [repo](https://github.com/darkpoet78/MatrixClockFonts)
 
+For european starters you can use the font EHMTXv2.ttf of the copy2esphome folder.
+
 ```yaml
 font:
   - file: EHMTXv2.ttf
@@ -402,7 +404,7 @@ font:
 
 #### Icons and Animations
 
-Download and install all needed icons (.jpg/.png) and animations (.GIF) under the `ehmtx:` key. All icons have to be 8x8 or 8x32 pixels in size. If necessary, scale them with gimp, check "as animation" for GIFs.
+Download and install all needed icons (.jpg/.png) and animations (.GIF) under the `ehmtxv2:` key. All icons have to be 8x8 or 8x32 pixels in size. If necessary, scale them with gimp, check "as animation" for GIFs.
 
 You can also specify a URL to directly download the image file. The URLs will only be downloaded once at compile time, so there is no additional traffic on the hosting website.
 
@@ -423,8 +425,11 @@ emhtx:
     - id: yoga
       file: icons/yoga-bridge.GIF
       pingpong: true
+    - id: jackshome
+      url: https://awtrix.blueforcer.de/animations/JackHomePage
+      resize: 32x8
     - id: garage
-      file: garage.GIF
+      lameid: 1234
       duration: 100
     - id: homeassistant
       url: https://github.com/home-assistant/assets/raw/master/logo/logo-special.png      
@@ -451,8 +456,6 @@ This component is highly customizable.
 ```yaml
 ehmtxv2:
   id: rgb8x32
-  clock_time: 7
-  screen_time: 9
   show_seconds: true
   matrix_component: ehmtx_display
   time_component: ehmtx_time
@@ -475,10 +478,6 @@ ehmtxv2:
 ***Parameters***
 
 **id** (required, ID): Manually specify the ID used for code generation and in service definitions.
-
-**clock_time** (optional, seconds): duration to display the clock after this time the date is displayed until the next "show_screen". If `show_date` is false and `clock_time` > 0 the clock will be display as long as a normal screen! Setting `clock_time` to 0 will not show the clock or date. If there are no screens ind the queue, the display will be blank until the next screen is sent.
-
-**screen_time** (optional, seconds): default duration to display a screen or a clock/date sequence, a long text will be scrolled at least `scroll_count` times (default: 10 seconds). This may be overwritten by the add_screen service.
 
 **hold_time** (optional, seconds): extends the display time of the current screen in seconds (default=20). Used in services or automations, see `hold_screen`
 
@@ -978,6 +977,7 @@ THE SOFTWARE IS PROVIDED "AS IS", use at your own risk!
 - **[ofirsnb](https://github.com/ofirsnb)** for his contributions
 - **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
+- **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
 - ** everbody that found bugs/issues and reported them!
 
 ## Special thanks to all sponsors

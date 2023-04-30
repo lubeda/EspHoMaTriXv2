@@ -49,7 +49,6 @@ NextClockTrigger = ehmtx_ns.class_(
     "EHMTXNextClockTrigger", automation.Trigger.template(cg.std_string)
 )
 
-CONF_CLOCKTIME = "clock_time"
 CONF_EHMTX = "ehmtx"
 CONF_URL = "url"
 CONF_FLAG = "flag"
@@ -391,7 +390,6 @@ async def to_code(config):
     ehmtxtime = await cg.get_variable(config[CONF_TIMECOMPONENT])
     cg.add(var.set_clock(ehmtxtime))
 
-    cg.add(var.set_clock_time(config[CONF_CLOCKTIME]))
     cg.add(var.set_brightness(config[CONF_BRIGHTNESS]))
     cg.add(var.set_scroll_interval(config[CONF_SCROLLINTERVAL]))
     cg.add(var.set_rainbow_interval(config[CONF_SCROLLINTERVAL]))
