@@ -222,7 +222,6 @@ display:
       
 ehmtxv2:
   id: rgb8x32
-  hold_time: 30
   icons2html: true
   default_font_yoffset: 6
   matrix_component: ehmtx_display

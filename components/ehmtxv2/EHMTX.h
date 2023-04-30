@@ -23,7 +23,7 @@ const uint8_t TEXTSTARTOFFSET = (32 - 8);
 const uint16_t TICKINTERVAL = 1000; // each 1000ms
 static const char *const EHMTX_VERSION = "Version: 2023.5.0 beta";
 static const char *const TAG = "EHMTXv2";
-enum show_mode : uint8_t { MODE_EMPTY = 0,MODE_BLANK = 1, MODE_CLOCK = 2, MODE_DATE = 3, MODE_FULL_SCREEN = 4, MODE_ICONSCREEN = 5, MODE_TEXT = 6 , MODE_RAINBOW_ICON = 7,MODE_RAINBOW_TEXT = 8, MODE_RAINBOW_CLOCK = 9 };
+enum show_mode : uint8_t { MODE_EMPTY = 0,MODE_BLANK = 1, MODE_CLOCK = 2, MODE_DATE = 3, MODE_FULL_SCREEN = 4, MODE_ICONSCREEN = 5, MODE_TEXT = 6 , MODE_RAINBOW_ICON = 7,MODE_RAINBOW_TEXT = 8, MODE_RAINBOW_CLOCK = 9,MODE_RAINBOW_DATE=10 };
 
 namespace esphome
 {
@@ -99,7 +99,7 @@ namespace esphome
     void get_status();
     void queue_status();
     void skip_screen();
-    void hold_screen();
+    void hold_screen(int t=30);
     void set_display(addressable_light::AddressableLightDisplay *disp);
     
     void set_hold_time(uint16_t t=30);

@@ -98,6 +98,7 @@ You can call this from e.g. the [developer tools service](https://my.home-assist
 clock_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
 rainbow_clock_screen => {"lifetime", "screen_time", "default_font"}
 date_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
+rainbow_date_screen => {"lifetime", "screen_time", "default_font"}
 ```
 
 ###### Lambda
@@ -479,8 +480,6 @@ ehmtxv2:
 
 **id** (required, ID): Manually specify the ID used for code generation and in service definitions.
 
-**hold_time** (optional, seconds): extends the display time of the current screen in seconds (default=20). Used in services or automations, see `hold_screen`
-
 **date_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%d.%m."` (use `"%m.%d."` for the US)
 
 **show_seconds** (optional, boolean): toggle an indicator for seconds while the clock is displayed (default: false)
@@ -541,6 +540,38 @@ See [icon details](#icons-and-animations)
 ## Control your display
 
 A lot of features are accessible with actions, you can use in your YAML.
+
+### Public functions/services
+    |service|parameter|result|
+    |---|---|---|---|
+    `status`|none|write some status information to the esphome logs|
+    `display_on`|none|turn display off|
+    `display_off`|none|turn display on|
+    `hold_screen`|none|show the screen that is currently displayed for the number of seconds longer|
+    `hide_indicator`|none|hides the indicator|
+    `hide_gauge`|none|hides the gauge|
+    `hide_alarm`|none|hides the alarm|
+    `show_gauge"`|"percent", "r", "g", "b"|set the heught of the gauge according to the percentage in the given color|
+    `show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper right corner|
+    `show_indicator`|"r", "g", "b", "size"|shows the color with the given size in the lower right corner|
+
+    `clock_color`|"r", "g", "b"|set the default color for the clock/date display|
+    `today_color"`|"r", "g", "b"|set the special color for today in the day of week line|
+    `weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
+
+    `del_screen`|"icon_name", "mode"|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
+    `force_screen`|"icon_name", "mode"|displayes the seleted the specified icon screen from the queue, the [mode](#modes) is a filter|
+
+    `full_screen`|"icon_name", "lifetime", "screen_time"|show the specified icon as fullscreen|
+    `icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text|
+    `rainbow_icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color|
+    `text_screen`|"text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified text|
+    `rainbow_text_screen`|"text", "lifetime", "screen_time", "default_font"|show the specified text in rainbow colors|
+    `clock_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the clock|
+    `rainbow_clock_screen`|"lifetime", "screen_time", "default_font"|show the clock in rainbow color|
+    `blank_screen`|"lifetime", "screen_time"|"show" an empty screen|
+    `date_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the date|
+    `brightness`|"value"|set the display brightness|
 
 ### Local actions/lambdas
 
@@ -681,6 +712,8 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 - ```icon_name```: Icon `id` defined in the YAML (see installation)
 - ```mode```: The mode is for internal purposes use `5`  for icon_screen
 
+##### modes
+
 |mode|value|
 |----|----|
 |MODE_BLANK|1|
@@ -689,6 +722,10 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 | MODE_FULL_SCREEN | 4|
 |MODE_ICONSCREEN | 5|
 |MODE_TEXT | 6|
+|MODE_RAINBOW_ICON | 7|
+|MODE_RAINBOW_TEXT |8|
+| MODE_RAINBOW_CLOCK | 9|
+| MODE_RAINBOW_DATE | 10|
 
 **(D)** Service **display_on** / **display_off**
 
@@ -733,7 +770,7 @@ binary_sensor:
 
 Service **hold_screen**
 
-Displays the current screen for a configured amount (see **hold_time**) (default=20) seconds longer.
+Displays the current screen for a configured amount (see **hold_time**) (default=30) seconds longer.
 
 e.g. on the Ulanzi TC001
 
@@ -745,7 +782,7 @@ binary_sensor:
       inverted: true
     on_press:
       lambda:
-        id(rgb8x32)->hold_screen();
+        id(rgb8x32)->hold_screen(120);
 ```
 
 **(D)** Service **status**

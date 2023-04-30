@@ -9,6 +9,7 @@ namespace esphome
     this->display_indicator = 0;
     this->display_alarm = 0;
     this->clock_time = 10;
+    this->hold_time = 10;
     this->icon_count = 0;
     this->hue_ = 0;
     this->text_color = Color(C_RED, C_GREEN, C_BLUE);
@@ -158,7 +159,7 @@ namespace esphome
     register_service(&EHMTX::get_status, "status");
     register_service(&EHMTX::set_display_on, "display_on");
     register_service(&EHMTX::set_display_off, "display_off");
-    register_service(&EHMTX::hold_screen, "hold_screen");
+    register_service(&EHMTX::hold_screen, "hold_screen", {"time"});
     register_service(&EHMTX::hide_indicator, "hide_indicator");
     register_service(&EHMTX::hide_gauge, "hide_gauge");
     register_service(&EHMTX::hide_alarm, "hide_alarm");
@@ -385,9 +386,10 @@ namespace esphome
     this->next_action_time = this->clock->now().timestamp - 1;
   }
 
-  void EHMTX::hold_screen()
+  void EHMTX::hold_screen(int time)
   {
     this->next_action_time += this->hold_time;
+    this->hold_time = time;
   }
 
   void EHMTX::get_status()
@@ -763,11 +765,6 @@ namespace esphome
   void EHMTX::set_clock_time(uint16_t t)
   {
     this->clock_time = t;
-  }
-
-  void EHMTX::set_hold_time(uint16_t t)
-  {
-    this->hold_time = t;
   }
 
   void EHMTX::set_scroll_count(uint8_t c)
