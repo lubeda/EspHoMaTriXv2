@@ -92,9 +92,6 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_DEFAULT_FONT_ID): cv.use_id(font),
     cv.Required(CONF_special_FONT_ID): cv.use_id(font),
     cv.Optional(
-        CONF_CLOCKTIME, default="5"
-    ): cv.templatable(cv.positive_int),
-    cv.Optional(
         CONF_HTML, default=False
     ): cv.boolean,
     cv.Optional(
