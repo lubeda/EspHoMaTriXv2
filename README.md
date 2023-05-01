@@ -1,14 +1,6 @@
-# This is a work in progress. Don't use it for production!
-
-## Important information
-
-If you like my work, please donate me a star on github and consider sponsoring me!!
-
 # EspHoMaTriX version 2 (EHMTXv2)
 
-A simple but very flexible DIY status display, built with a flexible 8x32 RGB LED panel implemented with [esphome.io](https://esphome.io)
-
-![sample image](./images/sample.png)
+## This is a prerelease beta version!
 
 ## Important information
 
@@ -16,38 +8,23 @@ If you like my work, please donate me a star on github and consider sponsoring m
 
 ## Introduction
 
+A simple but very flexible DIY status display, built with a flexible 8x32 RGB LED panel, e.g. the ULANZI TC001  implemented with [esphome.io](https://esphome.io)
+
+![sample image](./images/sample.png)
+
+## Background
+
 There are some "RGB-matrices" status displays/clocks out there, the commercial ones from LaMetric and Ulanzi, also some very good DIY-alternatives.
 
 - [LaMetric](https://lametric.com/en-US/) commercial ~ €199
 - [Ulanzi TC001](https://www.aliexpress.com/item/1005005008682055.html) commercial ~ €50
 - [AWTRIX](https://awtrixdocs.blueforcer.de/#/) (project has been discontinued after more than 4 years now in August 2022)
 - [Pixel It](https://docs.bastelbunker.de/pixelit/) (project is under active development)
-- [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of Awtrix, optimized for the Ulanzi TC001
-Hardware
-- [lamatrix](https://github.com/noahwilliamsson/lamatrix/tree/master) micropython based and around 5 years old
+- [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of Awtrix, optimized for the Ulanzi TC001 Hardware
 
 The solutions have their pros and cons. I tried some and used AwTrix for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of MQTT.
 
 But it had to be extensible, e.g. for the use as pool thermometer or as media player. All done by the magical power of esphome.
-
-### EspHoMaTriX in the media
-
-See this German tutorial video with information on setting up your display [RGB-LED Status Display für Home Assistant mit ESPHome | ESPHoMaTrix](https://www.youtube.com/watch?v=DTd9vAhet9A).
-
-Another german tutorial video focused at the Ulanzi [Smarte Pixel Clock über Home Assistant steuern - Entitäten / Icons und mehr in der Ulanzi](https://www.youtube.com/watch?v=LgaT0mNbl34)
-
-See this [nice article](https://blakadder.com/esphome-pixel-clock/) about EsphoMaTrix on a Ulanzi TC001 from [blakadder](https://github.com/blakadder).
-
-Short video on Instagram [@blak_adder](https://www.insbuiltagram.com/reel/CpYVByRIaSI)
-
-See this english discussions:
-[Share your projects](https://community.home-assistant.io/t/esphomatrix-a-simple-clock-status-display/425325)
-[ESPHOME](https://community.home-assistant.io/t/a-simple-diy-status-display-with-an-8x32-rgb-led/379051)
-
-It was also mentiond in the blog [Building the Open Home](https://building.open-home.io/local-control-is-the-only-way/) and in the home assistant [livestream](https://youtu.be/IGnCGDaXR0M?t=6267)
-
-Or in german:
-[Showroom](https://community.simon42.com/t/8x32-pixel-uhr-mit-homeassistant-anbindung/1076)
 
 ### Features
 
@@ -61,26 +38,26 @@ After the [old](https://github.com/lubeda/EsphoMaTrix) component became favorite
 
 ### The easy way
 
-There is a little hype around the Ulanzi TC001 pixel clock. This hardware can be used with **EspHoMaTriX v2**.
+There is a little hype around the Ulanzi TC001 pixel clock. The easy way works with the Ulanzi TC001 hardware. For more customization and other hardware look [here](#the-funny-but-more-elaborate-way).
 
-### Steps (easy)
+In easy mode you'll have a clock with auto brightness control and after step 3 you can send states to the display an toggle on or off additional screen elements.
 
 #### Step 1
 
-Copy these files:
+Copy these files from the source folder `copy2esphome`:
 
 - ulanzi-simple.yaml
 - EHMTXv2.ttf
 
-to your esphome directory (usually /config/esphome). In your esphome dashboard, you will find a new device named `ulanzi-simple`.
+to your esphome directory (usually /config/esphome). In your esphome dashboard, you will find a new device named `ulanzi-easy`.
 
 #### Step 2
 
-connect your ulanzi device to your host with USB-C and flash the firmware.
+Connect your ulanzi device to your host with USB-C and flash the firmware.
 
 #### Step 3
 
-Copy `EHMTX_easy_state.yaml` to your blueprint path (usually /config/blueprints/automation/) in a subfolder named  `ehmtxv2`.
+Copy the blueprints `EHMTX_easy_*.yaml` to your blueprint path (usually /config/blueprints/automation/) in a subfolder named `ehmtxv2`.
 
 Reload your automations and have fun after configuring some automations with this blueprint.
 
@@ -90,7 +67,7 @@ The device should boot
 
 ![boot](images/booting.png)
 
-and after a while (~30 seconds) it should display the correct time
+and after a while (~30 seconds) it should display the correct time.
 
 ![clock screen](images/clock_screen.png).
 
@@ -98,34 +75,41 @@ If not, check the esphome logs for further investigations.
 
 ### The funny but more elaborate way
 
-This is for the more advanced users. If you understand the concept of esphome, you can display nearly everything with this component.
+This is for the more advanced users. If you understand the concept of esphome, you can display nearly everything with this component. You are also able to create your own customized esphome based display with multiple sensors or even use it as microphone for the new [voice assist](https://esphome.io/components/voice_assistant.html) feature from home assistant.
 
 #### Concept
 
 You can add screens to a queue and all these screens are displayed one after another.
 ![timing](./images/timingv2.png)
-Each screen can display different information or is of a different kind. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the date and time screens are displayed. Some screens can show additional features like an alarm or indicator see [elements](#elements).
-You can add screens from home assistant with services or from esphome via YAML.
+Each screen can display different information or animation or text, even in rainbox color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the date and time screens are displayed. Some screens can show additional features like an alarm or indicator see [elements](#display-elements).
+You can add screens from home assistant with service-calls or from esphome via lambdas in your YAML.
 
-#### Screen types
+#### Screen types a.k.a. what is possible
 
 ##### Date/Time screen
 
 ![clock screen](./images/clock_screen.png)
 
-###### Service
+###### Service via API
+
+You can call this from e.g. the [developer tools service](https://my.home-assistant.io/redirect/developer_services/)
 
 ```c
 clock_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
+rainbow_clock_screen => {"lifetime", "screen_time", "default_font"}
 date_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
+rainbow_date_screen => {"lifetime", "screen_time", "default_font"}
 ```
 
-###### API
+###### Lambda
+
+You cann use these in [lambdas](https://esphome.io/guides/automations.html?highlight=lambda#lambda-action) in your esphome YAML.
 
 all parameters have a default value.
 
 ```c
 void clock_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
+void rainbow_clock_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);
 void date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true, int r=C_RED, int g=C_GREEN, int b=C_BLUE);     
 ```
 
@@ -133,16 +117,18 @@ void date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool def
 
 ![icon screen](./images/icon_screen.png)
 
-###### service
+###### Service via API
 
 ```c
 icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
+rainbow_icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default_font"}
 ```
 
-###### api
+###### Lambda
 
 ```c
 void icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
+void rainbow_icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true);
 ```
 
 ##### full_screen
@@ -151,39 +137,40 @@ For 8x32 icons or animations
 
 ![full_screen](./images/fullscreen.png)
 
-###### service
+###### service via API
 
 ```c
 full_screen => {"icon_name", "lifetime", "screen_time"}
 ```
 
-###### api
+###### Lambda
 
 ```c
-void EHMTX::full_screen(std::string iconname, int lifetime, int screen_time)
+void full_screen(string iconname, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
 ```
 
-#### Elements
+#### Display Elements
 
 ![elements](./images/elements.png)
 
 ##### alarm
 
-The alarm is displayed in the upper right corner at all  screen types! You can set its color.
+The alarm is displayed in the upper right corner at all  screen types! You can set its color and its size.
 
 ###### service
 
 ```c
-show_alarm => { "r", "g", "b","s"}
+show_alarm => { "r", "g", "b","size"}
 ```
 
 ###### api
 
 ```c
-void EHMTX::show_alarm(int r, int g, int b, int s=2);
+void EHMTX::show_alarm(int r, int g, int b, int size=2);
 ```
 
 r,g,b: 0-255 color components
+size: 0-3 (zero turns it off)
 
 To remove it, call:
 
@@ -193,10 +180,10 @@ To remove it, call:
 hide_alarm => no parameter
 ```
 
-###### API
+###### Lambda
 
 ```c
-void EHMTX::hide_alarm();
+void hide_alarm();
 ```
 
 ##### Indicator
@@ -206,16 +193,17 @@ The indicator is in the lower left corner, but not displayed in fullscreen 8x32 
 ###### Service
 
 ```c
-show_indicator => { "r", "g", "b","s"}
+show_indicator => { "r", "g", "b","size"}
 ```
 
 ###### API
 
 ```c
-void EHMTX::show_indicator(int r, int g, int ,int s=3);
+void show_indicator(int r, int g, int ,int size=3);
 ```
 
 r,g,b: 0-255 color components
+size: 0-3 (zero turns it off)
 
 To remove it, call:
 
@@ -225,10 +213,10 @@ To remove it, call:
 hide_indicator => no parameter
 ```
 
-###### API
+###### Lambda
 
 ```c
-void EHMTX::hide_indicator();
+void hide_indicator();
 ```
 
 ##### gauge
@@ -244,10 +232,10 @@ show_gauge => {"value","r", "g", "b"}
 ###### api
 
 ```c
-void EHMTX::show_gauge(int value, int r, int g, int b);
+void show_gauge(int percent, int r, int g, int b);
 ```
 
-value: 0-100 (resolution: one pixel per 12,5%)
+percent: 0-100 (resolution: one pixel per 12,5%)
 r,g,b: 0-255 color components
 
 To remove it call:
@@ -261,16 +249,14 @@ hide_gauge => no parameter
 ###### api
 
 ```c
-void EHMTX::hide_gauge();
+void hide_gauge();
 ```
 
-#### Installation
-
-##### **EspHoMaTriXv2** custom component
+#### Installation of **EspHoMaTriXv2** custom component
 
 **EspHoMaTriXv2** is a custom component, you have to include it in your YAML configuration. To always use the newest features you should use the repo, to use a stable version, you copy a working version to your esphome installation.
 
-###### local use
+##### use of local copy
 
 If you download the components-folder from the repo and install it in your esphome you have a stable installation. But if there are new features, you won't see them. If needed, customize the YAML to your folder structure.
 
@@ -290,10 +276,10 @@ external_components:
   - source:
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: release # optional select a special branch or tag
+      ref: stable # optional select a special branch or tag
 ```
 
-##### Addressable_light component
+#### Addressable_light component
 
 The **EspHoMaTriXv2** component requires a 8x32 pixel addressable_light, it is referenced by the id `matrix_component`.
 
@@ -301,7 +287,7 @@ See the default [options](https://esphome.io/components/display/index.html)
 
 There are some different matrices-types on the market, to adapt them to **EspHoMaTriXv2** you have to find the proper pixel mapper. If there is garbage on your display, try the other `pixel_mapper`. Here are the most common types for flexible 8x32 matrices:
 
-#### Type 1
+##### Type 1
 
 Common for 8x32 RGB flexible matrices.
 
@@ -319,7 +305,7 @@ display:
     .....
 ```
 
-#### Type 2 (e.g. Ulanzi TC001)
+##### Type 2 (e.g. Ulanzi TC001)
 
 Under the display tag, specify this pixel mapper:
 
@@ -335,7 +321,7 @@ display:
     .....
 ```
 
-#### Type 3 (daisy chained 8x8 panels)
+##### Type 3 (daisy chained 8x8 panels)
 
 ```yaml
 display:
@@ -346,7 +332,7 @@ display:
     .....
 ```
 
-#### How to configure the pixel_mapper
+##### How to configure the pixel_mapper
 
 You have to configure this `lambda` under the `display:` section to use the **EspHoMaTriXv2** component
 
@@ -406,6 +392,8 @@ You can configure two fonts if you like.
 
 DarkPoet78 is also providing special fonts for 8x32 matrices in his [repo](https://github.com/darkpoet78/MatrixClockFonts)
 
+For european starters you can use the font EHMTXv2.ttf of the copy2esphome folder.
+
 ```yaml
 font:
   - file: EHMTXv2.ttf
@@ -417,7 +405,7 @@ font:
 
 #### Icons and Animations
 
-Download and install all needed icons (.jpg/.png) and animations (.GIF) under the `ehmtx:` key. All icons have to be 8x8 or 8x32 pixels in size. If necessary, scale them with gimp, check "as animation" for GIFs.
+Download and install all needed icons (.jpg/.png) and animations (.GIF) under the `ehmtxv2:` key. All icons have to be 8x8 or 8x32 pixels in size. If necessary, scale them with gimp, check "as animation" for GIFs.
 
 You can also specify a URL to directly download the image file. The URLs will only be downloaded once at compile time, so there is no additional traffic on the hosting website.
 
@@ -438,8 +426,11 @@ emhtx:
     - id: yoga
       file: icons/yoga-bridge.GIF
       pingpong: true
+    - id: jackshome
+      url: https://awtrix.blueforcer.de/animations/JackHomePage
+      resize: 32x8
     - id: garage
-      file: garage.GIF
+      lameid: 1234
       duration: 100
     - id: homeassistant
       url: https://github.com/home-assistant/assets/raw/master/logo/logo-special.png      
@@ -466,22 +457,21 @@ This component is highly customizable.
 ```yaml
 ehmtxv2:
   id: rgb8x32
-  clock_time: 7
-  screen_time: 9
   show_seconds: true
   matrix_component: ehmtx_display
   time_component: ehmtx_time
   icons2html: true
   default_font_id: default_font
+  default_font_yoffset: 6
   special_font_id: special_font
   special_font_yoffset: 7
-  default_font_yoffset: 6
   brightness: 80 # percent
   time_format: "%H:%M"
   date_format: "%d.%m."
   week_start_monday: true # false equals sunday
   scroll_count: 2 # scroll long text at least two times
   scroll_interval: 80 # milliseconds
+  rainbow_interval: 32 # milliseconds
   frame_interval: 192 # milliseconds
   icons: 
   .....
@@ -490,12 +480,6 @@ ehmtxv2:
 ***Parameters***
 
 **id** (required, ID): Manually specify the ID used for code generation and in service definitions.
-
-**clock_time** (optional, seconds): duration to display the clock after this time the date is displayed until the next "show_screen". If `show_date` is false and `clock_time` > 0 the clock will be display as long as a normal screen! Setting `clock_time` to 0 will not show the clock or date. If there are no screens ind the queue, the display will be blank until the next screen is sent.
-
-**screen_time** (optional, seconds): default duration to display a screen or a clock/date sequence, a long text will be scrolled at least `scroll_count` times (default: 10 seconds). This may be overwritten by the add_screen service.
-
-**hold_time** (optional, seconds): extends the display time of the current screen in seconds (default=20). Used in services or automations, see `hold_screen`
 
 **date_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%d.%m."` (use `"%m.%d."` for the US)
 
@@ -556,9 +540,39 @@ See [icon details](#icons-and-animations)
 
 ## Control your display
 
-A lot of features are accessible with actions, you can use in your YAML.
+A lot of features are accessible with services from home assistant and lambdas you can use in your YAML.
 
-### Local actions/lambdas
+### Public functions/services
+  
+|service|parameter|result|
+|---|---|---|
+|`status`|none|write some status information to the esphome logs|
+|`display_on`|none|turn display off|
+|`display_off`|none|turn display on|
+|`hold_screen`|none|show the screen that is currently displayed for the number of seconds longer|
+|`hide_indicator`|none|hides the indicator|
+|`hide_gauge`|none|hides the gauge|
+|`hide_alarm`|none|hides the alarm|
+|`show_gauge"`|"percent", "r", "g", "b"|set the heught of the gauge according to the percentage in the given color|
+|`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper right corner|
+|`show_indicator`|"r", "g", "b", "size"|shows the color with the given size in the lower right corner|
+|`clock_color`|"r", "g", "b"|set the default color for the clock/date display|
+|`today_color"`|"r", "g", "b"|set the special color for today in the day of week line|
+|`weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
+|`del_screen`|"icon_name", "mode"|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
+|`force_screen`|"icon_name", "mode"|displayes the seleted the specified icon screen from the queue, the [mode](#modes) is a filter|
+|`full_screen`|"icon_name", "lifetime", "screen_time"|show the specified 8x32 icon as fullscreen|
+|`icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text|
+|`rainbow_icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color|
+|`text_screen`|"text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified text|
+|`rainbow_text_screen`|"text", "lifetime", "screen_time", "default_font"|show the specified text in rainbow colors|
+|`clock_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the clock|
+|`rainbow_clock_screen`|"lifetime", "screen_time", "default_font"|show the clock in rainbow color|
+|`blank_screen`|"lifetime", "screen_time"|"show" an empty screen|
+|`date_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the date|
+|`brightness`|"value"|set the display brightness|
+
+### Local lambdas
 
 #### Add screen to your display queue
 
@@ -582,7 +596,6 @@ sensor:
            id(rgb8x32)->icon_screen("sun", text); // uses default values for color etc.
 ```
 
-#### Set (alarm/clock/gauge/text/today/weekday) color action
 
 ##### Force screen
 
@@ -601,7 +614,7 @@ Experienced programmers can use these public methods:
 ```c
 ```
 
-### Local trigger
+### Local triggers
 
 To use the display without homeassistant automations, you may use the [advanced functionality](#change-configuration-during-runtime) with triggers. The triggers can be fired by sensors, time or by the ehmtx component.
 
@@ -697,14 +710,20 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 - ```icon_name```: Icon `id` defined in the YAML (see installation)
 - ```mode```: The mode is for internal purposes use `5`  for icon_screen
 
+##### modes
+
 |mode|value|
 |----|----|
 |MODE_BLANK|1|
 |MODE_CLOCK | 2|
 | MODE_DATE | 3|
 | MODE_FULL_SCREEN | 4|
-|MODE_ICONSCREEN | 5|
-|MODE_TEXT | 6|
+|MODE_ICON_SCREEN | 5|
+|MODE_TEXT_SCREEN | 6|
+|MODE_RAINBOW_ICON | 7|
+|MODE_RAINBOW_TEXT |8|
+| MODE_RAINBOW_CLOCK | 9|
+| MODE_RAINBOW_DATE | 10|
 
 **(D)** Service **display_on** / **display_off**
 
@@ -749,7 +768,7 @@ binary_sensor:
 
 Service **hold_screen**
 
-Displays the current screen for a configured amount (see **hold_time**) (default=20) seconds longer.
+Displays the current screen for a configured amount (see **hold_time**) (default=30) seconds longer.
 
 e.g. on the Ulanzi TC001
 
@@ -761,7 +780,7 @@ binary_sensor:
       inverted: true
     on_press:
       lambda:
-        id(rgb8x32)->hold_screen();
+        id(rgb8x32)->hold_screen(120);
 ```
 
 **(D)** Service **status**
@@ -960,9 +979,24 @@ sensor:
 
 **nothing yet, since it is new** 
 
-## Usage
+## EspHoMaTriX in the media
 
-The integration works with the Home Assistant API so, after boot of the device, it takes a few seconds until the service calls start working. If you see a growing green rectangle after boot, you have to wait a bit until the API is connected  etc.
+See this German tutorial video with information on setting up your display [RGB-LED Status Display für Home Assistant mit ESPHome | ESPHoMaTrix](https://www.youtube.com/watch?v=DTd9vAhet9A).
+
+Another german tutorial video focused at the Ulanzi [Smarte Pixel Clock über Home Assistant steuern - Entitäten / Icons und mehr in der Ulanzi](https://www.youtube.com/watch?v=LgaT0mNbl34)
+
+See this [nice article](https://blakadder.com/esphome-pixel-clock/) about EsphoMaTrix on a Ulanzi TC001 from [blakadder](https://github.com/blakadder).
+
+Short video on Instagram [@blak_adder](https://www.insbuiltagram.com/reel/CpYVByRIaSI)
+
+See this english discussions:
+[Share your projects](https://community.home-assistant.io/t/esphomatrix-a-simple-clock-status-display/425325)
+[ESPHOME](https://community.home-assistant.io/t/a-simple-diy-status-display-with-an-8x32-rgb-led/379051)
+
+It was also mentiond in the blog [Building the Open Home](https://building.open-home.io/local-control-is-the-only-way/) and in the home assistant [livestream](https://youtu.be/IGnCGDaXR0M?t=6267)
+
+Or in german:
+[Showroom](https://community.simon42.com/t/8x32-pixel-uhr-mit-homeassistant-anbindung/1076)
 
 ## Disclaimer
 
@@ -978,6 +1012,7 @@ THE SOFTWARE IS PROVIDED "AS IS", use at your own risk!
 - **[ofirsnb](https://github.com/ofirsnb)** for his contributions
 - **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
+- **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
 - ** everbody that found bugs/issues and reported them!
 
 ## Special thanks to all sponsors

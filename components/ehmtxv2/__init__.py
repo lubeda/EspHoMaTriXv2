@@ -27,8 +27,7 @@ SVG_FULL_SCREEN_START = '<svg width="320px" height="80px" viewBox="0 0 320 80">'
 SVG_END = "</svg>"
 
 logging.warning(f"")
-logging.warning(f"If you are upgrading EsphoMaTrix from a version before 2023.5.0,")
-logging.warning(f"you should read the manual https://github.com/lubeda/EspHoMaTriXv2 for tips.")
+logging.warning(f"This is a beta version of https://github.com/lubeda/EspHoMaTriXv2")
 logging.warning(f"")
 
 def rgb565_svg(x,y,r,g,b):
@@ -50,7 +49,6 @@ NextClockTrigger = ehmtx_ns.class_(
     "EHMTXNextClockTrigger", automation.Trigger.template(cg.std_string)
 )
 
-CONF_CLOCKTIME = "clock_time"
 CONF_EHMTX = "ehmtx"
 CONF_URL = "url"
 CONF_FLAG = "flag"
@@ -61,7 +59,6 @@ CONF_ICONS = "icons"
 CONF_SHOWDOW = "show_dow"
 CONF_SHOWDATE = "show_date"
 CONF_FRAMEDURATION = "frame_duration"
-CONF_HOLD_TIME = "hold_time"
 CONF_SCROLLCOUNT = "scroll_count"
 CONF_MATRIXCOMPONENT = "matrix_component"
 CONF_HTML = "icons2html"
@@ -93,9 +90,6 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_MATRIXCOMPONENT): cv.use_id(display),
     cv.Required(CONF_DEFAULT_FONT_ID): cv.use_id(font),
     cv.Required(CONF_special_FONT_ID): cv.use_id(font),
-    cv.Optional(
-        CONF_CLOCKTIME, default="5"
-    ): cv.templatable(cv.positive_int),
     cv.Optional(
         CONF_HTML, default=False
     ): cv.boolean,
@@ -132,9 +126,6 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(
         CONF_special_FONT_YOFFSET, default="6"
     ): cv.templatable(cv.int_range(min=-32, max=32)),
-    cv.Optional(
-        CONF_HOLD_TIME, default="20"
-    ): cv.templatable(cv.int_range(min=0, max=3600)),
     cv.Optional(CONF_SCROLLINTERVAL, default="80"
                 ): cv.templatable(cv.positive_int),
     cv.Optional(CONF_RAINBOWINTERVAL, default="32"
@@ -232,8 +223,6 @@ async def ehmtx_set_week_color_action_to_code(config, action_id, template_arg, a
     cg.add(var.set_blue(template_))
 
     return var
-
-
 
 CODEOWNERS = ["@lubeda"]
 
@@ -392,7 +381,6 @@ async def to_code(config):
     ehmtxtime = await cg.get_variable(config[CONF_TIMECOMPONENT])
     cg.add(var.set_clock(ehmtxtime))
 
-    cg.add(var.set_clock_time(config[CONF_CLOCKTIME]))
     cg.add(var.set_brightness(config[CONF_BRIGHTNESS]))
     cg.add(var.set_scroll_interval(config[CONF_SCROLLINTERVAL]))
     cg.add(var.set_rainbow_interval(config[CONF_SCROLLINTERVAL]))
@@ -402,7 +390,6 @@ async def to_code(config):
     cg.add(var.set_time_format(config[CONF_TIME_FORMAT]))
     cg.add(var.set_date_format(config[CONF_DATE_FORMAT]))
     cg.add(var.set_show_day_of_week(config[CONF_SHOWDOW]))
-    cg.add(var.set_hold_time(config[CONF_HOLD_TIME]))
     cg.add(var.set_show_date(config[CONF_SHOWDATE]))
     cg.add(var.set_show_seconds(config[CONF_SHOW_SECONDS]))
     cg.add(var.set_default_font_offset(config[CONF_DEFAULT_FONT_XOFFSET], config[CONF_DEFAULT_FONT_YOFFSET] ))

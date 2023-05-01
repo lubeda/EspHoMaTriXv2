@@ -22,7 +22,7 @@ blueprint:
           custom_value: true
           mode: dropdown
           options:
-            - label: MODE_ICONSCREEN
+            - label: MODE_ICON_SCREEN
               value: "5"
             - label: MODE_BLANK
               value: "1"
@@ -32,7 +32,7 @@ blueprint:
               value: "3"
             - label: MODE_FULL_SCREEN
               value: "4"
-            - label: MODE_TEXT 
+            - label: MODE_TEXT_SCREEN 
               value: "6"
             - label: MODE_RAINBOW_ICON 
               value: "7"
