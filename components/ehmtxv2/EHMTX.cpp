@@ -2,7 +2,7 @@
 
 namespace esphome
 {
-  EHMTX::EHMTX() : PollingComponent(TICKINTERVAL)
+  EHMTX::EHMTX() : PollingComponent(POLLINGINTERVAL)
   {
     this->show_display = true;
     this->display_gauge = false;
@@ -176,13 +176,19 @@ namespace esphome
 
     register_service(&EHMTX::full_screen, "full_screen", {"icon_name", "lifetime", "screen_time"});
     register_service(&EHMTX::icon_screen, "icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+    register_service(&EHMTX::rainbow_icon_screen, "rainbow_icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font"});
+
     register_service(&EHMTX::text_screen, "text_screen", {"text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+    register_service(&EHMTX::rainbow_text_screen, "rainbow_text_screen", {"text", "lifetime", "screen_time", "default_font"});
+
     register_service(&EHMTX::clock_screen, "clock_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::rainbow_clock_screen, "rainbow_clock_screen", {"lifetime", "screen_time", "default_font"});
-    register_service(&EHMTX::blank_screen, "blank_screen", {"lifetime", "screen_time"});
+    
     register_service(&EHMTX::date_screen, "date_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
-    register_service(&EHMTX::rainbow_icon_screen, "rainbow_icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font"});
-    register_service(&EHMTX::rainbow_text_screen, "rainbow_text_screen", {"text", "lifetime", "screen_time", "default_font"});
+    register_service(&EHMTX::rainbow_date_screen, "rainbow_date_screen", {"lifetime", "screen_time", "default_font"});
+
+    register_service(&EHMTX::blank_screen, "blank_screen", {"lifetime", "screen_time"});
+
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
     ESP_LOGD(TAG, "Setup and running!");
@@ -215,7 +221,7 @@ namespace esphome
 
   void EHMTX::update() // called from polling component
   {
-    if (! this->is_running){
+    if (!this->is_running){
       if (this->clock->now().timestamp > 6000) {
         ESP_LOGD(TAG, "time sync => starting");
         this->is_running = true;
@@ -236,7 +242,7 @@ namespace esphome
       if (this->queue[i]->mode == mode)
       {
         bool force = true;
-        if ((mode == MODE_ICONSCREEN) || (mode == MODE_FULL_SCREEN) || (mode == MODE_RAINBOW_ICON))
+        if ((mode == MODE_ICON_SCREEN) || (mode == MODE_FULL_SCREEN) || (mode == MODE_RAINBOW_ICON))
         {
           if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
           {
@@ -303,12 +309,12 @@ namespace esphome
             case MODE_FULL_SCREEN:
               infotext = "full screen " + this->queue[i]->icon_name;
               break;
-            case MODE_ICONSCREEN:
+            case MODE_ICON_SCREEN:
             case MODE_RAINBOW_ICON:
               infotext = this->queue[i]->icon_name.c_str();
               break;
             case MODE_RAINBOW_TEXT:
-            case MODE_TEXT:
+            case MODE_TEXT_SCREEN:
               infotext = "TEXT";
               break;
             default:
@@ -461,7 +467,7 @@ namespace esphome
       {
         bool force = true;
         ESP_LOGW(TAG, "del_screen: icon %s in position: %d mode %d", icon_name.c_str(), i, mode);
-        if ((mode == MODE_ICONSCREEN) || (mode == MODE_FULL_SCREEN) || (mode == MODE_RAINBOW_ICON))
+        if ((mode == MODE_ICON_SCREEN) || (mode == MODE_FULL_SCREEN) || (mode == MODE_RAINBOW_ICON))
         {
           if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
           {
@@ -505,7 +511,7 @@ namespace esphome
     screen->set_text(text, icon, w, lifetime, screen_time);
     screen->text_color = Color(r, g, b);
     screen->default_font = default_font;
-    screen->mode = MODE_ICONSCREEN;
+    screen->mode = MODE_ICON_SCREEN;
     screen->icon_name = iconname;
     ESP_LOGD(TAG, "icon screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
     screen->status();
@@ -523,6 +529,19 @@ namespace esphome
     screen->status();
   }
 
+  void EHMTX::rainbow_date_screen(int lifetime, int screen_time, bool default_font)
+  {
+    EHMTX_queue *screen = this->find_free_queue_element();
+
+    ESP_LOGD(TAG, "rainbow_date_screen lifetime: %d screen_time: %d", lifetime, screen_time);
+    screen->mode = MODE_RAINBOW_DATE;
+    screen->default_font = default_font;
+    screen->screen_time = screen_time;
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    screen->status();
+  }
+
+
 
   void EHMTX::rainbow_icon_screen(std::string iconname, std::string text, int lifetime, int screen_time, bool default_font)
   {
@@ -534,22 +553,13 @@ namespace esphome
       icon = 0;
     }
     EHMTX_queue *screen = this->find_icon_queue_element(icon);
-
-    int x, y, w, h;
-    if (default_font)
-    {
-      this->display->get_text_bounds(0, 0, text.c_str(), this->default_font, display::TextAlign::LEFT, &x, &y, &w, &h);
-    }
-    else
-    {
-      this->display->get_text_bounds(0, 0, text.c_str(), this->special_font, display::TextAlign::LEFT, &x, &y, &w, &h);
-    }
-    screen->set_text(text, icon, w, lifetime, screen_time);
-    screen->default_font = default_font;
-    screen->text = text;
-    screen->pixels_ = w;
-    screen->mode = MODE_RAINBOW_ICON;
     screen->icon_name = iconname;
+    screen->text = text;
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    screen->screen_time = screen_time;
+    screen->default_font = default_font;  
+    screen->mode = MODE_RAINBOW_ICON;
+    screen->calc_scroll_time();
     ESP_LOGD(TAG, "rainbow_icon_screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -558,33 +568,13 @@ namespace esphome
   {
     EHMTX_queue *screen = this->find_free_queue_element();
 
-    int x, y, w, h;
-    if (default_font)
-    {
-      this->display->get_text_bounds(0, 0, text.c_str(), this->default_font, display::TextAlign::LEFT, &x, &y, &w, &h);
-    }
-    else
-    {
-      this->display->get_text_bounds(0, 0, text.c_str(), this->special_font, display::TextAlign::LEFT, &x, &y, &w, &h);
-    }
-
     screen->text = text;
-    screen->pixels_ = w;
-    if (screen->pixels_ < 32)
-    {
-      screen->centerx_ = ceil((32 - screen->pixels_) / 2);
-    }
-
-    screen->shiftx_ = 0;
-    float display_duration = ceil((this->scroll_count * w * this->scroll_interval) / 1000);
-    screen->screen_time = (display_duration > screen_time) ? display_duration : screen_time;
-    ESP_LOGD(TAG, "text_screen text: text: %s pixels %d screen_time: %d lifetime: %d", text.c_str(), w, screen->screen_time, lifetime);
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
-
-    screen->text_color = Color(r, g, b);
+    screen->screen_time = screen_time;
     screen->default_font = default_font;
-    screen->mode = MODE_TEXT;
-
+    screen->text_color = Color(r, g, b);
+    screen->mode = MODE_TEXT_SCREEN;
+    screen->calc_scroll_time();
     screen->status();
   }
 
@@ -592,32 +582,12 @@ namespace esphome
   {
     EHMTX_queue *screen = this->find_free_queue_element();
 
-    int x, y, w, h;
-    if (default_font)
-    {
-      this->display->get_text_bounds(0, 0, text.c_str(), this->default_font, display::TextAlign::LEFT, &x, &y, &w, &h);
-    }
-    else
-    {
-      this->display->get_text_bounds(0, 0, text.c_str(), this->special_font, display::TextAlign::LEFT, &x, &y, &w, &h);
-    }
-
     screen->text = text;
-    screen->pixels_ = w;
-    if (screen->pixels_ < 32)
-    {
-      screen->centerx_ = ceil((32 - screen->pixels_) / 2);
-    }
-
-    screen->shiftx_ = 0;
-    float display_duration = ceil((this->scroll_count * w * this->scroll_interval) / 1000);
-    screen->screen_time = (display_duration > screen_time) ? display_duration : screen_time;
-    ESP_LOGD(TAG, "text_screen text: text: %s pixels %d screen_time: %d lifetime: %d", text.c_str(), w, screen->screen_time, lifetime);
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
-
+    screen->screen_time = screen_time;    
     screen->default_font = default_font;
     screen->mode = MODE_RAINBOW_TEXT;
-
+    screen->calc_scroll_time();
     screen->status();
   }
 
@@ -671,7 +641,7 @@ namespace esphome
   {
     for (size_t i = 0; i < MAXQUEUE; i++)
     {
-      if ((this->queue[i]->mode == MODE_ICONSCREEN) && (this->queue[i]->icon == icon))
+      if ((this->queue[i]->mode == MODE_ICON_SCREEN) && (this->queue[i]->icon == icon))
       {
         ESP_LOGD(TAG, "free_screen: found by icon");
         return this->queue[i];

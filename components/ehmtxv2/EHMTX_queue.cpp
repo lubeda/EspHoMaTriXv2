@@ -37,10 +37,10 @@ namespace esphome
     case MODE_FULL_SCREEN:
       ESP_LOGD(TAG, "queue: full screen: %s for %d sec", this->icon_name.c_str(), this->screen_time);
       break;
-    case MODE_ICONSCREEN:
+    case MODE_ICON_SCREEN:
       ESP_LOGD(TAG, "queue: icon screen: %s text: %s for %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time);
       break;
-    case MODE_TEXT:
+    case MODE_TEXT_SCREEN:
       ESP_LOGD(TAG, "queue: text text: %s for %d sec", this->text.c_str(), this->screen_time);
       break;
     case MODE_RAINBOW_ICON:
@@ -76,7 +76,7 @@ namespace esphome
       this->config_->last_rainbow_time = millis();
     }
 
-    if ((this->mode == MODE_ICONSCREEN) || (this->mode == MODE_RAINBOW_ICON))
+    if ((this->mode == MODE_ICON_SCREEN) || (this->mode == MODE_RAINBOW_ICON))
     {
       if (millis() - this->config_->last_scroll_time >= this->config_->scroll_interval && this->pixels_ > TEXTSTARTOFFSET)
       {
@@ -88,7 +88,7 @@ namespace esphome
         this->config_->last_scroll_time = millis();
       }
     }
-    if ((this->mode == MODE_TEXT) || (this->mode == MODE_RAINBOW_TEXT))
+    if ((this->mode == MODE_TEXT_SCREEN) || (this->mode == MODE_RAINBOW_TEXT))
     {
       if (millis() - this->config_->last_scroll_time >= this->config_->scroll_interval && this->pixels_ >= 32)
       {
@@ -154,7 +154,7 @@ namespace esphome
                                            this->config_->clock->now());
           if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
           {
-            this->config_->display->draw_pixel_at(0, 0, this->config_->clock_color);
+            this->config_->display->draw_pixel_at(0, 0, color_);
           }
            if (this->mode != MODE_RAINBOW_DATE){
             this->config_->draw_day_of_week();
@@ -168,7 +168,7 @@ namespace esphome
       case MODE_FULL_SCREEN:
         this->config_->display->image(0, 0, this->config_->icons[this->icon]);
         break;
-      case MODE_ICONSCREEN:
+      case MODE_ICON_SCREEN:
       case MODE_RAINBOW_ICON:
       {
         if (this->pixels_ > TEXTSTARTOFFSET)
@@ -196,7 +196,7 @@ namespace esphome
         }
       }
       break;
-      case MODE_TEXT:
+      case MODE_TEXT_SCREEN:
       case MODE_RAINBOW_TEXT:
 
         if (this->pixels_ > 32)
@@ -241,5 +241,49 @@ namespace esphome
     ESP_LOGD(TAG, "display text: %s pixels %d calculated: %d screen_time: %d", text.c_str(), pixel, this->screen_time, screen_time);
     this->endtime = this->config_->clock->now().timestamp + et * 60;
     this->icon = icon;
+  }
+
+  void EHMTX_queue::calc_scroll_time()
+  {
+    int x, y, w, h;
+    float display_duration;
+    if (this->default_font)
+    {
+      this->config_->display->get_text_bounds(0, 0, text.c_str(), this->config_->default_font, display::TextAlign::LEFT, &x, &y, &w, &h);
+    }
+    else
+    {
+      this->config_->display->get_text_bounds(0, 0, text.c_str(), this->config_->special_font, display::TextAlign::LEFT, &x, &y, &w, &h);
+    }
+
+    this->pixels_ = w;
+    this->shiftx_ = 0;
+
+    switch (this->mode)
+    {
+    case MODE_RAINBOW_TEXT:
+    case MODE_TEXT_SCREEN:
+      display_duration = ceil((28+(this->config_->scroll_count * (32 + this->pixels_)) * this->config_->scroll_interval) / 1000);
+      this->screen_time = (display_duration > this->screen_time) ? display_duration : this->screen_time;
+      if (this->pixels_ < 32)
+      {
+        this->centerx_ = ceil((32 - this->pixels_) / 2);
+      }
+      break;   
+    case MODE_RAINBOW_ICON:
+    case MODE_ICON_SCREEN:
+      display_duration = ceil(((28-TEXTSTARTOFFSET)+(this->config_->scroll_count * (TEXTSTARTOFFSET + this->pixels_)) * this->config_->scroll_interval) / 1000);
+      this->screen_time = (display_duration > this->screen_time) ? display_duration : this->screen_time;
+      if (this->pixels_ < 23)
+      {
+        this->centerx_ = ceil((23 - this->pixels_) / 2);
+      }
+      break;   
+    default:
+      break;
+    }
+    
+    this->shiftx_ = 0;
+    ESP_LOGD(TAG, "display text: %s pixels %d calculated: %d", text.c_str(), this->pixels_, this->screen_time);
   }
 }

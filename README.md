@@ -462,15 +462,16 @@ ehmtxv2:
   time_component: ehmtx_time
   icons2html: true
   default_font_id: default_font
+  default_font_yoffset: 6
   special_font_id: special_font
   special_font_yoffset: 7
-  default_font_yoffset: 6
   brightness: 80 # percent
   time_format: "%H:%M"
   date_format: "%d.%m."
   week_start_monday: true # false equals sunday
   scroll_count: 2 # scroll long text at least two times
   scroll_interval: 80 # milliseconds
+  rainbow_interval: 32 # milliseconds
   frame_interval: 192 # milliseconds
   icons: 
   .....
@@ -720,8 +721,8 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_CLOCK | 2|
 | MODE_DATE | 3|
 | MODE_FULL_SCREEN | 4|
-|MODE_ICONSCREEN | 5|
-|MODE_TEXT | 6|
+|MODE_ICON_SCREEN | 5|
+|MODE_TEXT_SCREEN | 6|
 |MODE_RAINBOW_ICON | 7|
 |MODE_RAINBOW_TEXT |8|
 | MODE_RAINBOW_CLOCK | 9|

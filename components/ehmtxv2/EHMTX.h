@@ -20,10 +20,10 @@ const uint8_t MAXICONS = 90;
 const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
-const uint16_t TICKINTERVAL = 1000; // each 1000ms
+const uint16_t POLLINGINTERVAL = 800; 
 static const char *const EHMTX_VERSION = "Version: 2023.5.0 beta";
 static const char *const TAG = "EHMTXv2";
-enum show_mode : uint8_t { MODE_EMPTY = 0,MODE_BLANK = 1, MODE_CLOCK = 2, MODE_DATE = 3, MODE_FULL_SCREEN = 4, MODE_ICONSCREEN = 5, MODE_TEXT = 6 , MODE_RAINBOW_ICON = 7,MODE_RAINBOW_TEXT = 8, MODE_RAINBOW_CLOCK = 9,MODE_RAINBOW_DATE=10 };
+enum show_mode : uint8_t { MODE_EMPTY = 0,MODE_BLANK = 1, MODE_CLOCK = 2, MODE_DATE = 3, MODE_FULL_SCREEN = 4, MODE_ICON_SCREEN = 5, MODE_TEXT_SCREEN = 6 , MODE_RAINBOW_ICON = 7,MODE_RAINBOW_TEXT = 8, MODE_RAINBOW_CLOCK = 9,MODE_RAINBOW_DATE=10 };
 
 namespace esphome
 {
@@ -69,7 +69,7 @@ namespace esphome
     void remove_expired_queue_element();
     uint8_t find_oldest_queue_element();
     uint8_t find_icon_in_queue(std::string);
-    void force_screen(std::string name,int mode=MODE_ICONSCREEN);
+    void force_screen(std::string name,int mode=MODE_ICON_SCREEN);
     EHMTX_Icon *icons[MAXICONS];
     EHMTX_queue *queue[MAXQUEUE];
     void add_icon(EHMTX_Icon *icon);
@@ -142,7 +142,8 @@ namespace esphome
     void rainbow_icon_screen(std::string icon_name, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);
     void rainbow_text_screen(std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);
     void rainbow_clock_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);
-    void del_screen(std::string icon, int mode=MODE_ICONSCREEN);
+    void rainbow_date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);
+    void del_screen(std::string icon, int mode=MODE_ICON_SCREEN);
     
     void draw_gauge();
     void draw_alarm();
@@ -186,6 +187,7 @@ namespace esphome
     void update_screen();
     void hold_slot(uint8_t _sec);
     void set_text(std::string text, uint8_t icon, uint16_t pixel, uint16_t et, uint16_t st);
+    void calc_scroll_time();
   };
 
   class EHMTXNextScreenTrigger : public Trigger<std::string, std::string>
