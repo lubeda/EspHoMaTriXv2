@@ -540,11 +540,12 @@ See [icon details](#icons-and-animations)
 
 ## Control your display
 
-A lot of features are accessible with actions, you can use in your YAML.
+A lot of features are accessible with services from home assistant and lambdas you can use in your YAML.
 
 ### Public functions/services
+
     |service|parameter|result|
-    |---|---|---|---|
+    |---|---|---|
     `status`|none|write some status information to the esphome logs|
     `display_on`|none|turn display off|
     `display_off`|none|turn display on|
