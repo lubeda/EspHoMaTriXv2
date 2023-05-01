@@ -543,37 +543,34 @@ See [icon details](#icons-and-animations)
 A lot of features are accessible with services from home assistant and lambdas you can use in your YAML.
 
 ### Public functions/services
-
-    |service|parameter|result|
-    |---|---|---|
-    |`status`|none|write some status information to the esphome logs|
-    |`display_on`|none|turn display off|
-    |`display_off`|none|turn display on|
-    |`hold_screen`|none|show the screen that is currently displayed for the number of seconds longer|
-    |`hide_indicator`|none|hides the indicator|
-    |`hide_gauge`|none|hides the gauge|
-    |`hide_alarm`|none|hides the alarm|
-    |`show_gauge"`|"percent", "r", "g", "b"|set the heught of the gauge according to the percentage in the given color|
-    |`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper right corner|
-    |`show_indicator`|"r", "g", "b", "size"|shows the color with the given size in the lower right corner|
-
-    |`clock_color`|"r", "g", "b"|set the default color for the clock/date display|
-    |`today_color"`|"r", "g", "b"|set the special color for today in the day of week line|
-    |`weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
-
-    |`del_screen`|"icon_name", "mode"|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
-    |`force_screen`|"icon_name", "mode"|displayes the seleted the specified icon screen from the queue, the [mode](#modes) is a filter|
-
-    |`full_screen`|"icon_name", "lifetime", "screen_time"|show the specified icon as fullscreen|
-    |`icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text|
-    |`rainbow_icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color|
-    |`text_screen`|"text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified text|
-    |`rainbow_text_screen`|"text", "lifetime", "screen_time", "default_font"|show the specified text in rainbow colors|
-    |`clock_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the clock|
-    |`rainbow_clock_screen`|"lifetime", "screen_time", "default_font"|show the clock in rainbow color|
-    |`blank_screen`|"lifetime", "screen_time"|"show" an empty screen|
-    |`date_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the date|
-    |`brightness`|"value"|set the display brightness|
+  
+|service|parameter|result|
+|---|---|---|
+|`status`|none|write some status information to the esphome logs|
+|`display_on`|none|turn display off|
+|`display_off`|none|turn display on|
+|`hold_screen`|none|show the screen that is currently displayed for the number of seconds longer|
+|`hide_indicator`|none|hides the indicator|
+|`hide_gauge`|none|hides the gauge|
+|`hide_alarm`|none|hides the alarm|
+|`show_gauge"`|"percent", "r", "g", "b"|set the heught of the gauge according to the percentage in the given color|
+|`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper right corner|
+|`show_indicator`|"r", "g", "b", "size"|shows the color with the given size in the lower right corner|
+|`clock_color`|"r", "g", "b"|set the default color for the clock/date display|
+|`today_color"`|"r", "g", "b"|set the special color for today in the day of week line|
+|`weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
+|`del_screen`|"icon_name", "mode"|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
+|`force_screen`|"icon_name", "mode"|displayes the seleted the specified icon screen from the queue, the [mode](#modes) is a filter|
+|`full_screen`|"icon_name", "lifetime", "screen_time"|show the specified icon as fullscreen|
+|`icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text|
+|`rainbow_icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color|
+|`text_screen`|"text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified text|
+|`rainbow_text_screen`|"text", "lifetime", "screen_time", "default_font"|show the specified text in rainbow colors|
+|`clock_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the clock|
+|`rainbow_clock_screen`|"lifetime", "screen_time", "default_font"|show the clock in rainbow color|
+|`blank_screen`|"lifetime", "screen_time"|"show" an empty screen|
+|`date_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the date|
+|`brightness`|"value"|set the display brightness|
 
 ### Local actions/lambdas
 
