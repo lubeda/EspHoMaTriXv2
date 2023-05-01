@@ -561,7 +561,7 @@ A lot of features are accessible with services from home assistant and lambdas y
 |`weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
 |`del_screen`|"icon_name", "mode"|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
 |`force_screen`|"icon_name", "mode"|displayes the seleted the specified icon screen from the queue, the [mode](#modes) is a filter|
-|`full_screen`|"icon_name", "lifetime", "screen_time"|show the specified icon as fullscreen|
+|`full_screen`|"icon_name", "lifetime", "screen_time"|show the specified 8x32 icon as fullscreen|
 |`icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text|
 |`rainbow_icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color|
 |`text_screen`|"text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified text|
@@ -572,7 +572,7 @@ A lot of features are accessible with services from home assistant and lambdas y
 |`date_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the date|
 |`brightness`|"value"|set the display brightness|
 
-### Local actions/lambdas
+### Local lambdas
 
 #### Add screen to your display queue
 
@@ -596,7 +596,6 @@ sensor:
            id(rgb8x32)->icon_screen("sun", text); // uses default values for color etc.
 ```
 
-#### Set (alarm/clock/gauge/text/today/weekday) color action
 
 ##### Force screen
 
@@ -615,7 +614,7 @@ Experienced programmers can use these public methods:
 ```c
 ```
 
-### Local trigger
+### Local triggers
 
 To use the display without homeassistant automations, you may use the [advanced functionality](#change-configuration-during-runtime) with triggers. The triggers can be fired by sensors, time or by the ehmtx component.
 
