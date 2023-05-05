@@ -554,6 +554,7 @@ namespace esphome
     }
     EHMTX_queue *screen = this->find_icon_queue_element(icon);
     screen->icon_name = iconname;
+    screen->icon = icon;
     screen->text = text;
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->screen_time = screen_time;

@@ -1,5 +1,5 @@
 substitutions:
-  devicename: 
+  devicename: ulanzi
   ledpin: GPIO32 
   buzzerpin: GPIO15
   friendly_name: LED Matrix
@@ -17,22 +17,22 @@ substitutions:
 
 switch:
   - platform: template
-      name: "Auto-Adjust Brightness"
-      id: switch_autobrightness
-      icon: mdi:brightness-auto
-      restore_mode: RESTORE_DEFAULT_ON
+    name: "Auto-Adjust Brightness"
+    id: switch_autobrightness
+    icon: mdi:brightness-auto
+    restore_mode: RESTORE_DEFAULT_ON
+    lambda: |-
+      if (id(aab_enable)) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action:
       lambda: |-
-        if (id(aab_enable)) {
-          return true;
-        } else {
-          return false;
-        }
-      turn_on_action:
-        lambda: |-
-          id(aab_enable) = true;
-      turn_off_action:
-        lambda: |-
-          id(aab_enable) = false;
+        id(aab_enable) = true;
+    turn_off_action:
+      lambda: |-
+        id(aab_enable) = false;
 
 globals:
   # aab = auto-adjustable brightness
