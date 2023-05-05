@@ -1013,6 +1013,7 @@ THE SOFTWARE IS PROVIDED "AS IS", use at your own risk!
 - **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
-- ** everbody that found bugs/issues and reported them!
+- **[geekofweek](https://github.com/geekofweek)** fixed sample YAML
+- **everbody** that found bugs/issues and reported them!
 
 ## Special thanks to all sponsors
