@@ -179,51 +179,6 @@ EHMTX_SCHEMA = cv.Schema({
 
 CONFIG_SCHEMA = cv.All(font.validate_pillow_installed, EHMTX_SCHEMA)
 
-SET_COLOR_ACTION_SCHEMA = cv.Schema(
-    {
-        cv.GenerateID(): cv.use_id(EHMTX_), 
-        cv.Optional(CONF_RED,default="80"): cv.templatable(cv.uint8_t),
-        cv.Optional(CONF_BLUE,default="80"): cv.templatable(cv.uint8_t),
-        cv.Optional(CONF_GREEN,default="80"): cv.templatable(cv.uint8_t),
-    }
-)
-
-SetTodayColorAction = ehmtx_ns.class_("SetTodayColor", automation.Action)
-
-@automation.register_action(
-    "ehmtx.today.color", SetTodayColorAction, SET_COLOR_ACTION_SCHEMA
-)
-async def ehmtx_set_today_color_action_to_code(config, action_id, template_arg, args):
-    paren = await cg.get_variable(config[CONF_ID])
-
-    var = cg.new_Pvariable(action_id, template_arg, paren)
-    template_ = await cg.templatable(config[CONF_RED], args, cg.int_)
-    cg.add(var.set_red(template_))
-    template_ = await cg.templatable(config[CONF_GREEN], args, cg.int_)
-    cg.add(var.set_green(template_))
-    template_ = await cg.templatable(config[CONF_BLUE], args, cg.int_)
-    cg.add(var.set_blue(template_))
-    return var
-
-SetWeekdayColorAction = ehmtx_ns.class_("SetWeekdayColor", automation.Action)
-
-@automation.register_action(
-    "ehmtx.weekday.color", SetWeekdayColorAction, SET_COLOR_ACTION_SCHEMA
-)
-
-async def ehmtx_set_week_color_action_to_code(config, action_id, template_arg, args):
-    paren = await cg.get_variable(config[CONF_ID])
-
-    var = cg.new_Pvariable(action_id, template_arg, paren)
-    template_ = await cg.templatable(config[CONF_RED], args, cg.int_)
-    cg.add(var.set_red(template_))
-    template_ = await cg.templatable(config[CONF_GREEN], args, cg.int_)
-    cg.add(var.set_green(template_))
-    template_ = await cg.templatable(config[CONF_BLUE], args, cg.int_)
-    cg.add(var.set_blue(template_))
-
-    return var
-
 CODEOWNERS = ["@lubeda"]
 
 async def to_code(config):

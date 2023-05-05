@@ -1,5 +1,5 @@
 substitutions:
-  devicename: 
+  devicename: ulanzi
   ledpin: GPIO32 
   buzzerpin: GPIO15
   friendly_name: LED Matrix
@@ -15,7 +15,8 @@ substitutions:
   scl_pin: GPIO22 
   sda_pin: GPIO21 
 
-- platform: template
+switch:
+  - platform: template
     name: "Auto-Adjust Brightness"
     id: switch_autobrightness
     icon: mdi:brightness-auto
@@ -53,7 +54,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: release
+      ref: main
     refresh: 60s 
     components: [ ehmtxv2 ]   
 
@@ -98,6 +99,7 @@ logger:
   level: WARN
 
 api:
+  services:
     - service: tune
       variables:
         tune: string
@@ -249,7 +251,7 @@ ehmtxv2:
       url: https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif 
   on_next_screen:
     - homeassistant.event:
-        event: ehmtxv2.new_screen
+        event: esphome.new_screen
         data_template:
           iconname: !lambda "return x.c_str();"
           text: !lambda "return y.c_str();"

@@ -1,6 +1,6 @@
 # EspHoMaTriX version 2 (EHMTXv2)
 
-## This is a prerelease beta version!
+## **This is a prerelease beta version**
 
 ## Important information
 
@@ -28,7 +28,7 @@ But it had to be extensible, e.g. for the use as pool thermometer or as media pl
 
 ### Features
 
-Based on a 8x32 RGB matrix, it displays a clock, the date and up to 24 other 'screens' provided by Home Assistant. Each screen (value/text) can be associated with a 8x8 bit RGB icon or GIF animation (see [installation](#installation)). The values/text can be updated or deleted from the display queue. Each screen has a lifetime, if not refreshed in its lifetime, it will disappear. Even 8x32 GIF animations are possible. You can control nearly everything of the component.
+Based on a 8x32 RGB matrix, it displays a clock, the date and up to 24 other 'screens' provided by Home Assistant. Each screen (value/text) can be associated with a 8x8 bit RGB icon or GIF animation (see [installation](#installation-of-esphomatrixv2-custom-component). The values/text can be updated or deleted from the display queue. Each screen has a lifetime, if not refreshed in its lifetime, it will disappear. Even 8x32 GIF animations are possible. You can control nearly everything of the component.
 
 ### State
 
@@ -596,7 +596,6 @@ sensor:
            id(rgb8x32)->icon_screen("sun", text); // uses default values for color etc.
 ```
 
-
 ##### Force screen
 
 Force the selected [icon_screen](#icon-screen) ```icon_name``` to be displayed next. Afterward the loop continues from this screen. e.g. helpful for alarms. Or after an update of the value/text.
@@ -808,7 +807,6 @@ To control your display, it has to be integrated in Home Assistant. Then it prov
 
 All communication with Home Assistant use the homeasistant-api. The services can be provided by default or also defined additionally in the YAML. To define the additional services you need the id of the ehmtx-component e.g. ```id(rgb8x32)```.
 
-
 ### Use in Home Assistant automations
 
 The easiest way to use ehmtx as a status display is to use the icon names as trigger id. In my example I have an icon named "wind" when the sensor.wind_speed has a new state, this automation sends the new data to the screen with the icon named "wind" and so on.
@@ -977,7 +975,7 @@ sensor:
 
 ## Breaking changes
 
-**nothing yet, since it is new** 
+### **nothing yet, since it is new**
 
 ## EspHoMaTriX in the media
 
@@ -1013,6 +1011,7 @@ THE SOFTWARE IS PROVIDED "AS IS", use at your own risk!
 - **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
-- ** everbody that found bugs/issues and reported them!
+- **[geekofweek](https://github.com/geekofweek)** fixed sample YAML
+- **everbody** that found bugs/issues and reported them!
 
 ## Special thanks to all sponsors
