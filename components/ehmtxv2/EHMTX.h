@@ -30,6 +30,7 @@ namespace esphome
   class EHMTX_queue;
   class EHMTX_Icon;
   class EHMTXNextScreenTrigger;
+  class EHMTXIconErrorTrigger;
   class EHMTXExpiredScreenTrigger;
   class EHMTXNextClockTrigger;
 
@@ -43,6 +44,7 @@ namespace esphome
     bool show_day_of_week;
     
     std::vector<EHMTXNextScreenTrigger *> on_next_screen_triggers_;
+    std::vector<EHMTXIconErrorTrigger *> on_icon_error_triggers_;
     std::vector<EHMTXExpiredScreenTrigger *> on_expired_screen_triggers_;
     std::vector<EHMTXNextClockTrigger *> on_next_clock_triggers_;
     EHMTX_queue *find_icon_queue_element(uint8_t icon);
@@ -127,7 +129,7 @@ namespace esphome
     void set_clock_color(int r=C_RED, int g=C_GREEN, int b=C_BLUE);
     void set_today_color(int r, int g, int b);
     void set_weekday_color(int r, int g, int b);
-    void show_alarm(int r=CA_RED, int g=C_GREEN, int b=C_BLUE, int s= 2);
+    void show_alarm(int r=CA_RED, int g=CA_GREEN, int b=CA_BLUE, int s= 2);
     void show_gauge(int v,int r=C_RED, int g=C_GREEN, int b=C_BLUE); // int because of register_service
     void hide_gauge();
     void hide_indicator();
@@ -150,6 +152,7 @@ namespace esphome
     void draw_indicator();
 
     void add_on_next_screen_trigger(EHMTXNextScreenTrigger *t) { this->on_next_screen_triggers_.push_back(t); }
+    void add_on_icon_error_trigger(EHMTXIconErrorTrigger *t) { this->on_icon_error_triggers_.push_back(t); }
     void add_on_expired_screen_trigger(EHMTXExpiredScreenTrigger *t) { this->on_expired_screen_triggers_.push_back(t); }
     void add_on_next_clock_trigger(EHMTXNextClockTrigger *t) { this->on_next_clock_triggers_.push_back(t); }
     
@@ -196,6 +199,14 @@ namespace esphome
     explicit EHMTXNextScreenTrigger(EHMTX *parent) { parent->add_on_next_screen_trigger(this); }
     void process(std::string, std::string);
   };
+
+  class EHMTXIconErrorTrigger : public Trigger<std::string>
+  {
+  public:
+    explicit EHMTXIconErrorTrigger(EHMTX *parent) { parent->add_on_icon_error_trigger(this); }
+    void process(std::string);
+  };
+
 
   class EHMTXExpiredScreenTrigger : public Trigger<std::string, std::string>
   {

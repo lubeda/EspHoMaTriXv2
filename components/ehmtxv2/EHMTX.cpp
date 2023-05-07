@@ -109,6 +109,7 @@ namespace esphome
       }
     }
     ESP_LOGW(TAG, "icon: %s not found", name.c_str());
+    
     return MAXICONS;
   }
 
@@ -496,6 +497,10 @@ namespace esphome
     {
       ESP_LOGW(TAG, "icon %d not found => default: 0", icon);
       icon = 0;
+      for (auto *t : on_icon_error_triggers_)
+      {
+        t->process(iconname);
+      }
     }
     EHMTX_queue *screen = this->find_icon_queue_element(icon);
 
@@ -551,6 +556,10 @@ namespace esphome
     {
       ESP_LOGW(TAG, "icon %d not found => default: 0", icon);
       icon = 0;
+      for (auto *t : on_icon_error_triggers_)
+      {
+        t->process(iconname);
+      }
     }
     EHMTX_queue *screen = this->find_icon_queue_element(icon);
     screen->icon_name = iconname;
@@ -599,6 +608,10 @@ namespace esphome
     if (icon >= this->icon_count)
     {
       ESP_LOGW(TAG, "full screen: icon %d not found => default: 0", icon);
+      for (auto *t : on_icon_error_triggers_)
+      {
+        t->process(iconname);
+      }
       icon = 0;
     }
     EHMTX_queue *screen = this->find_icon_queue_element(icon);
@@ -879,6 +892,11 @@ namespace esphome
   void EHMTXNextScreenTrigger::process(std::string iconname, std::string text)
   {
     this->trigger(iconname, text);
+  }
+
+  void EHMTXIconErrorTrigger::process(std::string iconname)
+  {
+    this->trigger(iconname);
   }
 
   void EHMTXExpiredScreenTrigger::process(std::string iconname, std::string text)
