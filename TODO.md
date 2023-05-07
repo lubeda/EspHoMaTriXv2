@@ -13,7 +13,7 @@
 - [x] force_screen with * and filter by type, do delete all clocks etc.
 - [x] gauge with color and del_gaugeall clocks etc.
 - [ ] seconds point moveable
-- [ ] seconds point to clock screen only
+- [x] seconds point to clock screen only
 - [x] rainbow icon and text
 - [x] del_slot still active?
 - [x] CONF_ALARM remove?
