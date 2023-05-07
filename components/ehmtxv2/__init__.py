@@ -53,6 +53,10 @@ NextClockTrigger = ehmtx_ns.class_(
     "EHMTXNextClockTrigger", automation.Trigger.template(cg.std_string)
 )
 
+AddScreenTrigger = ehmtx_ns.class_(
+    "EHMTXAddScreenTrigger", automation.Trigger.template(cg.std_string)
+)
+
 CONF_URL = "url"
 CONF_FLAG = "flag"
 CONF_TIMECOMPONENT = "time_component"
@@ -81,6 +85,7 @@ CONF_DATE_FORMAT = "date_format"
 CONF_ON_NEXT_SCREEN = "on_next_screen"
 CONF_ON_NEXT_CLOCK = "on_next_clock"
 CONF_ON_ICON_ERROR = "on_icon_error"
+CONF_ON_ADD_SCREEN = "on_add_screen"
 CONF_ON_EXPIRED_SCREEN= "on_expired_screen"
 CONF_SHOW_SECONDS = "show_seconds"
 CONF_WEEK_START_MONDAY = "week_start_monday"
@@ -148,6 +153,11 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(CONF_ON_ICON_ERROR): automation.validate_automation(
         {
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(IconErrorTrigger),
+        }
+    ),
+    cv.Optional(CONF_ON_ADD_SCREEN): automation.validate_automation(
+        {
+            cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(AddScreenTrigger),
         }
     ),
     cv.Optional(CONF_ON_EXPIRED_SCREEN): automation.validate_automation(
@@ -360,7 +370,7 @@ async def to_code(config):
     cg.add(var.set_special_font_offset(config[CONF_special_FONT_XOFFSET], config[CONF_special_FONT_YOFFSET] ))
     for conf in config.get(CONF_ON_NEXT_SCREEN, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
-        await automation.build_automation(trigger, [(cg.std_string, "x"), (cg.std_string, "y")], conf)
+        await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.std_string, "text")], conf)
 
     for conf in config.get(CONF_ON_NEXT_CLOCK, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
@@ -368,10 +378,14 @@ async def to_code(config):
 
     for conf in config.get(CONF_ON_EXPIRED_SCREEN, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
-        await automation.build_automation(trigger, [(cg.std_string, "x"), (cg.std_string, "y")] , conf)
+        await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.std_string, "text")] , conf)
 
     for conf in config.get(CONF_ON_ICON_ERROR, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
-        await automation.build_automation(trigger, [(cg.std_string, "x")] , conf)
+        await automation.build_automation(trigger, [(cg.std_string, "icon")] , conf)
+
+    for conf in config.get(CONF_ON_ADD_SCREEN, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.uint8 , "mode")] , conf)
 
     await cg.register_component(var, config)

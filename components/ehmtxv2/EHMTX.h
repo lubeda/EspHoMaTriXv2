@@ -30,6 +30,7 @@ namespace esphome
   class EHMTX_queue;
   class EHMTX_Icon;
   class EHMTXNextScreenTrigger;
+  class EHMTXAddScreenTrigger;
   class EHMTXIconErrorTrigger;
   class EHMTXExpiredScreenTrigger;
   class EHMTXNextClockTrigger;
@@ -47,6 +48,7 @@ namespace esphome
     std::vector<EHMTXIconErrorTrigger *> on_icon_error_triggers_;
     std::vector<EHMTXExpiredScreenTrigger *> on_expired_screen_triggers_;
     std::vector<EHMTXNextClockTrigger *> on_next_clock_triggers_;
+    std::vector<EHMTXAddScreenTrigger *> on_add_screen_triggers_;
     EHMTX_queue *find_icon_queue_element(uint8_t icon);
     EHMTX_queue *find_free_queue_element();
 
@@ -152,6 +154,7 @@ namespace esphome
     void draw_indicator();
 
     void add_on_next_screen_trigger(EHMTXNextScreenTrigger *t) { this->on_next_screen_triggers_.push_back(t); }
+    void add_on_add_screen_trigger(EHMTXAddScreenTrigger *t) { this->on_add_screen_triggers_.push_back(t); }
     void add_on_icon_error_trigger(EHMTXIconErrorTrigger *t) { this->on_icon_error_triggers_.push_back(t); }
     void add_on_expired_screen_trigger(EHMTXExpiredScreenTrigger *t) { this->on_expired_screen_triggers_.push_back(t); }
     void add_on_next_clock_trigger(EHMTXNextClockTrigger *t) { this->on_next_clock_triggers_.push_back(t); }
@@ -198,6 +201,13 @@ namespace esphome
   public:
     explicit EHMTXNextScreenTrigger(EHMTX *parent) { parent->add_on_next_screen_trigger(this); }
     void process(std::string, std::string);
+  };
+
+  class EHMTXAddScreenTrigger : public Trigger<std::string, uint8_t>
+  {
+  public:
+    explicit EHMTXAddScreenTrigger(EHMTX *parent) { parent->add_on_add_screen_trigger(this); }
+    void process(std::string, uint8_t);
   };
 
   class EHMTXIconErrorTrigger : public Trigger<std::string>

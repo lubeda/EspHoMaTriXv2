@@ -617,13 +617,54 @@ Experienced programmers can use these public methods:
 
 To use the display without homeassistant automations, you may use the [advanced functionality](#change-configuration-during-runtime) with triggers. The triggers can be fired by sensors, time or by the ehmtx component.
 
+#### on_add_screen
+
+There is a trigger available to do some local magic. The trigger ```on_add_screen``` is triggered every time a new screen with icon is added to the queue. In lambda's you can use two local  variables:
+
+**icon** (Name of the icon, std::string): value to use in lambda
+
+**mode** ([mode](#modes) of the screen, uint8_t): value to use in lambda
+
+See the examples:
+
+##### Write information to esphome log
+
+```yaml
+ehmtxv2:
+  ....
+    on_add_screen:
+    then:  
+      - logger.log:
+          format: 'add screen: %s, mode: %d'
+          tag: "EHMTXv2 sample"
+          args:
+            - icon.c_str()
+            - mode
+```
+
+#### on_icon_error
+
+The trigger ```on_icon_error``` is triggered if you  try to add a screen with a non defined icon. In lambda's you can use one local string variable:
+
+**icon** (Name of the icon, std::string): value to use in lambda
+
+See the examples:
+
+```yaml
+ehmtxv2:
+  ....
+  on_next_screen:
+    lambda: |-
+        ESP_LOGD("Check CONFIG","Iconname: %s",icon.c_str());
+```
+
 #### on_next_screen
 
-There is a trigger available to do some local magic. The trigger ```on_next_screen``` is triggered every time a new screen is displayed (it doesn't trigger on the clock/date display!!). In lambda's you can use two local string variables:
+The trigger ```on_next_screen``` is triggered every time a new screen is displayed (it doesn't trigger on the clock/date display!!). In lambda's you can use two local string variables:
 
-**x** (Name of the icon, std::string): value to use in lambda
+**icon** (Name of the icon, std::string): value to use in lambda
 
-**y** (displayed text, std::string): value to use in lambda
+**text** (displayed text, std::string): value to use in lambda
 
 See the examples:
 
@@ -634,8 +675,8 @@ ehmtxv2:
   ....
   on_next_screen:
     lambda: |-
-        ESP_LOGD("TriggerTest","Iconname: %s",x.c_str());
-        ESP_LOGI("TriggerTest","Text: %s",y.c_str());
+        ESP_LOGD("TriggerTest","Iconname: %s",icon.c_str());
+        ESP_LOGI("TriggerTest","Text: %s",text.c_str());
 ```
 
 ##### Send an event to Home Assistant
@@ -649,8 +690,8 @@ ehmtxv2:
     - homeassistant.event:
         event: esphome.next_screen
         data_template:
-          iconname: !lambda "return x.c_str();"
-          text: !lambda "return y.c_str();"
+          iconname: !lambda "return icon.c_str();"
+          text: !lambda "return text.c_str();"
 ```
 
 ***Result***

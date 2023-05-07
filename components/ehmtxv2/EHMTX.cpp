@@ -518,6 +518,10 @@ namespace esphome
     screen->default_font = default_font;
     screen->mode = MODE_ICON_SCREEN;
     screen->icon_name = iconname;
+    for (auto *t : on_add_screen_triggers_)
+    {
+       t->process(screen->icon_name,(uint8_t)screen->mode);
+    }
     ESP_LOGD(TAG, "icon screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -892,6 +896,11 @@ namespace esphome
   void EHMTXNextScreenTrigger::process(std::string iconname, std::string text)
   {
     this->trigger(iconname, text);
+  }
+
+  void EHMTXAddScreenTrigger::process(std::string iconname, uint8_t mode)
+  {
+    this->trigger(iconname, mode);
   }
 
   void EHMTXIconErrorTrigger::process(std::string iconname)
