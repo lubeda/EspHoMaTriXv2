@@ -574,6 +574,10 @@ namespace esphome
     screen->default_font = default_font;  
     screen->mode = MODE_RAINBOW_ICON;
     screen->calc_scroll_time();
+    for (auto *t : on_add_screen_triggers_)
+    {
+       t->process(screen->icon_name,(uint8_t)screen->mode);
+    }
     ESP_LOGD(TAG, "rainbow_icon_screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -625,6 +629,10 @@ namespace esphome
     screen->icon_name = iconname;
     screen->screen_time = screen_time;
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    for (auto *t : on_add_screen_triggers_)
+    {
+       t->process(screen->icon_name,(uint8_t)screen->mode);
+    }
     ESP_LOGD(TAG, "full screen: icon: %d iconname: %s lifetime: %d screen_time:%d ", icon, iconname.c_str(), lifetime, screen_time);
     screen->status();
   }
