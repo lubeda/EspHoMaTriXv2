@@ -1,22 +1,22 @@
 blueprint:
   name: |-
-    ehmtxv2: delete screen from 8x32 RGB-display
-  description: This blueprint is triggered by a state change. If the state is between certain values it will be displayed with special colors or no state change will be displayed
+    ehmtxv2: delete screen from 8x32 RGB-matrix
+  description: This blueprint is triggered by a state change and will remove a certain screen from the queue. The screen is selected by type an icon.
   domain: automation
   input:
     ehmtx_device:
-      name: which device to display at
+      name: Which EspHoMaTriXv2 device to use
       selector:
         device:
           integration: esphome
     trigger_sensor:
-      name: which state change triggers
-      description: this entity triggers
+      name: Which state change triggers the automation?
       selector:
         entity:
           domain: sensor
     screen_mode:
-      name: the mode
+      name: The mode od the screen?
+      description: Some modes use a icon some not. The use "*" as icon, e.g. for MODE_BLANK.
       selector:
         select:
           custom_value: true
@@ -42,37 +42,26 @@ blueprint:
               value: "9"
       default: "5"
     icon_name:
-      name: the icon
+      name: The icon to specify a screen.
       selector:
         select:
           mode: dropdown
           options:
             ["*","error","home_assistant","temperature","lightbulb","music","phone","car","sleep8x32",]
       default: home_assistant
-    low_value:
-      name: below this vaule is a special color
-      selector:
-        number:
-          mode: box
-          min: -10000
-          max: +10000
-    low_color:
-      name: Low color
-      description: the color for values below the limit
-      selector:
-        color_rgb:
-      default: [40, 240, 40]
 
 variables:
   display: !input ehmtx_device
+
+mode: parallel
 
 trigger:
   - platform: state
     entity_id: !input trigger_sensor
 
 action:
-  - mode: parallel
-  - service: esphome.{{ device_attr(display, "name") }}_del_screen
+  - service: |-
+      esphome.{{ device_attr(display, "name") }}_del_screen
     data:
       icon_name: !input icon_name
       mode: !input screen_mode 
