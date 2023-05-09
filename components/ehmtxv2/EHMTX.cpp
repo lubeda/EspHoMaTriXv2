@@ -109,6 +109,7 @@ namespace esphome
       }
     }
     ESP_LOGW(TAG, "icon: %s not found", name.c_str());
+    
     return MAXICONS;
   }
 
@@ -496,6 +497,10 @@ namespace esphome
     {
       ESP_LOGW(TAG, "icon %d not found => default: 0", icon);
       icon = 0;
+      for (auto *t : on_icon_error_triggers_)
+      {
+        t->process(iconname);
+      }
     }
     EHMTX_queue *screen = this->find_icon_queue_element(icon);
 
@@ -513,6 +518,10 @@ namespace esphome
     screen->default_font = default_font;
     screen->mode = MODE_ICON_SCREEN;
     screen->icon_name = iconname;
+    for (auto *t : on_add_screen_triggers_)
+    {
+       t->process(screen->icon_name,(uint8_t)screen->mode);
+    }
     ESP_LOGD(TAG, "icon screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -551,6 +560,10 @@ namespace esphome
     {
       ESP_LOGW(TAG, "icon %d not found => default: 0", icon);
       icon = 0;
+      for (auto *t : on_icon_error_triggers_)
+      {
+        t->process(iconname);
+      }
     }
     EHMTX_queue *screen = this->find_icon_queue_element(icon);
     screen->icon_name = iconname;
@@ -561,6 +574,10 @@ namespace esphome
     screen->default_font = default_font;  
     screen->mode = MODE_RAINBOW_ICON;
     screen->calc_scroll_time();
+    for (auto *t : on_add_screen_triggers_)
+    {
+       t->process(screen->icon_name,(uint8_t)screen->mode);
+    }
     ESP_LOGD(TAG, "rainbow_icon_screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -599,6 +616,10 @@ namespace esphome
     if (icon >= this->icon_count)
     {
       ESP_LOGW(TAG, "full screen: icon %d not found => default: 0", icon);
+      for (auto *t : on_icon_error_triggers_)
+      {
+        t->process(iconname);
+      }
       icon = 0;
     }
     EHMTX_queue *screen = this->find_icon_queue_element(icon);
@@ -608,6 +629,10 @@ namespace esphome
     screen->icon_name = iconname;
     screen->screen_time = screen_time;
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    for (auto *t : on_add_screen_triggers_)
+    {
+       t->process(screen->icon_name,(uint8_t)screen->mode);
+    }
     ESP_LOGD(TAG, "full screen: icon: %d iconname: %s lifetime: %d screen_time:%d ", icon, iconname.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -879,6 +904,16 @@ namespace esphome
   void EHMTXNextScreenTrigger::process(std::string iconname, std::string text)
   {
     this->trigger(iconname, text);
+  }
+
+  void EHMTXAddScreenTrigger::process(std::string iconname, uint8_t mode)
+  {
+    this->trigger(iconname, mode);
+  }
+
+  void EHMTXIconErrorTrigger::process(std::string iconname)
+  {
+    this->trigger(iconname);
   }
 
   void EHMTXExpiredScreenTrigger::process(std::string iconname, std::string text)

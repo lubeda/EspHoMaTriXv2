@@ -1,22 +1,23 @@
 blueprint:
   name: |-
-    ehmtxv2: show screen elements to 8x32 RGB-display
-  description: add a gauge,indicator or alarm element to your display
+    ehmtxv2: Show screen elements on 8x32 RGB-matrix
+  description: Add a gauge, indicator or alarm element to your EspHoMaTriXv2 display
   domain: automation
   input:
     ehmtx_device:
-      name: which device to display at
+      name: Which device to display at?
       selector:
         device:
           integration: esphome
     trigger_sensor:
-      name: which state to show
-      description: what triggers this automation?
+      name: Which state-change triggers the screen element
       selector:
         entity:
           domain: sensor
     element:
-      name: the element
+      name: The screen element
+      description: |-
+         Indicator and alarm are in the corners at the right size and have a color and a size. The gauge has a color and a value in percent.
       selector:
         select:
           custom_value: true
@@ -30,7 +31,7 @@ blueprint:
              value: show_indicator
       default: show_indicator
     gauge_value:
-      name: the value on the gauge
+      name: The value on the gauge (if selected)
       selector:
         number:
           mode: slider
@@ -38,7 +39,7 @@ blueprint:
           max: 100
       default: 50
     size_value:
-      name: size of the alarm or indicator
+      name: The size of the alarm or indicator (if selected)
       selector:
         number:
           mode: slider
@@ -47,7 +48,6 @@ blueprint:
       default: 2
     element_color:
       name: The color for the element
-      description: the color 
       selector:
         color_rgb:
       default: [240, 40, 40]
@@ -57,17 +57,20 @@ variables:
   myservice: !input element
   value: !input gauge_value
   size: !input size_value
+mode: parallel
+
 trigger:
   - platform: state
     entity_id: !input trigger_sensor
+
 action:
-  - mode: parallel
   - if:
       - condition: template
         value_template: |- 
           {{ myservice != "show_gauge" }}
     then:
-      - service: esphome.{{ device_attr(display, "name") }}_{{ myservice }}
+      - service: |-
+          esphome.{{ device_attr(display, "name") }}_{{ myservice }}
         data:
           r: |-
             {{ element_color[0] }}
@@ -78,7 +81,8 @@ action:
           size: |-
             {{ size }}
     else:
-      - service: esphome.{{ device_attr(display, "name") }}_{{ myservice }}
+      - service: |-
+          esphome.{{ device_attr(display, "name") }}_{{ myservice }}
         data:
           r: |-
             {{ element_color[0] }}
@@ -87,5 +91,5 @@ action:
           b: |-
             {{ element_color[2] }}
           percent: |-
-            {{ element_color[2] }}
+            {{ value }}
       

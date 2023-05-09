@@ -1,29 +1,29 @@
 blueprint:
   name: |-
-    ehmtxv2: show state with unit on on 8x32 RGB-display
-  description: This blueprint is triggered by a state change. If the state is between certain values it will be displayed with special colors or no state change will be displayed
+    ehmtxv2: show state with unit on 8x32 RGB-matrix
+  description: This blueprint is triggered by a state change. If the state is between certain values, it will be displayed with special colors or no state change will be displayed
   domain: automation
   input:
     ehmtx_device:
-      name: which device to display at
+      name: Which EspHoMaTriX-device to display at?
       selector:
         device:
           integration: esphome
     trigger_sensor:
-      name: which state to show
-      description: This sensor state will be displayed
+      name: Which sensor state to show?
+      description: This sensor state will be displayed.
       selector:
         entity:
           domain: sensor
           multiple: true
     default_color:
-      name: default text color
-      description: this is the default textcolor for values within the low and the high value
+      name: Default text color
+      description: This is the default text color for values within the low and the high value (90% white)
       selector:
         color_rgb:
       default: [240, 240, 240]
     lifetime:
-      name: how many minutes is this screen in the loop
+      name: How many minutes is this screen kept in the loop?
       selector:
         number:
           min: 1
@@ -31,7 +31,7 @@ blueprint:
           step: 1
       default: 2
     screen_time:
-      name: minimum display time per loop in seconds
+      name: Minimum display time of this screen per loop in seconds?
       selector:
         number:
           min: 6
@@ -39,7 +39,8 @@ blueprint:
           step: 2
       default: 12
     icon_name:
-      name: the icon
+      name: The icon associated to this state screen? 
+      description: If you use additional icons in your YAML, you have to add them to this blueprint.
       selector:
         select:
           mode: dropdown
@@ -47,22 +48,24 @@ blueprint:
             ["error","home_assistant","temperature","lightbulb","music","phone","car","sleep8x32",]
       default: home_assistant
     use_friendly:
-      name: use the triggers friendly name in display
+      name: Use the triggers friendly name in display?
+      description: Add the friendly name of the sensor to the state display.
       selector:
         boolean:
       default: true
     default_font:
-      name: true uses the default, false the special font
+      name: Use the default or set false to use the special font.
       selector:
         boolean:
       default: true
     use_colors:
-      name: Use colors based on state values
+      name: Use colors based on state values?
+      description: If false, the default color will be used.
       selector:
         boolean:
       default: false
     low_value:
-      name: below this vaule is a special color
+      name: Below this value use "low color".
       selector:
         number:
           mode: box
@@ -71,12 +74,12 @@ blueprint:
       default: 0
     low_color:
       name: Low color
-      description: the color for values below the limit
+      description: The color for values below the above limit.
       selector:
         color_rgb:
       default: [40, 240, 40]
     high_value:
-      name: upper limit
+      name: Above this value use the "high Color".
       selector:
         number:
           mode: box
@@ -88,8 +91,7 @@ blueprint:
       description: Text color for values above the defined value
       selector:
         color_rgb:
-      default: [240, 40, 40]
-    
+      default: [240, 40, 40]  
 
 variables:
   display: !input ehmtx_device
@@ -98,17 +100,19 @@ variables:
   lo_color: !input low_color
   hi_color: !input high_color
 
+mode: queued
+
 trigger:
   - platform: state
     entity_id: !input trigger_sensor
  
 action:
-  - mode: parallel
   - if:
       - condition: template
         value_template: "{{ not use_colors }}"
     then:
-      - service: esphome.{{ device_attr(display, "name") }}_icon_screen
+      - service: |-
+          esphome.{{ device_attr(display, "name") }}_icon_screen
         data:
           icon_name: !input icon_name
           screen_time: !input screen_time
@@ -133,7 +137,8 @@ action:
                 entity_id: !input trigger_sensor
                 below: !input low_value
             sequence:
-              - service: esphome.{{ device_attr(display, "name") }}_icon_screen
+              - service: |-
+                 esphome.{{ device_attr(display, "name") }}_icon_screen
                 data:
                   icon_name: !input icon_name
                   screen_time: !input screen_time
@@ -156,7 +161,8 @@ action:
                 entity_id: !input trigger_sensor
                 above: !input high_value
             sequence:
-              - service: esphome.{{ device_attr(display, "name") }}_icon_screen
+              - service: |-
+                  esphome.{{ device_attr(display, "name") }}_icon_screen
                 data:
                   icon_name: !input icon_name
                   screen_time: !input screen_time
@@ -175,7 +181,8 @@ action:
                   b: |-
                     {{ hi_color[2] }}
         default:
-          - service: esphome.{{ device_attr(display, "name") }}_icon_screen
+          - service: |-
+              esphome.{{ device_attr(display, "name") }}_icon_screen
             data:
               icon_name: !input icon_name
               screen_time: !input screen_time
