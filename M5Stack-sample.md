@@ -12,4 +12,4 @@ The setup was just for demonstration, you should **never** power your matrix via
 
 [Youtube](https://www.youtube.com/watch?v=CsOir14DCbM)
 
-**Use at your own risk!!!!!**
+**Use at your own risk!!!!**

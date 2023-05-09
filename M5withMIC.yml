@@ -1,6 +1,6 @@
 substitutions:
   devicename: m5mic
-  
+
 external_components:
   - source:
       type: git
