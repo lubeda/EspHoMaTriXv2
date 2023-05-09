@@ -1,22 +1,21 @@
 blueprint:
   name: |-
-    ehmtxv2: hide screen elements to 8x32 RGB-display
-  description: removes the gauge,indicator or alarm element from your display
+    ehmtxv2: Hide screen elements on 8x32 RGB-matrix
+  description: Removes the gauge, indicator or alarm element from your EspHoMaTriXv2 display.
   domain: automation
   input:
     ehmtx_device:
-      name: which device to display at
+      name: Which display to use
       selector:
         device:
           integration: esphome
     trigger_sensor:
-      name: which statechange triggers
-      description: this entity triggers
+      name: Which state change triggers this automation
       selector:
         entity:
           domain: sensor
     element:
-      name: the element
+      name: The screen element
       selector:
         select:
           custom_value: true
@@ -34,10 +33,12 @@ variables:
   display: !input ehmtx_device
   service: !input element
 
+mode: parallel
+
 trigger:
   - platform: state
     entity_id: !input trigger_sensor
 
 action:
-  - mode: parallel
-  - service: esphome.{{ device_attr(display, "name") }}_{{service}}
+  - service: |-
+      esphome.{{ device_attr(display, "name") }}_{{service}}

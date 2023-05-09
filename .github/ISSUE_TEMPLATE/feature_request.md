@@ -1,10 +1,9 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
-title: "[FEATURE]"
-labels: enhancement
+about: Suggest an idea for this EspHoMaTriXv2
+title: "[FEATURE REQUEST]"
+labels: feature request
 assignees: ''
-
 ---
 
 <!-- Make sure to read the documentaion (https://github.com/lubeda/EspHoMaTriXv2/blob/main/README.md) before opening an issue. -->

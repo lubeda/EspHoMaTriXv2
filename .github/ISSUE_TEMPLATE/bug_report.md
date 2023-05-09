@@ -4,7 +4,6 @@ about: Create a report to help us improve EspHoMaTriXv2
 title: "[BUG]"
 labels: bug
 assignees: ''
-
 ---
 
 <!-- Make sure to read the documentaion (https://github.com/lubeda/EspHoMaTriXv2/blob/main/README.md) before opening an issue. -->
@@ -20,6 +19,7 @@ Add a description of the bug. Detail the expected behavior in contrast with the 
 - used Hardware:
   - ESP32 or ESP8266
   - EspHoMaTriXv2 version: [e.g. 2023.5.0]
+
 
 ## To Reproduce
 
