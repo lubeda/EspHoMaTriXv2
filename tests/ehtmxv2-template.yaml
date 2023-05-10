@@ -13,7 +13,37 @@ external_components:
 esphome:
   comment: "EHMTXv2 TEXT from LuBeDa"
   name: $devicename 
-  
+  on_boot:
+    lambda: |-
+      if(rgb8x32)->show_indicator(255,100,50,2);
+      if(rgb8x32)->hide_indicator();
+      if(rgb8x32)->show_alarm(255,0,150,3);
+      if(rgb8x32)->hide_alarm();
+      if(rgb8x32)->icon_screen("error","Hallo Text",false,237,20,100,200,150);
+      if(rgb8x32)->force_screen("error");
+      if(rgb8x32)->del_screen("error");
+      if(rgb8x32)->del_screen("error",5);
+      if(rgb8x32)->rainbow_icon_screen("error","Hallo Text",true,237,20,100,200,150);
+      id(rgb8x32)->status());
+      id(rgb8x32)->set_display_on();
+      id(rgb8x32)->set_display_off();
+      id(rgb8x32)->hold_screen();
+      id(rgb8x32)->show_gauge(100,0,200);
+      id(rgb8x32)->hide_gauge();
+      id(rgb8x32)->clock_color(200,100,50);
+      id(rgb8x32)->today_color(200,100,50);
+      id(rgb8x32)->weekday_color(200,100,50);
+      id(rgb8x32)->full_screen("scale");
+      id(rgb8x32)->rainbow_icon_screen("error","Oh ein Text");
+      id(rgb8x32)->text_screen("text",30);
+      id(rgb8x32)->rainbow_text_screen("text",30);
+      id(rgb8x32)->clock_screen(30,5);
+      id(rgb8x32)->rainbow_clock_screen(30,5);
+      id(rgb8x32)->date_screen(30,5);
+      id(rgb8x32)->rainbow_date_screen(30,5);
+      id(rgb8x32)->rainbow_blank_screen(30,5);
+      id(rgb8x32)->set_brightness(20);
+
 esp32:
   board: esp32dev
 
@@ -92,5 +122,36 @@ ehmtxv2:
   icons: 
     - id: error
       lameid: 40530
+    - id: scale
+      file: scale.gif
+      resize: 32x8
     - id: sleep8x32
       url: https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif 
+  on_next_screen:
+    - homeassistant.event:
+        event: esphome.new_screen
+        data_template:
+          iconname: !lambda "return icon.c_str();"
+          text: !lambda "return text.c_str();"
+  on_add_screen:
+    - homeassistant.event:
+        event: esphome.new_screen
+        data_template:
+          iconname: !lambda "return icon.c_str();"
+          text: !lambda "return text.c_str();"
+  on_next_clock:
+    - homeassistant.event:
+        event: esphome.new_screen
+        data_template:
+          iconname: "Hallo"
+  on_expired_screen:
+    - homeassistant.event:
+        event: esphome.new_screen
+        data_template:
+          iconname: !lambda "return icon.c_str();"
+          text: !lambda "return text.c_str();"
+  on_icon_error:
+    - homeassistant.event:
+        event: esphome.new_screen
+        data_template:
+          iconname: !lambda "return icon.c_str();"
