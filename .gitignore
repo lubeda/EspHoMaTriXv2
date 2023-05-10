@@ -4,7 +4,6 @@ venv
 .esphome/
 _icons/
 _fonts/
-secrets.yaml
 esphome.ps1
 dev_*.yaml
 ehmtx8266.yaml
