@@ -15,10 +15,10 @@ jobs:
     strategy:
       matrix:
         firmware:
-          - file: copy2esphome/ulanzi-easy.yaml
+          - file: tests/ulanzi-easy.yaml
             name: Ulanzi-Easy
             manifest_filename: ulanzi-easy-manifest.json
-          - file:  copy2esphome/ehtmxv2-template.yaml
+          - file:  tests/ehtmxv2-template.yaml
             name: EHMTX template
             manifest_filename: ehtmxv2-template-manifest.json
       fail-fast: false

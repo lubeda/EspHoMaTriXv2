@@ -6,14 +6,12 @@ substitutions:
   
 external_components:
   - source:
-      type: git
-      url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: release
-    refresh: 60s 
+      type: local
+      path: EspHoMaTriXv2/components # e.g. /config/esphome/components
     components: [ ehmtxv2 ]   
 
 esphome:
-  comment: "EHMTXv2 from LuBeDa"
+  comment: "EHMTXv2 TEXT from LuBeDa"
   name: $devicename 
   
 esp32:
@@ -52,7 +50,7 @@ light:
     type: GRB
     internal: true
     variant: WS2812
-    pin: $ledpin
+    pin: $matrix_pin
     num_leds: 256
     color_correct: [30%, 30%, 30%]
     gamma_correct: 2.0
@@ -94,17 +92,5 @@ ehmtxv2:
   icons: 
     - id: error
       lameid: 40530
-    - id: home_assistant
-      lameid: 47693
-    - id: temperature
-      lameid: 2056
-    - id: lightbulb
-      lameid: 1762
-    - id: music
-      lameid: 45625
-    - id: phone
-      lameid: 1232
-    - id: car
-      lameid: 2819
     - id: sleep8x32
       url: https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif 
