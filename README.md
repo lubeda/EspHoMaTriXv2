@@ -12,6 +12,8 @@ A simple but very flexible DIY status display, built with a flexible 8x32 RGB LE
 
 ![sample image](./images/sample.png)
 
+If you like to tinker you can use the custom component even as a satelit voice control microphone. [Youtube](https://www.youtube.com/watch?v=CsOir14DCbM)
+
 ## Background
 
 There are some "RGB-matrices" status displays/clocks out there, the commercial ones from LaMetric and Ulanzi, also some very good DIY-alternatives.
