@@ -7,7 +7,7 @@ substitutions:
 external_components:
   - source:
       type: local
-      path: EspHoMaTriXv2/components # e.g. /config/esphome/components
+      path: ../components # e.g. /config/esphome/components
     components: [ ehmtxv2 ]   
 
 esphome:
