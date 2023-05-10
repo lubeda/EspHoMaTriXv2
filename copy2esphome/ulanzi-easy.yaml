@@ -253,5 +253,5 @@ ehmtxv2:
     - homeassistant.event:
         event: esphome.new_screen
         data_template:
-          iconname: !lambda "return x.c_str();"
-          text: !lambda "return y.c_str();"
+          iconname: !lambda "return icon.c_str();"
+          text: !lambda "return text.c_str();"
