@@ -138,7 +138,7 @@ ehmtxv2:
         event: esphome.new_screen
         data_template:
           iconname: !lambda "return icon.c_str();"
-          text: !lambda "return text.c_str();"
+          mode: !lambda "return mode;"
   on_next_clock:
     - homeassistant.event:
         event: esphome.new_screen
