@@ -157,7 +157,7 @@ namespace esphome
   void EHMTX::setup()
   {
     ESP_LOGD(TAG, "Setting up services");
-    register_service(&EHMTX::get_status, "status");
+    register_service(&EHMTX::get_status, "get_status");
     register_service(&EHMTX::set_display_on, "display_on");
     register_service(&EHMTX::set_display_off, "display_off");
     register_service(&EHMTX::hold_screen, "hold_screen", {"time"});
@@ -168,9 +168,9 @@ namespace esphome
     register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b", "size"});
     register_service(&EHMTX::show_indicator, "show_indicator", {"r", "g", "b", "size"});
 
-    register_service(&EHMTX::set_clock_color, "clock_color", {"r", "g", "b"});
-    register_service(&EHMTX::set_today_color, "today_color", {"r", "g", "b"});
-    register_service(&EHMTX::set_weekday_color, "weekday_color", {"r", "g", "b"});
+    register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
+    register_service(&EHMTX::set_today_color, "set_today_color", {"r", "g", "b"});
+    register_service(&EHMTX::set_weekday_color, "set_weekday_color", {"r", "g", "b"});
 
     register_service(&EHMTX::del_screen, "del_screen", {"icon_name", "mode"});
     register_service(&EHMTX::force_screen, "force_screen", {"icon_name", "mode"});

@@ -7,7 +7,7 @@ substitutions:
 external_components:
   - source:
       type: local
-      path: ../components # e.g. /config/esphome/components
+      path: /config/esphome/EspHoMaTriXv2/components  #../components
     components: [ ehmtxv2 ]   
 
 esphome:
@@ -15,24 +15,24 @@ esphome:
   name: $devicename 
   on_boot:
     lambda: |-
-      if(rgb8x32)->show_indicator(255,100,50,2);
-      if(rgb8x32)->hide_indicator();
-      if(rgb8x32)->show_alarm(255,0,150,3);
-      if(rgb8x32)->hide_alarm();
-      if(rgb8x32)->icon_screen("error","Hallo Text",false,237,20,100,200,150);
-      if(rgb8x32)->force_screen("error");
-      if(rgb8x32)->del_screen("error");
-      if(rgb8x32)->del_screen("error",5);
-      if(rgb8x32)->rainbow_icon_screen("error","Hallo Text",true,237,20,100,200,150);
-      id(rgb8x32)->status());
+      id(rgb8x32)->show_indicator(255,100,50,2);
+      id(rgb8x32)->hide_indicator();
+      id(rgb8x32)->show_alarm(255,0,150,3);
+      id(rgb8x32)->hide_alarm();
+      id(rgb8x32)->icon_screen("error","Hallo Text",false,237,20,100,200,150);
+      id(rgb8x32)->force_screen("error");
+      id(rgb8x32)->del_screen("error");
+      id(rgb8x32)->del_screen("error",5);
+      id(rgb8x32)->rainbow_icon_screen("error","Hallo Text",true,237,20);
+      id(rgb8x32)->get_status();
       id(rgb8x32)->set_display_on();
       id(rgb8x32)->set_display_off();
       id(rgb8x32)->hold_screen();
       id(rgb8x32)->show_gauge(100,0,200);
       id(rgb8x32)->hide_gauge();
-      id(rgb8x32)->clock_color(200,100,50);
-      id(rgb8x32)->today_color(200,100,50);
-      id(rgb8x32)->weekday_color(200,100,50);
+      id(rgb8x32)->set_clock_color(200,100,50);
+      id(rgb8x32)->set_today_color(200,100,50);
+      id(rgb8x32)->set_weekday_color(200,100,50);
       id(rgb8x32)->full_screen("scale");
       id(rgb8x32)->rainbow_icon_screen("error","Oh ein Text");
       id(rgb8x32)->text_screen("text",30);
@@ -41,7 +41,7 @@ esphome:
       id(rgb8x32)->rainbow_clock_screen(30,5);
       id(rgb8x32)->date_screen(30,5);
       id(rgb8x32)->rainbow_date_screen(30,5);
-      id(rgb8x32)->rainbow_blank_screen(30,5);
+      id(rgb8x32)->blank_screen(30,5);
       id(rgb8x32)->set_brightness(20);
 
 esp32:

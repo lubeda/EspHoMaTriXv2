@@ -548,7 +548,7 @@ Numerous features are accessible with services from home assistant and lambdas y
   
 |service|parameter|result|
 |---|---|---|
-|`status`|none|write some status information to the esphome logs|
+|`get_status`|none|write some status information to the esphome logs|
 |`display_on`|none|turn display off|
 |`display_off`|none|turn display on|
 |`hold_screen`|none|show the screen that is currently displayed for the number of seconds longer|
@@ -558,9 +558,9 @@ Numerous features are accessible with services from home assistant and lambdas y
 |`show_gauge"`|"percent", "r", "g", "b"|set the height of the gauge according to the percentage in the given color|
 |`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper-right corner|
 |`show_indicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
-|`clock_color`|"r", "g", "b"|set the default color for the clock/date display|
-|`today_color"`|"r", "g", "b"|set the special color for today in the day of week line|
-|`weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
+|`set_clock_color`|"r", "g", "b"|set the default color for the clock/date display|
+|`set_today_color"`|"r", "g", "b"|set the special color for today in the day of week line|
+|`set_weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
 |`del_screen`|"icon_name", "mode"|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
 |`force_screen`|"icon_name", "mode"|displays the selected the specified icon screen from the queue, the [mode](#modes) is a filter|
 |`full_screen`|"icon_name", "lifetime", "screen_time"|show the specified 8x32 icon as full screen|
@@ -825,7 +825,7 @@ binary_sensor:
         id(rgb8x32)->hold_screen(120);
 ```
 
-**(D)** Service **status**
+**(D)** Service **get_status**
 
 This service displays the running queue and a list of icons in the logs
 
