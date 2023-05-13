@@ -223,7 +223,7 @@ namespace esphome
   void EHMTX::update() // called from polling component
   {
     if (!this->is_running){
-      if (this->clock->now().timestamp > 6000) {
+      if (this->clock->now().timestamp > 15) {
         ESP_LOGD(TAG, "time sync => starting");
         this->is_running = true;
       }
