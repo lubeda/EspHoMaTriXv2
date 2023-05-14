@@ -50,14 +50,9 @@ binary_sensor:
     name: ${devicename} Button
     id: echo_button
     on_press:
-      - voice_assistant.start:
-      - lambda: |-
-          id(rgb8x32)->show_alarm(120,0,0,2);
-    on_release:
+      - voice_assistant.start: 
+on_release:
       - voice_assistant.stop:
-      - lambda: |-
-          id(rgb8x32)->hide_alarm();
-
 font: !include library/ehmtx_font.yaml
 
 switch:
