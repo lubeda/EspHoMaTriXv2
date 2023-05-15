@@ -574,6 +574,18 @@ Numerous features are accessible with services from home assistant and lambdas y
 |`date_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the date|
 |`brightness`|"value"|set the display brightness|
 
+#### Parameter description
+
+"r", "g", "b": Color components for red, green and blue 0..255
+"size": The size of the indicator or alarm, 1-3
+"percent": values from 0..100
+"icon_name": the id of the icon to show, as defined in the YAML file
+"text": a text message to display
+"lifetime": how long does this screen stay in the queue (minutes)
+"screen_time": how long is this screen display in the loop (seconds). For short text without scrolling it is shown the defined time, longer text is scrolled at least `scroll_count` times.
+"default_font": use the default font (true) or the special font (false)
+"value": the brightness 0..255 
+
 ### Local lambdas
 
 #### Add screen to your display queue
