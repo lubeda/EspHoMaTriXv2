@@ -1,8 +1,9 @@
 ---
 name: Question
-about: Open an issue to ask something
+
+about: Open an issue to ask something about EspHoMaTriXv2
 title: "[QUESTION]"
-labels: question
+labels: help wanted, question
 assignees: ''
 ---
 
@@ -16,7 +17,8 @@ Add here your question.
 
 - used Hardware:
   - ESP32 or ESP8266
-  - EspHoMaTriXv2 version: [ eg. 2023.5.0 ]
+
+  - EspHoMaTriXv2 version: [e.g. 2023.5.0]
 
 ## Logs
 

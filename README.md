@@ -12,6 +12,8 @@ A simple but very flexible DIY status display, built with a flexible 8x32 RGB LE
 
 ![sample image](./images/sample.png)
 
+If you like to tinker you can use the custom component even as a satelit voice control microphone. [Youtube](https://www.youtube.com/watch?v=CsOir14DCbM)
+
 ## Background
 
 There are some "RGB-matrices" status displays/clocks out there, the commercial ones from LaMetric and Ulanzi, also some very good DIY-alternatives.
@@ -546,7 +548,7 @@ Numerous features are accessible with services from home assistant and lambdas y
   
 |service|parameter|result|
 |---|---|---|
-|`status`|none|write some status information to the esphome logs|
+|`get_status`|none|write some status information to the esphome logs|
 |`display_on`|none|turn display off|
 |`display_off`|none|turn display on|
 |`hold_screen`|none|show the screen that is currently displayed for the number of seconds longer|
@@ -556,9 +558,9 @@ Numerous features are accessible with services from home assistant and lambdas y
 |`show_gauge"`|"percent", "r", "g", "b"|set the height of the gauge according to the percentage in the given color|
 |`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper-right corner|
 |`show_indicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
-|`clock_color`|"r", "g", "b"|set the default color for the clock/date display|
-|`today_color"`|"r", "g", "b"|set the special color for today in the day of week line|
-|`weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
+|`set_clock_color`|"r", "g", "b"|set the default color for the clock/date display|
+|`set_today_color"`|"r", "g", "b"|set the special color for today in the day of week line|
+|`set_weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
 |`del_screen`|"icon_name", "mode"|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
 |`force_screen`|"icon_name", "mode"|displays the selected the specified icon screen from the queue, the [mode](#modes) is a filter|
 |`full_screen`|"icon_name", "lifetime", "screen_time"|show the specified 8x32 icon as full screen|
@@ -571,6 +573,18 @@ Numerous features are accessible with services from home assistant and lambdas y
 |`blank_screen`|"lifetime", "screen_time"|"show" an empty screen|
 |`date_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the date|
 |`brightness`|"value"|set the display brightness|
+
+#### Parameter description
+
+"r", "g", "b": Color components for red, green and blue 0..255
+"size": The size of the indicator or alarm, 1-3
+"percent": values from 0..100
+"icon_name": the id of the icon to show, as defined in the YAML file
+"text": a text message to display
+"lifetime": how long does this screen stay in the queue (minutes)
+"screen_time": how long is this screen display in the loop (seconds). For short text without scrolling it is shown the defined time, longer text is scrolled at least `scroll_count` times.
+"default_font": use the default font (true) or the special font (false)
+"value": the brightness 0..255 
 
 ### Local lambdas
 
@@ -823,7 +837,7 @@ binary_sensor:
         id(rgb8x32)->hold_screen(120);
 ```
 
-**(D)** Service **status**
+**(D)** Service **get_status**
 
 This service displays the running queue and a list of icons in the logs
 

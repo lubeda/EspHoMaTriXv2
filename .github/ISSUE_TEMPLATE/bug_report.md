@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a detailed report to help us improve
+about: Create a report to help us improve EspHoMaTriXv2
 title: "[BUG]"
 labels: bug
 assignees: ''
@@ -12,13 +12,14 @@ assignees: ''
 
 ## Describe the bug
 
-Add a description of the bug. Detail the expected behaviour in contrast with the behaviour you're observing.
+Add a description of the bug. Detail the expected behavior in contrast with the behavior you're observing.
 
 ## Additional information
 
 - used Hardware:
   - ESP32 or ESP8266
-  - EspHoMaTriXv2 version: [ eg. 2023.5.0 ]
+  - EspHoMaTriXv2 version: [e.g. 2023.5.0]
+
 
 ## To Reproduce
 

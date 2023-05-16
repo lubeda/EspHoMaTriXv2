@@ -4,7 +4,6 @@ venv
 .esphome/
 _icons/
 _fonts/
-secrets.yaml
 esphome.ps1
 dev_*.yaml
 ehmtx8266.yaml
@@ -27,3 +26,5 @@ ltr1.png
 ltr2.png
 ltr3.png
 8x32 iMAGE.xcf
+
+.vscode/c_cpp_properties.json
