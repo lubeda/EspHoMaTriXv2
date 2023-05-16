@@ -85,11 +85,13 @@ namespace esphome
     int8_t default_yoffset, default_xoffset;
     int8_t special_yoffset, special_xoffset;
     uint8_t find_icon(std::string name);
+    uint8_t find_last_clock();
     bool string_has_ending(std::string const &fullString, std::string const &ending);
     bool show_seconds;
     uint16_t scroll_interval; // ms to between scrollsteps
     uint16_t rainbow_interval; // ms to between scrollsteps
     uint16_t frame_interval;   // ms to next_frame()
+    uint16_t clock_interval;
     uint16_t hold_time;       // seconds display of screen_time to extend 
     uint8_t icon_count;        // max iconnumber -1
     unsigned long last_scroll_time;
@@ -105,7 +107,7 @@ namespace esphome
     void skip_screen();
     void hold_screen(int t=30);
     void set_display(addressable_light::AddressableLightDisplay *disp);
-    
+    void set_clock_interval(uint16_t t=60);
     void set_hold_time(uint16_t t=30);
     void set_clock_time(uint16_t t=10);
     void set_show_day_of_week(bool b);
@@ -192,7 +194,6 @@ namespace esphome
     bool update_slot(uint8_t _icon);
     void update_screen();
     void hold_slot(uint8_t _sec);
-    void set_text(std::string text, uint8_t icon, uint16_t pixel, uint16_t et, uint16_t st);
     void calc_scroll_time();
   };
 
