@@ -361,7 +361,7 @@ namespace esphome
   }
   void EHMTX::tick()
   {
-    this->hue_++;
+    this->hue_++;    
     if (this->hue_ == 360)
     {
       this->hue_ = 0;
@@ -369,6 +369,25 @@ namespace esphome
     float red, green, blue;
     esphome::hsv_to_rgb(this->hue_, 0.8, 0.8, red, green, blue);
     this->rainbow_color = Color(uint8_t(255 * red), uint8_t(255 * green), uint8_t(255 * blue));
+    
+    this->scroll_step++;
+
+    switch (this->queue[this->screen_pointer]->mode)
+      {
+        case MODE_ICON_SCREEN:
+        case MODE_RAINBOW_ICON:
+            if (this->scroll_step > this->queue[this->screen_pointer]->pixels_ + 8) {
+              this->scroll_step = 0;
+            }
+          break;
+        case MODE_RAINBOW_TEXT:
+        case MODE_TEXT_SCREEN:
+            if (this->scroll_step > this->queue[this->screen_pointer]->pixels_ + 31) {
+              this->scroll_step = 0;
+            }
+          break;
+      }
+
     time_t ts = this->clock->now().timestamp;
 
     if (this->is_running)
@@ -384,6 +403,7 @@ namespace esphome
         if (this->screen_pointer != MAXQUEUE)
         {
           this->queue[this->screen_pointer]->shiftx_ = 0;
+          this->scroll_step=0;
           this->queue[this->screen_pointer]->last_time = ts + this->queue[this->screen_pointer]->screen_time_;
           if (this->queue[this->screen_pointer]->icon < this->icon_count)
           {

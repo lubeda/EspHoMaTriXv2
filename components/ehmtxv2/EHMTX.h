@@ -70,6 +70,7 @@ namespace esphome
     bool rtl;
     uint8_t gauge_value;
     uint16_t clock_time;
+    uint16_t scroll_step;
     uint8_t scroll_count;
     void remove_expired_queue_element();
     uint8_t find_oldest_queue_element();

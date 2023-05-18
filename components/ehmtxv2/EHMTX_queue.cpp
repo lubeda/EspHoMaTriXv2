@@ -142,6 +142,7 @@ namespace esphome
         if (this->shiftx_ > this->pixels_ + 32)
         {
           this->shiftx_ = 0;
+          
         }
         this->config_->last_scroll_time = millis();
       }
@@ -236,8 +237,6 @@ namespace esphome
         else {
           this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
-         // this->config_->display->print(this->centerx_ + TEXTSCROLLSTART - this->shiftx_ + extraoffset + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
-         //                             this->text.c_str());
         }
         if (this->config_->display_gauge)
         {
@@ -263,7 +262,7 @@ namespace esphome
           extraoffset += 2;
         }
         color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
-        this->config_->display->print(this->centerx_ - this->shiftx_ + xoffset + extraoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
         break;
       default:
@@ -301,7 +300,7 @@ namespace esphome
     switch (this->mode)
     {
     case MODE_RAINBOW_TEXT:
-    case MODE_TEXT_SCREEN:
+    case MODE_TEXT_SCREEN:   
       if (this->pixels_ < 32)
       {
         this->screen_time_ = screen_time;
