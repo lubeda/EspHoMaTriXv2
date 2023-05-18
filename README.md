@@ -513,6 +513,8 @@ ehmtxv2:
 
 **frame_interval** (optional, ms): the interval in ms to display the next animation/icon frame (default = 192), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html). It can be overwritten per icon/GIF, see [icons](#icons-and-animations) parameter `frame_duration`
 
+**clock_interval** (optional, s): the interval in seconds to force the clock display. By default the clock screen, if any, will be displayed according to the position in the queue. **If you set the clock_interval close to the screen_time of the clock you will only see the clock!** (default=0)
+
 **icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons.  (default = `false`)
 
 ***Example output:***

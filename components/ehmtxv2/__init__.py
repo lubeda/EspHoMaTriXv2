@@ -59,6 +59,7 @@ AddScreenTrigger = ehmtx_ns.class_(
 
 CONF_URL = "url"
 CONF_FLAG = "flag"
+CONF_CLOCKINTERVAL = "clock_interval"
 CONF_TIMECOMPONENT = "time_component"
 CONF_LAMEID = "lameid"
 CONF_LIFETIME = "lifetime"
@@ -99,6 +100,9 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_MATRIXCOMPONENT): cv.use_id(display),
     cv.Required(CONF_DEFAULT_FONT_ID): cv.use_id(font),
     cv.Required(CONF_special_FONT_ID): cv.use_id(font),
+    cv.Optional(
+        CONF_CLOCKINTERVAL, default="0"
+    ): cv.templatable(cv.positive_int),
     cv.Optional(
         CONF_HTML, default=False
     ): cv.boolean,
@@ -361,6 +365,7 @@ async def to_code(config):
     cg.add(var.set_scroll_count(config[CONF_SCROLLCOUNT]))
     cg.add(var.set_frame_interval(config[CONF_FRAMEINTERVAL]))
     cg.add(var.set_week_start(config[CONF_WEEK_START_MONDAY]))
+    cg.add(var.set_clock_interval(config[CONF_CLOCKINTERVAL]))
     cg.add(var.set_time_format(config[CONF_TIME_FORMAT]))
     cg.add(var.set_date_format(config[CONF_DATE_FORMAT]))
     cg.add(var.set_show_day_of_week(config[CONF_SHOWDOW]))

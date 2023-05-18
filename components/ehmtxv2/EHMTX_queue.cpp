@@ -225,24 +225,7 @@ namespace esphome
   }
 
   // TODO void EHMTX_queue::set_mode_icon()
-  void EHMTX_queue::set_text(std::string text, uint8_t icon, uint16_t pixel, uint16_t et, uint16_t screen_time)
-  {
-    this->text = text;
-    this->pixels_ = pixel;
-
-    if (pixel < 23)
-    {
-      this->centerx_ = ceil((22 - pixel) / 2);
-    }
-
-    this->shiftx_ = 0;
-    float display_duration = ceil((this->config_->scroll_count * (TEXTSTARTOFFSET + pixel) * this->config_->scroll_interval) / 1000);
-    this->screen_time = (display_duration > screen_time) ? display_duration : screen_time;
-    ESP_LOGD(TAG, "display text: %s pixels %d display_duration %d calculated: %d screen_time: %d", text.c_str(), pixel,display_duration, this->screen_time, screen_time);
-    this->endtime = this->config_->clock->now().timestamp + et * 60;
-    this->icon = icon;
-  }
-
+  
   void EHMTX_queue::calc_scroll_time()
   {
     int x, y, w, h;
