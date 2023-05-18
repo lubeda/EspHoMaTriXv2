@@ -10,7 +10,7 @@ namespace esphome
     this->last_time = 0;
     this->centerx_ = 0;
     this->shiftx_ = 0;
-    this->screen_time = 0;
+    this->screen_time_ = 0;
     this->mode = MODE_EMPTY;
     this->icon_name = "";
     this->icon = 0;
@@ -23,37 +23,37 @@ namespace esphome
     switch (this->mode)
     {
     case MODE_EMPTY:
-      ESP_LOGD(TAG, "queue: empty slot");
+      ESP_LOGD(TAG, " empty slot");
       break;
     case MODE_BLANK:
-      ESP_LOGD(TAG, "queue: blank screen for %d sec", this->screen_time);
+      ESP_LOGD(TAG, "queue: blank screen for %d sec", this->screen_time_);
       break;
     case MODE_CLOCK:
-      ESP_LOGD(TAG, "queue: clock for %d sec", this->screen_time);
+      ESP_LOGD(TAG, "queue: clock for: %d sec", this->screen_time_);
       break;
     case MODE_DATE:
-      ESP_LOGD(TAG, "queue: date for %d sec", this->screen_time);
+      ESP_LOGD(TAG, "queue: date for: %d sec", this->screen_time_);
       break;
     case MODE_FULL_SCREEN:
-      ESP_LOGD(TAG, "queue: full screen: %s for %d sec", this->icon_name.c_str(), this->screen_time);
+      ESP_LOGD(TAG, "queue: full screen: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
       break;
     case MODE_ICON_SCREEN:
-      ESP_LOGD(TAG, "queue: icon screen: %s text: %s for %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time);
+      ESP_LOGD(TAG, "queue: icon screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
       break;
     case MODE_TEXT_SCREEN:
-      ESP_LOGD(TAG, "queue: text text: %s for %d sec", this->text.c_str(), this->screen_time);
+      ESP_LOGD(TAG, "queue: text text: \"%s\" for: %d sec", this->text.c_str(), this->screen_time_);
       break;
     case MODE_RAINBOW_ICON:
-      ESP_LOGD(TAG, "queue: rainbow icon: %s text: %s for %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time);
+      ESP_LOGD(TAG, "queue: rainbow icon: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
       break;
     case MODE_RAINBOW_TEXT:
-      ESP_LOGD(TAG, "queue: rainbow text: %s for %d sec", this->text.c_str(), this->screen_time);
+      ESP_LOGD(TAG, "queue: rainbow text: \"%s\" for: %d sec", this->text.c_str(), this->screen_time_);
       break;
     case MODE_RAINBOW_CLOCK:
-      ESP_LOGD(TAG, "queue: clock for %d sec", this->screen_time);
+      ESP_LOGD(TAG, "queue: clock for: %d sec", this->screen_time_);
       break;
     case MODE_RAINBOW_DATE:
-      ESP_LOGD(TAG, "queue: date for %d sec", this->screen_time);
+      ESP_LOGD(TAG, "queue: date for: %d sec", this->screen_time_);
       break;
     default:
       ESP_LOGD(TAG, "queue: UPPS");
@@ -135,7 +135,8 @@ namespace esphome
           {
             this->config_->display->draw_pixel_at(0, 0, color_);
           }
-          if (this->mode != MODE_RAINBOW_CLOCK){
+          if (this->mode != MODE_RAINBOW_CLOCK)
+          {
             this->config_->draw_day_of_week();
           }
         }
@@ -156,7 +157,8 @@ namespace esphome
           {
             this->config_->display->draw_pixel_at(0, 0, color_);
           }
-           if (this->mode != MODE_RAINBOW_DATE){
+          if (this->mode != MODE_RAINBOW_DATE)
+          {
             this->config_->draw_day_of_week();
           }
         }
@@ -215,7 +217,7 @@ namespace esphome
         break;
       }
       this->update_screen();
-    } 
+    }
   }
 
   void EHMTX_queue::hold_slot(uint8_t _sec)
@@ -225,8 +227,8 @@ namespace esphome
   }
 
   // TODO void EHMTX_queue::set_mode_icon()
-  
-  void EHMTX_queue::calc_scroll_time()
+
+  void EHMTX_queue::calc_scroll_time(std::string text, uint16_t screen_time)
   {
     int x, y, w, h;
     float display_duration;
@@ -240,33 +242,41 @@ namespace esphome
     }
 
     this->pixels_ = w;
+    this->centerx_ = 0;
     this->shiftx_ = 0;
 
     switch (this->mode)
     {
     case MODE_RAINBOW_TEXT:
     case MODE_TEXT_SCREEN:
-      display_duration = ceil((28+(this->config_->scroll_count * (32 + this->pixels_)) * this->config_->scroll_interval) / 1000);
-      this->screen_time = (display_duration > this->screen_time) ? display_duration : this->screen_time;
       if (this->pixels_ < 32)
       {
+        this->screen_time_ = screen_time;
         this->centerx_ = ceil((32 - this->pixels_) / 2);
       }
-      break;   
+      else
+      {
+        display_duration = ceil((28 + (this->config_->scroll_count * (32 + this->pixels_)) * this->config_->scroll_interval) / 1000);
+        this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+      }
+      break;
     case MODE_RAINBOW_ICON:
     case MODE_ICON_SCREEN:
-      display_duration = ceil(((28-TEXTSTARTOFFSET)+(this->config_->scroll_count * (TEXTSTARTOFFSET + this->pixels_)) * this->config_->scroll_interval) / 1000);
-      this->screen_time = (display_duration > this->screen_time) ? display_duration : this->screen_time;
       if (this->pixels_ < 23)
       {
+        this->screen_time_ = screen_time;
         this->centerx_ = ceil((23 - this->pixels_) / 2);
       }
-      break;   
+      else
+      {
+        display_duration = ceil((this->config_->scroll_count * (TEXTSTARTOFFSET + this->pixels_) * this->config_->scroll_interval) / 1000);
+        this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+      }
+      break;
     default:
       break;
     }
-    
-    this->shiftx_ = 0;
-    ESP_LOGD(TAG, "display text: %s pixels %d calculated: %d", text.c_str(), this->pixels_, this->screen_time);
+
+    ESP_LOGD(TAG, "calc_scroll_time: mode: %d text: \"%s\" pixels %d calculated: %d defined: %d", this->mode, text.c_str(), this->pixels_, this->screen_time_, screen_time);
   }
 }

@@ -67,6 +67,7 @@ namespace esphome
     bool display_gauge;
     bool is_running=false;
     bool show_date;
+    bool rtl;
     uint8_t gauge_value;
     uint16_t clock_time;
     uint8_t scroll_count;
@@ -113,6 +114,7 @@ namespace esphome
     void set_show_day_of_week(bool b);
     void set_show_seconds(bool b);
     void set_show_date(bool b);
+    void set_rtl(bool b);
     void set_font_offset(int8_t x, int8_t y);
     void set_week_start(bool b);
     void set_brightness(int b); 
@@ -175,7 +177,7 @@ namespace esphome
     uint8_t centerx_;
     uint16_t shiftx_;
     uint16_t pixels_;
-    uint16_t screen_time;
+    uint16_t screen_time_;
     bool default_font;
     time_t endtime;
     time_t last_time;
@@ -194,7 +196,7 @@ namespace esphome
     bool update_slot(uint8_t _icon);
     void update_screen();
     void hold_slot(uint8_t _sec);
-    void calc_scroll_time();
+    void calc_scroll_time(std::string,uint16_t );
   };
 
   class EHMTXNextScreenTrigger : public Trigger<std::string, std::string>
