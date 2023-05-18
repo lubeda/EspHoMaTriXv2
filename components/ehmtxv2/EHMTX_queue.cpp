@@ -61,6 +61,52 @@ namespace esphome
     }
   }
 
+  int EHMTX_queue::xpos()
+  {
+    uint8_t width = 32;
+    uint8_t startx = 0;
+    switch (this->mode)
+    {
+    case MODE_RAINBOW_ICON:
+    case MODE_ICON_SCREEN:
+      startx = 8;
+      break;
+    case MODE_TEXT_SCREEN:
+    case MODE_RAINBOW_TEXT:
+      // no correction
+      break;
+    }
+    
+    if (this->config_->display_gauge)
+    {
+      startx += 2;
+    }
+    width -= startx;
+
+    if (this->config_->rtl)
+    {
+      if (this->pixels_ < width)
+      {
+        return 32 - ceil((width - this->pixels_) / 2);
+      }
+      else
+      {
+        return startx + this->shiftx_;
+      }
+    }
+    else
+    {
+      if (this->pixels_ < width)
+      {
+        return startx + ceil((width - this->pixels_) / 2);
+      }
+      else
+      {
+        return startx - this->shiftx_ + width;
+      }
+    }
+  }
+
   void EHMTX_queue::update_screen()
   {
     if (millis() - this->config_->last_rainbow_time >= this->config_->rainbow_interval)
@@ -79,13 +125,13 @@ namespace esphome
     if ((this->mode == MODE_ICON_SCREEN) || (this->mode == MODE_RAINBOW_ICON))
     {
       if (millis() - this->config_->last_scroll_time >= this->config_->scroll_interval && this->pixels_ > TEXTSTARTOFFSET)
-      {
-        this->shiftx_++;
-        if (this->shiftx_ > this->pixels_ + TEXTSTARTOFFSET)
-        {
-          this->shiftx_ = 0;
-        }
-        this->config_->last_scroll_time = millis();
+      {   
+          this->shiftx_++;
+          if (this->shiftx_ > this->pixels_ + TEXTSTARTOFFSET)
+          {
+            this->shiftx_ = 0;
+          }
+          this->config_->last_scroll_time = millis();
       }
     }
     if ((this->mode == MODE_TEXT_SCREEN) || (this->mode == MODE_RAINBOW_TEXT))
@@ -183,9 +229,16 @@ namespace esphome
         }
 
         color_ = (this->mode == MODE_RAINBOW_ICON) ? this->config_->rainbow_color : this->text_color;
-
-        this->config_->display->print(this->centerx_ + TEXTSCROLLSTART - this->shiftx_ + extraoffset + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+        if (this->config_->rtl) {
+          this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
+        }
+        else {
+          this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+                                      this->text.c_str());
+         // this->config_->display->print(this->centerx_ + TEXTSCROLLSTART - this->shiftx_ + extraoffset + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+         //                             this->text.c_str());
+        }
         if (this->config_->display_gauge)
         {
           this->config_->display->image(2, 0, this->config_->icons[this->icon]);
