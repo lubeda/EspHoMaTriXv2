@@ -694,14 +694,7 @@ namespace esphome
     ESP_LOGD(TAG, "clock_screen_color lifetime: %d screen_time: %d red: %d green: %d blue: %d", lifetime, screen_time, r, g, b);
     screen->mode = MODE_CLOCK;
     screen->default_font = default_font;
-    if (this->clock_interval == 0 || (this->clock_interval > screen_time))
-    {
-      screen->screen_time_ = screen_time;
-    }
-    else
-    {
-      screen->screen_time_ = this->clock_interval - 2;
-    }
+    screen->screen_time_ = (this->clock_interval > screen_time  )?screen_time:this->clock_interval-1;
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->status();
   }
