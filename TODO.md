@@ -2,17 +2,18 @@
 
 ## function
 
+- [ ] screen_time on ms sec base
+- [ ] scroll left to right
+- [ ] seconds point moveable
 - [x] alarm on all screens but full screen
 - [x] indicator on all screens but full screen and clock
 - [x] refreshing an icon screen should extend the display time
-- [ ] scroll left to right
 - [x] size of indicator and alarm
 - [x] center text
 - [x] alarm independent of screen
 - [x] del_screen with * and filter by type, do delete all clocks etc.
 - [x] force_screen with * and filter by type, do delete all clocks etc.
 - [x] gauge with color and del_gaugeall clocks etc.
-- [ ] seconds point moveable
 - [x] seconds point to clock screen only
 - [x] rainbow icon and text
 - [x] del_slot still active?
@@ -22,16 +23,16 @@
 ## user experience
 
 - [ ] blueprints
-- [x] Color in blueprints
-- [ ] all modes in one blueprint
 - [ ] external HTML with more blueprint helpers (icons and modes)
+- [ ] ~~all modes in one blueprint~~
+- [x] Color in blueprints
 - [x] default values for all functions
 - [x] provide sample font from [url](https://www.pentacom.jp/pentacom/bitfontmaker2/)
 - [x] start animation
 
 ## style
 
-- [ ] in screen rename text_color to color
+- [x] ~~in screen rename text_color to color~~
 - [x] default_font before alarm parameter
 - [x] screen_time instead of showtime
 - [x] lifetime instead of durations

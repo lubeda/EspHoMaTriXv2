@@ -1,7 +1,5 @@
 substitutions:
   devicename: ulanzi
-  ledpin: GPIO32 
-  buzzerpin: GPIO15
   friendly_name: LED Matrix
   board: esp32dev
   # Pin definition from https://github.com/aptonline/PixelIt_Ulanzi 
@@ -11,7 +9,6 @@ substitutions:
   left_button_pin: GPIO26 
   mid_button_pin: GPIO27 
   right_button_pin: GPIO14 
-  buzzer_pin: GPIO15 
   scl_pin: GPIO22 
   sda_pin: GPIO21 
 
@@ -99,13 +96,6 @@ logger:
   level: WARN
 
 api:
-  services:
-    - service: tune
-      variables:
-        tune: string
-      then:
-        - rtttl.play:
-            rtttl: !lambda 'return tune;'
 
 sensor:
   - platform: sht3xd
@@ -167,14 +157,6 @@ wifi:
   password: !secret wifi_password
 
 web_server:
-
-output:
-  - platform: ledc
-    pin: $buzzerpin
-    id: rtttl_out
-
-rtttl:
-  output: rtttl_out
 
 i2c:
   sda: $sda_pin

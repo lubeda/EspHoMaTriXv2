@@ -20,7 +20,7 @@ const uint8_t MAXICONS = 90;
 const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
-const uint16_t POLLINGINTERVAL = 800; 
+const uint16_t POLLINGINTERVAL = 1000; 
 static const char *const EHMTX_VERSION = "Version: 2023.5.0 beta";
 static const char *const TAG = "EHMTXv2";
 enum show_mode : uint8_t { MODE_EMPTY = 0,MODE_BLANK = 1, MODE_CLOCK = 2, MODE_DATE = 3, MODE_FULL_SCREEN = 4, MODE_ICON_SCREEN = 5, MODE_TEXT_SCREEN = 6 , MODE_RAINBOW_ICON = 7,MODE_RAINBOW_TEXT = 8, MODE_RAINBOW_CLOCK = 9,MODE_RAINBOW_DATE=10 };
@@ -37,7 +37,7 @@ namespace esphome
 
   class EHMTX : public PollingComponent, public api::CustomAPIDevice   {
   protected:   
-    float get_setup_priority() const override { return esphome::setup_priority::PROCESSOR; }
+    float get_setup_priority() const override { return esphome::setup_priority::BEFORE_CONNECTION; }
     uint8_t brightness_;
     uint32_t boot_anim=0;
     uint8_t screen_pointer;
@@ -57,7 +57,7 @@ namespace esphome
     EHMTX();
     Color text_color, alarm_color, gauge_color,indicator_color,clock_color;
     Color today_color,weekday_color,rainbow_color;
-    int hue_;
+    uint16_t hue_=0;
     void dump_config();
     std::string time_fmt;
     std::string date_fmt;
@@ -95,6 +95,7 @@ namespace esphome
     uint16_t frame_interval;   // ms to next_frame()
     uint16_t clock_interval;
     uint16_t hold_time;       // seconds display of screen_time to extend 
+    
     uint8_t icon_count;        // max iconnumber -1
     unsigned long last_scroll_time;
     unsigned long last_rainbow_time;
@@ -109,7 +110,7 @@ namespace esphome
     void skip_screen();
     void hold_screen(int t=30);
     void set_display(addressable_light::AddressableLightDisplay *disp);
-    void set_clock_interval(uint16_t t=60);
+    void set_clock_interval(uint16_t t=90);
     void set_hold_time(uint16_t t=30);
     void set_clock_time(uint16_t t=10);
     void set_show_day_of_week(bool b);
@@ -141,7 +142,6 @@ namespace esphome
     void hide_gauge();
     void hide_indicator();
     void hide_alarm();
-
     void full_screen(std::string icon, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME);
     void icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
     void text_screen(std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true, int r=C_RED, int g=C_GREEN, int b=C_BLUE);
@@ -182,6 +182,7 @@ namespace esphome
     time_t endtime;
     time_t last_time;
     uint8_t icon;
+    uint16_t scroll_reset;
     Color text_color;
     show_mode mode;
     
