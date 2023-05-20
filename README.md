@@ -470,6 +470,7 @@ ehmtxv2:
   brightness: 80 # percent
   time_format: "%H:%M"
   date_format: "%d.%m."
+  rtl: false # write vom left to right
   week_start_monday: true # false equals sunday
   scroll_count: 2 # scroll long text at least two times
   scroll_interval: 80 # milliseconds
@@ -496,6 +497,8 @@ ehmtxv2:
 **special_font_yoffset** (optional, pixel): yoffset the text is aligned BASELINE_LEFT, the baseline defaults to `6`
 
 **special_font_xoffset** (optional, pixel): xoffset the text is aligned BASELINE_LEFT, the left defaults to `1`
+
+**rtl** (optional, boolean): if `true` write from right to left (arabic, hebrew etc.). Default ist `false`
 
 **matrix_component** (required, ID): ID of the addressable display
 
