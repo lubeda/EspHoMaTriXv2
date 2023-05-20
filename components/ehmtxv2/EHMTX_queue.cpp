@@ -172,7 +172,7 @@ namespace esphome
         break;
       case MODE_RAINBOW_CLOCK:
       case MODE_CLOCK:
-        if (this->config_->clock->now().timestamp > 6000) // valid time
+        if (this->config_->clock->now().is_valid()) // valid time
         {
           color_ = (this->mode == MODE_RAINBOW_CLOCK) ? this->config_->rainbow_color : this->config_->clock_color;
           time_t ts = this->config_->clock->now().timestamp;
@@ -194,7 +194,7 @@ namespace esphome
         break;
       case MODE_RAINBOW_DATE:
       case MODE_DATE:
-        if (this->config_->clock->now().timestamp > 6000) // valid time
+        if (this->config_->clock->now().is_valid()) 
         {
           color_ = (this->mode == MODE_RAINBOW_DATE) ? this->config_->rainbow_color : this->config_->clock_color;
           time_t ts = this->config_->clock->now().timestamp;
