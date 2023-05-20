@@ -170,7 +170,7 @@ light:
     type: GRB
     internal: true
     variant: WS2812
-    pin: $led_pin
+    pin: $matrix_pin
     num_leds: 256
     color_correct: [30%, 30%, 30%]
     gamma_correct: 2.0
