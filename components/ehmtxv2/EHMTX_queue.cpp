@@ -91,6 +91,7 @@ namespace esphome
       }
       else
       {
+
         result = startx + this->config_->scroll_step;
       }
     }

@@ -395,6 +395,7 @@ namespace esphome
 
         if (this->screen_pointer != MAXQUEUE)
         {
+
           this->queue[this->screen_pointer]->last_time = ts + this->queue[this->screen_pointer]->screen_time_;
           if (this->queue[this->screen_pointer]->icon < this->icon_count)
           {
