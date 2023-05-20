@@ -98,16 +98,16 @@ namespace esphome
     {
       if (this->pixels_ < width)
       {
-        result =  startx + ceil((width - this->pixels_) / 2);
+        result = startx + ceil((width - this->pixels_) / 2);
       }
       else
       {
-        result =  startx - this->config_->scroll_step + width;
+        result = startx - this->config_->scroll_step + width;
       }
     }
     return result;
   }
-  
+
   void EHMTX_queue::update_screen()
   {
     if (millis() - this->config_->last_rainbow_time >= this->config_->rainbow_interval)
@@ -239,8 +239,16 @@ namespace esphome
           extraoffset += 2;
         }
         color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
-        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
-                                      this->text.c_str());
+        if (this->config_->rtl)
+        {
+          this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
+                                        this->text.c_str());
+        }
+        else
+        {
+          this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+                                        this->text.c_str());
+        }
         break;
       default:
         break;
@@ -261,7 +269,7 @@ namespace esphome
   {
     int x, y, w, h;
     float display_duration;
-    
+
     uint8_t width = 32;
     uint8_t startx = 0;
     uint16_t max_steps = 0;
@@ -313,7 +321,8 @@ namespace esphome
       break;
     }
 
-    this->scroll_reset = (width - startx) + this->pixels_;;
+    this->scroll_reset = (width - startx) + this->pixels_;
+    ;
 
     ESP_LOGD(TAG, "calc_scroll_time: mode: %d text: \"%s\" pixels %d calculated: %d defined: %d max_steps: %d", this->mode, text.c_str(), this->pixels_, this->screen_time_, screen_time, this->scroll_reset);
   }
