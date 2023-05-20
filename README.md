@@ -4,7 +4,7 @@
 
 ## Important information
 
-If you like my work, please donate me a star on GitHub and consider sponsoring me!!
+If you like my work, please donate me a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!!
 
 ## Introduction
 

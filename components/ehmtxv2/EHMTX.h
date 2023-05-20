@@ -37,7 +37,7 @@ namespace esphome
 
   class EHMTX : public PollingComponent, public api::CustomAPIDevice   {
   protected:   
-    float get_setup_priority() const override { return esphome::setup_priority::WIFI; }
+    float get_setup_priority() const override { return esphome::setup_priority::BEFORE_CONNECTION; }
     uint8_t brightness_;
     uint32_t boot_anim=0;
     uint8_t screen_pointer;
@@ -109,7 +109,7 @@ namespace esphome
     void skip_screen();
     void hold_screen(int t=30);
     void set_display(addressable_light::AddressableLightDisplay *disp);
-    void set_clock_interval(uint16_t t=60);
+    void set_clock_interval(uint16_t t=90);
     void set_hold_time(uint16_t t=30);
     void set_clock_time(uint16_t t=10);
     void set_show_day_of_week(bool b);
@@ -176,7 +176,6 @@ namespace esphome
 
   public:
     uint8_t centerx_;
-    uint16_t shiftx_;
     uint16_t pixels_;
     uint16_t screen_time_;
     bool default_font;
