@@ -95,6 +95,7 @@ namespace esphome
     uint16_t frame_interval;   // ms to next_frame()
     uint16_t clock_interval;
     uint16_t hold_time;       // seconds display of screen_time to extend 
+    
     uint8_t icon_count;        // max iconnumber -1
     unsigned long last_scroll_time;
     unsigned long last_rainbow_time;
@@ -141,7 +142,6 @@ namespace esphome
     void hide_gauge();
     void hide_indicator();
     void hide_alarm();
-
     void full_screen(std::string icon, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME);
     void icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
     void text_screen(std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true, int r=C_RED, int g=C_GREEN, int b=C_BLUE);
@@ -182,6 +182,7 @@ namespace esphome
     time_t endtime;
     time_t last_time;
     uint8_t icon;
+    uint16_t scroll_reset;
     Color text_color;
     show_mode mode;
     

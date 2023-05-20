@@ -64,6 +64,7 @@ namespace esphome
   {
     uint8_t width = 32;
     uint8_t startx = 0;
+    int result = 0;
     switch (this->mode)
     {
     case MODE_RAINBOW_ICON:
@@ -86,26 +87,27 @@ namespace esphome
     {
       if (this->pixels_ < width)
       {
-        return 32 - ceil((width - this->pixels_) / 2);
+        result = 32 - ceil((width - this->pixels_) / 2);
       }
       else
       {
-        return startx + this->config_->scroll_step;
+        result = startx + this->config_->scroll_step;
       }
     }
     else
     {
       if (this->pixels_ < width)
       {
-        return startx + ceil((width - this->pixels_) / 2);
+        result =  startx + ceil((width - this->pixels_) / 2);
       }
       else
       {
-        return startx - this->config_->scroll_step + width;
+        result =  startx - this->config_->scroll_step + width;
       }
     }
+    return result;
   }
-
+  
   void EHMTX_queue::update_screen()
   {
     if (millis() - this->config_->last_rainbow_time >= this->config_->rainbow_interval)
@@ -259,6 +261,11 @@ namespace esphome
   {
     int x, y, w, h;
     float display_duration;
+    
+    uint8_t width = 32;
+    uint8_t startx = 0;
+    uint16_t max_steps = 0;
+
     if (this->default_font)
     {
       this->config_->display->get_text_bounds(0, 0, text.c_str(), this->config_->default_font, display::TextAlign::LEFT, &x, &y, &w, &h);
@@ -282,12 +289,14 @@ namespace esphome
       }
       else
       {
-        display_duration = ceil((28 + (this->config_->scroll_count * (32 + this->pixels_)) * this->config_->scroll_interval) / 1000);
+        max_steps = (this->config_->scroll_count + 1) * (width - startx) + this->config_->scroll_count * this->pixels_;
+        display_duration = ceil((max_steps * this->config_->scroll_interval) / 1000);
         this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
       }
       break;
     case MODE_RAINBOW_ICON:
     case MODE_ICON_SCREEN:
+      startx = 8;
       if (this->pixels_ < 23)
       {
         this->screen_time_ = screen_time;
@@ -295,7 +304,8 @@ namespace esphome
       }
       else
       {
-        display_duration = ceil((this->config_->scroll_count * (TEXTSTARTOFFSET + this->pixels_) * this->config_->scroll_interval) / 1000);
+        max_steps = (this->config_->scroll_count + 1) * (width - startx) + this->config_->scroll_count * this->pixels_;
+        display_duration = ceil((max_steps * this->config_->scroll_interval) / 1000);
         this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
       }
       break;
@@ -303,6 +313,8 @@ namespace esphome
       break;
     }
 
-    ESP_LOGD(TAG, "calc_scroll_time: mode: %d text: \"%s\" pixels %d calculated: %d defined: %d", this->mode, text.c_str(), this->pixels_, this->screen_time_, screen_time);
+    this->scroll_reset = (width - startx) + this->pixels_;;
+
+    ESP_LOGD(TAG, "calc_scroll_time: mode: %d text: \"%s\" pixels %d calculated: %d defined: %d max_steps: %d", this->mode, text.c_str(), this->pixels_, this->screen_time_, screen_time, this->scroll_reset);
   }
 }

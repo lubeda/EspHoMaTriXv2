@@ -21,6 +21,7 @@ namespace esphome
     this->gauge_color = Color(CD_RED, CD_GREEN, CD_BLUE);
     this->gauge_value = 0;
     this->next_action_time = 0;
+    this->last_scroll_time = 0;
     this->screen_pointer = MAXQUEUE;
 
     for (uint8_t i = 0; i < MAXQUEUE; i++)
@@ -370,64 +371,67 @@ namespace esphome
 
     if (this->is_running)
     {
+      if (millis() - this->last_scroll_time >= this->scroll_interval)
+      {
+        this->scroll_step++;
+        this->last_scroll_time = millis();
+        if (this->scroll_step > this->queue[this->screen_pointer]->scroll_reset)
+        {
+          ESP_LOGD(TAG, "end scroll at: %d",this->scroll_step);
+          this->scroll_step = 0;
+        }
+      }
+
       if (ts > this->next_action_time)
       {
         this->remove_expired_queue_element();
         this->screen_pointer = this->find_last_clock();
+        this->scroll_step = 0;
+
         if (this->screen_pointer == MAXQUEUE)
         {
           this->screen_pointer = find_oldest_queue_element();
         }
-        if (millis() - this->last_scroll_time >= this->scroll_interval)
-        {
-          this->scroll_step++;
-          this->last_scroll_time = millis();
 
-          if (this->scroll_step > this->queue[this->screen_pointer]->pixels_ + 32)
+        if (this->screen_pointer != MAXQUEUE)
+        {
+          this->queue[this->screen_pointer]->last_time = ts + this->queue[this->screen_pointer]->screen_time_;
+          if (this->queue[this->screen_pointer]->icon < this->icon_count)
           {
-            this->scroll_step = 0;
+            this->icons[this->queue[this->screen_pointer]->icon]->set_frame(0);
           }
-          if (this->screen_pointer != MAXQUEUE)
+          this->next_action_time = this->queue[this->screen_pointer]->last_time;
+          // Todo switch for Triggers
+          if (this->queue[this->screen_pointer]->mode == MODE_CLOCK)
           {
-            this->scroll_step = 0;
-            this->queue[this->screen_pointer]->last_time = ts + this->queue[this->screen_pointer]->screen_time_;
-            if (this->queue[this->screen_pointer]->icon < this->icon_count)
+            for (auto *t : on_next_clock_triggers_)
             {
-              this->icons[this->queue[this->screen_pointer]->icon]->set_frame(0);
-            }
-            this->next_action_time = this->queue[this->screen_pointer]->last_time;
-            // Todo switch for Triggers
-            if (this->queue[this->screen_pointer]->mode == MODE_CLOCK)
-            {
-              for (auto *t : on_next_clock_triggers_)
-              {
-                t->process();
-              }
-            }
-            else
-            {
-              for (auto *t : on_next_screen_triggers_)
-              {
-                t->process(this->queue[this->screen_pointer]->icon_name, this->queue[this->screen_pointer]->text);
-              }
+              t->process();
             }
           }
           else
           {
-            ESP_LOGW(TAG, "tick: nothing to do. Restarting clock display!");
-            this->clock_screen(24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
-            this->date_screen(24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
-            this->next_action_time = ts + this->clock_time;
+            for (auto *t : on_next_screen_triggers_)
+            {
+              t->process(this->queue[this->screen_pointer]->icon_name, this->queue[this->screen_pointer]->text);
+            }
           }
+        }
+        else
+        {
+          ESP_LOGW(TAG, "tick: nothing to do. Restarting clock display!");
+          this->clock_screen(24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
+          this->date_screen(24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
+          this->next_action_time = ts + this->clock_time;
         }
       }
     }
     else
-      {
-        uint8_t w = (1 + (uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
-        this->display->rectangle(0, 2, w, 4, this->rainbow_color); // Color(120, 190, 40));
-        this->boot_anim++;
-      }
+    {
+      uint8_t w = (1 + (uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
+      this->display->rectangle(0, 2, w, 4, this->rainbow_color); // Color(120, 190, 40));
+      this->boot_anim++;
+    }
   }
 
   void EHMTX::skip_screen()
