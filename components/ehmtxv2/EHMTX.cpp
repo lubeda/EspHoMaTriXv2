@@ -228,7 +228,7 @@ namespace esphome
   {
     if (!this->is_running)
     {
-      if (this->clock->now().timestamp > 15)
+      if (this->clock->is_valid())
       {
         ESP_LOGD(TAG, "time sync => starting");
         this->is_running = true;
@@ -238,12 +238,6 @@ namespace esphome
 
   void EHMTX::force_screen(std::string icon_name, int mode)
   {
-    // if (this->string_has_ending(icon_name, "*"))
-    // {
-    //   // remove the *
-    //   icon_name = icon_name.substr(0, icon_name.length() - 1);
-    // }
-
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
       if (this->queue[i]->mode == mode)
