@@ -9,7 +9,6 @@ namespace esphome
     this->endtime = 0;
     this->last_time = 0;
     this->centerx_ = 0;
-    this->shiftx_ = 0;
     this->screen_time_ = 0;
     this->mode = MODE_EMPTY;
     this->icon_name = "";
@@ -91,7 +90,7 @@ namespace esphome
       }
       else
       {
-        return startx + this->shiftx_;
+        return startx + this->config_->scroll_step;
       }
     }
     else
@@ -102,7 +101,7 @@ namespace esphome
       }
       else
       {
-        return startx - this->shiftx_ + width;
+        return startx - this->config_->scroll_step + width;
       }
     }
   }
@@ -120,32 +119,6 @@ namespace esphome
       esphome::hsv_to_rgb(this->config_->hue_, 0.8, 0.8, red, green, blue);
       this->config_->rainbow_color = Color(uint8_t(255 * red), uint8_t(255 * green), uint8_t(255 * blue));
       this->config_->last_rainbow_time = millis();
-    }
-
-    if ((this->mode == MODE_ICON_SCREEN) || (this->mode == MODE_RAINBOW_ICON))
-    {
-      if (millis() - this->config_->last_scroll_time >= this->config_->scroll_interval && this->pixels_ > TEXTSTARTOFFSET)
-      {   
-          this->shiftx_++;
-          if (this->shiftx_ > this->pixels_ + TEXTSTARTOFFSET)
-          {
-            this->shiftx_ = 0;
-          }
-          this->config_->last_scroll_time = millis();
-      }
-    }
-    if ((this->mode == MODE_TEXT_SCREEN) || (this->mode == MODE_RAINBOW_TEXT))
-    {
-      if (millis() - this->config_->last_scroll_time >= this->config_->scroll_interval && this->pixels_ >= 32)
-      {
-        this->shiftx_++;
-        if (this->shiftx_ > this->pixels_ + 32)
-        {
-          this->shiftx_ = 0;
-          
-        }
-        this->config_->last_scroll_time = millis();
-      }
     }
 
     if (millis() - this->config_->last_anim_time >= this->config_->icons[this->icon]->frame_duration)
@@ -295,7 +268,6 @@ namespace esphome
 
     this->pixels_ = w;
     this->centerx_ = 0;
-    this->shiftx_ = 0;
 
     switch (this->mode)
     {

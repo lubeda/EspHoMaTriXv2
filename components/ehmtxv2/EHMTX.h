@@ -176,7 +176,6 @@ namespace esphome
 
   public:
     uint8_t centerx_;
-    uint16_t shiftx_;
     uint16_t pixels_;
     uint16_t screen_time_;
     bool default_font;
