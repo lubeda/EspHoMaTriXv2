@@ -20,6 +20,7 @@ namespace esphome
     this->alarm_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->gauge_color = Color(CD_RED, CD_GREEN, CD_BLUE);
     this->gauge_value = 0;
+    this->next_action_time = 0;
     this->screen_pointer = MAXQUEUE;
 
     for (uint8_t i = 0; i < MAXQUEUE; i++)
@@ -194,7 +195,6 @@ namespace esphome
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
     ESP_LOGD(TAG, "Setup and running!");
-    this->is_running = true;
   }
 
   void EHMTX::show_alarm(int r, int g, int b, int size)
@@ -906,7 +906,6 @@ namespace esphome
     {
       ESP_LOGCONFIG(TAG, "weekstart: sunday");
     }
-    this->is_running = true;
   }
 
   void EHMTX::add_icon(EHMTX_Icon *icon)

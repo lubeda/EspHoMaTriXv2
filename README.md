@@ -1032,7 +1032,9 @@ sensor:
 
 ## Breaking changes
 
-### **nothing yet, since it is new**
+### 2023.5.0
+
+- removed the rtttl buzzer from the ulanzi easy template, because it often caused reboots!
 
 ## EspHoMaTriX in the media
 
@@ -1065,7 +1067,7 @@ THE SOFTWARE IS PROVIDED "AS IS", use at your own risk!
 - **[aptonline](https://github.com/aptonline)** for his work on the ulanzi hardware
 - **[wsbtak](https://github.com/wsbtak)** for the work on the ulanzi hardware
 - **[ofirsnb](https://github.com/ofirsnb)** for his contributions
-- **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts
+- **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts and user support
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
 - **[geekofweek](https://github.com/geekofweek)** fixed sample YAML
