@@ -151,6 +151,22 @@ full_screen => {"icon_name", "lifetime", "screen_time"}
 void full_screen(string iconname, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
 ```
 
+##### bitmap screen
+
+For 8x32 images as text. You can generate this images with e.g. [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator)
+
+###### service via API
+
+```c
+bitmap_screen => {"[0,4523,0,2342,0,..... (256 values 16bit values rgb565)]", "lifetime", "screen_time"}
+```
+
+###### Lambda
+
+```c
+void bitmap_screen(string text, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
+```
+
 #### Display Elements
 
 ![elements](./images/elements.png)

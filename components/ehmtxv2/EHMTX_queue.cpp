@@ -54,6 +54,9 @@ namespace esphome
     case MODE_RAINBOW_DATE:
       ESP_LOGD(TAG, "queue: date for: %d sec", this->screen_time_);
       break;
+    case MODE_BITMAP_SCREEN:
+      ESP_LOGD(TAG, "queue: bitmap for: %d sec", this->screen_time_);
+      break;
     default:
       ESP_LOGD(TAG, "queue: UPPS");
       break;
@@ -147,6 +150,15 @@ namespace esphome
       case MODE_EMPTY:
         break;
       case MODE_BLANK:
+        break;
+      case MODE_BITMAP_SCREEN:
+        for (uint8_t x = 0; x < 32; x++)
+        {
+          for (uint8_t y = 0; y < 8; y++)
+          {
+            this->config_->display->draw_pixel_at(x, y, this->config_->bitmap[x + y * 32]);
+          }
+        }
         break;
       case MODE_RAINBOW_CLOCK:
       case MODE_CLOCK:

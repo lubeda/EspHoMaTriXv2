@@ -23,7 +23,7 @@ const uint8_t TEXTSTARTOFFSET = (32 - 8);
 const uint16_t POLLINGINTERVAL = 1000; 
 static const char *const EHMTX_VERSION = "Version: 2023.5.0 beta";
 static const char *const TAG = "EHMTXv2";
-enum show_mode : uint8_t { MODE_EMPTY = 0,MODE_BLANK = 1, MODE_CLOCK = 2, MODE_DATE = 3, MODE_FULL_SCREEN = 4, MODE_ICON_SCREEN = 5, MODE_TEXT_SCREEN = 6 , MODE_RAINBOW_ICON = 7,MODE_RAINBOW_TEXT = 8, MODE_RAINBOW_CLOCK = 9,MODE_RAINBOW_DATE=10 };
+enum show_mode : uint8_t { MODE_EMPTY = 0,MODE_BLANK = 1, MODE_CLOCK = 2, MODE_DATE = 3, MODE_FULL_SCREEN = 4, MODE_ICON_SCREEN = 5, MODE_TEXT_SCREEN = 6 , MODE_RAINBOW_ICON = 7,MODE_RAINBOW_TEXT = 8, MODE_RAINBOW_CLOCK = 9,MODE_RAINBOW_DATE=10,MODE_BITMAP_SCREEN=11 };
 
 namespace esphome
 {
@@ -72,6 +72,7 @@ namespace esphome
     uint16_t clock_time;
     uint16_t scroll_step;
     uint8_t scroll_count;
+    Color bitmap[256];
     void remove_expired_queue_element();
     uint8_t find_oldest_queue_element();
     uint8_t find_icon_in_queue(std::string);
@@ -149,6 +150,7 @@ namespace esphome
     void clock_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
     void date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true, int r=C_RED, int g=C_GREEN, int b=C_BLUE);
     void blank_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME);
+    void bitmap_screen(std::string text,int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME);
     void rainbow_icon_screen(std::string icon_name, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);
     void rainbow_text_screen(std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);
     void rainbow_clock_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);

@@ -9,7 +9,7 @@ namespace esphome
     this->display_indicator = 0;
     this->display_alarm = 0;
     this->clock_time = 10;
-    this->clock_intervall = 90;
+    this->clock_interval = 90;
     this->hold_time = 10;
     this->icon_count = 0;
     this->hue_ = 0;
@@ -29,8 +29,6 @@ namespace esphome
     {
       this->queue[i] = new EHMTX_queue(this);
     }
-    this->clock_screen(14 * 24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
-    this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
   }
 
   void EHMTX::set_time_format(std::string s)
@@ -105,12 +103,38 @@ namespace esphome
     }
   }
 
-  void EHMTX::get_string(std::string text)
+  void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
-    ESP_LOGD(TAG, "get_string: %s",text.c_str());
-    json::parse_json(text,[](JsonObject root) {
-      ESP_LOGD(TAG, "string1: %s int1", root["string"],root["int"]);
-            });
+    ESP_LOGD(TAG, "bitmap screen: lifetime: %d screen_time: %d", lifetime, screen_time);
+    const size_t CAPACITY = JSON_ARRAY_SIZE(256);
+    StaticJsonDocument<CAPACITY> doc;
+    deserializeJson(doc, text);
+    JsonArray array = doc.as<JsonArray>();
+    // extract the values
+    uint16_t i = 0;
+    for (JsonVariant v : array)
+    {
+      uint16_t buf = v.as<int>();
+      
+      unsigned char b = (((buf)&0x001F) << 3);
+      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      Color c = Color(r, g, b);
+      
+      this->bitmap[i++] = c;
+    }
+
+    EHMTX_queue *screen = this->find_free_queue_element();
+
+    screen->text = "";
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    screen->mode = MODE_BITMAP_SCREEN;
+    screen->screen_time_ = screen_time;
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process("bitmap", (uint8_t)screen->mode);
+    }
+    screen->status();
   }
 
   uint8_t EHMTX::find_icon(std::string name)
@@ -198,6 +222,7 @@ namespace esphome
     register_service(&EHMTX::rainbow_text_screen, "rainbow_text_screen", {"text", "lifetime", "screen_time", "default_font"});
 
     register_service(&EHMTX::clock_screen, "clock_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
+    register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"text", "lifetime", "screen_time"});
     register_service(&EHMTX::rainbow_clock_screen, "rainbow_clock_screen", {"lifetime", "screen_time", "default_font"});
 
     register_service(&EHMTX::date_screen, "date_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
@@ -244,6 +269,8 @@ namespace esphome
       if (this->clock->now().is_valid())
       {
         ESP_LOGD(TAG, "time sync => start running");
+        this->clock_screen(14 * 24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
+        this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
         this->is_running = true;
       }
     }
@@ -329,7 +356,7 @@ namespace esphome
         this->queue[i]->endtime = 0;
         if (this->queue[i]->mode != MODE_EMPTY)
         {
-          ESP_LOGD(TAG, "remove expired queue element: slot %d: icon_name: %s text: %s", i, this->queue[i]->icon_name.c_str(), this->queue[i]->text.c_str());
+          ESP_LOGD(TAG, "remove expired queue element: slot %d: mode: %d icon_name: %s text: %s", i, this->queue[i]->mode, this->queue[i]->icon_name.c_str(), this->queue[i]->text.c_str());
           for (auto *t : on_expired_screen_triggers_)
           {
             infotext = "";
@@ -704,7 +731,7 @@ namespace esphome
     ESP_LOGD(TAG, "clock_screen_color lifetime: %d screen_time: %d red: %d green: %d blue: %d", lifetime, screen_time, r, g, b);
     screen->mode = MODE_CLOCK;
     screen->default_font = default_font;
-    screen->screen_time_ = screen_time; 
+    screen->screen_time_ = screen_time;
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->status();
   }
@@ -911,6 +938,10 @@ namespace esphome
     else
     {
       ESP_LOGCONFIG(TAG, "weekstart: sunday");
+    }
+    if (this->clock->now().is_valid())
+    {
+      this->is_running = true;
     }
   }
 
