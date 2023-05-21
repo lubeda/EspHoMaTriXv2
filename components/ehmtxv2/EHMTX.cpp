@@ -9,6 +9,7 @@ namespace esphome
     this->display_indicator = 0;
     this->display_alarm = 0;
     this->clock_time = 10;
+    this->clock_intervall = 90;
     this->hold_time = 10;
     this->icon_count = 0;
     this->hue_ = 0;
@@ -28,6 +29,8 @@ namespace esphome
     {
       this->queue[i] = new EHMTX_queue(this);
     }
+    this->clock_screen(14 * 24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
+    this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
   }
 
   void EHMTX::set_time_format(std::string s)
@@ -100,6 +103,14 @@ namespace esphome
     {
       return false;
     }
+  }
+
+  void EHMTX::get_string(std::string text)
+  {
+    ESP_LOGD(TAG, "get_string: %s",text.c_str());
+    json::parse_json(text,[](JsonObject root) {
+      ESP_LOGD(TAG, "string1: %s int1", root["string"],root["int"]);
+            });
   }
 
   uint8_t EHMTX::find_icon(std::string name)
@@ -377,7 +388,6 @@ namespace esphome
         this->last_scroll_time = millis();
         if (this->scroll_step > this->queue[this->screen_pointer]->scroll_reset)
         {
-          ESP_LOGD(TAG, "end scroll at: %d",this->scroll_step);
           this->scroll_step = 0;
         }
       }
@@ -694,7 +704,7 @@ namespace esphome
     ESP_LOGD(TAG, "clock_screen_color lifetime: %d screen_time: %d red: %d green: %d blue: %d", lifetime, screen_time, r, g, b);
     screen->mode = MODE_CLOCK;
     screen->default_font = default_font;
-    screen->screen_time_ = (this->clock_interval > screen_time  )?screen_time:this->clock_interval-1;
+    screen->screen_time_ = screen_time; 
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->status();
   }

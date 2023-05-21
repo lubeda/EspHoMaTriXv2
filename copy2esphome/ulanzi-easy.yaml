@@ -4,6 +4,7 @@ substitutions:
   board: esp32dev
   # Pin definition from https://github.com/aptonline/PixelIt_Ulanzi 
   battery_pin: GPIO34 
+  buzzer_pin: GPIO15 
   ldr_pin: GPIO35 
   matrix_pin: GPIO32 
   left_button_pin: GPIO26 
@@ -61,7 +62,13 @@ esphome:
   on_boot:
     then:
       - ds1307.read_time:
-  
+
+output:
+  - platform: gpio
+    pin: $buzzer_pin
+    id: quiet_please
+
+
 esp32:
   board: esp32dev
 

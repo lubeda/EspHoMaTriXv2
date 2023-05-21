@@ -75,6 +75,8 @@ namespace esphome
     case MODE_RAINBOW_TEXT:
       // no correction
       break;
+    default:
+      break;
     }
 
     if (this->config_->display_gauge)
