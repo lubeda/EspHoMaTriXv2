@@ -66,6 +66,7 @@ CONF_LIFETIME = "lifetime"
 CONF_ICONS = "icons"
 CONF_SHOWDOW = "show_dow"
 CONF_SHOWDATE = "show_date"
+CONF_RTL = "rtl"
 CONF_FRAMEDURATION = "frame_duration"
 CONF_SCROLLCOUNT = "scroll_count"
 CONF_MATRIXCOMPONENT = "matrix_component"
@@ -105,6 +106,9 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.templatable(cv.positive_int),
     cv.Optional(
         CONF_HTML, default=False
+    ): cv.boolean,
+     cv.Optional(
+        CONF_RTL, default=False
     ): cv.boolean,
     cv.Optional(
         CONF_SHOW_SECONDS, default=False
@@ -362,6 +366,7 @@ async def to_code(config):
     cg.add(var.set_brightness(config[CONF_BRIGHTNESS]))
     cg.add(var.set_scroll_interval(config[CONF_SCROLLINTERVAL]))
     cg.add(var.set_rainbow_interval(config[CONF_SCROLLINTERVAL]))
+    cg.add(var.set_rtl(config[CONF_RTL]))
     cg.add(var.set_scroll_count(config[CONF_SCROLLCOUNT]))
     cg.add(var.set_frame_interval(config[CONF_FRAMEINTERVAL]))
     cg.add(var.set_week_start(config[CONF_WEEK_START_MONDAY]))

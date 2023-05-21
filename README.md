@@ -4,7 +4,7 @@
 
 ## Important information
 
-If you like my work, please donate me a star on GitHub and consider sponsoring me!!
+If you like my work, please donate me a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!!
 
 ## Introduction
 
@@ -149,6 +149,22 @@ full_screen => {"icon_name", "lifetime", "screen_time"}
 
 ```c
 void full_screen(string iconname, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
+```
+
+##### bitmap screen
+
+For 8x32 images as text. You can generate this images with e.g. [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator)
+
+###### service via API
+
+```c
+bitmap_screen => {"[0,4523,0,2342,0,..... (256 values 16bit values rgb565)]", "lifetime", "screen_time"}
+```
+
+###### Lambda
+
+```c
+void bitmap_screen(string text, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
 ```
 
 #### Display Elements
@@ -470,6 +486,7 @@ ehmtxv2:
   brightness: 80 # percent
   time_format: "%H:%M"
   date_format: "%d.%m."
+  rtl: false # write vom left to right
   week_start_monday: true # false equals sunday
   scroll_count: 2 # scroll long text at least two times
   scroll_interval: 80 # milliseconds
@@ -496,6 +513,8 @@ ehmtxv2:
 **special_font_yoffset** (optional, pixel): yoffset the text is aligned BASELINE_LEFT, the baseline defaults to `6`
 
 **special_font_xoffset** (optional, pixel): xoffset the text is aligned BASELINE_LEFT, the left defaults to `1`
+
+**rtl** (optional, boolean): if `true` write from right to left (arabic, hebrew etc.). Default ist `false`
 
 **matrix_component** (required, ID): ID of the addressable display
 
@@ -1032,7 +1051,9 @@ sensor:
 
 ## Breaking changes
 
-### **nothing yet, since it is new**
+### 2023.5.0
+
+- removed the rtttl buzzer from the ulanzi easy template, because it often caused reboots!
 
 ## EspHoMaTriX in the media
 
@@ -1065,7 +1086,7 @@ THE SOFTWARE IS PROVIDED "AS IS", use at your own risk!
 - **[aptonline](https://github.com/aptonline)** for his work on the ulanzi hardware
 - **[wsbtak](https://github.com/wsbtak)** for the work on the ulanzi hardware
 - **[ofirsnb](https://github.com/ofirsnb)** for his contributions
-- **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts
+- **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts and user support
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
 - **[geekofweek](https://github.com/geekofweek)** fixed sample YAML

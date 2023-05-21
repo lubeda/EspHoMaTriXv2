@@ -117,6 +117,8 @@ ehmtxv2:
   time_format: "%H:%M"
   date_format: "%d.%m."
   show_seconds: false
+  clock_interval: 90
+  rtl: true
   default_font_id: default_font
   special_font_id: default_font 
   icons: 
