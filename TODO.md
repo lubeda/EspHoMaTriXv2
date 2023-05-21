@@ -5,7 +5,8 @@
 - [ ] screen_time on ms sec base
 - [ ] scroll left to right
 - [ ] seconds point moveable
-- [ ] dynamic bitmap as json
+- [ ] dynamic bitmap as JSON (works partially)
+- [ ] fix find_free_icon to work for bitmap screen
 - [x] alarm on all screens but full screen
 - [x] indicator on all screens but full screen and clock
 - [x] refreshing an icon screen should extend the display time
