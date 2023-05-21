@@ -152,6 +152,7 @@ sensor:
               if (n > id(aab_max)) n = id(aab_max);
               if (n < id(aab_min)) n = id(aab_min);
               int c = id(rgb8x32)->get_brightness(); // current value
+              c = c>0?c:1 ; 
               int d = (n - c) * 100 / c; // diff in %
               if ( abs(d) > 2 ) id(rgb8x32)->set_brightness(n);
             }
@@ -177,7 +178,7 @@ light:
     type: GRB
     internal: true
     variant: WS2812
-    pin: $ledpin
+    pin: $led_pin
     num_leds: 256
     color_correct: [30%, 30%, 30%]
     gamma_correct: 2.0
