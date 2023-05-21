@@ -64,10 +64,12 @@ esphome:
       - ds1307.read_time:
 
 output:
-  - platform: gpio
+  - platform: ledc
     pin: $buzzer_pin
-    id: quiet_please
+    id: rtttl_out
 
+rtttl:
+  output: rtttl_out
 
 esp32:
   board: esp32dev
@@ -103,6 +105,13 @@ logger:
   level: WARN
 
 api:
+  services:
+    - service: tune
+      variables:
+        tune: string
+      then:
+        - rtttl.play:
+            rtttl: !lambda 'return tune;'
 
 sensor:
   - platform: sht3xd
