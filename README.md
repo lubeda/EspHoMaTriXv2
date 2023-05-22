@@ -380,10 +380,10 @@ light:
     ....
     on_turn_on:
       lambda: |-
-         id(rgb8x32)->set_enabled(false);
+         id(ehmtx_display)->set_enabled(false);
     on_turn_off:
        lambda: |-
-         id(rgb8x32)->set_enabled(true);
+         id(ehmtx_display)->set_enabled(true);
 ```
 
 To hide the light component in home assistant use: `internal: true`
