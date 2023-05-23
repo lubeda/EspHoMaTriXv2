@@ -1,7 +1,7 @@
 substitutions:
   devicename: ehmtxv2
   friendly_name: LED Matrix
-  board: d1-mini
+  board: d1_mini_lite
   matrix_pin: GPIO12 
   
 external_components:
