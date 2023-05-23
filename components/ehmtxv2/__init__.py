@@ -16,6 +16,7 @@ _LOGGER = logging.getLogger(__name__)
 
 DEPENDENCIES = ["display", "light", "api"]
 AUTO_LOAD = ["ehmtxv2"]
+AUTO_LOAD = ["json"]
 IMAGE_TYPE_RGB565 = 4
 MAXFRAMES = 110
 MAXICONS = 90
