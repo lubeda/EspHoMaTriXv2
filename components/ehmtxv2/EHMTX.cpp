@@ -115,12 +115,12 @@ namespace esphome
     for (JsonVariant v : array)
     {
       uint16_t buf = v.as<int>();
-      
+
       unsigned char b = (((buf)&0x001F) << 3);
       unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
       unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
       Color c = Color(r, g, b);
-      
+
       this->bitmap[i++] = c;
     }
 
@@ -269,14 +269,14 @@ namespace esphome
       if (this->clock->now().is_valid())
       {
         ESP_LOGD(TAG, "time sync => start running");
-        this->bitmap_screen("[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",1,10);
+        this->bitmap_screen("[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]", 1, 10);
         this->clock_screen(14 * 24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
         this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
         this->is_running = true;
       }
     }
   }
-  
+
   void EHMTX::force_screen(std::string icon_name, int mode)
   {
     for (uint8_t i = 0; i < MAXQUEUE; i++)
@@ -348,53 +348,59 @@ namespace esphome
 
   void EHMTX::remove_expired_queue_element()
   {
-    time_t ts = this->clock->now().timestamp;
-    std::string infotext;
-    for (size_t i = 0; i < MAXQUEUE; i++)
+    if (this->clock->now().is_valid())
     {
-      if ((this->queue[i]->endtime > 0) && (this->queue[i]->endtime < ts))
+      std::string infotext;
+      time_t ts = this->clock->now().timestamp;
+
+      for (size_t i = 0; i < MAXQUEUE; i++)
       {
-        this->queue[i]->endtime = 0;
-        if (this->queue[i]->mode != MODE_EMPTY)
+        if ((this->queue[i]->endtime > 0) && (this->queue[i]->endtime < ts))
         {
-          ESP_LOGD(TAG, "remove expired queue element: slot %d: mode: %d icon_name: %s text: %s", i, this->queue[i]->mode, this->queue[i]->icon_name.c_str(), this->queue[i]->text.c_str());
-          for (auto *t : on_expired_screen_triggers_)
+          this->queue[i]->endtime = 0;
+          if (this->queue[i]->mode != MODE_EMPTY)
           {
-            infotext = "";
-            switch (this->queue[i]->mode)
+            ESP_LOGD(TAG, "remove expired queue element: slot %d: mode: %d icon_name: %s text: %s", i, this->queue[i]->mode, this->queue[i]->icon_name.c_str(), this->queue[i]->text.c_str());
+            for (auto *t : on_expired_screen_triggers_)
             {
-            case MODE_EMPTY:
-              break;
-            case MODE_BLANK:
-              break;
-            case MODE_CLOCK:
-              infotext = "clock";
-              break;
-            case MODE_DATE:
-              infotext = "clock";
-              break;
-            case MODE_FULL_SCREEN:
-              infotext = "full screen " + this->queue[i]->icon_name;
-              break;
-            case MODE_ICON_SCREEN:
-            case MODE_RAINBOW_ICON:
-              infotext = this->queue[i]->icon_name.c_str();
-              break;
-            case MODE_RAINBOW_TEXT:
-            case MODE_TEXT_SCREEN:
-              infotext = "TEXT";
-              break;
-            default:
-              break;
+              infotext = "";
+              switch (this->queue[i]->mode)
+              {
+              case MODE_EMPTY:
+                break;
+              case MODE_BLANK:
+                break;
+              case MODE_CLOCK:
+                infotext = "clock";
+                break;
+              case MODE_DATE:
+                infotext = "clock";
+                break;
+              case MODE_FULL_SCREEN:
+                infotext = "full screen " + this->queue[i]->icon_name;
+                break;
+              case MODE_ICON_SCREEN:
+              case MODE_RAINBOW_ICON:
+                infotext = this->queue[i]->icon_name.c_str();
+                break;
+              case MODE_RAINBOW_TEXT:
+              case MODE_TEXT_SCREEN:
+                infotext = "TEXT";
+                break;
+              case MODE_BITMAP_SCREEN:
+                infotext = "BITMAP";
+                break;
+              default:
+                break;
+              }
+              t->process(this->queue[i]->icon_name, infotext);
             }
-            t->process(this->queue[i]->icon_name, infotext);
           }
+          this->queue[i]->mode = MODE_EMPTY;
         }
-        this->queue[i]->mode = MODE_EMPTY;
       }
     }
   }
-
   void EHMTX::tick()
   {
     this->hue_++;
@@ -406,10 +412,10 @@ namespace esphome
     esphome::hsv_to_rgb(this->hue_, 0.8, 0.8, red, green, blue);
     this->rainbow_color = Color(uint8_t(255 * red), uint8_t(255 * green), uint8_t(255 * blue));
 
-    time_t ts = this->clock->now().timestamp;
-
-    if (this->is_running)
+    if (this->is_running && this->clock->now().is_valid())
     {
+      time_t ts = this->clock->now().timestamp;
+
       if (millis() - this->last_scroll_time >= this->scroll_interval)
       {
         this->scroll_step++;
@@ -939,10 +945,6 @@ namespace esphome
     else
     {
       ESP_LOGCONFIG(TAG, "weekstart: sunday");
-    }
-    if (this->clock->now().is_valid())
-    {
-      this->is_running = true;
     }
   }
 

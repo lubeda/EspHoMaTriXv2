@@ -37,7 +37,7 @@ namespace esphome
 
   class EHMTX : public PollingComponent, public api::CustomAPIDevice   {
   protected:   
-    float get_setup_priority() const override { return esphome::setup_priority::BEFORE_CONNECTION; }
+    float get_setup_priority() const override { return esphome::setup_priority::AFTER_WIFI; }
     uint8_t brightness_;
     uint32_t boot_anim=0;
     uint8_t screen_pointer;
