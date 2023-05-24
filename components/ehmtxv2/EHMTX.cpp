@@ -109,35 +109,35 @@ namespace esphome
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
     ESP_LOGD(TAG, "bitmap screen: lifetime: %d screen_time: %d", lifetime, screen_time);
-    const size_t CAPACITY = JSON_ARRAY_SIZE(256);
-    StaticJsonDocument<CAPACITY> doc;
-    deserializeJson(doc, text);
-    JsonArray array = doc.as<JsonArray>();
-    // extract the values
-    uint16_t i = 0;
-    for (JsonVariant v : array)
-    {
-      uint16_t buf = v.as<int>();
+    // const size_t CAPACITY = JSON_ARRAY_SIZE(256);
+    // StaticJsonDocument<CAPACITY> doc;
+    // deserializeJson(doc, text);
+    // JsonArray array = doc.as<JsonArray>();
+    // // extract the values
+    // uint16_t i = 0;
+    // for (JsonVariant v : array)
+    // {
+    //   uint16_t buf = v.as<int>();
 
-      unsigned char b = (((buf)&0x001F) << 3);
-      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
-      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
-      Color c = Color(r, g, b);
+    //   unsigned char b = (((buf)&0x001F) << 3);
+    //   unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+    //   unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+    //   Color c = Color(r, g, b);
 
-      this->bitmap[i++] = c;
-    }
+    //   this->bitmap[i++] = c;
+    // }
 
-    EHMTX_queue *screen = this->find_free_queue_element();
+    // EHMTX_queue *screen = this->find_free_queue_element();
 
-    screen->text = "";
-    screen->endtime = this->clock->now().timestamp + lifetime * 60;
-    screen->mode = MODE_BITMAP_SCREEN;
-    screen->screen_time_ = screen_time;
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process("bitmap", (uint8_t)screen->mode);
-    }
-    screen->status();
+    // screen->text = "";
+    // screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    // screen->mode = MODE_BITMAP_SCREEN;
+    // screen->screen_time_ = screen_time;
+    // for (auto *t : on_add_screen_triggers_)
+    // {
+    //   t->process("bitmap", (uint8_t)screen->mode);
+    // }
+    // screen->status();
   }
 
   uint8_t EHMTX::find_icon(std::string name)
