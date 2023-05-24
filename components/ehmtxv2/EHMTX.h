@@ -20,7 +20,7 @@ const uint8_t MAXICONS = 90;
 const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
-const uint16_t POLLINGINTERVAL = 1000; 
+const uint16_t POLLINGINTERVAL = 250; 
 static const char *const EHMTX_VERSION = "Version: 2023.5.0 beta";
 static const char *const TAG = "EHMTXv2";
 enum show_mode : uint8_t { MODE_EMPTY = 0,MODE_BLANK = 1, MODE_CLOCK = 2, MODE_DATE = 3, MODE_FULL_SCREEN = 4, MODE_ICON_SCREEN = 5, MODE_TEXT_SCREEN = 6 , MODE_RAINBOW_ICON = 7,MODE_RAINBOW_TEXT = 8, MODE_RAINBOW_CLOCK = 9,MODE_RAINBOW_DATE=10,MODE_BITMAP_SCREEN=11 };
@@ -37,7 +37,7 @@ namespace esphome
 
   class EHMTX : public PollingComponent, public api::CustomAPIDevice   {
   protected:   
-    float get_setup_priority() const override { return esphome::setup_priority::AFTER_WIFI; }
+    float get_setup_priority() const override { return esphome::setup_priority::LATE; }
     uint8_t brightness_;
     uint32_t boot_anim=0;
     uint8_t screen_pointer;

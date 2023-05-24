@@ -4,6 +4,7 @@ namespace esphome
 {
   EHMTX::EHMTX() : PollingComponent(POLLINGINTERVAL)
   {
+    ESP_LOGD(TAG, "Constructor start");
     this->show_display = true;
     this->display_gauge = false;
     this->display_indicator = 0;
@@ -24,11 +25,13 @@ namespace esphome
     this->next_action_time = 0;
     this->last_scroll_time = 0;
     this->screen_pointer = MAXQUEUE;
+    this->is_running = false;
 
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
       this->queue[i] = new EHMTX_queue(this);
     }
+    ESP_LOGD(TAG, "Constructor finish");
   }
 
   void EHMTX::set_time_format(std::string s)
@@ -274,6 +277,9 @@ namespace esphome
         this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
         this->is_running = true;
       }
+    }
+    else
+    {
     }
   }
 
@@ -874,11 +880,13 @@ namespace esphome
   {
     this->display = disp;
     this->show_display = true;
+    ESP_LOGD(TAG, "set_display");
   }
 
   void EHMTX::set_clock(time::RealTimeClock *clock)
   {
     this->clock = clock;
+    ESP_LOGD(TAG, "set_clock");
   }
 
   void EHMTX::draw_day_of_week()
