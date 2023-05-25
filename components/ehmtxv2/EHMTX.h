@@ -55,13 +55,29 @@ namespace esphome
   public:
     void setup() override;
     EHMTX();
-    Color text_color, alarm_color, gauge_color,indicator_color,clock_color;
-    Color today_color,weekday_color,rainbow_color;
+    
     uint16_t hue_=0;
     void dump_config();
-    std::string time_fmt;
-    std::string date_fmt;
-
+    #ifdef USE_ESP32
+      PROGMEM Color text_color, alarm_color, gauge_color,indicator_color,clock_color,today_color,weekday_color,rainbow_color;
+      PROGMEM std::string time_fmt;
+      PROGMEM std::string date_fmt;
+      PROGMEM Color bitmap[256];
+      PROGMEM EHMTX_Icon *icons[MAXICONS];
+      PROGMEM display::Font *default_font;
+      PROGMEM display::Font *special_font;
+    #endif
+    
+    #ifdef USE_ESP8266
+      std::string time_fmt;
+      std::string date_fmt;
+      Color text_color, alarm_color, gauge_color,indicator_color,clock_color,today_color,weekday_color,rainbow_color;
+      Color bitmap[256];
+      EHMTX_Icon *icons[MAXICONS];
+      display::Font *default_font;
+      display::Font *special_font;
+    #endif
+    
     int display_indicator;
     int display_alarm;
     bool display_gauge;
@@ -72,24 +88,13 @@ namespace esphome
     uint16_t clock_time;
     uint16_t scroll_step;
     uint8_t scroll_count;
-    Color bitmap[256];
-    void remove_expired_queue_element();
-    uint8_t find_oldest_queue_element();
-    uint8_t find_icon_in_queue(std::string);
-    void force_screen(std::string name,int mode=MODE_ICON_SCREEN);
-    EHMTX_Icon *icons[MAXICONS];
+    
     EHMTX_queue *queue[MAXQUEUE];
-    void add_icon(EHMTX_Icon *icon);
-    bool show_display=false;
     addressable_light::AddressableLightDisplay *display;
     time::RealTimeClock *clock;
-    display::Font *default_font;
-    display::Font *special_font;
+    
     int8_t default_yoffset, default_xoffset;
     int8_t special_yoffset, special_xoffset;
-    uint8_t find_icon(std::string name);
-    uint8_t find_last_clock();
-    bool string_has_ending(std::string const &fullString, std::string const &ending);
     bool show_seconds;
     uint16_t scroll_interval; // ms to between scrollsteps
     uint16_t rainbow_interval; // ms to between scrollsteps
@@ -102,6 +107,16 @@ namespace esphome
     unsigned long last_rainbow_time;
     unsigned long last_anim_time;
     time_t next_action_time = 0; // when is the next screen change
+    
+    void remove_expired_queue_element();
+    uint8_t find_oldest_queue_element();
+    uint8_t find_icon_in_queue(std::string);
+    void force_screen(std::string name,int mode=MODE_ICON_SCREEN);
+    void add_icon(EHMTX_Icon *icon);
+    bool show_display=false;
+    uint8_t find_icon(std::string name);
+    uint8_t find_last_clock();
+    bool string_has_ending(std::string const &fullString, std::string const &ending);
     void draw_day_of_week();
     void show_all_icons();
     void tick();
@@ -189,9 +204,15 @@ namespace esphome
     Color text_color;
     show_mode mode;
     
-    std::string text;
-    std::string icon_name;
-    
+    #ifdef USE_ESP32
+      PROGMEM std::string text;
+      PROGMEM std::string icon_name;
+    #endif
+    #ifdef USE_ESP8266
+      std::string text;
+      std::string icon_name;
+    #endif
+        
     EHMTX_queue(EHMTX *config);
 
     void status();
