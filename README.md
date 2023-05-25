@@ -153,6 +153,8 @@ void full_screen(string iconname, int =D_LIFETIME, int screen_time=D_SCREEN_TIME
 
 ##### bitmap screen
 
+**This feature is only available on ESP32 platform!!!!!**
+
 For 8x32 images as text. You can generate this images with e.g. [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator)
 
 ###### service via API
