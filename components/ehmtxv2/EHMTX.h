@@ -3,7 +3,7 @@
 #include "esphome.h"
 
 const uint8_t MAXQUEUE = 24;
-const uint8_t C_RED = 240; //default
+const uint8_t C_RED = 240; // default
 const uint8_t C_BLUE = 240;
 const uint8_t C_GREEN = 240;
 const uint8_t CD_RED = 100; // dim
@@ -20,10 +20,27 @@ const uint8_t MAXICONS = 90;
 const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
-const uint16_t POLLINGINTERVAL = 250; 
+const uint16_t POLLINGINTERVAL = 250;
 static const char *const EHMTX_VERSION = "Version: 2023.5.0 beta";
 static const char *const TAG = "EHMTXv2";
-enum show_mode : uint8_t { MODE_EMPTY = 0,MODE_BLANK = 1, MODE_CLOCK = 2, MODE_DATE = 3, MODE_FULL_SCREEN = 4, MODE_ICON_SCREEN = 5, MODE_TEXT_SCREEN = 6 , MODE_RAINBOW_ICON = 7,MODE_RAINBOW_TEXT = 8, MODE_RAINBOW_CLOCK = 9,MODE_RAINBOW_DATE=10,MODE_BITMAP_SCREEN=11 };
+#ifndef USE_ESP8266
+static const char *const EHMTX_LOGO = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+#endif
+enum show_mode : uint8_t
+{
+  MODE_EMPTY = 0,
+  MODE_BLANK = 1,
+  MODE_CLOCK = 2,
+  MODE_DATE = 3,
+  MODE_FULL_SCREEN = 4,
+  MODE_ICON_SCREEN = 5,
+  MODE_TEXT_SCREEN = 6,
+  MODE_RAINBOW_ICON = 7,
+  MODE_RAINBOW_TEXT = 8,
+  MODE_RAINBOW_CLOCK = 9,
+  MODE_RAINBOW_DATE = 10,
+  MODE_BITMAP_SCREEN = 11
+};
 
 namespace esphome
 {
@@ -35,15 +52,16 @@ namespace esphome
   class EHMTXExpiredScreenTrigger;
   class EHMTXNextClockTrigger;
 
-  class EHMTX : public PollingComponent, public api::CustomAPIDevice   {
-  protected:   
+  class EHMTX : public PollingComponent, public api::CustomAPIDevice
+  {
+  protected:
     float get_setup_priority() const override { return esphome::setup_priority::LATE; }
     uint8_t brightness_;
-    uint32_t boot_anim=0;
+    uint32_t boot_anim = 0;
     uint8_t screen_pointer;
     bool week_starts_monday;
     bool show_day_of_week;
-    
+
     std::vector<EHMTXNextScreenTrigger *> on_next_screen_triggers_;
     std::vector<EHMTXIconErrorTrigger *> on_icon_error_triggers_;
     std::vector<EHMTXExpiredScreenTrigger *> on_expired_screen_triggers_;
@@ -55,65 +73,61 @@ namespace esphome
   public:
     void setup() override;
     EHMTX();
-    
-    uint16_t hue_=0;
+
+    uint16_t hue_ = 0;
     void dump_config();
-    #ifdef USE_ESP32
-      PROGMEM Color text_color, alarm_color, gauge_color,indicator_color,clock_color,today_color,weekday_color,rainbow_color;
-      PROGMEM std::string time_fmt;
-      PROGMEM std::string date_fmt;
-      PROGMEM Color bitmap[256];
-      PROGMEM EHMTX_Icon *icons[MAXICONS];
-      PROGMEM display::Font *default_font;
-      PROGMEM display::Font *special_font;
-    #endif
-    
-    #ifdef USE_ESP8266
-      std::string time_fmt;
-      std::string date_fmt;
-      Color text_color, alarm_color, gauge_color,indicator_color,clock_color,today_color,weekday_color,rainbow_color;
-      Color bitmap[256];
-      EHMTX_Icon *icons[MAXICONS];
-      display::Font *default_font;
-      display::Font *special_font;
-    #endif
-    
+#ifdef USE_ESP32
+    PROGMEM Color text_color, alarm_color, gauge_color, indicator_color, clock_color, today_color, weekday_color, rainbow_color;
+    PROGMEM std::string time_fmt;
+    PROGMEM std::string date_fmt;
+    PROGMEM Color bitmap[256];
+    PROGMEM EHMTX_Icon *icons[MAXICONS];
+#endif
+
+#ifdef USE_ESP8266
+    std::string time_fmt;
+    std::string date_fmt;
+    Color text_color, alarm_color, gauge_color, indicator_color, clock_color, today_color, weekday_color, rainbow_color;
+    EHMTX_Icon *icons[MAXICONS];
+#endif
+    display::Font *default_font;
+    display::Font *special_font;
     int display_indicator;
     int display_alarm;
     bool display_gauge;
-    bool is_running=false;
+    bool is_running = false;
     bool show_date;
     bool rtl;
     uint8_t gauge_value;
     uint16_t clock_time;
     uint16_t scroll_step;
     uint8_t scroll_count;
-    
+
     EHMTX_queue *queue[MAXQUEUE];
     addressable_light::AddressableLightDisplay *display;
     time::RealTimeClock *clock;
-    
+
     int8_t default_yoffset, default_xoffset;
     int8_t special_yoffset, special_xoffset;
     bool show_seconds;
-    uint16_t scroll_interval; // ms to between scrollsteps
+    uint16_t scroll_interval;  // ms to between scrollsteps
     uint16_t rainbow_interval; // ms to between scrollsteps
     uint16_t frame_interval;   // ms to next_frame()
     uint16_t clock_interval;
-    uint16_t hold_time;       // seconds display of screen_time to extend 
-    
-    uint8_t icon_count;        // max iconnumber -1
+    uint16_t hold_time; // seconds display of screen_time to extend
+
+    uint8_t icon_count; // max iconnumber -1
     unsigned long last_scroll_time;
     unsigned long last_rainbow_time;
     unsigned long last_anim_time;
     time_t next_action_time = 0; // when is the next screen change
-    
+
     void remove_expired_queue_element();
     uint8_t find_oldest_queue_element();
     uint8_t find_icon_in_queue(std::string);
-    void force_screen(std::string name,int mode=MODE_ICON_SCREEN);
+    void force_screen(std::string name, int mode = MODE_ICON_SCREEN);
     void add_icon(EHMTX_Icon *icon);
-    bool show_display=false;
+    bool show_display = false;
     uint8_t find_icon(std::string name);
     uint8_t find_last_clock();
     bool string_has_ending(std::string const &fullString, std::string const &ending);
@@ -124,23 +138,23 @@ namespace esphome
     void get_status();
     void queue_status();
     void skip_screen();
-    void hold_screen(int t=30);
+    void hold_screen(int t = 30);
     void set_display(addressable_light::AddressableLightDisplay *disp);
-    void set_clock_interval(uint16_t t=90);
+    void set_clock_interval(uint16_t t = 90);
     void get_string(std::string);
-    void set_hold_time(uint16_t t=30);
-    void set_clock_time(uint16_t t=10);
+    void set_hold_time(uint16_t t = 30);
+    void set_clock_time(uint16_t t = 10);
     void set_show_day_of_week(bool b);
     void set_show_seconds(bool b);
     void set_show_date(bool b);
     void set_rtl(bool b);
     void set_font_offset(int8_t x, int8_t y);
     void set_week_start(bool b);
-    void set_brightness(int b); 
+    void set_brightness(int b);
     void set_default_font_offset(int8_t x, int8_t y);
     void set_special_font_offset(int8_t x, int8_t y);
     void set_display_on();
-    void set_display_off();   
+    void set_display_off();
     void set_clock(time::RealTimeClock *clock);
     void set_default_font(display::Font *font);
     void set_special_font(display::Font *font);
@@ -150,28 +164,30 @@ namespace esphome
     void set_scroll_count(uint8_t count);
     void set_time_format(std::string s);
     void set_date_format(std::string s);
-    void show_indicator(int r=C_RED, int g=C_GREEN, int b=C_BLUE,int s=3);
-    void set_clock_color(int r=C_RED, int g=C_GREEN, int b=C_BLUE);
+    void show_indicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
+    void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void set_today_color(int r, int g, int b);
     void set_weekday_color(int r, int g, int b);
-    void show_alarm(int r=CA_RED, int g=CA_GREEN, int b=CA_BLUE, int s= 2);
-    void show_gauge(int v,int r=C_RED, int g=C_GREEN, int b=C_BLUE); // int because of register_service
+    void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
+    void show_gauge(int v, int r = C_RED, int g = C_GREEN, int b = C_BLUE); // int because of register_service
     void hide_gauge();
     void hide_indicator();
     void hide_alarm();
-    void full_screen(std::string icon, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME);
-    void icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
-    void text_screen(std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true, int r=C_RED, int g=C_GREEN, int b=C_BLUE);
-    void clock_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
-    void date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true, int r=C_RED, int g=C_GREEN, int b=C_BLUE);
-    void blank_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME);
-    void bitmap_screen(std::string text,int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME);
-    void rainbow_icon_screen(std::string icon_name, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);
-    void rainbow_text_screen(std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);
-    void rainbow_clock_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);
-    void rainbow_date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);
-    void del_screen(std::string icon, int mode=MODE_ICON_SCREEN);
-    
+    void full_screen(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
+    void icon_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void date_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void blank_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
+#ifndef USE_ESP8266
+    void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
+#endif
+    void rainbow_icon_screen(std::string icon_name, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
+    void rainbow_text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
+    void rainbow_clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
+    void rainbow_date_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
+    void del_screen(std::string icon, int mode = MODE_ICON_SCREEN);
+
     void draw_gauge();
     void draw_alarm();
     void draw_indicator();
@@ -181,15 +197,14 @@ namespace esphome
     void add_on_icon_error_trigger(EHMTXIconErrorTrigger *t) { this->on_icon_error_triggers_.push_back(t); }
     void add_on_expired_screen_trigger(EHMTXExpiredScreenTrigger *t) { this->on_expired_screen_triggers_.push_back(t); }
     void add_on_next_clock_trigger(EHMTXNextClockTrigger *t) { this->on_next_clock_triggers_.push_back(t); }
-    
+
     void update();
     uint8_t get_brightness();
-};
+  };
 
   class EHMTX_queue
   {
   protected:
-    
     EHMTX *config_;
 
   public:
@@ -203,16 +218,16 @@ namespace esphome
     uint16_t scroll_reset;
     Color text_color;
     show_mode mode;
-    
-    #ifdef USE_ESP32
-      PROGMEM std::string text;
-      PROGMEM std::string icon_name;
-    #endif
-    #ifdef USE_ESP8266
-      std::string text;
-      std::string icon_name;
-    #endif
-        
+
+#ifdef USE_ESP32
+    PROGMEM std::string text;
+    PROGMEM std::string icon_name;
+#endif
+#ifdef USE_ESP8266
+    std::string text;
+    std::string icon_name;
+#endif
+
     EHMTX_queue(EHMTX *config);
 
     void status();
@@ -221,7 +236,7 @@ namespace esphome
     bool update_slot(uint8_t _icon);
     void update_screen();
     void hold_slot(uint8_t _sec);
-    void calc_scroll_time(std::string,uint16_t );
+    void calc_scroll_time(std::string, uint16_t);
     int xpos();
   };
 
@@ -246,7 +261,6 @@ namespace esphome
     void process(std::string);
   };
 
-
   class EHMTXExpiredScreenTrigger : public Trigger<std::string, std::string>
   {
   public:
@@ -261,7 +275,6 @@ namespace esphome
     void process();
   };
 
-  
   class EHMTX_Icon : public display::Animation
   {
   protected:

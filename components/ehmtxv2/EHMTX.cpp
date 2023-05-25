@@ -106,6 +106,7 @@ namespace esphome
     }
   }
 
+#ifndef USE_ESP8266      
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
     ESP_LOGD(TAG, "bitmap screen: lifetime: %d screen_time: %d", lifetime, screen_time);
@@ -139,7 +140,7 @@ namespace esphome
     }
     screen->status();
   }
-
+#endif
   uint8_t EHMTX::find_icon(std::string name)
   {
     for (uint8_t i = 0; i < this->icon_count; i++)
@@ -225,7 +226,7 @@ namespace esphome
     register_service(&EHMTX::rainbow_text_screen, "rainbow_text_screen", {"text", "lifetime", "screen_time", "default_font"});
 
     register_service(&EHMTX::clock_screen, "clock_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
-    register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"text", "lifetime", "screen_time"});
+    
     register_service(&EHMTX::rainbow_clock_screen, "rainbow_clock_screen", {"lifetime", "screen_time", "default_font"});
 
     register_service(&EHMTX::date_screen, "date_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
@@ -234,6 +235,10 @@ namespace esphome
     register_service(&EHMTX::blank_screen, "blank_screen", {"lifetime", "screen_time"});
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
+    #ifndef USE_ESP8266      
+    register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"text", "lifetime", "screen_time"});
+    #endif
+    
     ESP_LOGD(TAG, "Setup and running!");
   }
 
@@ -272,7 +277,9 @@ namespace esphome
       if (this->clock->now().is_valid())
       {
         ESP_LOGD(TAG, "time sync => start running");
-        this->bitmap_screen("[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]", 1, 10);
+        #ifndef USE_ESP8266      
+            this->bitmap_screen(EHMTX_LOGO, 1, 10);
+        #endif
         this->clock_screen(14 * 24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
         this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
         this->is_running = true;

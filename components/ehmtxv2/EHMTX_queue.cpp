@@ -54,9 +54,12 @@ namespace esphome
     case MODE_RAINBOW_DATE:
       ESP_LOGD(TAG, "queue: date for: %d sec", this->screen_time_);
       break;
+
+#ifndef USE_ESP8266
     case MODE_BITMAP_SCREEN:
       ESP_LOGD(TAG, "queue: bitmap for: %d sec", this->screen_time_);
       break;
+#endif
     default:
       ESP_LOGD(TAG, "queue: UPPS");
       break;
@@ -151,6 +154,7 @@ namespace esphome
         break;
       case MODE_BLANK:
         break;
+#ifndef USE_ESP8266
       case MODE_BITMAP_SCREEN:
         for (uint8_t x = 0; x < 32; x++)
         {
@@ -160,6 +164,7 @@ namespace esphome
           }
         }
         break;
+#endif
       case MODE_RAINBOW_CLOCK:
       case MODE_CLOCK:
         if (this->config_->clock->now().is_valid()) // valid time
