@@ -24,7 +24,7 @@ There are some "RGB-matrices" status displays/clocks out there, the commercial o
 - [Pixel It](https://docs.bastelbunker.de/pixelit/) (project is under active development)
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of Awtrix, optimized for the Ulanzi TC001 hardware
 
-The solutions have their pros and cons. I tried some and used AwTrix for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of MQTT.
+The solutions have their pros and cons. I tried some and used AwTrix for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of MQTT or uploading files to the ESP.
 
 But it had to be extensible, e.g. for the use as a pool thermometer or as a media player. All done by the magical power of esphome.
 
