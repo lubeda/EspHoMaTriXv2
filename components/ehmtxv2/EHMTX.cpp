@@ -7,7 +7,8 @@ namespace esphome
     ESP_LOGD(TAG, "Constructor start");
     this->show_display = true;
     this->display_gauge = false;
-    this->display_indicator = 0;
+    this->display_rindicator = 0;
+    this->display_lindicator = 0;
     this->display_alarm = 0;
     this->clock_time = 10;
     this->clock_interval = 90;
@@ -44,25 +45,46 @@ namespace esphome
     this->date_fmt = s;
   }
 
-  void EHMTX::show_indicator(int r, int g, int b, int size)
+  void EHMTX::show_rindicator(int r, int g, int b, int size)
   {
     if (size > 0)
     {
-      this->indicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
-      this->display_indicator = size & 3;
-      ESP_LOGD(TAG, "show indicator size: %d r: %d g: %d b: %d", size, r, g, b);
+      this->rindicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+      this->display_rindicator = size & 3;
+      ESP_LOGD(TAG, "show rindicator size: %d r: %d g: %d b: %d", size, r, g, b);
     }
     else
     {
-      this->hide_indicator();
+      this->hide_rindicator();
     }
   }
 
-  void EHMTX::hide_indicator()
+  void EHMTX::show_lindicator(int r, int g, int b, int size)
   {
-    this->display_indicator = 0;
-    ESP_LOGD(TAG, "hide indicator");
+    if (size > 0)
+    {
+      this->lindicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+      this->display_lindicator = size & 3;
+      ESP_LOGD(TAG, "show lindicator size: %d r: %d g: %d b: %d", size, r, g, b);
+    }
+    else
+    {
+      this->hide_lindicator();
+    }
   }
+
+  void EHMTX::hide_rindicator()
+  {
+    this->display_rindicator = 0;
+    ESP_LOGD(TAG, "hide rindicator");
+  }
+
+  void EHMTX::hide_lindicator()
+  {
+    this->display_lindicator = 0;
+    ESP_LOGD(TAG, "hide lindicator");
+  }
+
 
   void EHMTX::set_display_off()
   {
@@ -141,6 +163,11 @@ namespace esphome
     screen->status();
   }
 #endif
+#ifdef USE_ESP8266      
+void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
+  {
+  }
+  #endif
   uint8_t EHMTX::find_icon(std::string name)
   {
     for (uint8_t i = 0; i < this->icon_count; i++)
@@ -204,12 +231,14 @@ namespace esphome
     register_service(&EHMTX::set_display_on, "display_on");
     register_service(&EHMTX::set_display_off, "display_off");
     register_service(&EHMTX::hold_screen, "hold_screen", {"time"});
-    register_service(&EHMTX::hide_indicator, "hide_indicator");
+    register_service(&EHMTX::hide_rindicator, "hide_rindicator");
+    register_service(&EHMTX::hide_lindicator, "hide_lindicator");
     register_service(&EHMTX::hide_gauge, "hide_gauge");
     register_service(&EHMTX::hide_alarm, "hide_alarm");
     register_service(&EHMTX::show_gauge, "show_gauge", {"percent", "r", "g", "b"});
     register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b", "size"});
-    register_service(&EHMTX::show_indicator, "show_indicator", {"r", "g", "b", "size"});
+    register_service(&EHMTX::show_rindicator, "show_rindicator", {"r", "g", "b", "size"});
+    register_service(&EHMTX::show_lindicator, "show_lindicator", {"r", "g", "b", "size"});
 
     register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
     register_service(&EHMTX::set_today_color, "set_today_color", {"r", "g", "b"});
@@ -987,22 +1016,41 @@ namespace esphome
     }
   }
 
-  void EHMTX::draw_indicator()
+  void EHMTX::draw_rindicator()
   {
-    if (this->display_indicator > 2)
+    if (this->display_rindicator > 2)
     {
-      this->display->line(31, 5, 29, 7, this->indicator_color);
+      this->display->line(31, 5, 29, 7, this->rindicator_color);
     }
 
-    if (this->display_indicator > 1)
+    if (this->display_rindicator > 1)
     {
-      this->display->draw_pixel_at(30, 7, this->indicator_color);
-      this->display->draw_pixel_at(31, 6, this->indicator_color);
+      this->display->draw_pixel_at(30, 7, this->rindicator_color);
+      this->display->draw_pixel_at(31, 6, this->rindicator_color);
     }
 
-    if (this->display_indicator > 0)
+    if (this->display_rindicator > 0)
     {
-      this->display->draw_pixel_at(31, 7, this->indicator_color);
+      this->display->draw_pixel_at(31, 7, this->rindicator_color);
+    }
+  }
+
+  void EHMTX::draw_lindicator()
+  {
+    if (this->display_rindicator > 2)
+    {
+      this->display->line(0, 5, 2, 7, this->rindicator_color);
+    }
+
+    if (this->display_rindicator > 1)
+    {
+      this->display->draw_pixel_at(1, 7, this->rindicator_color);
+      this->display->draw_pixel_at(0, 6, this->rindicator_color);
+    }
+
+    if (this->display_rindicator > 0)
+    {
+      this->display->draw_pixel_at(0, 7, this->rindicator_color);
     }
   }
 
@@ -1017,7 +1065,8 @@ namespace esphome
       }
       if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN)
       {
-        this->draw_indicator();
+        this->draw_lindicator();
+        this->draw_rindicator();
       }
       this->draw_alarm();
     }

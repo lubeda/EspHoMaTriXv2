@@ -77,7 +77,7 @@ namespace esphome
     uint16_t hue_ = 0;
     void dump_config();
 #ifdef USE_ESP32
-    PROGMEM Color text_color, alarm_color, gauge_color, indicator_color, clock_color, today_color, weekday_color, rainbow_color;
+    PROGMEM Color text_color, alarm_color, gauge_color, rindicator_color,  lindicator_color,clock_color, today_color, weekday_color, rainbow_color;
     PROGMEM std::string time_fmt;
     PROGMEM std::string date_fmt;
     PROGMEM Color bitmap[256];
@@ -87,12 +87,13 @@ namespace esphome
 #ifdef USE_ESP8266
     std::string time_fmt;
     std::string date_fmt;
-    Color text_color, alarm_color, gauge_color, indicator_color, clock_color, today_color, weekday_color, rainbow_color;
+    Color text_color, alarm_color, gauge_color, rindicator_color,lindicator_color, clock_color, today_color, weekday_color, rainbow_color;
     EHMTX_Icon *icons[MAXICONS];
 #endif
     display::Font *default_font;
     display::Font *special_font;
-    int display_indicator;
+    int display_rindicator;
+    int display_lindicator;
     int display_alarm;
     bool display_gauge;
     bool is_running = false;
@@ -164,14 +165,16 @@ namespace esphome
     void set_scroll_count(uint8_t count);
     void set_time_format(std::string s);
     void set_date_format(std::string s);
-    void show_indicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
+    void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
+    void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void set_today_color(int r, int g, int b);
     void set_weekday_color(int r, int g, int b);
     void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
     void show_gauge(int v, int r = C_RED, int g = C_GREEN, int b = C_BLUE); // int because of register_service
     void hide_gauge();
-    void hide_indicator();
+    void hide_rindicator();
+    void hide_lindicator();
     void hide_alarm();
     void full_screen(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void icon_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
@@ -179,9 +182,9 @@ namespace esphome
     void clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void date_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void blank_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
-#ifndef USE_ESP8266
+
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
-#endif
+  
     void rainbow_icon_screen(std::string icon_name, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
@@ -190,7 +193,8 @@ namespace esphome
 
     void draw_gauge();
     void draw_alarm();
-    void draw_indicator();
+    void draw_rindicator();
+    void draw_lindicator();
 
     void add_on_next_screen_trigger(EHMTXNextScreenTrigger *t) { this->on_next_screen_triggers_.push_back(t); }
     void add_on_add_screen_trigger(EHMTXAddScreenTrigger *t) { this->on_add_screen_triggers_.push_back(t); }

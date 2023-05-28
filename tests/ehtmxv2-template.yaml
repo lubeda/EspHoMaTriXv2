@@ -15,8 +15,8 @@ esphome:
   name: $devicename 
   on_boot:
     lambda: |-
-      id(rgb8x32)->show_indicator(255,100,50,2);
-      id(rgb8x32)->hide_indicator();
+      id(rgb8x32)->show_rindicator(255,100,50,2);
+      id(rgb8x32)->hide_rindicator();
       id(rgb8x32)->show_alarm(255,0,150,3);
       id(rgb8x32)->hide_alarm();
       id(rgb8x32)->icon_screen("error","Hallo Text",false,237,20,100,200,150);

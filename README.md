@@ -83,7 +83,7 @@ This is for the more advanced users. If you understand the concept of esphome, y
 
 You can add screens to a queue and all these screens are displayed one after another.
 ![timing](./images/timingv2.png)
-Each screen can display different information or animation or text, even in rainbow color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the date and time screens are displayed. Some screens can show additional features like an alarm or indicator see [elements](#display-elements).
+Each screen can display different information or animation or text, even in rainbow color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the date and time screens are displayed. Some screens can show additional features like an alarm or rindicator see [elements](#display-elements).
 You can add screens from home assistant with service-calls or from esphome via lambdas in your YAML.
 
 #### Screen types a.k.a. what is possible
@@ -206,20 +206,20 @@ hide_alarm => no parameter
 void hide_alarm();
 ```
 
-##### Indicator
+##### rindicator
 
-The indicator is in the lower-left corner, but not displayed in full screen 8x32 animations. You can set its color.
+The rindicator is in the lower-left corner, but not displayed in full screen 8x32 animations. You can set its color.
 
 ###### Service
 
 ```c
-show_indicator => { "r", "g", "b","size"}
+show_rindicator => { "r", "g", "b","size"}
 ```
 
 ###### API
 
 ```c
-void show_indicator(int r, int g, int ,int size=3);
+void show_rindicator(int r, int g, int ,int size=3);
 ```
 
 r,g,b: 0-255 color components
@@ -230,14 +230,18 @@ To remove it, call:
 ###### Service
 
 ```c
-hide_indicator => no parameter
+hide_rindicator => no parameter
 ```
 
 ###### Lambda
 
 ```c
-void hide_indicator();
+void hide_rindicator();
 ```
+
+##### lindicator
+
+same as above but in the lower left corner1
 
 ##### gauge
 
@@ -504,7 +508,7 @@ ehmtxv2:
 
 **date_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%d.%m."` (use `"%m.%d."` for the US)
 
-**show_seconds** (optional, boolean): toggle an indicator for seconds while the clock is displayed (default: false)
+**show_seconds** (optional, boolean): toggle an rindicator for seconds while the clock is displayed (default: false)
 
 **time_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M"` (use `"%I:%M%p"` for the US)
 
@@ -520,7 +524,7 @@ ehmtxv2:
 
 **matrix_component** (required, ID): ID of the addressable display
 
-**show_dow** (optional, bool): draw the day of week indicator on the bottom of the clock screen. Disable, e.g. if you want larger fonts, defaults to true.
+**show_dow** (optional, bool): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g. if you want larger fonts, defaults to true.
 
 **time_component** (required, ID): ID of the time component. The display shows `!t!` until the time source is valid.
 
@@ -575,12 +579,12 @@ Numerous features are accessible with services from home assistant and lambdas y
 |`display_on`|none|turn display off|
 |`display_off`|none|turn display on|
 |`hold_screen`|none|show the screen that is currently displayed for the number of seconds longer|
-|`hide_indicator`|none|hides the indicator|
+|`hide_rindicator`|none|hides the rindicator|
 |`hide_gauge`|none|hides the gauge|
 |`hide_alarm`|none|hides the alarm|
 |`show_gauge"`|"percent", "r", "g", "b"|set the height of the gauge according to the percentage in the given color|
 |`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper-right corner|
-|`show_indicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
+|`show_rindicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
 |`set_clock_color`|"r", "g", "b"|set the default color for the clock/date display|
 |`set_today_color"`|"r", "g", "b"|set the special color for today in the day of week line|
 |`set_weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
@@ -600,7 +604,7 @@ Numerous features are accessible with services from home assistant and lambdas y
 #### Parameter description
 
 "r", "g", "b": Color components for red, green and blue 0..255
-"size": The size of the indicator or alarm, 1-3
+"size": The size of the rindicator or alarm, 1-3
 "percent": values from 0..100
 "icon_name": the id of the icon to show, as defined in the YAML file
 "text": a text message to display
@@ -1055,7 +1059,7 @@ sensor:
 
 ### 2023.5.0
 
-- removed the rtttl buzzer from the ulanzi easy template, because it often caused reboots!
+- renamed `indicator` to `rindicator`, because there is now also a `lindicator`
 
 ## EspHoMaTriX in the media
 
