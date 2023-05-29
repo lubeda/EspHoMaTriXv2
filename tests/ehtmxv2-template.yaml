@@ -31,6 +31,7 @@ esphome:
       id(rgb8x32)->set_display_off();
       id(rgb8x32)->hold_screen();
       id(rgb8x32)->show_gauge(100,0,200);
+      id(rgb8x32)->show_gauge(40,0,200,0,100,100,100);
       id(rgb8x32)->hide_gauge();
       id(rgb8x32)->set_clock_color(200,100,50);
       id(rgb8x32)->set_today_color(200,100,50);
