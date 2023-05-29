@@ -40,7 +40,7 @@ enum show_mode : uint8_t
   MODE_RAINBOW_TEXT = 8,
   MODE_RAINBOW_CLOCK = 9,
   MODE_RAINBOW_DATE = 10,
-  MODE_BITMAP_SCREEN = 11
+  MODE_BITMAP_SCREEN = 11,
   MODE_BITMAP_SMALL = 12
 };
 
@@ -187,7 +187,7 @@ namespace esphome
     void blank_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
 
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
-  
+    void bitmap_small(std::string, std::string,int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void rainbow_icon_screen(std::string icon_name, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);

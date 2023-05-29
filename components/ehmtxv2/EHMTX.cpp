@@ -85,7 +85,6 @@ namespace esphome
     ESP_LOGD(TAG, "hide lindicator");
   }
 
-
   void EHMTX::set_display_off()
   {
     this->show_display = false;
@@ -128,7 +127,7 @@ namespace esphome
     }
   }
 
-#ifndef USE_ESP8266      
+#ifndef USE_ESP8266
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
     ESP_LOGD(TAG, "bitmap screen: lifetime: %d screen_time: %d", lifetime, screen_time);
@@ -162,12 +161,53 @@ namespace esphome
     }
     screen->status();
   }
-#endif
-#ifdef USE_ESP8266      
-void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
+  
+  void EHMTX::bitmap_small(std::string icon, std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
+    ESP_LOGD(TAG, "small bitmap screen: text: %s lifetime: %d screen_time: %d", text.c_str(), lifetime, screen_time);
+    const size_t CAPACITY = JSON_ARRAY_SIZE(64);
+    StaticJsonDocument<CAPACITY> doc;
+    deserializeJson(doc, icon);
+    JsonArray array = doc.as<JsonArray>();
+    // extract the values
+    uint16_t i = 0;
+    for (JsonVariant v : array)
+    {
+      uint16_t buf = v.as<int>();
+
+      unsigned char b = (((buf)&0x001F) << 3);
+      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      Color c = Color(r, g, b);
+
+      this->sbitmap[i++] = c;
+    }
+
+    EHMTX_queue *screen = this->find_free_queue_element();
+
+    screen->text = text;
+    screen->text_color = Color(r,g,b);
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    screen->mode = MODE_BITMAP_SMALL;
+    screen->default_font = default_font;
+    screen->calc_scroll_time(text, screen_time);
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process("bitmap small", (uint8_t)screen->mode);
+    }
+    screen->status();
   }
-  #endif
+#endif
+#ifdef USE_ESP8266
+  void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
+  {
+    ESP_LOGW(TAG, "bitmap_screen is not available on ESP8266");
+  }
+  void EHMTX::bitmap_small(std::string icon, std::string text, int lifetime, int screen_time, int r, int g, int b)
+  {
+    ESP_LOGW(TAG, "bitmap_screen is not available on ESP8266");
+  }
+#endif
   uint8_t EHMTX::find_icon(std::string name)
   {
     for (uint8_t i = 0; i < this->icon_count; i++)
@@ -203,7 +243,7 @@ void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
     ESP_LOGD(TAG, "hide gauge");
   }
 
-  void EHMTX::show_gauge(int percent, int r, int g, int b,int bg_r, int bg_g, int bg_b)
+  void EHMTX::show_gauge(int percent, int r, int g, int b, int bg_r, int bg_g, int bg_b)
   {
     this->display_gauge = false;
     if (percent <= 100)
@@ -256,7 +296,7 @@ void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
     register_service(&EHMTX::rainbow_text_screen, "rainbow_text_screen", {"text", "lifetime", "screen_time", "default_font"});
 
     register_service(&EHMTX::clock_screen, "clock_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
-    
+
     register_service(&EHMTX::rainbow_clock_screen, "rainbow_clock_screen", {"lifetime", "screen_time", "default_font"});
 
     register_service(&EHMTX::date_screen, "date_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
@@ -265,10 +305,11 @@ void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
     register_service(&EHMTX::blank_screen, "blank_screen", {"lifetime", "screen_time"});
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
-    #ifndef USE_ESP8266      
-    register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"text", "lifetime", "screen_time"});
-    #endif
-    
+#ifndef USE_ESP8266
+    register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"icon", "lifetime", "screen_time"});
+    register_service(&EHMTX::bitmap_small, "bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+#endif
+
     ESP_LOGD(TAG, "Setup and running!");
   }
 
@@ -307,9 +348,9 @@ void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
       if (this->clock->now().is_valid())
       {
         ESP_LOGD(TAG, "time sync => start running");
-        #ifndef USE_ESP8266      
-            this->bitmap_screen(EHMTX_LOGO, 1, 10);
-        #endif
+#ifndef USE_ESP8266
+        this->bitmap_screen(EHMTX_LOGO, 1, 10);
+#endif
         this->clock_screen(14 * 24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
         this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
         this->is_running = true;
@@ -1060,17 +1101,17 @@ void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
     if ((this->is_running) && (this->show_display) && (this->screen_pointer != MAXQUEUE))
     {
       this->queue[this->screen_pointer]->draw();
-      if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP)
+      if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
       {
         this->draw_gauge();
       }
-      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN)
+      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN&& this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
       {
-       
+
         this->draw_rindicator();
-        if (this->queue[this->screen_pointer]->mode != MODE_ICON_SCREEN && this->queue[this->screen_pointer]->mode != MODE_RAINBOW_ICON && ! this->display_gauge)
+        if (this->queue[this->screen_pointer]->mode != MODE_ICON_SCREEN && this->queue[this->screen_pointer]->mode != MODE_RAINBOW_ICON && !this->display_gauge)
         {
-           this->draw_lindicator();
+          this->draw_lindicator();
         }
       }
       this->draw_alarm();

@@ -59,6 +59,9 @@ namespace esphome
     case MODE_BITMAP_SCREEN:
       ESP_LOGD(TAG, "queue: bitmap for: %d sec", this->screen_time_);
       break;
+    case MODE_BITMAP_SMALL:
+      ESP_LOGD(TAG, "queue: small bitmap for: %d sec", this->screen_time_);
+      break;
 #endif
     default:
       ESP_LOGD(TAG, "queue: UPPS");
@@ -74,6 +77,7 @@ namespace esphome
     switch (this->mode)
     {
     case MODE_RAINBOW_ICON:
+    case MODE_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
       startx = 8;
       break;
@@ -161,6 +165,38 @@ namespace esphome
           for (uint8_t y = 0; y < 8; y++)
           {
             this->config_->display->draw_pixel_at(x, y, this->config_->bitmap[x + y * 32]);
+          }
+        }
+        break;
+      case MODE_BITMAP_SMALL:
+        if (this->pixels_ > TEXTSTARTOFFSET)
+        {
+          extraoffset = TEXTSTARTOFFSET;
+        }
+        color_ = this->text_color;
+        if (this->config_->rtl)
+        {
+          this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
+                                        this->text.c_str());
+        }
+        else
+        {
+          this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+                                        this->text.c_str());
+        }
+        if (this->config_->display_gauge)
+        {
+          this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
+        }
+        else
+        {
+          this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
+        }
+        for (uint8_t x = 0; x < 8; x++)
+        {
+          for (uint8_t y = 0; y < 8; y++)
+          {
+            this->config_->display->draw_pixel_at(x, y, this->config_->sbitmap[x + y * 8]);
           }
         }
         break;
@@ -323,6 +359,7 @@ namespace esphome
       }
       break;
     case MODE_RAINBOW_ICON:
+    case MODE_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
       startx = 8;
       if (this->pixels_ < 23)
