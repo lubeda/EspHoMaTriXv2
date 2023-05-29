@@ -227,17 +227,20 @@ namespace esphome
       case MODE_DATE:
         if (this->config_->clock->now().is_valid())
         {
-          color_ = (this->mode == MODE_RAINBOW_DATE) ? this->config_->rainbow_color : this->config_->clock_color;
-          time_t ts = this->config_->clock->now().timestamp;
-          this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, this->config_->date_fmt.c_str(),
-                                           this->config_->clock->now());
-          if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
+          if (this->config_->show_date)
           {
-            this->config_->display->draw_pixel_at(0, 0, color_);
-          }
-          if (this->mode != MODE_RAINBOW_DATE)
-          {
-            this->config_->draw_day_of_week();
+            color_ = (this->mode == MODE_RAINBOW_DATE) ? this->config_->rainbow_color : this->config_->clock_color;
+            time_t ts = this->config_->clock->now().timestamp;
+            this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, this->config_->date_fmt.c_str(),
+                                             this->config_->clock->now());
+            if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
+            {
+              this->config_->display->draw_pixel_at(0, 0, color_);
+            }
+            if (this->mode != MODE_RAINBOW_DATE)
+            {
+              this->config_->draw_day_of_week();
+            }
           }
         }
         else

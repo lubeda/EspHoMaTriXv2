@@ -350,6 +350,7 @@ namespace esphome
         ESP_LOGD(TAG, "time sync => start running");
 #ifndef USE_ESP8266
         this->bitmap_screen(EHMTX_LOGO, 1, 10);
+        this->bitmap_small(EHMTX_SLOGO,EHMTX_VERSION, 1, 10);
 #endif
         this->clock_screen(14 * 24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
         this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
@@ -1003,15 +1004,12 @@ namespace esphome
 
   void EHMTX::dump_config()
   {
-    ESP_LOGCONFIG(TAG, "EspHoMatriXv2 %s", EHMTX_VERSION);
-    ESP_LOGCONFIG(TAG, "Boot anim: %d", this->boot_anim);
+    ESP_LOGCONFIG(TAG, "EspHoMatriXv2 version: %s", EHMTX_VERSION);
     ESP_LOGCONFIG(TAG, "Icons: %d of %d", this->icon_count, MAXICONS);
-    ESP_LOGCONFIG(TAG, "Max screens: %d", MAXQUEUE);
     ESP_LOGCONFIG(TAG, "Clock interval: %d s", this->clock_interval);
     ESP_LOGCONFIG(TAG, "Date format: %s", this->date_fmt.c_str());
     ESP_LOGCONFIG(TAG, "Time format: %s", this->time_fmt.c_str());
     ESP_LOGCONFIG(TAG, "Interval (ms) scroll: %d frame: %d", this->scroll_interval, this->frame_interval);
-    ESP_LOGCONFIG(TAG, "Displaytime (s) clock: %d", this->clock_time);
     if (this->show_day_of_week)
     {
       ESP_LOGCONFIG(TAG, "show day of week");
