@@ -1060,7 +1060,7 @@ void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
     if ((this->is_running) && (this->show_display) && (this->screen_pointer != MAXQUEUE))
     {
       this->queue[this->screen_pointer]->draw();
-      if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN)
+      if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP)
       {
         this->draw_gauge();
       }
@@ -1068,7 +1068,7 @@ void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
       {
        
         this->draw_rindicator();
-        if (this->queue[this->screen_pointer]->mode != MODE_ICON && this->queue[this->screen_pointer]->mode != MODE_RAINBOWICON)
+        if (this->queue[this->screen_pointer]->mode != MODE_ICON_SCREEN && this->queue[this->screen_pointer]->mode != MODE_RAINBOW_ICON && ! this->display_gauge)
         {
            this->draw_lindicator();
         }

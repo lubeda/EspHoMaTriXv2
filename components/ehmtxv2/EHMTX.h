@@ -41,6 +41,7 @@ enum show_mode : uint8_t
   MODE_RAINBOW_CLOCK = 9,
   MODE_RAINBOW_DATE = 10,
   MODE_BITMAP_SCREEN = 11
+  MODE_BITMAP_SMALL = 12
 };
 
 namespace esphome
@@ -82,6 +83,7 @@ namespace esphome
     PROGMEM std::string time_fmt;
     PROGMEM std::string date_fmt;
     PROGMEM Color bitmap[256];
+    PROGMEM Color sbitmap[64];
     PROGMEM EHMTX_Icon *icons[MAXICONS];
 #endif
 

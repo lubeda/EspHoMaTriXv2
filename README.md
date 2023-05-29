@@ -36,6 +36,10 @@ Based on a 8x32 RGB matrix, it displays a clock, the date and up to 24 other 'sc
 
 After the [old](https://github.com/lubeda/EsphoMaTrix) component became favorite, there were some feature requests, which indicated that my old code was a mess. I reworked the whole code and restructured it, so it is now hopefully more extensible.
 
+### Advice
+
+If you have the choice use an **ESP32 device**, there are conditions where the RAM size is to limited in a ESO8266 device, so i stripped out some features an these boards, e.g. the bitmap_screen.
+
 ## How to use
 
 ### The easy way
@@ -102,6 +106,8 @@ rainbow_clock_screen => {"lifetime", "screen_time", "default_font"}
 date_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
 rainbow_date_screen => {"lifetime", "screen_time", "default_font"}
 ```
+
+The rainbow_* variants don't display the day of week bar.
 
 ###### Lambda
 
