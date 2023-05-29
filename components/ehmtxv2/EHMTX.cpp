@@ -203,7 +203,7 @@ namespace esphome
   {
     ESP_LOGW(TAG, "bitmap_screen is not available on ESP8266");
   }
-  void EHMTX::bitmap_small(std::string i, std::string t ,int l, int s, bool f, int r, int g, int b);
+  void EHMTX::bitmap_small(std::string i, std::string t ,int l, int s, bool f, int r, int g, int b)
   {
     ESP_LOGW(TAG, "bitmap_screen is not available on ESP8266");
   }
