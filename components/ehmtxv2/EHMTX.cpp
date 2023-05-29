@@ -1066,8 +1066,12 @@ void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
       }
       if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN)
       {
-        this->draw_lindicator();
+       
         this->draw_rindicator();
+        if (this->queue[this->screen_pointer]->mode != MODE_ICON && this->queue[this->screen_pointer]->mode != MODE_RAINBOWICON)
+        {
+           this->draw_lindicator();
+        }
       }
       this->draw_alarm();
     }

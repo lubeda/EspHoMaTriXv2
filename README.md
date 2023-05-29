@@ -241,7 +241,7 @@ void hide_rindicator();
 
 ##### lindicator
 
-same as above but in the lower left corner1
+Same as above but in the lower left corner, this is not visible while icons are displayed.
 
 ##### gauge
 
@@ -250,17 +250,18 @@ The gauge is displayed in the left most column. You can set its color and its va
 ###### service
 
 ```c
-show_gauge => {"value","r", "g", "b"}
+show_gauge => {"value","r", "g", "b","bg_r", "bg_g", "bg_b"}
 ```
 
 ###### api
 
 ```c
-void show_gauge(int percent, int r, int g, int b);
+void show_gauge(int percent, int r, int g, int b, int bg_r, int bg_g, int bg_b);
 ```
 
 percent: 0-100 (resolution: one pixel per 12,5%)
-r, g, b: 0-255 color components
+r, g, b: 0-255 foreground color components
+bg_r, bg_g, bg_b: 0-255 background color components
 
 To remove it, call:
 
