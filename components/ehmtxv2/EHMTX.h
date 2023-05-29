@@ -12,6 +12,7 @@ const uint8_t CD_GREEN = 100;
 const uint8_t CA_RED = 200; // alarm
 const uint8_t CA_BLUE = 50;
 const uint8_t CA_GREEN = 50;
+const uint8_t CG_GREY = 50;
 
 const uint8_t D_LIFETIME = 5;
 const uint8_t D_SCREEN_TIME = 10;
@@ -77,7 +78,7 @@ namespace esphome
     uint16_t hue_ = 0;
     void dump_config();
 #ifdef USE_ESP32
-    PROGMEM Color text_color, alarm_color, gauge_color, rindicator_color,  lindicator_color,clock_color, today_color, weekday_color, rainbow_color;
+    PROGMEM Color text_color, alarm_color, gauge_color, gauge_bgcolor, rindicator_color,  lindicator_color,clock_color, today_color, weekday_color, rainbow_color;
     PROGMEM std::string time_fmt;
     PROGMEM std::string date_fmt;
     PROGMEM Color bitmap[256];
@@ -87,7 +88,7 @@ namespace esphome
 #ifdef USE_ESP8266
     std::string time_fmt;
     std::string date_fmt;
-    Color text_color, alarm_color, gauge_color, rindicator_color,lindicator_color, clock_color, today_color, weekday_color, rainbow_color;
+    Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, clock_color, today_color, weekday_color, rainbow_color;
     EHMTX_Icon *icons[MAXICONS];
 #endif
     display::Font *default_font;
@@ -171,7 +172,7 @@ namespace esphome
     void set_today_color(int r, int g, int b);
     void set_weekday_color(int r, int g, int b);
     void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
-    void show_gauge(int v, int r = C_RED, int g = C_GREEN, int b = C_BLUE); // int because of register_service
+    void show_gauge(int v, int r = C_RED, int g = C_GREEN, int b = C_BLUE,int bgr = CG_GREY, int bgg = CG_GREY, int bgb = CG_GREY); // int because of register_service
     void hide_gauge();
     void hide_rindicator();
     void hide_lindicator();

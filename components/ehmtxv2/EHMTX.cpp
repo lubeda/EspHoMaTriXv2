@@ -203,12 +203,13 @@ void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
     ESP_LOGD(TAG, "hide gauge");
   }
 
-  void EHMTX::show_gauge(int percent, int r, int g, int b)
+  void EHMTX::show_gauge(int percent, int r, int g, int b,int bg_r, int bg_g, int bg_b)
   {
     this->display_gauge = false;
     if (percent <= 100)
     {
       this->gauge_color = Color(r, g, b);
+      this->gauge_bgcolor = Color(bg_r, bg_g, bg_b);
       this->display_gauge = true;
       this->gauge_value = (uint8_t)(100 - percent) * 7 / 100;
     }
@@ -218,7 +219,7 @@ void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
     if (this->display_gauge)
     {
-      this->display->line(0, 7, 0, 0, esphome::display::COLOR_OFF);
+      this->display->line(0, 7, 0, 0, this->gauge_bgcolor);
       this->display->line(1, 7, 1, 0, esphome::display::COLOR_OFF);
       this->display->line(0, 7, 0, this->gauge_value, this->gauge_color);
     }
@@ -235,7 +236,7 @@ void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
     register_service(&EHMTX::hide_lindicator, "hide_lindicator");
     register_service(&EHMTX::hide_gauge, "hide_gauge");
     register_service(&EHMTX::hide_alarm, "hide_alarm");
-    register_service(&EHMTX::show_gauge, "show_gauge", {"percent", "r", "g", "b"});
+    register_service(&EHMTX::show_gauge, "show_gauge", {"percent", "r", "g", "b", "bg_r", "bg_g", "bg_b"});
     register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b", "size"});
     register_service(&EHMTX::show_rindicator, "show_rindicator", {"r", "g", "b", "size"});
     register_service(&EHMTX::show_lindicator, "show_lindicator", {"r", "g", "b", "size"});
@@ -1037,20 +1038,20 @@ void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
 
   void EHMTX::draw_lindicator()
   {
-    if (this->display_rindicator > 2)
+    if (this->display_lindicator > 2)
     {
-      this->display->line(0, 5, 2, 7, this->rindicator_color);
+      this->display->line(0, 5, 2, 7, this->lindicator_color);
     }
 
-    if (this->display_rindicator > 1)
+    if (this->display_lindicator > 1)
     {
-      this->display->draw_pixel_at(1, 7, this->rindicator_color);
-      this->display->draw_pixel_at(0, 6, this->rindicator_color);
+      this->display->draw_pixel_at(1, 7, this->lindicator_color);
+      this->display->draw_pixel_at(0, 6, this->lindicator_color);
     }
 
-    if (this->display_rindicator > 0)
+    if (this->display_lindicator > 0)
     {
-      this->display->draw_pixel_at(0, 7, this->rindicator_color);
+      this->display->draw_pixel_at(0, 7, this->lindicator_color);
     }
   }
 
