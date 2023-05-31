@@ -4,9 +4,11 @@ namespace esphome
 {
   EHMTX::EHMTX() : PollingComponent(POLLINGINTERVAL)
   {
+    ESP_LOGD(TAG, "Constructor start");
     this->show_display = true;
     this->display_gauge = false;
-    this->display_indicator = 0;
+    this->display_rindicator = 0;
+    this->display_lindicator = 0;
     this->display_alarm = 0;
     this->clock_time = 10;
     this->clock_interval = 90;
@@ -24,11 +26,13 @@ namespace esphome
     this->next_action_time = 0;
     this->last_scroll_time = 0;
     this->screen_pointer = MAXQUEUE;
+    this->is_running = false;
 
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
       this->queue[i] = new EHMTX_queue(this);
     }
+    ESP_LOGD(TAG, "Constructor finish");
   }
 
   void EHMTX::set_time_format(std::string s)
@@ -41,24 +45,44 @@ namespace esphome
     this->date_fmt = s;
   }
 
-  void EHMTX::show_indicator(int r, int g, int b, int size)
+  void EHMTX::show_rindicator(int r, int g, int b, int size)
   {
     if (size > 0)
     {
-      this->indicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
-      this->display_indicator = size & 3;
-      ESP_LOGD(TAG, "show indicator size: %d r: %d g: %d b: %d", size, r, g, b);
+      this->rindicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+      this->display_rindicator = size & 3;
+      ESP_LOGD(TAG, "show rindicator size: %d r: %d g: %d b: %d", size, r, g, b);
     }
     else
     {
-      this->hide_indicator();
+      this->hide_rindicator();
     }
   }
 
-  void EHMTX::hide_indicator()
+  void EHMTX::show_lindicator(int r, int g, int b, int size)
   {
-    this->display_indicator = 0;
-    ESP_LOGD(TAG, "hide indicator");
+    if (size > 0)
+    {
+      this->lindicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+      this->display_lindicator = size & 3;
+      ESP_LOGD(TAG, "show lindicator size: %d r: %d g: %d b: %d", size, r, g, b);
+    }
+    else
+    {
+      this->hide_lindicator();
+    }
+  }
+
+  void EHMTX::hide_rindicator()
+  {
+    this->display_rindicator = 0;
+    ESP_LOGD(TAG, "hide rindicator");
+  }
+
+  void EHMTX::hide_lindicator()
+  {
+    this->display_lindicator = 0;
+    ESP_LOGD(TAG, "hide lindicator");
   }
 
   void EHMTX::set_display_off()
@@ -103,6 +127,7 @@ namespace esphome
     }
   }
 
+#ifndef USE_ESP8266
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
     ESP_LOGD(TAG, "bitmap screen: lifetime: %d screen_time: %d", lifetime, screen_time);
@@ -115,12 +140,12 @@ namespace esphome
     for (JsonVariant v : array)
     {
       uint16_t buf = v.as<int>();
-      
+
       unsigned char b = (((buf)&0x001F) << 3);
       unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
       unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
       Color c = Color(r, g, b);
-      
+
       this->bitmap[i++] = c;
     }
 
@@ -136,7 +161,53 @@ namespace esphome
     }
     screen->status();
   }
+  
+  void EHMTX::bitmap_small(std::string icon, std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
+  {
+    ESP_LOGD(TAG, "small bitmap screen: text: %s lifetime: %d screen_time: %d", text.c_str(), lifetime, screen_time);
+    const size_t CAPACITY = JSON_ARRAY_SIZE(64);
+    StaticJsonDocument<CAPACITY> doc;
+    deserializeJson(doc, icon);
+    JsonArray array = doc.as<JsonArray>();
+    // extract the values
+    uint16_t i = 0;
+    for (JsonVariant v : array)
+    {
+      uint16_t buf = v.as<int>();
 
+      unsigned char b = (((buf)&0x001F) << 3);
+      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      Color c = Color(r, g, b);
+
+      this->sbitmap[i++] = c;
+    }
+
+    EHMTX_queue *screen = this->find_free_queue_element();
+
+    screen->text = text;
+    screen->text_color = Color(r,g,b);
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    screen->mode = MODE_BITMAP_SMALL;
+    screen->default_font = default_font;
+    screen->calc_scroll_time(text, screen_time);
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process("bitmap small", (uint8_t)screen->mode);
+    }
+    screen->status();
+  }
+#endif
+#ifdef USE_ESP8266
+  void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
+  {
+    ESP_LOGW(TAG, "bitmap_screen is not available on ESP8266");
+  }
+  void EHMTX::bitmap_small(std::string i, std::string t ,int l, int s, bool f, int r, int g, int b)
+  {
+    ESP_LOGW(TAG, "bitmap_screen is not available on ESP8266");
+  }
+#endif
   uint8_t EHMTX::find_icon(std::string name)
   {
     for (uint8_t i = 0; i < this->icon_count; i++)
@@ -172,12 +243,13 @@ namespace esphome
     ESP_LOGD(TAG, "hide gauge");
   }
 
-  void EHMTX::show_gauge(int percent, int r, int g, int b)
+  void EHMTX::show_gauge(int percent, int r, int g, int b, int bg_r, int bg_g, int bg_b)
   {
     this->display_gauge = false;
     if (percent <= 100)
     {
       this->gauge_color = Color(r, g, b);
+      this->gauge_bgcolor = Color(bg_r, bg_g, bg_b);
       this->display_gauge = true;
       this->gauge_value = (uint8_t)(100 - percent) * 7 / 100;
     }
@@ -187,7 +259,7 @@ namespace esphome
   {
     if (this->display_gauge)
     {
-      this->display->line(0, 7, 0, 0, esphome::display::COLOR_OFF);
+      this->display->line(0, 7, 0, 0, this->gauge_bgcolor);
       this->display->line(1, 7, 1, 0, esphome::display::COLOR_OFF);
       this->display->line(0, 7, 0, this->gauge_value, this->gauge_color);
     }
@@ -200,12 +272,14 @@ namespace esphome
     register_service(&EHMTX::set_display_on, "display_on");
     register_service(&EHMTX::set_display_off, "display_off");
     register_service(&EHMTX::hold_screen, "hold_screen", {"time"});
-    register_service(&EHMTX::hide_indicator, "hide_indicator");
+    register_service(&EHMTX::hide_rindicator, "hide_rindicator");
+    register_service(&EHMTX::hide_lindicator, "hide_lindicator");
     register_service(&EHMTX::hide_gauge, "hide_gauge");
     register_service(&EHMTX::hide_alarm, "hide_alarm");
-    register_service(&EHMTX::show_gauge, "show_gauge", {"percent", "r", "g", "b"});
+    register_service(&EHMTX::show_gauge, "show_gauge", {"percent", "r", "g", "b", "bg_r", "bg_g", "bg_b"});
     register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b", "size"});
-    register_service(&EHMTX::show_indicator, "show_indicator", {"r", "g", "b", "size"});
+    register_service(&EHMTX::show_rindicator, "show_rindicator", {"r", "g", "b", "size"});
+    register_service(&EHMTX::show_lindicator, "show_lindicator", {"r", "g", "b", "size"});
 
     register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
     register_service(&EHMTX::set_today_color, "set_today_color", {"r", "g", "b"});
@@ -222,7 +296,7 @@ namespace esphome
     register_service(&EHMTX::rainbow_text_screen, "rainbow_text_screen", {"text", "lifetime", "screen_time", "default_font"});
 
     register_service(&EHMTX::clock_screen, "clock_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
-    register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"text", "lifetime", "screen_time"});
+
     register_service(&EHMTX::rainbow_clock_screen, "rainbow_clock_screen", {"lifetime", "screen_time", "default_font"});
 
     register_service(&EHMTX::date_screen, "date_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
@@ -231,6 +305,11 @@ namespace esphome
     register_service(&EHMTX::blank_screen, "blank_screen", {"lifetime", "screen_time"});
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
+#ifndef USE_ESP8266
+    register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"icon", "lifetime", "screen_time"});
+    register_service(&EHMTX::bitmap_small, "bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+#endif
+
     ESP_LOGD(TAG, "Setup and running!");
   }
 
@@ -269,14 +348,20 @@ namespace esphome
       if (this->clock->now().is_valid())
       {
         ESP_LOGD(TAG, "time sync => start running");
-        this->bitmap_screen("[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",1,10);
+#ifndef USE_ESP8266
+        this->bitmap_screen(EHMTX_LOGO, 1, 10);
+        this->bitmap_small(EHMTX_SLOGO,EHMTX_VERSION, 1, 10);
+#endif
         this->clock_screen(14 * 24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
         this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
         this->is_running = true;
       }
     }
+    else
+    {
+    }
   }
-  
+
   void EHMTX::force_screen(std::string icon_name, int mode)
   {
     for (uint8_t i = 0; i < MAXQUEUE; i++)
@@ -348,53 +433,59 @@ namespace esphome
 
   void EHMTX::remove_expired_queue_element()
   {
-    time_t ts = this->clock->now().timestamp;
-    std::string infotext;
-    for (size_t i = 0; i < MAXQUEUE; i++)
+    if (this->clock->now().is_valid())
     {
-      if ((this->queue[i]->endtime > 0) && (this->queue[i]->endtime < ts))
+      std::string infotext;
+      time_t ts = this->clock->now().timestamp;
+
+      for (size_t i = 0; i < MAXQUEUE; i++)
       {
-        this->queue[i]->endtime = 0;
-        if (this->queue[i]->mode != MODE_EMPTY)
+        if ((this->queue[i]->endtime > 0) && (this->queue[i]->endtime < ts))
         {
-          ESP_LOGD(TAG, "remove expired queue element: slot %d: mode: %d icon_name: %s text: %s", i, this->queue[i]->mode, this->queue[i]->icon_name.c_str(), this->queue[i]->text.c_str());
-          for (auto *t : on_expired_screen_triggers_)
+          this->queue[i]->endtime = 0;
+          if (this->queue[i]->mode != MODE_EMPTY)
           {
-            infotext = "";
-            switch (this->queue[i]->mode)
+            ESP_LOGD(TAG, "remove expired queue element: slot %d: mode: %d icon_name: %s text: %s", i, this->queue[i]->mode, this->queue[i]->icon_name.c_str(), this->queue[i]->text.c_str());
+            for (auto *t : on_expired_screen_triggers_)
             {
-            case MODE_EMPTY:
-              break;
-            case MODE_BLANK:
-              break;
-            case MODE_CLOCK:
-              infotext = "clock";
-              break;
-            case MODE_DATE:
-              infotext = "clock";
-              break;
-            case MODE_FULL_SCREEN:
-              infotext = "full screen " + this->queue[i]->icon_name;
-              break;
-            case MODE_ICON_SCREEN:
-            case MODE_RAINBOW_ICON:
-              infotext = this->queue[i]->icon_name.c_str();
-              break;
-            case MODE_RAINBOW_TEXT:
-            case MODE_TEXT_SCREEN:
-              infotext = "TEXT";
-              break;
-            default:
-              break;
+              infotext = "";
+              switch (this->queue[i]->mode)
+              {
+              case MODE_EMPTY:
+                break;
+              case MODE_BLANK:
+                break;
+              case MODE_CLOCK:
+                infotext = "clock";
+                break;
+              case MODE_DATE:
+                infotext = "clock";
+                break;
+              case MODE_FULL_SCREEN:
+                infotext = "full screen " + this->queue[i]->icon_name;
+                break;
+              case MODE_ICON_SCREEN:
+              case MODE_RAINBOW_ICON:
+                infotext = this->queue[i]->icon_name.c_str();
+                break;
+              case MODE_RAINBOW_TEXT:
+              case MODE_TEXT_SCREEN:
+                infotext = "TEXT";
+                break;
+              case MODE_BITMAP_SCREEN:
+                infotext = "BITMAP";
+                break;
+              default:
+                break;
+              }
+              t->process(this->queue[i]->icon_name, infotext);
             }
-            t->process(this->queue[i]->icon_name, infotext);
           }
+          this->queue[i]->mode = MODE_EMPTY;
         }
-        this->queue[i]->mode = MODE_EMPTY;
       }
     }
   }
-
   void EHMTX::tick()
   {
     this->hue_++;
@@ -406,10 +497,10 @@ namespace esphome
     esphome::hsv_to_rgb(this->hue_, 0.8, 0.8, red, green, blue);
     this->rainbow_color = Color(uint8_t(255 * red), uint8_t(255 * green), uint8_t(255 * blue));
 
-    time_t ts = this->clock->now().timestamp;
-
-    if (this->is_running)
+    if (this->is_running && this->clock->now().is_valid())
     {
+      time_t ts = this->clock->now().timestamp;
+
       if (millis() - this->last_scroll_time >= this->scroll_interval)
       {
         this->scroll_step++;
@@ -868,11 +959,13 @@ namespace esphome
   {
     this->display = disp;
     this->show_display = true;
+    ESP_LOGD(TAG, "set_display");
   }
 
   void EHMTX::set_clock(time::RealTimeClock *clock)
   {
     this->clock = clock;
+    ESP_LOGD(TAG, "set_clock");
   }
 
   void EHMTX::draw_day_of_week()
@@ -911,15 +1004,12 @@ namespace esphome
 
   void EHMTX::dump_config()
   {
-    ESP_LOGCONFIG(TAG, "EspHoMatriXv2 %s", EHMTX_VERSION);
-    ESP_LOGCONFIG(TAG, "Boot anim: %d", this->boot_anim);
+    ESP_LOGCONFIG(TAG, "EspHoMatriXv2 version: %s", EHMTX_VERSION);
     ESP_LOGCONFIG(TAG, "Icons: %d of %d", this->icon_count, MAXICONS);
-    ESP_LOGCONFIG(TAG, "Max screens: %d", MAXQUEUE);
     ESP_LOGCONFIG(TAG, "Clock interval: %d s", this->clock_interval);
     ESP_LOGCONFIG(TAG, "Date format: %s", this->date_fmt.c_str());
     ESP_LOGCONFIG(TAG, "Time format: %s", this->time_fmt.c_str());
     ESP_LOGCONFIG(TAG, "Interval (ms) scroll: %d frame: %d", this->scroll_interval, this->frame_interval);
-    ESP_LOGCONFIG(TAG, "Displaytime (s) clock: %d", this->clock_time);
     if (this->show_day_of_week)
     {
       ESP_LOGCONFIG(TAG, "show day of week");
@@ -939,10 +1029,6 @@ namespace esphome
     else
     {
       ESP_LOGCONFIG(TAG, "weekstart: sunday");
-    }
-    if (this->clock->now().is_valid())
-    {
-      this->is_running = true;
     }
   }
 
@@ -970,22 +1056,41 @@ namespace esphome
     }
   }
 
-  void EHMTX::draw_indicator()
+  void EHMTX::draw_rindicator()
   {
-    if (this->display_indicator > 2)
+    if (this->display_rindicator > 2)
     {
-      this->display->line(31, 5, 29, 7, this->indicator_color);
+      this->display->line(31, 5, 29, 7, this->rindicator_color);
     }
 
-    if (this->display_indicator > 1)
+    if (this->display_rindicator > 1)
     {
-      this->display->draw_pixel_at(30, 7, this->indicator_color);
-      this->display->draw_pixel_at(31, 6, this->indicator_color);
+      this->display->draw_pixel_at(30, 7, this->rindicator_color);
+      this->display->draw_pixel_at(31, 6, this->rindicator_color);
     }
 
-    if (this->display_indicator > 0)
+    if (this->display_rindicator > 0)
     {
-      this->display->draw_pixel_at(31, 7, this->indicator_color);
+      this->display->draw_pixel_at(31, 7, this->rindicator_color);
+    }
+  }
+
+  void EHMTX::draw_lindicator()
+  {
+    if (this->display_lindicator > 2)
+    {
+      this->display->line(0, 5, 2, 7, this->lindicator_color);
+    }
+
+    if (this->display_lindicator > 1)
+    {
+      this->display->draw_pixel_at(1, 7, this->lindicator_color);
+      this->display->draw_pixel_at(0, 6, this->lindicator_color);
+    }
+
+    if (this->display_lindicator > 0)
+    {
+      this->display->draw_pixel_at(0, 7, this->lindicator_color);
     }
   }
 
@@ -994,13 +1099,18 @@ namespace esphome
     if ((this->is_running) && (this->show_display) && (this->screen_pointer != MAXQUEUE))
     {
       this->queue[this->screen_pointer]->draw();
-      if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN)
+      if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
       {
         this->draw_gauge();
       }
-      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN)
+      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN&& this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
       {
-        this->draw_indicator();
+
+        this->draw_rindicator();
+        if (this->queue[this->screen_pointer]->mode != MODE_ICON_SCREEN && this->queue[this->screen_pointer]->mode != MODE_RAINBOW_ICON && !this->display_gauge)
+        {
+          this->draw_lindicator();
+        }
       }
       this->draw_alarm();
     }

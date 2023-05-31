@@ -16,6 +16,7 @@ _LOGGER = logging.getLogger(__name__)
 
 DEPENDENCIES = ["display", "light", "api"]
 AUTO_LOAD = ["ehmtxv2"]
+AUTO_LOAD = ["json"]
 IMAGE_TYPE_RGB565 = 4
 MAXFRAMES = 110
 MAXICONS = 90
@@ -354,14 +355,14 @@ async def to_code(config):
     disp = await cg.get_variable(config[CONF_MATRIXCOMPONENT])
     cg.add(var.set_display(disp))
 
+    ehmtxtime = await cg.get_variable(config[CONF_TIMECOMPONENT])
+    cg.add(var.set_clock(ehmtxtime))
+
     f = await cg.get_variable(config[CONF_DEFAULT_FONT_ID])
     cg.add(var.set_default_font(f))
 
     f = await cg.get_variable(config[CONF_special_FONT_ID])
     cg.add(var.set_special_font(f))
-
-    ehmtxtime = await cg.get_variable(config[CONF_TIMECOMPONENT])
-    cg.add(var.set_clock(ehmtxtime))
 
     cg.add(var.set_brightness(config[CONF_BRIGHTNESS]))
     cg.add(var.set_scroll_interval(config[CONF_SCROLLINTERVAL]))

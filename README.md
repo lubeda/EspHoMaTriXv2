@@ -1,7 +1,5 @@
 # EspHoMaTriX version 2 (EHMTXv2)
 
-## **This is a prerelease beta version**
-
 ## Important information
 
 If you like my work, please donate me a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!!
@@ -24,7 +22,7 @@ There are some "RGB-matrices" status displays/clocks out there, the commercial o
 - [Pixel It](https://docs.bastelbunker.de/pixelit/) (project is under active development)
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of Awtrix, optimized for the Ulanzi TC001 hardware
 
-The solutions have their pros and cons. I tried some and used AwTrix for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of MQTT.
+The solutions have their pros and cons. I tried some and used AwTrix for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of MQTT or uploading files to the ESP.
 
 But it had to be extensible, e.g. for the use as a pool thermometer or as a media player. All done by the magical power of esphome.
 
@@ -35,6 +33,10 @@ Based on a 8x32 RGB matrix, it displays a clock, the date and up to 24 other 'sc
 ### State
 
 After the [old](https://github.com/lubeda/EsphoMaTrix) component became favorite, there were some feature requests, which indicated that my old code was a mess. I reworked the whole code and restructured it, so it is now hopefully more extensible.
+
+### Advice
+
+If you have the choice use an **ESP32 device**, there are conditions where the RAM size is to limited in a ESO8266 device, so i stripped out some features an these boards, e.g. the bitmap_screen.
 
 ## How to use
 
@@ -83,7 +85,7 @@ This is for the more advanced users. If you understand the concept of esphome, y
 
 You can add screens to a queue and all these screens are displayed one after another.
 ![timing](./images/timingv2.png)
-Each screen can display different information or animation or text, even in rainbow color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the date and time screens are displayed. Some screens can show additional features like an alarm or indicator see [elements](#display-elements).
+Each screen can display different information or animation or text, even in rainbow color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the date and time screens are displayed. Some screens can show additional features like an alarm or rindicator see [elements](#display-elements).
 You can add screens from home assistant with service-calls or from esphome via lambdas in your YAML.
 
 #### Screen types a.k.a. what is possible
@@ -102,6 +104,8 @@ rainbow_clock_screen => {"lifetime", "screen_time", "default_font"}
 date_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
 rainbow_date_screen => {"lifetime", "screen_time", "default_font"}
 ```
+
+The rainbow_* variants don't display the day of week bar.
 
 ###### Lambda
 
@@ -152,6 +156,8 @@ void full_screen(string iconname, int =D_LIFETIME, int screen_time=D_SCREEN_TIME
 ```
 
 ##### bitmap screen
+
+**This feature is only available on ESP32 platform!!!!!**
 
 For 8x32 images as text. You can generate this images with e.g. [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator)
 
@@ -204,20 +210,20 @@ hide_alarm => no parameter
 void hide_alarm();
 ```
 
-##### Indicator
+##### rindicator
 
-The indicator is in the lower-left corner, but not displayed in full screen 8x32 animations. You can set its color.
+The rindicator is in the lower-left corner, but not displayed in full screen 8x32 animations. You can set its color.
 
 ###### Service
 
 ```c
-show_indicator => { "r", "g", "b","size"}
+show_rindicator => { "r", "g", "b","size"}
 ```
 
 ###### API
 
 ```c
-void show_indicator(int r, int g, int ,int size=3);
+void show_rindicator(int r, int g, int ,int size=3);
 ```
 
 r,g,b: 0-255 color components
@@ -228,14 +234,18 @@ To remove it, call:
 ###### Service
 
 ```c
-hide_indicator => no parameter
+hide_rindicator => no parameter
 ```
 
 ###### Lambda
 
 ```c
-void hide_indicator();
+void hide_rindicator();
 ```
+
+##### lindicator
+
+Same as above but in the lower left corner, this is not visible while icons are displayed.
 
 ##### gauge
 
@@ -244,17 +254,18 @@ The gauge is displayed in the left most column. You can set its color and its va
 ###### service
 
 ```c
-show_gauge => {"value","r", "g", "b"}
+show_gauge => {"value","r", "g", "b","bg_r", "bg_g", "bg_b"}
 ```
 
 ###### api
 
 ```c
-void show_gauge(int percent, int r, int g, int b);
+void show_gauge(int percent, int r, int g, int b, int bg_r, int bg_g, int bg_b);
 ```
 
 percent: 0-100 (resolution: one pixel per 12,5%)
-r, g, b: 0-255 color components
+r, g, b: 0-255 foreground color components
+bg_r, bg_g, bg_b: 0-255 background color components
 
 To remove it, call:
 
@@ -502,7 +513,7 @@ ehmtxv2:
 
 **date_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%d.%m."` (use `"%m.%d."` for the US)
 
-**show_seconds** (optional, boolean): toggle an indicator for seconds while the clock is displayed (default: false)
+**show_seconds** (optional, boolean): toggle an rindicator for seconds while the clock is displayed (default: false)
 
 **time_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M"` (use `"%I:%M%p"` for the US)
 
@@ -518,7 +529,7 @@ ehmtxv2:
 
 **matrix_component** (required, ID): ID of the addressable display
 
-**show_dow** (optional, bool): draw the day of week indicator on the bottom of the clock screen. Disable, e.g. if you want larger fonts, defaults to true.
+**show_dow** (optional, bool): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g. if you want larger fonts, defaults to true.
 
 **time_component** (required, ID): ID of the time component. The display shows `!t!` until the time source is valid.
 
@@ -573,12 +584,12 @@ Numerous features are accessible with services from home assistant and lambdas y
 |`display_on`|none|turn display off|
 |`display_off`|none|turn display on|
 |`hold_screen`|none|show the screen that is currently displayed for the number of seconds longer|
-|`hide_indicator`|none|hides the indicator|
+|`hide_rindicator`|none|hides the rindicator|
 |`hide_gauge`|none|hides the gauge|
 |`hide_alarm`|none|hides the alarm|
 |`show_gauge"`|"percent", "r", "g", "b"|set the height of the gauge according to the percentage in the given color|
 |`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper-right corner|
-|`show_indicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
+|`show_rindicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
 |`set_clock_color`|"r", "g", "b"|set the default color for the clock/date display|
 |`set_today_color"`|"r", "g", "b"|set the special color for today in the day of week line|
 |`set_weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
@@ -598,7 +609,7 @@ Numerous features are accessible with services from home assistant and lambdas y
 #### Parameter description
 
 "r", "g", "b": Color components for red, green and blue 0..255
-"size": The size of the indicator or alarm, 1-3
+"size": The size of the rindicator or alarm, 1-3
 "percent": values from 0..100
 "icon_name": the id of the icon to show, as defined in the YAML file
 "text": a text message to display
@@ -1053,7 +1064,7 @@ sensor:
 
 ### 2023.5.0
 
-- removed the rtttl buzzer from the ulanzi easy template, because it often caused reboots!
+- renamed `indicator` to `rindicator`, because there is now also a `lindicator`
 
 ## EspHoMaTriX in the media
 

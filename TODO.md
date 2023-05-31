@@ -8,9 +8,9 @@
 - [ ] dynamic bitmap as JSON (works partially)
 - [ ] fix find_free_icon to work for bitmap screen
 - [x] alarm on all screens but full screen
-- [x] indicator on all screens but full screen and clock
+- [x] rindicator on all screens but full screen and clock
 - [x] refreshing an icon screen should extend the display time
-- [x] size of indicator and alarm
+- [x] size of rindicator and alarm
 - [x] center text
 - [x] alarm independent of screen
 - [x] del_screen with * and filter by type, do delete all clocks etc.

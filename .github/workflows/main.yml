@@ -21,6 +21,9 @@ jobs:
           - file:  tests/ehtmxv2-template.yaml
             name: EHMTX template
             manifest_filename: ehtmxv2-template-manifest.json
+          - file:  tests/ehtmxv2-special.yaml
+            name: EHMTX template 8266
+            manifest_filename: ehtmxv2-special-template-manifest.json
       fail-fast: false
     steps:
       - name: Checkout source code
