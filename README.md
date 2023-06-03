@@ -529,6 +529,8 @@ ehmtxv2:
 
 **matrix_component** (required, ID): ID of the addressable display
 
+**show_date** (optional, bool): show the date in the loop (rainbow and normal), defaults to true.
+
 **show_dow** (optional, bool): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g. if you want larger fonts, defaults to true.
 
 **time_component** (required, ID): ID of the time component. The display shows `!t!` until the time source is valid.

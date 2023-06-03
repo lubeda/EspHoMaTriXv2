@@ -22,11 +22,11 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2023.6.0";
+static const char *const EHMTX_VERSION = "2023.6.1";
 static const char *const TAG = "EHMTXv2";
 #ifndef USE_ESP8266
 static const char *const EHMTX_LOGO = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
-static const char *const EHMTX_SLOGO = "[2016,0,0,2016,0,0,0,64170,2016,0,0,2016,0,0,0,64842,2016,0,0,2016,31,31,0,65514,0,2016,2016,31,0,0,31,45034,0,0,0,0,0,31,0,22517,0,0,0,0,31,0,0,22527,0,0,0,31,31,31,31,21855,0,0,0,0,0,0,0,21183]";
+static const char *const EHMTX_SLOGO = "[2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,0,2016,0,2016,0,31,31,0,0,0,2016,0,31,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,31,31,31]";
 #endif
 enum show_mode : uint8_t
 {
@@ -149,10 +149,10 @@ namespace esphome
     void get_string(std::string);
     void set_hold_time(uint16_t t = 30);
     void set_clock_time(uint16_t t = 10);
-    void set_show_day_of_week(bool b);
-    void set_show_seconds(bool b);
-    void set_show_date(bool b);
-    void set_rtl(bool b);
+    void set_show_day_of_week(bool b=true);
+    void set_show_seconds(bool b=false);
+    void set_show_date(bool b=true);
+    void set_rtl(bool b=false);
     void set_font_offset(int8_t x, int8_t y);
     void set_week_start(bool b);
     void set_brightness(int b);
