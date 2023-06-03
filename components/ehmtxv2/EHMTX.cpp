@@ -161,7 +161,7 @@ namespace esphome
     }
     screen->status();
   }
-  
+
   void EHMTX::bitmap_small(std::string icon, std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
     ESP_LOGD(TAG, "small bitmap screen: text: %s lifetime: %d screen_time: %d", text.c_str(), lifetime, screen_time);
@@ -186,7 +186,7 @@ namespace esphome
     EHMTX_queue *screen = this->find_free_queue_element();
 
     screen->text = text;
-    screen->text_color = Color(r,g,b);
+    screen->text_color = Color(r, g, b);
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->mode = MODE_BITMAP_SMALL;
     screen->default_font = default_font;
@@ -203,7 +203,7 @@ namespace esphome
   {
     ESP_LOGW(TAG, "bitmap_screen is not available on ESP8266");
   }
-  void EHMTX::bitmap_small(std::string i, std::string t ,int l, int s, bool f, int r, int g, int b)
+  void EHMTX::bitmap_small(std::string i, std::string t, int l, int s, bool f, int r, int g, int b)
   {
     ESP_LOGW(TAG, "bitmap_screen is not available on ESP8266");
   }
@@ -350,7 +350,7 @@ namespace esphome
         ESP_LOGD(TAG, "time sync => start running");
 #ifndef USE_ESP8266
         this->bitmap_screen(EHMTX_LOGO, 1, 10);
-        this->bitmap_small(EHMTX_SLOGO,EHMTX_VERSION, 1, 10);
+        this->bitmap_small(EHMTX_SLOGO, EHMTX_VERSION, 1, 10);
 #endif
         this->clock_screen(14 * 24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
         this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
@@ -558,7 +558,7 @@ namespace esphome
     }
     else
     {
-      uint8_t w = (1 + (uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
+      uint8_t w = (2 + (uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
       this->display->rectangle(0, 2, w, 4, this->rainbow_color); // Color(120, 190, 40));
       this->boot_anim++;
     }
@@ -753,14 +753,21 @@ namespace esphome
 
   void EHMTX::rainbow_date_screen(int lifetime, int screen_time, bool default_font)
   {
-    EHMTX_queue *screen = this->find_free_queue_element();
-
     ESP_LOGD(TAG, "rainbow_date_screen lifetime: %d screen_time: %d", lifetime, screen_time);
-    screen->mode = MODE_RAINBOW_DATE;
-    screen->default_font = default_font;
-    screen->screen_time_ = screen_time;
-    screen->endtime = this->clock->now().timestamp + lifetime * 60;
-    screen->status();
+    if (this->show_date)
+    {
+      EHMTX_queue *screen = this->find_free_queue_element();
+
+      screen->mode = MODE_RAINBOW_DATE;
+      screen->default_font = default_font;
+      screen->screen_time_ = screen_time;
+      screen->endtime = this->clock->now().timestamp + lifetime * 60;
+      screen->status();
+    }
+    else
+    {
+      ESP_LOGW(TAG, "rainbow_date_screen disabled because show_date=false");
+    }
   }
 
   void EHMTX::text_screen(std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
@@ -830,15 +837,23 @@ namespace esphome
 
   void EHMTX::date_screen(int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
-    EHMTX_queue *screen = this->find_free_queue_element();
-
-    screen->text_color = Color(r, g, b);
     ESP_LOGD(TAG, "date_screen lifetime: %d screen_time: %d red: %d green: %d blue: %d", lifetime, screen_time, r, g, b);
-    screen->mode = MODE_DATE;
-    screen->screen_time_ = screen_time;
-    screen->default_font = default_font;
-    screen->endtime = this->clock->now().timestamp + lifetime * 60;
-    screen->status();
+    if (this->show_date)
+    {
+      EHMTX_queue *screen = this->find_free_queue_element();
+
+      screen->text_color = Color(r, g, b);
+
+      screen->mode = MODE_DATE;
+      screen->screen_time_ = screen_time;
+      screen->default_font = default_font;
+      screen->endtime = this->clock->now().timestamp + lifetime * 60;
+      screen->status();
+    }
+    else
+    {
+      ESP_LOGW(TAG, "date_screen disabled because show_date=false");
+    }
   }
 
   EHMTX_queue *EHMTX::find_icon_queue_element(uint8_t icon)
@@ -1103,7 +1118,7 @@ namespace esphome
       {
         this->draw_gauge();
       }
-      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN&& this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
+      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
       {
 
         this->draw_rindicator();

@@ -6,25 +6,27 @@ If you like my work, please donate me a star on GitHub and consider [sponsoring]
 
 ## Introduction
 
-A simple but very flexible DIY status display, built with a flexible 8x32 RGB LED panel, e.g. the ULANZI TC001  implemented with [esphome.io](https://esphome.io)
+A simple but very flexible DIY status display, built with a flexible 8x32 RGB LED panel, e.g., the ULANZI TC001 implemented with [esphome.io](https://esphome.io)
 
 ![sample image](./images/sample.png)
 
-If you like to tinker you can use the custom component even as a satelit voice control microphone. [Youtube](https://www.youtube.com/watch?v=CsOir14DCbM)
+If you like to tinker, you can use the custom component even as a satellite voice control microphone for home assistant. [Youtube](https://www.youtube.com/watch?v=CsOir14DCbM)
+
+Special use cases or tips and tricks can be found in the [WIKI](https://github.com/lubeda/EspHoMaTriXv2/wiki)
 
 ## Background
 
-There are some "RGB-matrices" status displays/clocks out there, the commercial ones from LaMetric and Ulanzi, also some very good DIY-alternatives.
+There are some “RGB-matrices” status displays/clocks out there, the commercial ones from LaMetric and Ulanzi, also some excellent DIY-alternatives.
 
 - [LaMetric](https://lametric.com/en-US/) commercial ~ €199
 - [Ulanzi TC001](https://www.aliexpress.com/item/1005005008682055.html) commercial ~ €50
 - [AWTRIX](https://awtrixdocs.blueforcer.de/#/) (project has been discontinued after more than 4 years in August 2022)
 - [Pixel It](https://docs.bastelbunker.de/pixelit/) (project is under active development)
-- [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of Awtrix, optimized for the Ulanzi TC001 hardware
+- [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of AWTRIX, optimized for the Ulanzi TC001 hardware
 
-The solutions have their pros and cons. I tried some and used AwTrix for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of MQTT or uploading files to the ESP.
+The solutions have their pros and cons. I tried some and used AWTRIX for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of MQTT or uploading files to the ESP.
 
-But it had to be extensible, e.g. for the use as a pool thermometer or as a media player. All done by the magical power of esphome.
+But it had to be extensible, e.g., for the use as a pool thermometer or as a media player. All done by the magical power of [esphome.io](https://esphome.io).
 
 ### Features
 
@@ -36,7 +38,7 @@ After the [old](https://github.com/lubeda/EsphoMaTrix) component became favorite
 
 ### Advice
 
-If you have the choice use an **ESP32 device**, there are conditions where the RAM size is to limited in a ESO8266 device, so i stripped out some features an these boards, e.g. the bitmap_screen.
+If you have the choice to use an **ESP32 device**, there are conditions where the RAM size is too limited in a ESO8266 device, so I stripped out some features and these boards, e.g., the bitmap_screen.
 
 ## How to use
 
@@ -44,7 +46,7 @@ If you have the choice use an **ESP32 device**, there are conditions where the R
 
 There is a little hype around the Ulanzi TC001 pixel clock. The easy way works with the Ulanzi TC001 hardware. For more customization and other hardware, look [here](#the-funny-but-more-elaborate-way).
 
-In easy mode you'll have a clock with auto brightness control and after step 3 you can send states to the display an toggle on or off additional screen elements.
+In easy mode you'll have a clock with auto brightness control and after step 3 you can send states to the display and toggle on or off additional screen elements.
 
 #### Step 1
 
@@ -79,7 +81,7 @@ If not, check the esphome logs for further investigations.
 
 ### The funny but more elaborate way
 
-This is for the more advanced users. If you understand the concept of esphome, you can display nearly everything with this component. You are also able to create your own customized esphome based display with multiple sensors, or even use it as a microphone for the new [voice assist](https://esphome.io/components/voice_assistant.html) feature from home assistant.
+This is for the more advanced users. If you understand the concept of esphome, you can display nearly everything with this component. You can also create your own customized esphome based display with multiple sensors, or even use it as a microphone for the new [voice assist](https://esphome.io/components/voice_assistant.html) feature from home assistant.
 
 #### Concept
 
@@ -96,7 +98,7 @@ You can add screens from home assistant with service-calls or from esphome via l
 
 ###### Service via API
 
-You can call this from e.g. the [developer tools service](https://my.home-assistant.io/redirect/developer_services/)
+You can call this from e.g., the [developer tools service](https://my.home-assistant.io/redirect/developer_services/)
 
 ```c
 clock_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
@@ -116,7 +118,7 @@ all parameters have a default value.
 ```c
 void clock_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
 void rainbow_clock_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME, bool default_font=true);
-void date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true, int r=C_RED, int g=C_GREEN, int b=C_BLUE);     
+void date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true, int r=C_RED, int g=C_GREEN, int b=C_BLUE);     
 ```
 
 ##### icon screen
@@ -159,7 +161,7 @@ void full_screen(string iconname, int =D_LIFETIME, int screen_time=D_SCREEN_TIME
 
 **This feature is only available on ESP32 platform!!!!!**
 
-For 8x32 images as text. You can generate this images with e.g. [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator)
+For 8x32 images as text. You can generate these images with, e.g., [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator)
 
 ###### service via API
 
@@ -179,7 +181,7 @@ void bitmap_screen(string text, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
 
 ##### alarm
 
-The alarm is displayed in the upper-right corner at all  screen types! You can set its color and its size.
+The alarm is displayed in the upper-right corner at all screen types! You can set its color and its size.
 
 ###### service
 
@@ -193,7 +195,7 @@ show_alarm => { "r", "g", "b","size"}
 void EHMTX::show_alarm(int r, int g, int b, int size=2);
 ```
 
-r,g,b: 0-255 color components
+r, g, b: 0-255 color components
 size: 0-3 (zero turns it off)
 
 To remove it, call:
@@ -226,7 +228,7 @@ show_rindicator => { "r", "g", "b","size"}
 void show_rindicator(int r, int g, int ,int size=3);
 ```
 
-r,g,b: 0-255 color components
+r, g, b: 0-255 color components
 size: 0-3 (zero turns it off)
 
 To remove it, call:
@@ -245,7 +247,7 @@ void hide_rindicator();
 
 ##### lindicator
 
-Same as above but in the lower left corner, this is not visible while icons are displayed.
+Same as above but in the lower-left corner, this is not visible while icons are displayed.
 
 ##### gauge
 
@@ -257,13 +259,13 @@ The gauge is displayed in the left most column. You can set its color and its va
 show_gauge => {"value","r", "g", "b","bg_r", "bg_g", "bg_b"}
 ```
 
-###### api
+###### API
 
 ```c
 void show_gauge(int percent, int r, int g, int b, int bg_r, int bg_g, int bg_b);
 ```
 
-percent: 0-100 (resolution: one pixel per 12,5%)
+percent: 0-100 (resolution: one pixel per 12.5%)
 r, g, b: 0-255 foreground color components
 bg_r, bg_g, bg_b: 0-255 background color components
 
@@ -291,26 +293,26 @@ If you download the components-folder from the repo and install it in your espho
 
 ```yaml
 external_components:
-   - source:
-       type: local
-       path: components # e.g. /config/esphome/components
+   - source:
+       type: local
+       path: components # e.g. /config/esphome/components
 ```
 
 ##### use from repo
 
-Use the GitHub repo as a component. Esphome refreshes the external components "only" once a day, perhaps you have to refresh it manually. In this mode, there may be breaking changes, so read the changelog and check the logs while installing the firmware.
+Use the GitHub repo as a component. Esphome refreshes the external components “only” once a day, perhaps you have to refresh it manually. In this mode, there may be breaking changes, so read the changelog and check the logs while installing the firmware.
 
 ```yaml
 external_components:
-  - source:
-      type: git
-      url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: stable # optional select a special branch or tag
+  - source:
+      type: git
+      url: https://github.com/lubeda/EspHoMaTriXv2
+      ref: stable # optional select a special branch or tag
 ```
 
 #### Addressable_light component
 
-The **EspHoMaTriXv2** component requires an 8x32 pixel addressable_light, it is referenced by the id `matrix_component`.
+The **EspHoMaTriXv2** component requires an 8x32 pixel addressable_light, it is referenced by the ID `matrix_component`.
 
 See the default [options](https://esphome.io/components/display/index.html)
 
@@ -324,41 +326,41 @@ Under the display tag, specify this pixel mapper:
 
 ```yaml
 display:
-  - platform: addressable_light
-    .....
-    pixel_mapper: |-
-      if (x % 2 == 0) {
-        return (x * 8) + y;
-      }
-      return (x * 8) + (7 - y);
-    .....
+  - platform: addressable_light
+    .....
+    pixel_mapper: |-
+      if (x % 2 == 0) {
+        return (x * 8) + y;
+      }
+      return (x * 8) + (7 - y);
+    .....
 ```
 
-##### Type 2 (e.g. Ulanzi TC001)
+##### Type 2 (e.g., Ulanzi TC001)
 
 Under the display tag, specify this pixel mapper:
 
 ```yaml
 display:
-  - platform: addressable_light
-    .....
-    pixel_mapper: |-
-      if (y % 2 == 0) {
-        return (y * 32) + x;
-      }
-      return (y * 32) + (31 - x);
-    .....
+  - platform: addressable_light
+    .....
+    pixel_mapper: |-
+      if (y % 2 == 0) {
+        return (y * 32) + x;
+      }
+      return (y * 32) + (31 - x);
+    .....
 ```
 
 ##### Type 3 (daisy-chained 8x8 panels)
 
 ```yaml
 display:
-  - platform: addressable_light
-    .....
-    pixel_mapper: |-
-      return ((int) (x/8 * 64)) + x % 8 + y * 8;
-    .....
+  - platform: addressable_light
+    .....
+    pixel_mapper: |-
+      return ((int) (x/8 * 64)) + x % 8 + y * 8;
+    .....
 ```
 
 ##### How to configure the pixel_mapper
@@ -367,18 +369,18 @@ You have to configure this `lambda` under the `display:` section to use the **Es
 
 ```yaml
 display:
-  - platform: addressable_light
-    id: ehmtx_display
-    .....
-    auto_clear_enabled: true
-    lambda: |-
-      id(rgb8x32)->tick();
-      id(rgb8x32)->draw();
+  - platform: addressable_light
+    id: ehmtx_display
+    .....
+    auto_clear_enabled: true
+    lambda: |-
+      id(rgb8x32)->tick();
+      id(rgb8x32)->draw();
 ```
 
 #### Light component
 
-The light component is used by the addressable_light component and referenced by id under `addressable_light_id:`.
+The light component is used by the addressable_light component and referenced by ID under `addressable_light_id:`.
 
 To use the light component directly from home assistant, add the sample lambdas```on_turn_on``` and ```on_turn_off``` to the light component.
 
@@ -386,36 +388,36 @@ To use the light component directly from home assistant, add the sample lambdas`
 
 ```yaml
 light:
-  - platform: neopixelbus
-    id: ehmtx_light
-    ....
-    on_turn_on:
-      lambda: |-
-         id(ehmtx_display)->set_enabled(false);
-    on_turn_off:
-       lambda: |-
-         id(ehmtx_display)->set_enabled(true);
+  - platform: neopixelbus
+    id: ehmtx_light
+    ....
+    on_turn_on:
+      lambda: |-
+         id(ehmtx_display)->set_enabled(false);
+    on_turn_off:
+       lambda: |-
+         id(ehmtx_display)->set_enabled(true);
 ```
 
 To hide the light component in home assistant use: `internal: true`
 
 ```yaml
 light:
-  - platform: neopixelbus
-    id: ehmtx_light
-    internal: true
-    ...
+  - platform: neopixelbus
+    id: ehmtx_light
+    internal: true
+    ...
 ```
 
 #### Time component
 
-Since it is a clock, you need a time component, e.g. [homeassistant](https://esphome.io/components/time/homeassistant.html). It is referenced by its id under `time_component:` The display shows `!t!` until the time source is synchronized and valid.
+Since it is a clock, you need a time component, e.g. [homeassistant](https://esphome.io/components/time/homeassistant.html). It is referenced by its ID under `time_component:` The display shows `!t!` until the time source is synchronized and valid.
 
 #### Font
 
 In the easy configuration is a ttf-font included, it is based on this [font](https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=13768). Or you can search for a font you like more.
 
-Not all fonts are suitable for this minimalistic display. There are public domain fonts which work well on the display,  e.g. [DMDSmall](https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=5993), details on alternative fonts are [here](https://blakadder.com/esphome-pixel-clock/#fonts).
+Not all fonts are suitable for this minimalistic display. There are public domain fonts which work well on the display, e.g., [DMDSmall](https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=5993), details on alternative fonts are [here](https://blakadder.com/esphome-pixel-clock/#fonts).
 
 You can configure two fonts if you like.
 
@@ -425,16 +427,16 @@ For Europeans starters, you can use the font EHMTXv2.ttf of the copy2esphome fol
 
 ```yaml
 font:
-  - file: EHMTXv2.ttf
-    id: default_font
-    size: 16
-    glyphs:  |
-      !"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz€@
+  - file: EHMTXv2.ttf
+    id: default_font
+    size: 16
+    glyphs:  |
+      !"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz€@
 ```
 
 #### Icons and Animations
 
-Download and install all needed icons (.jpg/.png) and animations (.GIF) under the `ehmtxv2:` key. All icons have to be 8x8 or 8x32 pixels in size. If necessary, scale them with gimp, check "as animation" for GIFs.
+Download and install all needed icons (.jpg/.png) and animations (.GIF) under the `ehmtxv2:` key. All icons have to be 8x8 or 8x32 pixels in size. If necessary, scale them with gimp, check “as animation” for GIFs.
 
 You can also specify a URL to directly download the image file. The URLs will only be downloaded once at compile time, so there is no additional traffic on the hosting website.
 
@@ -446,28 +448,28 @@ There are maximum 90 icons possible.
 
 ```yaml
 emhtx:
-  icons: 
-    - id: boot 
-      file: icons/rocket.GIF
-      duration: 75     
-    - id: temp 
-      file: temperature.png
-    - id: yoga
-      file: icons/yoga-bridge.GIF
-      pingpong: true
-    - id: jackshome
-      url: https://awtrix.blueforcer.de/animations/JackHomePage
-      resize: 32x8
-    - id: garage
-      lameid: 1234
-      duration: 100
-    - id: homeassistant
-      url: https://github.com/home-assistant/assets/raw/master/logo/logo-special.png      
+  icons: 
+    - id: boot 
+      file: icons/rocket.GIF
+      duration: 75     
+    - id: temp 
+      file: temperature.png
+    - id: yoga
+      file: icons/yoga-bridge.GIF
+      pingpong: true
+    - id: jackshome
+      url: https://awtrix.blueforcer.de/animations/JackHomePage
+      resize: 32x8
+    - id: garage
+      lameid: 1234
+      duration: 100
+    - id: homeassistant
+      url: https://github.com/home-assistant/assets/raw/master/logo/logo-special.png      
 ```
 
-The id of the icons is used later to configure the screens to display. So, you should name them wisely. If you like to group icons, you should prefix them e.g. with "weather_" (see Service **del_screen**)
+The ID of the icons is used later to configure the screens to display. So, you should name them wisely. If you like to group icons, you should prefix them, e.g., with “weather_” (see Service **del_screen**)
 
-The first defined icon will be used as a fallback icon, in case of an error, e.g. if you use a non-existing icon id.
+The first defined icon will be used as a fallback icon, in case of an error, e.g., if you use a non-existing icon ID.
 
 GIFs are limited to 110 frames to limit the used amount of flash space.
 
@@ -477,7 +479,7 @@ See also [icon parameter](#icons)
 
 #### Configuration
 
-##### ehmtx component
+##### ehmtxv2 component
 
 This component is highly customizable.
 
@@ -485,26 +487,26 @@ This component is highly customizable.
 
 ```yaml
 ehmtxv2:
-  id: rgb8x32
-  show_seconds: true
-  matrix_component: ehmtx_display
-  time_component: ehmtx_time
-  icons2html: true
-  default_font_id: default_font
-  default_font_yoffset: 6
-  special_font_id: special_font
-  special_font_yoffset: 7
-  brightness: 80 # percent
-  time_format: "%H:%M"
-  date_format: "%d.%m."
-  rtl: false # write vom left to right
-  week_start_monday: true # false equals sunday
-  scroll_count: 2 # scroll long text at least two times
-  scroll_interval: 80 # milliseconds
-  rainbow_interval: 32 # milliseconds
-  frame_interval: 192 # milliseconds
-  icons: 
-  .....
+  id: rgb8x32
+  show_seconds: true
+  matrix_component: ehmtx_display
+  time_component: ehmtx_time
+  icons2html: true
+  default_font_id: default_font
+  default_font_yoffset: 6
+  special_font_id: special_font
+  special_font_yoffset: 7
+  brightness: 80 # percent
+  time_format: "%H:%M"
+  date_format: "%d.%m."
+  rtl: false # write vom left to right
+  week_start_monday: true # false equals sunday
+  scroll_count: 2 # scroll long text at least two times
+  scroll_interval: 80 # milliseconds
+  rainbow_interval: 32 # milliseconds
+  frame_interval: 192 # milliseconds
+  icons: 
+  .....
 ```
 
 ***Parameters***
@@ -513,7 +515,7 @@ ehmtxv2:
 
 **date_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%d.%m."` (use `"%m.%d."` for the US)
 
-**show_seconds** (optional, boolean): toggle an rindicator for seconds while the clock is displayed (default: false)
+**show_seconds** (optional, boolean): toggle/blink an indicator-pixel each seconds while the clock is displayed (default: false)
 
 **time_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M"` (use `"%I:%M%p"` for the US)
 
@@ -525,27 +527,29 @@ ehmtxv2:
 
 **special_font_xoffset** (optional, pixel): xoffset the text is aligned BASELINE_LEFT, the left defaults to `1`
 
-**rtl** (optional, boolean): if `true` write from right to left (arabic, hebrew etc.). Default ist `false`
+**rtl** (optional, boolean): if `true` write from right to left (Arabic, Hebrew etc.). Default is `false`
 
 **matrix_component** (required, ID): ID of the addressable display
 
-**show_dow** (optional, bool): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g. if you want larger fonts, defaults to true.
+**show_date** (optional, bool): show the date in the loop (rainbow and normal), defaults to true.
+
+**show_dow** (optional, bool): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g., if you want larger fonts, defaults to true.
 
 **time_component** (required, ID): ID of the time component. The display shows `!t!` until the time source is valid.
 
 **default_font** (required, ID): ID of the default font
 
-**special_font** (required, ID): ID of the special font, you can reuse your default font, but sometimes it's nice to have a special font to minimize scrolling
+**special_font** (required, ID): ID of the special font, you can reuse your default font, but occasionally it's nice to have a special font to minimize scrolling
 
 **week_start_monday** (optional, bool): default Monday is first day of week, false => Sunday
 
-**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` from the [display](https://esphome.io/components/display/addressable_light.html)
+**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html)
 
-**frame_interval** (optional, ms): the interval in ms to display the next animation/icon frame (default = 192), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html). It can be overwritten per icon/GIF, see [icons](#icons-and-animations) parameter `frame_duration`
+**frame_interval** (optional, ms): the interval in ms to display the next animation/icon frame (default = 192), should be a multiple of the [display](https://esphome.io/components/display/addressable_light.html). It can be overwritten per icon/GIF, see [icons](#icons-and-animations) parameter `frame_duration`
 
-**clock_interval** (optional, s): the interval in seconds to force the clock display. By default the clock screen, if any, will be displayed according to the position in the queue. **If you set the clock_interval close to the screen_time of the clock you will only see the clock!** (default=0)
+**clock_interval** (optional, s): the interval in seconds to force the clock display. By default, the clock screen, if any, will be displayed according to the position in the queue. **If you set the clock_interval close to the screen_time of the clock, you will only see the clock!** (default=0)
 
-**icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons.  (default = `false`)
+**icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons.  (default = `false`)
 
 ***Example output:***
 ![icon preview](./images/icons_preview.png)
@@ -567,9 +571,9 @@ See [icon details](#icons-and-animations)
 ***Example***
 
 ```yaml
-    - id: jackshome
-      url: https://awtrix.blueforcer.de/animations/JackHomePage
-      resize: 32x8
+    - id: jackshome
+      url: https://awtrix.blueforcer.de/animations/JackHomePage
+      resize: 32x8
 ```
 
 ## Control your display
@@ -577,7 +581,7 @@ See [icon details](#icons-and-animations)
 Numerous features are accessible with services from home assistant and lambdas you can use in your YAML.
 
 ### Public functions/services
-  
+  
 |service|parameter|result|
 |---|---|---|
 |`get_status`|none|write some status information to the esphome logs|
@@ -608,7 +612,7 @@ Numerous features are accessible with services from home assistant and lambdas y
 
 #### Parameter description
 
-"r", "g", "b": Color components for red, green and blue 0..255
+"r", "g", "b": Color components for red, green, and blue 0..255
 "size": The size of the rindicator or alarm, 1-3
 "percent": values from 0..100
 "icon_name": the id of the icon to show, as defined in the YAML file
@@ -630,24 +634,24 @@ Take care that the ```char text[30];``` has enough space to store the formatted 
 
 ```yaml
 sensor:
-  - platform: bh1750
-    id: sensorlx
-    ...
-    on_value:
-      then:
-        lambda: |-
-          char text[30];
-          sprintf(text,"Light: %2.1f lx", id(sensorlx).state);
-          // 5 Minutes,each time at least 11 seconds,no alarm
-           id(rgb8x32)->icon_screen("sun", text); // uses default values for color etc.
+  - platform: bh1750
+    id: sensorlx
+    ...
+    on_value:
+      then:
+        lambda: |-
+          char text[30];
+          sprintf(text,"Light: %2.1f lx", id(sensorlx).state);
+          // 5 Minutes,each time at least 11 seconds,no alarm
+           id(rgb8x32)->icon_screen("sun", text); // uses default values for color etc.
 ```
 
 ##### Force screen
 
-Force the selected [icon_screen](#icon-screen) ```icon_name``` to be displayed next. Afterward, the loop continues from this screen. e.g. helpful for alarms. Or after an update of the value/text.
+Force the selected [icon_screen](#icon-screen) ```icon_name``` to be displayed next. Afterward, the loop continues from this screen. e.g., helpful for alarms. Or after an update of the value/text.
 
 ```yaml
-    id(rgb8x32)->force_screen("homeassistant");
+    id(rgb8x32)->force_screen("homeassistant");
 ```
 
 ##### Change configuration during runtime
@@ -661,11 +665,11 @@ Experienced programmers can use these public methods:
 
 ### Local triggers
 
-To use the display without homeassistant automations, you may use the [advanced functionality](#change-configuration-during-runtime) with triggers. The triggers can be fired by sensors, time or by the ehmtx component.
+To use the display without homeassistant automations, you may use the [advanced functionality](#change-configuration-during-runtime) with triggers. The triggers can be fired by sensors, time or by the ehmtxv2 component.
 
 #### on_add_screen
 
-There is a trigger available to do some local magic. The trigger ```on_add_screen``` is triggered every time a new screen with icon is added to the queue. In lambda's you can use two local  variables:
+There is a trigger available to do some local magic. The trigger ```on_add_screen``` is triggered every time a new screen with an icon is added to the queue. In lambda's you can use two local variables:
 
 **icon** (Name of the icon, std::string): value to use in lambda
 
@@ -677,20 +681,20 @@ See the examples:
 
 ```yaml
 ehmtxv2:
-  ....
-    on_add_screen:
-    then:  
-      - logger.log:
-          format: 'add screen: %s, mode: %d'
-          tag: "EHMTXv2 sample"
-          args:
-            - icon.c_str()
-            - mode
+  ....
+    on_add_screen:
+    then:  
+      - logger.log:
+          format: 'add screen: %s, mode: %d'
+          tag: "EHMTXv2 sample"
+          args:
+            - icon.c_str()
+            - mode
 ```
 
 #### on_icon_error
 
-The trigger ```on_icon_error``` is triggered if you  try to add a screen with a non defined icon. In lambda's you can use one local string variable:
+The trigger ```on_icon_error``` is triggered if you try to add a screen with a non defined icon. In lambda's you can use one local string variable:
 
 **icon** (Name of the icon, std::string): value to use in lambda
 
@@ -698,10 +702,10 @@ See the examples:
 
 ```yaml
 ehmtxv2:
-  ....
-  on_next_screen:
-    lambda: |-
-        ESP_LOGD("Check CONFIG","Iconname: %s",icon.c_str());
+  ....
+  on_next_screen:
+    lambda: |-
+        ESP_LOGD("Check CONFIG","Iconname: %s",icon.c_str());
 ```
 
 #### on_next_screen
@@ -718,11 +722,11 @@ See the examples:
 
 ```yaml
 ehmtxv2:
-  ....
-  on_next_screen:
-    lambda: |-
-        ESP_LOGD("TriggerTest","Iconname: %s",icon.c_str());
-        ESP_LOGI("TriggerTest","Text: %s",text.c_str());
+  ....
+  on_next_screen:
+    lambda: |-
+        ESP_LOGD("TriggerTest","Iconname: %s",icon.c_str());
+        ESP_LOGI("TriggerTest","Text: %s",text.c_str());
 ```
 
 ##### Send an event to Home Assistant
@@ -731,13 +735,13 @@ To send data back to home assistant, you can use events.
 
 ```yaml
 ehmtxv2:
-  ....
-  on_next_screen:
-    - homeassistant.event:
-        event: esphome.next_screen
-        data_template:
-          iconname: !lambda "return icon.c_str();"
-          text: !lambda "return text.c_str();"
+  ....
+  on_next_screen:
+    - homeassistant.event:
+        event: esphome.next_screen
+        data_template:
+          iconname: !lambda "return icon.c_str();"
+          text: !lambda "return text.c_str();"
 ```
 
 ***Result***
@@ -753,10 +757,10 @@ See the examples:
 
 ```yaml
 ehmtxv2:
-  ....
-  on_next_clock:
-    lambda: |-
-      id(rgb8x32)->.......
+  ....
+  on_next_clock:
+    lambda: |-
+      id(rgb8x32)->.......
 ```
 
 **(D)** Service **brightness**
@@ -771,16 +775,16 @@ There's an easier way, by using a number component:
 
 ```yaml
 number:
-  - platform: template
-    name: "LED brightness"
-    min_value: 0
-    max_value: 255
-    step: 1
-    lambda: |-
-      return id(rgb8x32)->get_brightness();
-    set_action:
-      lambda: |-
-        id(rgb8x32)->set_brightness(x);
+  - platform: template
+    name: "LED brightness"
+    min_value: 0
+    max_value: 255
+    step: 1
+    lambda: |-
+      return id(rgb8x32)->get_brightness();
+    set_action:
+      lambda: |-
+        id(rgb8x32)->set_brightness(x);
 ```
 
 **(D)** Service **del_screen**
@@ -794,7 +798,7 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 *Parameters:*
 
 - ```icon_name```: Icon `id` defined in the YAML (see installation)
-- ```mode```: The mode is for internal purposes use `5`  for icon_screen
+- ```mode```: The mode is for internal purposes use `5`  for icon_screen
 
 ##### modes
 
@@ -821,18 +825,18 @@ There's an easier way in using a switch component:
 
 ```yaml
 switch:
-  - platform: template
-    name: "$devicename Display"
-    icon: "mdi:power"
-    restore_mode: ALWAYS_ON
-    lambda: |-
-      return id(rgb8x32)->show_display;
-    turn_on_action:
-      lambda: |-
-        id(rgb8x32)->set_display_on();
-    turn_off_action:
-      lambda: |-
-        id(rgb8x32)->set_display_off();
+  - platform: template
+    name: "$devicename Display"
+    icon: "mdi:power"
+    restore_mode: ALWAYS_ON
+    lambda: |-
+      return id(rgb8x32)->show_display;
+    turn_on_action:
+      lambda: |-
+        id(rgb8x32)->set_display_on();
+    turn_off_action:
+      lambda: |-
+        id(rgb8x32)->set_display_off();
 ```
 
 Service **skip_screen**
@@ -843,30 +847,30 @@ e.g. on the Ulanzi TC001
 
 ```yaml
 binary_sensor:
-  - platform: gpio
-    pin:
-      number: $left_button_pin
-      inverted: true
-    on_press:
-      lambda:
-        id(rgb8x32)->skip_screen();
+  - platform: gpio
+    pin:
+      number: $left_button_pin
+      inverted: true
+    on_press:
+      lambda:
+        id(rgb8x32)->skip_screen();
 ```
 
 Service **hold_screen**
 
 Displays the current screen for a configured amount (see **hold_time**) (default=30) seconds longer.
 
-e.g. on the Ulanzi TC001
+e.g., on the Ulanzi TC001
 
 ```yaml
 binary_sensor:
-  - platform: gpio
-    pin:
-      number: $right_button_pin
-      inverted: true
-    on_press:
-      lambda:
-        id(rgb8x32)->hold_screen(120);
+  - platform: gpio
+    pin:
+      number: $right_button_pin
+      inverted: true
+    on_press:
+      lambda:
+        id(rgb8x32)->hold_screen(120);
 ```
 
 **(D)** Service **get_status**
@@ -874,11 +878,11 @@ binary_sensor:
 This service displays the running queue and a list of icons in the logs
 
 ```log
-[13:10:10][I][EHMTX:175]: status status: 1  as: 1
+[13:10:10][I][EHMTX:175]: status status: 1  as: 1
 [13:10:10][I][EHMTX:176]: status screen count: 3
-[13:10:10][I][EHMTX:181]: status slot: 0 icon: 36  text: 47.9°C end: 400
-[13:10:10][I][EHMTX:181]: status slot: 1 icon: 23  text: Supa langer Text end: 310
-[13:10:10][I][EHMTX:181]: status slot: 2 icon: 1  text: 10.3°C end: 363
+[13:10:10][I][EHMTX:181]: status slot: 0 icon: 36  text: 47.9°C end: 400
+[13:10:10][I][EHMTX:181]: status slot: 1 icon: 23  text: Supa langer Text end: 310
+[13:10:10][I][EHMTX:181]: status slot: 2 icon: 1  text: 10.3°C end: 363
 [13:10:10][I][EHMTX:186]: status icon: 0 name: boot
 [13:10:10][I][EHMTX:186]: status icon: 1 name: temp
 [13:10:10][I][EHMTX:186]: status icon: 2 name: garage
@@ -888,7 +892,7 @@ This service displays the running queue and a list of icons in the logs
 
 ## Integration in Home Assistant
 
-To control your display, it has to be integrated in Home Assistant. Then it provides a number of services, all prefixed with the configured `devicename` e.g. "ehmtx". See the default services marked as **(D)** [above](#services), but you can add your own (see alarm and screen).
+To control your display, it has to be integrated in Home Assistant. Then it provides several services, all prefixed with the configured `devicename` e.g. "ehmtx". See the default services marked as **(D)** [above](#services), but you can add your own (see alarm and screen).
 
 ### Services
 
@@ -896,28 +900,28 @@ All communication with Home Assistant use the homeasistant-api. The services can
 
 ### Use in Home Assistant automations
 
-The easiest way to use ehmtx as a status display is to use the icon names as trigger id. In my example I have an icon named "wind" when the sensor.wind_speed has a new state, this automation sends the new data to the screen with the icon named "wind" and so on.
+The easiest way to use ehmtx as a status display is to use the icon names as trigger id. In my example I have an icon named “wind” when the sensor.wind_speed has a new state, this automation sends the new data to the screen with the icon named “wind” and so on.
 
 ```yaml
 alias: EHMTX 8266 Test
 description: ''
 trigger:
-  - platform: numeric_state
-    entity_id: sensor.wind_speed
-    id: wind
-  - platform: state
-    entity_id: sensor.actual_temperature
-    id: temp
-  - platform: state
-    entity_id: sensor.wg_cover_device
-    id: cover
+  - platform: numeric_state
+    entity_id: sensor.wind_speed
+    id: wind
+  - platform: state
+    entity_id: sensor.actual_temperature
+    id: temp
+  - platform: state
+    entity_id: sensor.wg_cover_device
+    id: cover
 condition: []
 action:
-  - service: esphome.ehmtx8266_icon_screen
-    data:
-      icon_name: '{{trigger.id}}'
-      text: >-
-        {{trigger.to_state.state}}{{trigger.to_state.attributes.unit_of_measurement}}
+  - service: esphome.ehmtx8266_icon_screen
+    data:
+      icon_name: '{{trigger.id}}'
+      text: >-
+        {{trigger.to_state.state}}{{trigger.to_state.attributes.unit_of_measurement}}
 mode: queued
 max: 10
 ```
@@ -932,16 +936,16 @@ e.g.
 
 ### Specific icons per condition
 
-Add an icon per weather condition to the ehmtx component
+Add an icon per weather condition to the ehmtxv2 component
 
 ```yaml
-  - id: weather_clear_night
-      lameid: 52163
-    - id: weather_cloudy
-      lameid: 25991
-    - id: weather_fog
-      lameid: 52167
-    ......
+  - id: weather_clear_night
+      lameid: 52163
+    - id: weather_cloudy
+      lameid: 25991
+    - id: weather_fog
+      lameid: 52167
+    ......
 ```
 
 Sample automation to show the weather with local temperature
@@ -950,19 +954,19 @@ Sample automation to show the weather with local temperature
 alias: EHMTX weather
 description: weather with icon per condition
 trigger:
-  - platform: state
-    entity_id: weather.metno
+  - platform: state
+    entity_id: weather.metno
 action:
-  - service: esphome.ulanzi_del_screen
-    data:
-      icon_name: weather_*
-      mode: 5
-  - service: esphome.ulanzi_icon_screen
-    data:
-      icon_name: weather_{{ trigger.to_state.state }}
-      text: >-
-        {{ states("sensor.external_actual_temperature") }}°C
-      ....
+  - service: esphome.ulanzi_del_screen
+    data:
+      icon_name: weather_*
+      mode: 5
+  - service: esphome.ulanzi_icon_screen
+    data:
+      icon_name: weather_{{ trigger.to_state.state }}
+      text: >-
+        {{ states("sensor.external_actual_temperature") }}°C
+      ....
 ```
 
 or another sample automation for the trashcan type
@@ -971,34 +975,34 @@ or another sample automation for the trashcan type
 alias: "EHMTX Müllanzeige"
 description: Anzeige welche Tonne raus muss. iconnamen gekürzt
 trigger:
-  - platform: time
-    at:
-      - "06:30"
-      - "08:30"
-      - "10:30"
-      - "15:00"
-      - "17:00"
-      - "19:00"
+  - platform: time
+    at:
+      - "06:30"
+      - "08:30"
+      - "10:30"
+      - "15:00"
+      - "17:00"
+      - "19:00"
 condition:
-  - condition: numeric_state
-    entity_id: sensor.mulltrigger
-    below: "3"
+  - condition: numeric_state
+    entity_id: sensor.mulltrigger
+    below: "3"
 action:
-  - service: esphome.ulanzi_del_screen
-    data:
-      icon_name: trash_*
-      mode: 5
-  - service: esphome.ulanzi_icon_screen
-    data:
-      icon_name: >-
-        trash_{{ states("sensor.mulldetails") | replace("Biotonne",   "brow")|
-        replace("Papiertonne","blue")| replace("Restmüll",   "grey")|
-        replace("gelbe Tonne","yell|") | truncate(4,true,"")  }}     
-      text: >-
-        {{ states("sensor.mulldetails")|replace(" in","")|replace(" days","
-        Tagen") | replace ("0 Tagen","heute") | replace ("1 Tagen","morgen")}}
-      lifetime: 120
-      ...
+  - service: esphome.ulanzi_del_screen
+    data:
+      icon_name: trash_*
+      mode: 5
+  - service: esphome.ulanzi_icon_screen
+    data:
+      icon_name: >-
+        trash_{{ states("sensor.mulldetails") | replace("Biotonne",   "brow")|
+        replace("Papiertonne","blue")| replace("Restmüll",   "grey")|
+        replace("gelbe Tonne","yell|") | truncate(4,true,"")  }}     
+      text: >-
+        {{ states("sensor.mulldetails")|replace(" in","")|replace(" days","
+        Tagen") | replace ("0 Tagen","heute") | replace ("1 Tagen","morgen")}}
+      lifetime: 120
+      ...
 ```
 
 ### Integrate in Home Assistant UI
@@ -1009,34 +1013,34 @@ Add entities to the Home Assistant UI for interactive control of your display
 
 ```yaml
 number:
-  - platform: template
-    name: "$devicename brightness"
-    min_value: 0
-    max_value: 255
-    step: 1
-    lambda: |-
-      return id(rgb8x32)->get_brightness();
-    set_action:
-      lambda: |-
-        id(rgb8x32)->set_brightness(x);
+  - platform: template
+    name: "$devicename brightness"
+    min_value: 0
+    max_value: 255
+    step: 1
+    lambda: |-
+      return id(rgb8x32)->get_brightness();
+    set_action:
+      lambda: |-
+        id(rgb8x32)->set_brightness(x);
 ```
 
 #### Display switch
 
 ```yaml
 switch:
-  - platform: template
-    name: "$devicename Display"
-    icon: "mdi:power"
-    restore_mode: ALWAYS_ON
-    lambda: |-
-      return id(rgb8x32)->show_display;
-    turn_on_action:
-      lambda: |-
-        id(rgb8x32)->set_display_on();
-    turn_off_action:
-      lambda: |-
-        id(rgb8x32)->set_display_off();
+  - platform: template
+    name: "$devicename Display"
+    icon: "mdi:power"
+    restore_mode: ALWAYS_ON
+    lambda: |-
+      return id(rgb8x32)->show_display;
+    turn_on_action:
+      lambda: |-
+        id(rgb8x32)->set_display_on();
+    turn_off_action:
+      lambda: |-
+        id(rgb8x32)->set_display_off();
 ```
 
 ### automatic brightness
@@ -1047,24 +1051,24 @@ Example: automatic brightness control with a bh1570 sensor
 
 ```yaml
 sensor:
-  - platform: bh1570
-    # ...
-    on_value:
-      then:
-         lambda: |-  
-            if (x > 200)
-            {
-               id(rgb8x32)->set_brightness(50);
-            } else {
-               id(rgb8x32)->set_brightness(250);
-            }
+  - platform: bh1570
+    # ...
+    on_value:
+      then:
+         lambda: |-  
+            if (x > 200)
+            {
+               id(rgb8x32)->set_brightness(50);
+            } else {
+               id(rgb8x32)->set_brightness(250);
+            }
 ```
 
 ## Breaking changes
 
 ### 2023.5.0
 
-- renamed `indicator` to `rindicator`, because there is now also a `lindicator`
+- renamed `indicator` to `rindicator` because there is now also a `lindicator`
 
 ## EspHoMaTriX in the media
 
@@ -1080,9 +1084,9 @@ See this english discussions:
 [Share your projects](https://community.home-assistant.io/t/esphomatrix-a-simple-clock-status-display/425325)
 [ESPHOME](https://community.home-assistant.io/t/a-simple-diy-status-display-with-an-8x32-rgb-led/379051)
 
-It was also mentiond in the blog [Building the Open Home](https://building.open-home.io/local-control-is-the-only-way/) and in the home assistant [livestream](https://youtu.be/IGnCGDaXR0M?t=6267)
+It was also mentioned in the blog [Building the Open Home](https://building.open-home.io/local-control-is-the-only-way/) and in the home assistant [livestream](https://youtu.be/IGnCGDaXR0M?t=6267)
 
-Or in german:
+Or in German:
 [Showroom](https://community.simon42.com/t/8x32-pixel-uhr-mit-homeassistant-anbindung/1076)
 
 ## Disclaimer
