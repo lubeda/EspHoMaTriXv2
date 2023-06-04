@@ -1,6 +1,6 @@
 # introduction
 
-**Skill-level:** advanced
+**Skill-level:** medium to advanced
 
 This component provides some blueprints. Because there are so many options and parameters it is sometimes hard to create manuall automations.
 
