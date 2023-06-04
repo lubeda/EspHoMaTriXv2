@@ -10,6 +10,8 @@ If you like to use the comfort of the blueprints, you have to manually synchroni
 
 compile your YAML and copy a portion of the compilation result:
 
+![screenshot](https://github.com/lubeda/EspHoMaTriXv2/blob/main/wiki/compile-icons.png?raw=true)
+
 ```yaml
 ["error","github","precipitation","nina","waschmaschine","lamp","headphone","print3d","internet","speaker","alien","temp","garage","door","wind","rain","phone","fire","tv","frost","muell","cookit","nature","work","bike","amazon","post","power","solar","yoga","startrek","energy","sun","diesel","benzine10","vacuum","rainprecip","iss","thunder","nina_warning","mic","birthday","firework","coffee","lightning","xmastree","sauna","trash_grey","trash_blue","trash_yell","trash_brow","weather_clear_night","weather_cloudy","weather_fog","weather_lightingrainy","weather_partlycloudy","weather_pouring","weather_rainy","weather_snowy","weather_snowy_rainy","weather_sunny","f_mario","f_onair","f_starter","mops","girl","timer","lasticon","lightbulb","home_assistant",]
 ```
