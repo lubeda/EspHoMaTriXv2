@@ -1,7 +1,7 @@
 blueprint:
   name: |-
     ehmtxv2: Hide screen elements on 8x32 RGB-matrix
-  description: Removes the gauge, rindicator or alarm element from your EspHoMaTriXv2 display.
+  description: Removes the gauge, indicator or alarm element from your EspHoMaTriXv2 display.
   domain: automation
   input:
     ehmtx_device:
@@ -21,13 +21,15 @@ blueprint:
           custom_value: true
           mode: dropdown
           options:
-           - label: alarm
-             value: hide_alarm
-           - label: gauge
-             value: hide_gauge
-           - label: rindicator
-             value: hide_rindicator
-      default: hide_rindicator
+            - label: alarm
+              value: hide_alarm
+            - label: gauge
+              value: hide_gauge
+            - label: lindicator
+              value: hide_lindicator
+            - label: rindicator
+              value: hide_rindicator
+      default: hide_lindicator
     
 variables:
   display: !input ehmtx_device
