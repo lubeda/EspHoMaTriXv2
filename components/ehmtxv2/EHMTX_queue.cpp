@@ -120,7 +120,7 @@ namespace esphome
 
   void EHMTX_queue::update_screen()
   {
-    if (millis() - this->config_->last_rainbow_time >= this->config_->rainbow_interval)
+    if (millis() - this->config_->last_rainbow_time >= EHMTXv2_RAINBOW_INTERVALL)
     {
       this->config_->hue_++;
       if (this->config_->hue_ == 360)
@@ -341,8 +341,8 @@ namespace esphome
       }
       else
       {
-        max_steps = (this->config_->scroll_count + 1) * (width - startx) + this->config_->scroll_count * this->pixels_;
-        display_duration = ceil((max_steps * this->config_->scroll_interval) / 1000);
+        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
         this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
       }
       break;
@@ -357,8 +357,8 @@ namespace esphome
       }
       else
       {
-        max_steps = (this->config_->scroll_count + 1) * (width - startx) + this->config_->scroll_count * this->pixels_;
-        display_duration = ceil((max_steps * this->config_->scroll_interval) / 1000);
+        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
         this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
       }
       break;

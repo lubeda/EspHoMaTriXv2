@@ -504,7 +504,6 @@ ehmtxv2:
   scroll_count: 2 # scroll long text at least two times
   scroll_interval: 80 # milliseconds
   rainbow_interval: 32 # milliseconds
-  frame_interval: 192 # milliseconds
   icons: 
   .....
 ```
@@ -543,9 +542,9 @@ ehmtxv2:
 
 **week_start_monday** (optional, bool): default Monday is first day of week, false => Sunday
 
-**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html)
+**default_clock_font** (optional, boolean): If true, use the default font for clock and date otherwise use the special font. (default = `true`)
 
-**frame_interval** (optional, ms): the interval in ms to display the next animation/icon frame (default = 192), should be a multiple of the [display](https://esphome.io/components/display/addressable_light.html). It can be overwritten per icon/GIF, see [icons](#icons-and-animations) parameter `frame_duration`
+**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html)
 
 **clock_interval** (optional, s): the interval in seconds to force the clock display. By default, the clock screen, if any, will be displayed according to the position in the queue. **If you set the clock_interval close to the screen_time of the clock, you will only see the clock!** (default=0)
 

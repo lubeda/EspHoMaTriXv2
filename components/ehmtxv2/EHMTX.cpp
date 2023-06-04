@@ -11,7 +11,6 @@ namespace esphome
     this->display_lindicator = 0;
     this->display_alarm = 0;
     this->clock_time = 10;
-    this->clock_interval = 90;
     this->hold_time = 10;
     this->icon_count = 0;
     this->hue_ = 0;
@@ -409,14 +408,14 @@ namespace esphome
   uint8_t EHMTX::find_last_clock()
   {
     uint8_t hit = MAXQUEUE;
-    if (this->clock_interval > 0)
+    if (EHMTXv2_CLOCK_INTERVALL > 0)
     {
       time_t ts = this->clock->now().timestamp;
       for (size_t i = 0; i < MAXQUEUE; i++)
       {
         if ((this->queue[i]->mode == MODE_CLOCK) || (this->queue[i]->mode == MODE_RAINBOW_CLOCK))
         {
-          if (ts > (this->queue[i]->last_time + this->clock_interval))
+          if (ts > (this->queue[i]->last_time + EHMTXv2_CLOCK_INTERVALL))
           {
             hit = i;
           }
@@ -501,7 +500,7 @@ namespace esphome
     {
       time_t ts = this->clock->now().timestamp;
 
-      if (millis() - this->last_scroll_time >= this->scroll_interval)
+      if (millis() - this->last_scroll_time >= EHMTXv2_SCROLL_INTERVALL)
       {
         this->scroll_step++;
         this->last_scroll_time = millis();
@@ -621,21 +620,6 @@ namespace esphome
     this->special_font = font;
   }
 
-  void EHMTX::set_frame_interval(uint16_t fi)
-  {
-    this->frame_interval = fi;
-  }
-
-  void EHMTX::set_scroll_interval(uint16_t si)
-  {
-    this->scroll_interval = si;
-  }
-
-  void EHMTX::set_rainbow_interval(uint16_t si)
-  {
-    this->rainbow_interval = si;
-  }
-
   void EHMTX::del_screen(std::string icon_name, int mode)
   {
     for (uint8_t i = 0; i < MAXQUEUE; i++)
@@ -663,11 +647,6 @@ namespace esphome
         }
       }
     }
-  }
-
-  void EHMTX::set_clock_interval(uint16_t t)
-  {
-    this->clock_interval = t;
   }
 
   void EHMTX::icon_screen(std::string iconname, std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
@@ -739,13 +718,13 @@ namespace esphome
     ESP_LOGD(TAG, "rainbow_clock_screen lifetime: %d screen_time: %d", lifetime, screen_time);
     screen->mode = MODE_RAINBOW_CLOCK;
     screen->default_font = default_font;
-    if (this->clock_interval == 0 || (this->clock_interval > screen_time))
+    if (EHMTXv2_CLOCK_INTERVALL == 0 || (EHMTXv2_CLOCK_INTERVALL > screen_time))
     {
       screen->screen_time_ = screen_time;
     }
     else
     {
-      screen->screen_time_ = this->clock_interval - 2;
+      screen->screen_time_ = EHMTXv2_CLOCK_INTERVALL - 2;
     }
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->status();
@@ -967,11 +946,6 @@ namespace esphome
     this->clock_time = t;
   }
 
-  void EHMTX::set_scroll_count(uint8_t c)
-  {
-    this->scroll_count = c;
-  }
-
   void EHMTX::set_display(addressable_light::AddressableLightDisplay *disp)
   {
     this->display = disp;
@@ -1023,10 +997,10 @@ namespace esphome
   {
     ESP_LOGCONFIG(TAG, "EspHoMatriXv2 version: %s", EHMTX_VERSION);
     ESP_LOGCONFIG(TAG, "Icons: %d of %d", this->icon_count, MAXICONS);
-    ESP_LOGCONFIG(TAG, "Clock interval: %d s", this->clock_interval);
+    ESP_LOGCONFIG(TAG, "Clock interval: %d s", EHMTXv2_CLOCK_INTERVALL);
     ESP_LOGCONFIG(TAG, "Date format: %s", this->date_fmt.c_str());
     ESP_LOGCONFIG(TAG, "Time format: %s", this->time_fmt.c_str());
-    ESP_LOGCONFIG(TAG, "Interval (ms) scroll: %d frame: %d", this->scroll_interval, this->frame_interval);
+    ESP_LOGCONFIG(TAG, "Interval (ms) scroll: %d", EHMTXv2_SCROLL_INTERVALL);
     if (this->show_day_of_week)
     {
       ESP_LOGCONFIG(TAG, "show day of week");

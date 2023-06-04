@@ -368,20 +368,24 @@ async def to_code(config):
     cg.add(var.set_special_font(f))
 
     cg.add(var.set_brightness(config[CONF_BRIGHTNESS]))
-    cg.add(var.set_scroll_interval(config[CONF_SCROLLINTERVAL]))
-    cg.add_define("EHMTXv2_SCROLL_INTERVALL",config[CONF_SCROLLINTERVAL])    
-    cg.add(var.set_rainbow_interval(config[CONF_SCROLLINTERVAL]))
+    
+    cg.add_define("EHMTXv2_SCROLL_INTERVALL",config[CONF_SCROLLINTERVAL])
+    cg.add_define("EHMTXv2_RAINBOW_INTERVALL",config[CONF_RAINBOWINTERVAL])
+    cg.add_define("EHMTXv2_FRAME_INTERVALL",config[CONF_FRAMEINTERVAL])
+    cg.add_define("EHMTXv2_CLOCK_INTERVALL",config[CONF_CLOCKINTERVAL])
+    cg.add_define("EHMTXv2_SCROLL_COUNT",config[CONF_SCROLLCOUNT])
+    
     if config[CONF_RTL]:
         cg.add(var.set_rtl(config[CONF_RTL]))
         cg.add_define("EHMTXv2_USE_RTL")    
-    cg.add(var.set_scroll_count(config[CONF_SCROLLCOUNT]))
-    cg.add(var.set_frame_interval(config[CONF_FRAMEINTERVAL]))
-    cg.add(var.set_week_start(config[CONF_WEEK_START_MONDAY]))
-    cg.add(var.set_clock_interval(config[CONF_CLOCKINTERVAL]))
+    
     if config[CONF_CLOCKFONT]:
         cg.add_define("EHMTXv2_DEFAULT_CLOCK_FONT","true")    
     else:
         cg.add_define("EHMTXv2_DEFAULT_CLOCK_FONT","false")    
+
+    
+    cg.add(var.set_week_start(config[CONF_WEEK_START_MONDAY]))
     cg.add(var.set_time_format(config[CONF_TIME_FORMAT]))
     cg.add(var.set_date_format(config[CONF_DATE_FORMAT]))
     cg.add(var.set_show_day_of_week(config[CONF_SHOWDOW]))  

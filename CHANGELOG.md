@@ -1,5 +1,12 @@
 # Changelog
 
+## 2023.6.3
+
+- introduced `default_clock_font: true`  
+- changed *_interval to be set only on compile time
+- change scroll_count to be set only on compile time
+- remove unused frame_interval
+
 ## 2023.6.2
 
 - set rtl mode at compile time

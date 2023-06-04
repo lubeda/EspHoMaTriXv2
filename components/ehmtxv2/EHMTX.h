@@ -22,7 +22,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2023.6.2";
+static const char *const EHMTX_VERSION = "2023.6.3";
 static const char *const TAG = "EHMTXv2";
 #ifndef USE_ESP8266
 static const char *const EHMTX_LOGO = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
@@ -108,7 +108,6 @@ namespace esphome
     uint8_t gauge_value;
     uint16_t clock_time;
     uint16_t scroll_step;
-    uint8_t scroll_count;
 
     EHMTX_queue *queue[MAXQUEUE];
     addressable_light::AddressableLightDisplay *display;
@@ -117,10 +116,6 @@ namespace esphome
     int8_t default_yoffset, default_xoffset;
     int8_t special_yoffset, special_xoffset;
     bool show_seconds;
-    uint16_t scroll_interval;  // ms to between scrollsteps
-    uint16_t rainbow_interval; // ms to between scrollsteps
-    uint16_t frame_interval;   // ms to next_frame()
-    uint16_t clock_interval;
     uint16_t hold_time; // seconds display of screen_time to extend
 
     uint8_t icon_count; // max iconnumber -1
@@ -147,7 +142,6 @@ namespace esphome
     void skip_screen();
     void hold_screen(int t = 30);
     void set_display(addressable_light::AddressableLightDisplay *disp);
-    void set_clock_interval(uint16_t t = 90);
     void set_hold_time(uint16_t t = 30);
     void set_clock_time(uint16_t t = 10);
     void set_show_day_of_week(bool b=true);
@@ -166,10 +160,6 @@ namespace esphome
     void set_clock(time::RealTimeClock *clock);
     void set_default_font(display::Font *font);
     void set_special_font(display::Font *font);
-    void set_frame_interval(uint16_t interval);
-    void set_scroll_interval(uint16_t interval);
-    void set_rainbow_interval(uint16_t interval);
-    void set_scroll_count(uint8_t count);
     void set_time_format(std::string s);
     void set_date_format(std::string s);
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
