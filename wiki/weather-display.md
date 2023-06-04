@@ -1,6 +1,11 @@
+# introduction
+
+**Skill-level:** medium
+
 Show weather state with icons that match the weather conditions.
 
-**ulanzi.yaml**
+## step 1: add icons to **ulanzi.yaml**
+
 ```yaml
 ......
 ehmtx:
@@ -30,7 +35,7 @@ ehmtx:
 
 ```
 
-**homeassistant automation:**
+## step 2: enter **home assistant automation:**
 
 ```yaml
 alias: EHMTXv2 Weather
