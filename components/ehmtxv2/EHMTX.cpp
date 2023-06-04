@@ -352,8 +352,8 @@ namespace esphome
         this->bitmap_screen(EHMTX_LOGO, 1, 10);
         this->bitmap_small(EHMTX_SLOGO, EHMTX_VERSION, 1, 10);
 #endif
-        this->clock_screen(14 * 24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
-        this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
+        this->clock_screen(14 * 24 * 60, this->clock_time, true, C_RED, C_GREEN, C_BLUE);
+        this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, true, C_RED, C_GREEN, C_BLUE);
         this->is_running = true;
       }
     }
