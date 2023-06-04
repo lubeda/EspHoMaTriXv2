@@ -3,6 +3,7 @@
 ## 2023.6.2
 
 - set rtl mode at compile time
+- changed clock to default font
 
 ## 2023.6.1
 
