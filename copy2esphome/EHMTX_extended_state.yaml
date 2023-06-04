@@ -1,0 +1,179 @@
+blueprint:
+  name: |-
+    ehmtxv2: extended show state with unit on 8x32 RGB-matrix
+  description: This blueprint is triggered by a state change. Choose the way to display the state.
+  domain: automation
+  input:
+    ehmtx_device:
+      name: Which EspHoMaTriX-device to display at?
+      selector:
+        device:
+          integration: esphome
+    trigger_sensor:
+      name: Which sensor state to show?
+      description: This sensor state will be displayed.
+      selector:
+        entity:
+          domain: sensor
+          multiple: true
+    icon_text:
+      name: display with icon or only the state (default=icon)
+      selector:
+        boolean:
+      default: true
+    color_rainbow:
+      name: use the default color or rainbow colors (default=color)
+      selector:
+        boolean:
+      default: true
+    default_color:
+      name: Default text color
+      description: This is the default text color for values within the low and the high value (90% white)
+      selector:
+        color_rgb:
+      default: [240, 240, 240]
+    lifetime:
+      name: How many minutes is this screen kept in the loop?
+      selector:
+        number:
+          min: 1
+          max: 1440
+          step: 1
+      default: 2
+    screen_time:
+      name: Minimum display time of this screen per loop in seconds?
+      selector:
+        number:
+          min: 6
+          max: 120
+          step: 2
+      default: 12
+    icon_name:
+      name: The icon associated to this state screen?
+      description: If you use additional icons in your YAML, you have to add them to this blueprint.
+      selector:
+        select:
+          mode: dropdown
+          options:
+            [
+              "error",
+              "home_assistant",
+              "temperature",
+              "lightbulb",
+              "music",
+              "phone",
+              "car",
+              "sleep8x32",
+            ]
+      default: home_assistant
+    use_friendly:
+      name: Use the triggers friendly name in display?
+      description: Add the friendly name of the sensor to the state display.
+      selector:
+        boolean:
+      default: true
+    default_font:
+      name: Use the default or set false to use the special font.
+      selector:
+        boolean:
+      default: true
+    darkpoet78_replace:
+      name: Use special character provided by darkpoet78 fonts (default=false)
+      description: If you are using the bdf fonts of https://github.com/darkpoet78/MatrixClockFonts you have to translate some character e.g. the euro sign. This flag actives the translation.
+      selector:
+        boolean:
+      default: false
+
+variables:
+  display: !input ehmtx_device
+  bfriendly: !input use_friendly
+  def_color: !input default_color
+  use_color: !input color_rainbow
+  use_icon: !input icon_text
+  f_text: |-
+    {{trigger.to_state.attributes.friendly_name}}: {{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}
+  n_text: |-
+    {{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}
+  textstr: |-
+    {% if bfriendly %}
+      {% if darkpoet78_replace %}
+        {{ f_text |replace ("€","¼")| replace ("°C","¬")|replace ("℃","¬")| replace ("°F","¯")|replace ("℉","¯")|replace ("₴","¾")|replace ("₿","¨")|replace ("₩","½")|replace ("Ξ","¸") }}
+      {% else %}  
+        {{ f_text }}
+      {% endif %}
+    {% else %}
+      {% if darkpoet78_replace %}
+        {{ n_text |replace ("€","¼")| replace ("°C","¬")|replace ("℃","¬")| replace ("°F","¯")|replace ("℉","¯")|replace ("₴","¾")|replace ("₿","¨")|replace ("₩","½")|replace ("Ξ","¸") }}
+      {% else %}  
+        {{ n_text }}
+      {% endif %}
+    {% endif %}
+
+mode: queued
+
+trigger:
+  - platform: state
+    entity_id: !input trigger_sensor
+
+action:
+  - if:
+      - condition: template
+        value_template: "{{ use_icon }}"
+    then:
+      - if:
+          - condition: template
+            value_template: "{{ use_color }}"
+        then:
+          - service: |-
+              esphome.{{ device_attr(display, "name") }}_icon_screen
+            data:
+              icon_name: !input icon_name
+              screen_time: !input screen_time
+              lifetime: !input lifetime
+              text: |-
+                {{ textstr }}
+              default_font: !input default_font
+              r: |-
+                {{ def_color[0] }}
+              g: |-
+                {{ def_color[1] }}
+              b: |-
+                {{ def_color[2] }}
+        else:
+          - service: |-
+              esphome.{{ device_attr(display, "name") }}_rainbow_icon
+            data:
+              icon_name: !input icon_name
+              screen_time: !input screen_time
+              lifetime: !input lifetime
+              text: |-
+                {{ textstr }}
+              default_font: !input default_font
+    else:
+      - if:
+          - condition: template
+            value_template: "{{ use_color }}"
+        then:
+          - service: |-
+              esphome.{{ device_attr(display, "name") }}_text_screen
+            data:
+              screen_time: !input screen_time
+              lifetime: !input lifetime
+              text: |-
+                {{ textstr }}
+              default_font: !input default_font
+              r: |-
+                {{ def_color[0] }}
+              g: |-
+                {{ def_color[1] }}
+              b: |-
+                {{ def_color[2] }}
+        else:
+          - service: |-
+              esphome.{{ device_attr(display, "name") }}_rainbow_text
+            data:
+              screen_time: !input screen_time
+              lifetime: !input lifetime
+              text: |-
+                {{ textstr }}
+              default_font: !input default_font

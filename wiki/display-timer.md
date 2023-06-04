@@ -1,13 +1,12 @@
-# Setup
+# introduction
 
-## setup a timer helper named *eier_timer*.
+**Skill-level:** medium
 
-## How does it work?
+Set up a timer helper named *eier_timer*
 
-**home assistant automation:**
+## step 1: **home assistant automation:**
 
 triggered by the timer start, the timer display is refreshed every second
-
 
 ```yaml
 alias: Display Timer on ulanzi

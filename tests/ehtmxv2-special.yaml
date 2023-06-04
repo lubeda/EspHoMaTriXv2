@@ -28,6 +28,7 @@ esphome:
       id(rgb8x32)->rainbow_icon_screen("error","Hallo Text",true,237,20);
       id(rgb8x32)->get_status();
       id(rgb8x32)->set_display_on();
+      id(rgb8x32)->rainbow_text_screen("ÜÖÄüöä°C°F€--℉-℃-₿-₩-Ξ",30);
       id(rgb8x32)->set_display_off();
       id(rgb8x32)->hold_screen();
       id(rgb8x32)->show_gauge(100,0,200);

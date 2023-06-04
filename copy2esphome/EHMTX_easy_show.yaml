@@ -1,7 +1,7 @@
 blueprint:
   name: |-
     ehmtxv2: Show screen elements on 8x32 RGB-matrix
-  description: Add a gauge, rindicator or alarm element to your EspHoMaTriXv2 display
+  description: Add a gauge, indicator or alarm element to your EspHoMaTriXv2 display
   domain: automation
   input:
     ehmtx_device:
@@ -17,19 +17,22 @@ blueprint:
     element:
       name: The screen element
       description: |-
-         rindicator and alarm are in the corners at the right size and have a color and a size. The gauge has a color and a value in percent.
+        rindicator and alarm are in the corners at the right size and have a color and a size. The gauge has a color and a value in percent.
+        lindicator is in the lower left.
       selector:
         select:
           custom_value: true
           mode: dropdown
           options:
-           - label: alarm
-             value: show_alarm
-           - label: gauge
-             value: show_gauge
-           - label: rindicator
-             value: show_rindicator
-      default: show_rindicator
+            - label: alarm
+              value: show_alarm
+            - label: gauge
+              value: show_gauge
+            - label: "left indicator"
+              value: show_lindicator
+            - label: "right indicator"
+              value: show_rindicator
+      default: show_lindicator
     gauge_value:
       name: The value on the gauge (if selected)
       selector:
@@ -39,7 +42,7 @@ blueprint:
           max: 100
       default: 50
     size_value:
-      name: The size of the alarm or rindicator (if selected)
+      name: The size of the alarm or indicator (if selected)
       selector:
         number:
           mode: slider
@@ -66,7 +69,7 @@ trigger:
 action:
   - if:
       - condition: template
-        value_template: |- 
+        value_template: |-
           {{ myservice != "show_gauge" }}
     then:
       - service: |-
@@ -92,4 +95,3 @@ action:
             {{ element_color[2] }}
           percent: |-
             {{ value }}
-      

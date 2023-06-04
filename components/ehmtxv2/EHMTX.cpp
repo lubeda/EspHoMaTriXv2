@@ -352,8 +352,8 @@ namespace esphome
         this->bitmap_screen(EHMTX_LOGO, 1, 10);
         this->bitmap_small(EHMTX_SLOGO, EHMTX_VERSION, 1, 10);
 #endif
-        this->clock_screen(14 * 24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
-        this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
+        this->clock_screen(14 * 24 * 60, this->clock_time, true, C_RED, C_GREEN, C_BLUE);
+        this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, true, C_RED, C_GREEN, C_BLUE);
         this->is_running = true;
       }
     }
@@ -896,6 +896,7 @@ namespace esphome
     }
   }
 
+#ifdef EHMTXv2_USE_RTL
   void EHMTX::set_rtl(bool b)
   {
     this->rtl = b;
@@ -904,6 +905,7 @@ namespace esphome
       ESP_LOGI(TAG, "show text right to left");
     }
   }
+#endif
 
   void EHMTX::set_show_seconds(bool b)
   {
@@ -1033,10 +1035,9 @@ namespace esphome
     {
       ESP_LOGCONFIG(TAG, "show date");
     }
-    if (this->rtl)
-    {
+    #ifdef EHMTXv2_USE_RTL
       ESP_LOGCONFIG(TAG, "RTL activated");
-    }
+    #endif
     if (this->week_starts_monday)
     {
       ESP_LOGCONFIG(TAG, "weekstart: monday");

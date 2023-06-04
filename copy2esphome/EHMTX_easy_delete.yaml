@@ -24,30 +24,47 @@ blueprint:
           options:
             - label: MODE_ICON_SCREEN
               value: "5"
-            - label: MODE_BLANK
+            - label: "MODE_BLANK (*)"
               value: "1"
-            - label: MODE_CLOCK
-              value: "2" 
-            - label: MODE_DATE 
+            - label: "MODE_CLOCK (*)"
+              value: "2"
+            - label: "MODE_DATE (*)"
               value: "3"
             - label: MODE_FULL_SCREEN
               value: "4"
-            - label: MODE_TEXT_SCREEN 
+            - label: "MODE_TEXT_SCREEN (*)"
               value: "6"
-            - label: MODE_RAINBOW_ICON 
+            - label: "MODE_RAINBOW_ICON (*)"
               value: "7"
-            - label: MODE_RAINBOW_TEXT 
+            - label: "MODE_RAINBOW_TEXT (*)"
               value: "8"
-            - label: MODE_RAINBOW_CLOCK 
+            - label: "MODE_RAINBOW_CLOCK (*)"
               value: "9"
+            - label: "MODE_RAINBOW_DATE (*)"
+              value: "10"
+            - label: "MODE_BITMAP_SCREEN (*)"
+              value: "11"
+            - label: "MODE_BITMAP_SMALL (*)"
+              value: "12"
       default: "5"
     icon_name:
       name: The icon to specify a screen.
+      description: These are the default icons, extend this list to your needs in the blueprint
       selector:
         select:
           mode: dropdown
           options:
-            ["*","error","home_assistant","temperature","lightbulb","music","phone","car","sleep8x32",]
+            [
+              "*",
+              "error",
+              "home_assistant",
+              "temperature",
+              "lightbulb",
+              "music",
+              "phone",
+              "car",
+              "sleep8x32",
+            ]
       default: home_assistant
 
 variables:
@@ -64,5 +81,4 @@ action:
       esphome.{{ device_attr(display, "name") }}_del_screen
     data:
       icon_name: !input icon_name
-      mode: !input screen_mode 
-  
+      mode: !input screen_mode

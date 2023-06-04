@@ -28,7 +28,7 @@ SVG_FULL_SCREEN_START = '<svg width="320px" height="80px" viewBox="0 0 320 80">'
 SVG_END = "</svg>"
 
 logging.warning(f"")
-logging.warning(f"This is a beta version of https://github.com/lubeda/EspHoMaTriXv2")
+logging.warning(f"Please check the documentation and wiki https://github.com/lubeda/EspHoMaTriXv2")
 logging.warning(f"")
 
 def rgb565_svg(x,y,r,g,b):
@@ -79,9 +79,9 @@ CONF_DEFAULT_FONT_ID = "default_font_id"
 CONF_DEFAULT_FONT = "default_font"
 CONF_DEFAULT_FONT_XOFFSET = "default_font_xoffset"
 CONF_DEFAULT_FONT_YOFFSET = "default_font_yoffset"
-CONF_special_FONT_ID = "special_font_id"
-CONF_special_FONT_XOFFSET = "special_font_xoffset"
-CONF_special_FONT_YOFFSET = "special_font_yoffset"
+CONF_SPECIAL_FONT_ID = "special_font_id"
+CONF_SPECIAL_FONT_XOFFSET = "special_font_xoffset"
+CONF_SPECIAL_FONT_YOFFSET = "special_font_yoffset"
 CONF_PINGPONG = "pingpong"
 CONF_TIME_FORMAT = "time_format"
 CONF_DATE_FORMAT = "date_format"
@@ -95,13 +95,12 @@ CONF_WEEK_START_MONDAY = "week_start_monday"
 CONF_ICON = "icon_name"
 CONF_TEXT = "text"
 
-
 EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_ID): cv.declare_id(EHMTX_),
     cv.Required(CONF_TIMECOMPONENT): cv.use_id(time),
     cv.Required(CONF_MATRIXCOMPONENT): cv.use_id(display),
     cv.Required(CONF_DEFAULT_FONT_ID): cv.use_id(font),
-    cv.Required(CONF_special_FONT_ID): cv.use_id(font),
+    cv.Required(CONF_SPECIAL_FONT_ID): cv.use_id(font),
     cv.Optional(
         CONF_CLOCKINTERVAL, default="0"
     ): cv.templatable(cv.positive_int),
@@ -139,10 +138,10 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_DEFAULT_FONT_YOFFSET, default="6"
     ): cv.templatable(cv.int_range(min=-32, max=32)),
     cv.Optional(
-        CONF_special_FONT_XOFFSET, default="1"
+        CONF_SPECIAL_FONT_XOFFSET, default="1"
     ): cv.templatable(cv.int_range(min=-32, max=32)),
     cv.Optional(
-        CONF_special_FONT_YOFFSET, default="6"
+        CONF_SPECIAL_FONT_YOFFSET, default="6"
     ): cv.templatable(cv.int_range(min=-32, max=32)),
     cv.Optional(CONF_SCROLLINTERVAL, default="80"
                 ): cv.templatable(cv.positive_int),
@@ -361,24 +360,26 @@ async def to_code(config):
     f = await cg.get_variable(config[CONF_DEFAULT_FONT_ID])
     cg.add(var.set_default_font(f))
 
-    f = await cg.get_variable(config[CONF_special_FONT_ID])
+    f = await cg.get_variable(config[CONF_SPECIAL_FONT_ID])
     cg.add(var.set_special_font(f))
 
     cg.add(var.set_brightness(config[CONF_BRIGHTNESS]))
     cg.add(var.set_scroll_interval(config[CONF_SCROLLINTERVAL]))
     cg.add(var.set_rainbow_interval(config[CONF_SCROLLINTERVAL]))
-    cg.add(var.set_rtl(config[CONF_RTL]))
+    if config[CONF_RTL]:
+        cg.add(var.set_rtl(config[CONF_RTL]))
+        cg.add_define("EHMTXv2_USE_RTL")    
     cg.add(var.set_scroll_count(config[CONF_SCROLLCOUNT]))
     cg.add(var.set_frame_interval(config[CONF_FRAMEINTERVAL]))
     cg.add(var.set_week_start(config[CONF_WEEK_START_MONDAY]))
     cg.add(var.set_clock_interval(config[CONF_CLOCKINTERVAL]))
     cg.add(var.set_time_format(config[CONF_TIME_FORMAT]))
     cg.add(var.set_date_format(config[CONF_DATE_FORMAT]))
-    cg.add(var.set_show_day_of_week(config[CONF_SHOWDOW]))
+    cg.add(var.set_show_day_of_week(config[CONF_SHOWDOW]))  
     cg.add(var.set_show_date(config[CONF_SHOWDATE]))
     cg.add(var.set_show_seconds(config[CONF_SHOW_SECONDS]))
     cg.add(var.set_default_font_offset(config[CONF_DEFAULT_FONT_XOFFSET], config[CONF_DEFAULT_FONT_YOFFSET] ))
-    cg.add(var.set_special_font_offset(config[CONF_special_FONT_XOFFSET], config[CONF_special_FONT_YOFFSET] ))
+    cg.add(var.set_special_font_offset(config[CONF_SPECIAL_FONT_XOFFSET], config[CONF_SPECIAL_FONT_YOFFSET] ))
     for conf in config.get(CONF_ON_NEXT_SCREEN, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.std_string, "text")], conf)
