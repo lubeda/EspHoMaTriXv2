@@ -148,7 +148,6 @@ namespace esphome
     void hold_screen(int t = 30);
     void set_display(addressable_light::AddressableLightDisplay *disp);
     void set_clock_interval(uint16_t t = 90);
-    void get_string(std::string);
     void set_hold_time(uint16_t t = 30);
     void set_clock_time(uint16_t t = 10);
     void set_show_day_of_week(bool b=true);
