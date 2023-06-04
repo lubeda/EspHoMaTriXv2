@@ -143,8 +143,8 @@ namespace esphome
   void EHMTX_queue::draw()
   {
     display::Font *font = this->default_font ? this->config_->default_font : this->config_->special_font;
-    int8_t yoffset = this->default_font ? this->config_->default_xoffset : this->config_->special_xoffset;
-    int8_t xoffset = this->default_font ? this->config_->default_yoffset : this->config_->special_yoffset;
+    int8_t yoffset = this->default_font ? EHMTXv2_DEFAULT_FONT_OFFSET_Y : EHMTXv2_SPECIAL_FONT_OFFSET_Y;
+    int8_t xoffset = this->default_font ? EHMTXv2_DEFAULT_FONT_OFFSET_X : EHMTXv2_SPECIAL_FONT_OFFSET_X;
     int8_t extraoffset = 0;
     Color color_;
     if (this->config_->is_running)
@@ -201,7 +201,7 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_CLOCK) ? this->config_->rainbow_color : this->config_->clock_color;
           time_t ts = this->config_->clock->now().timestamp;
-          this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, this->config_->time_fmt.c_str(),
+          this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
                                            this->config_->clock->now());
           if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
           {
@@ -223,7 +223,7 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_DATE) ? this->config_->rainbow_color : this->config_->clock_color;
           time_t ts = this->config_->clock->now().timestamp;
-          this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, this->config_->date_fmt.c_str(),
+          this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER,EHMTXv2_DATE_FORMAT ,
                                            this->config_->clock->now());
           if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
           {

@@ -5,6 +5,8 @@
 - introduced `default_clock_font: true`  
 - changed *_interval to be set only on compile time
 - change scroll_count to be set only on compile time
+- change font_offsets to be set only on compile time
+- change date/time_format to be set only on compile time
 - remove unused frame_interval
 
 ## 2023.6.2

@@ -374,25 +374,22 @@ async def to_code(config):
     cg.add_define("EHMTXv2_FRAME_INTERVALL",config[CONF_FRAMEINTERVAL])
     cg.add_define("EHMTXv2_CLOCK_INTERVALL",config[CONF_CLOCKINTERVAL])
     cg.add_define("EHMTXv2_SCROLL_COUNT",config[CONF_SCROLLCOUNT])
-    
+    cg.add_define("EHMTXv2_WEEK_START",config[CONF_WEEK_START_MONDAY])
+    cg.add_define("EHMTXv2_DEFAULT_FONT_OFFSET_X",config[CONF_DEFAULT_FONT_XOFFSET])
+    cg.add_define("EHMTXv2_DEFAULT_FONT_OFFSET_Y",config[CONF_DEFAULT_FONT_YOFFSET])
+    cg.add_define("EHMTXv2_SPECIAL_FONT_OFFSET_X",config[CONF_SPECIAL_FONT_XOFFSET])
+    cg.add_define("EHMTXv2_SPECIAL_FONT_OFFSET_Y",config[CONF_SPECIAL_FONT_YOFFSET])
+    cg.add_define("EHMTXv2_DEFAULT_CLOCK_FONT",config[CONF_CLOCKFONT])    
+    cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])    
+    cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])    
+
     if config[CONF_RTL]:
-        cg.add(var.set_rtl(config[CONF_RTL]))
         cg.add_define("EHMTXv2_USE_RTL")    
     
-    if config[CONF_CLOCKFONT]:
-        cg.add_define("EHMTXv2_DEFAULT_CLOCK_FONT","true")    
-    else:
-        cg.add_define("EHMTXv2_DEFAULT_CLOCK_FONT","false")    
-
-    
-    cg.add(var.set_week_start(config[CONF_WEEK_START_MONDAY]))
-    cg.add(var.set_time_format(config[CONF_TIME_FORMAT]))
-    cg.add(var.set_date_format(config[CONF_DATE_FORMAT]))
     cg.add(var.set_show_day_of_week(config[CONF_SHOWDOW]))  
     cg.add(var.set_show_date(config[CONF_SHOWDATE]))
     cg.add(var.set_show_seconds(config[CONF_SHOW_SECONDS]))
-    cg.add(var.set_default_font_offset(config[CONF_DEFAULT_FONT_XOFFSET], config[CONF_DEFAULT_FONT_YOFFSET] ))
-    cg.add(var.set_special_font_offset(config[CONF_SPECIAL_FONT_XOFFSET], config[CONF_SPECIAL_FONT_YOFFSET] ))
+    
     for conf in config.get(CONF_ON_NEXT_SCREEN, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.std_string, "text")], conf)

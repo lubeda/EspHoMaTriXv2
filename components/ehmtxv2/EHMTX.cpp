@@ -34,16 +34,6 @@ namespace esphome
     ESP_LOGD(TAG, "Constructor finish");
   }
 
-  void EHMTX::set_time_format(std::string s)
-  {
-    this->time_fmt = s;
-  }
-
-  void EHMTX::set_date_format(std::string s)
-  {
-    this->date_fmt = s;
-  }
-
   void EHMTX::show_rindicator(int r, int g, int b, int size)
   {
     if (size > 0)
@@ -581,8 +571,8 @@ namespace esphome
              this->clock->now().month, this->clock->now().year,
              this->clock->now().hour, this->clock->now().minute);
     ESP_LOGI(TAG, "status brightness: %d (0..255)", this->brightness_);
-    ESP_LOGI(TAG, "status date format: %s", this->date_fmt.c_str());
-    ESP_LOGI(TAG, "status time format: %s", this->time_fmt.c_str());
+    ESP_LOGI(TAG, "status date format: %s", EHMTXv2_DATE_FORMAT);
+    ESP_LOGI(TAG, "status time format: %s", EHMTXv2_TIME_FORMAT);
     ESP_LOGI(TAG, "status alarm_color: RGB(%d,%d,%d)", this->alarm_color.r, this->alarm_color.g, this->alarm_color.b);
     if (this->show_display)
     {
@@ -875,17 +865,6 @@ namespace esphome
     }
   }
 
-#ifdef EHMTXv2_USE_RTL
-  void EHMTX::set_rtl(bool b)
-  {
-    this->rtl = b;
-    if (b)
-    {
-      ESP_LOGI(TAG, "show text right to left");
-    }
-  }
-#endif
-
   void EHMTX::set_show_seconds(bool b)
   {
     this->show_seconds = b;
@@ -909,19 +888,6 @@ namespace esphome
     else
     {
       ESP_LOGI(TAG, "don't show day of week");
-    }
-  }
-
-  void EHMTX::set_week_start(bool b)
-  {
-    this->week_starts_monday = b;
-    if (b)
-    {
-      ESP_LOGI(TAG, "weekstart: monday");
-    }
-    else
-    {
-      ESP_LOGI(TAG, "weekstart: sunday");
     }
   }
 
@@ -966,8 +932,8 @@ namespace esphome
       auto dow = this->clock->now().day_of_week - 1; // SUN = 0
       for (uint8_t i = 0; i <= 6; i++)
       {
-        if (((!this->week_starts_monday) && (dow == i)) ||
-            ((this->week_starts_monday) && ((dow == (i + 1)) || ((dow == 0 && i == 6)))))
+        if (((!EHMTXv2_WEEK_START) && (dow == i)) ||
+            ((EHMTXv2_WEEK_START) && ((dow == (i + 1)) || ((dow == 0 && i == 6)))))
         {
           this->display->line(2 + i * 4, 7, i * 4 + 4, 7, this->today_color);
         }
@@ -979,27 +945,13 @@ namespace esphome
     }
   };
 
-  void EHMTX::set_default_font_offset(int8_t y, int8_t x)
-  {
-    this->default_xoffset = x;
-    this->default_yoffset = y;
-    ESP_LOGD(TAG, "set_default_font_offset x: %d y: %d", x, y);
-  }
-
-  void EHMTX::set_special_font_offset(int8_t y, int8_t x)
-  {
-    this->special_xoffset = x;
-    this->special_yoffset = y;
-    ESP_LOGD(TAG, "set_special_font_offset x: %d y: %d", x, y);
-  }
-
   void EHMTX::dump_config()
   {
     ESP_LOGCONFIG(TAG, "EspHoMatriXv2 version: %s", EHMTX_VERSION);
     ESP_LOGCONFIG(TAG, "Icons: %d of %d", this->icon_count, MAXICONS);
     ESP_LOGCONFIG(TAG, "Clock interval: %d s", EHMTXv2_CLOCK_INTERVALL);
-    ESP_LOGCONFIG(TAG, "Date format: %s", this->date_fmt.c_str());
-    ESP_LOGCONFIG(TAG, "Time format: %s", this->time_fmt.c_str());
+    ESP_LOGCONFIG(TAG, "Date format: %s", EHMTXv2_DATE_FORMAT);
+    ESP_LOGCONFIG(TAG, "Time format: %s", EHMTXv2_TIME_FORMAT);
     ESP_LOGCONFIG(TAG, "Interval (ms) scroll: %d", EHMTXv2_SCROLL_INTERVALL);
     if (this->show_day_of_week)
     {
@@ -1012,7 +964,7 @@ namespace esphome
     #ifdef EHMTXv2_USE_RTL
       ESP_LOGCONFIG(TAG, "RTL activated");
     #endif
-    if (this->week_starts_monday)
+    if (EHMTXv2_WEEK_START)
     {
       ESP_LOGCONFIG(TAG, "weekstart: monday");
     }

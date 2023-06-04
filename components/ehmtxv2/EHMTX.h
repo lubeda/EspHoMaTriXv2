@@ -62,7 +62,6 @@ namespace esphome
     uint8_t brightness_;
     uint32_t boot_anim = 0;
     uint8_t screen_pointer;
-    bool week_starts_monday;
     bool show_day_of_week;
 
     std::vector<EHMTXNextScreenTrigger *> on_next_screen_triggers_;
@@ -81,16 +80,12 @@ namespace esphome
     void dump_config();
 #ifdef USE_ESP32
     PROGMEM Color text_color, alarm_color, gauge_color, gauge_bgcolor, rindicator_color,  lindicator_color,clock_color, today_color, weekday_color, rainbow_color;
-    PROGMEM std::string time_fmt;
-    PROGMEM std::string date_fmt;
     PROGMEM Color bitmap[256];
     PROGMEM Color sbitmap[64];
     PROGMEM EHMTX_Icon *icons[MAXICONS];
 #endif
 
 #ifdef USE_ESP8266
-    std::string time_fmt;
-    std::string date_fmt;
     Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, clock_color, today_color, weekday_color, rainbow_color;
     EHMTX_Icon *icons[MAXICONS];
 #endif
@@ -102,9 +97,6 @@ namespace esphome
     bool display_gauge;
     bool is_running = false;
     bool show_date;
-    #ifdef EHMTXv2_USE_RTL
-      bool rtl;
-    #endif
     uint8_t gauge_value;
     uint16_t clock_time;
     uint16_t scroll_step;
@@ -113,8 +105,6 @@ namespace esphome
     addressable_light::AddressableLightDisplay *display;
     time::RealTimeClock *clock;
 
-    int8_t default_yoffset, default_xoffset;
-    int8_t special_yoffset, special_xoffset;
     bool show_seconds;
     uint16_t hold_time; // seconds display of screen_time to extend
 
@@ -147,21 +137,12 @@ namespace esphome
     void set_show_day_of_week(bool b=true);
     void set_show_seconds(bool b=false);
     void set_show_date(bool b=true);
-    #ifdef EHMTXv2_USE_RTL
-      void set_rtl(bool b=false);
-    #endif
-    void set_font_offset(int8_t x, int8_t y);
-    void set_week_start(bool b);
     void set_brightness(int b);
-    void set_default_font_offset(int8_t x, int8_t y);
-    void set_special_font_offset(int8_t x, int8_t y);
     void set_display_on();
     void set_display_off();
     void set_clock(time::RealTimeClock *clock);
     void set_default_font(display::Font *font);
     void set_special_font(display::Font *font);
-    void set_time_format(std::string s);
-    void set_date_format(std::string s);
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
