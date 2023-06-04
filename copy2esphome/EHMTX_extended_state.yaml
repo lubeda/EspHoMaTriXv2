@@ -50,7 +50,7 @@ blueprint:
       default: 12
     icon_name:
       name: The icon associated to this state screen?
-      description: If you use additional icons in your YAML, you have to add them to this blueprint.
+      description: If you use additional icons in your YAML, you have to add them to this blueprint. Valid only if icon is chosen.
       selector:
         select:
           mode: dropdown
@@ -141,7 +141,7 @@ action:
                 {{ def_color[2] }}
         else:
           - service: |-
-              esphome.{{ device_attr(display, "name") }}_rainbow_icon
+              esphome.{{ device_attr(display, "name") }}_rainbow_icon_screen
             data:
               icon_name: !input icon_name
               screen_time: !input screen_time
@@ -170,7 +170,7 @@ action:
                 {{ def_color[2] }}
         else:
           - service: |-
-              esphome.{{ device_attr(display, "name") }}_rainbow_text
+              esphome.{{ device_attr(display, "name") }}_rainbow_text_screen
             data:
               screen_time: !input screen_time
               lifetime: !input lifetime
