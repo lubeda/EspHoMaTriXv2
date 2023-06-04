@@ -896,6 +896,7 @@ namespace esphome
     }
   }
 
+#ifdef EHMTXv2_USE_RTL
   void EHMTX::set_rtl(bool b)
   {
     this->rtl = b;
@@ -904,6 +905,7 @@ namespace esphome
       ESP_LOGI(TAG, "show text right to left");
     }
   }
+#endif
 
   void EHMTX::set_show_seconds(bool b)
   {
@@ -1033,10 +1035,9 @@ namespace esphome
     {
       ESP_LOGCONFIG(TAG, "show date");
     }
-    if (this->rtl)
-    {
+    #ifdef EHMTXv2_USE_RTL
       ESP_LOGCONFIG(TAG, "RTL activated");
-    }
+    #endif
     if (this->week_starts_monday)
     {
       ESP_LOGCONFIG(TAG, "weekstart: monday");

@@ -22,7 +22,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2023.6.1";
+static const char *const EHMTX_VERSION = "2023.6.2";
 static const char *const TAG = "EHMTXv2";
 #ifndef USE_ESP8266
 static const char *const EHMTX_LOGO = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
@@ -102,7 +102,9 @@ namespace esphome
     bool display_gauge;
     bool is_running = false;
     bool show_date;
-    bool rtl;
+    #ifdef EHMTXv2_USE_RTL
+      bool rtl;
+    #endif
     uint8_t gauge_value;
     uint16_t clock_time;
     uint16_t scroll_step;
@@ -152,7 +154,9 @@ namespace esphome
     void set_show_day_of_week(bool b=true);
     void set_show_seconds(bool b=false);
     void set_show_date(bool b=true);
-    void set_rtl(bool b=false);
+    #ifdef EHMTXv2_USE_RTL
+      void set_rtl(bool b=false);
+    #endif
     void set_font_offset(int8_t x, int8_t y);
     void set_week_start(bool b);
     void set_brightness(int b);

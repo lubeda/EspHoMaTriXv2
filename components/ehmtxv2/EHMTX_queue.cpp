@@ -95,8 +95,7 @@ namespace esphome
     }
     width -= startx;
 
-    if (this->config_->rtl)
-    {
+    #ifdef EHMTXv2_USE_RTL
       if (this->pixels_ < width)
       {
         result = 32 - ceil((width - this->pixels_) / 2);
@@ -106,9 +105,7 @@ namespace esphome
 
         result = startx + this->config_->scroll_step;
       }
-    }
-    else
-    {
+    #else
       if (this->pixels_ < width)
       {
         result = startx + ceil((width - this->pixels_) / 2);
@@ -117,7 +114,7 @@ namespace esphome
       {
         result = startx - this->config_->scroll_step + width;
       }
-    }
+    #endif
     return result;
   }
 
@@ -174,16 +171,13 @@ namespace esphome
           extraoffset = TEXTSTARTOFFSET;
         }
         color_ = this->text_color;
-        if (this->config_->rtl)
-        {
+        #ifdef EHMTXv2_USE_RTL
           this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                         this->text.c_str());
-        }
-        else
-        {
+        #else
           this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                         this->text.c_str());
-        }
+        #endif
         if (this->config_->display_gauge)
         {
           this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
@@ -261,16 +255,13 @@ namespace esphome
         }
 
         color_ = (this->mode == MODE_RAINBOW_ICON) ? this->config_->rainbow_color : this->text_color;
-        if (this->config_->rtl)
-        {
+        #ifdef EHMTXv2_USE_RTL
           this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                         this->text.c_str());
-        }
-        else
-        {
+        #else
           this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                         this->text.c_str());
-        }
+        #endif
         if (this->config_->display_gauge)
         {
           this->config_->display->image(2, 0, this->config_->icons[this->icon]);
@@ -295,16 +286,13 @@ namespace esphome
           extraoffset += 2;
         }
         color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
-        if (this->config_->rtl)
-        {
+        #ifdef EHMTXv2_USE_RTL
           this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                         this->text.c_str());
-        }
-        else
-        {
-          this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+        #else
+            this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                         this->text.c_str());
-        }
+        #endif
         break;
       default:
         break;
