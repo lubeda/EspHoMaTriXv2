@@ -59,7 +59,7 @@ to your esphome directory (usually /config/esphome). In your esphome dashboard, 
 
 #### Step 2
 
-Connect your ulanzi device to your host with USB-C and flash the firmware.
+Connect your Ulanzi device to your host with USB-C and flash the firmware.
 
 #### Step 3
 
@@ -98,7 +98,7 @@ You can add screens from home assistant with service-calls or from esphome via l
 
 ###### Service via API
 
-You can call this from e.g., the [developer tools service](https://my.home-assistant.io/redirect/developer_services/)
+You can call this from, e.g., the [developer tools service](https://my.home-assistant.io/redirect/developer_services/)
 
 ```c
 clock_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
@@ -181,7 +181,7 @@ void bitmap_screen(string text, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
 
 ##### alarm
 
-The alarm is displayed in the upper-right corner at all screen types! You can set its color and its size.
+The alarm is displayed in the upper-right corner on all screen types! You can set its color and its size.
 
 ###### service
 
@@ -312,7 +312,7 @@ external_components:
 
 #### Addressable_light component
 
-The **EspHoMaTriXv2** component requires an 8x32 pixel addressable_light, it is referenced by the ID `matrix_component`.
+The **EspHoMaTriXv2** component requires a 8x32 pixel addressable_light, it is referenced by the ID `matrix_component`.
 
 See the default [options](https://esphome.io/components/display/index.html)
 
@@ -411,11 +411,11 @@ light:
 
 #### Time component
 
-Since it is a clock, you need a time component, e.g. [homeassistant](https://esphome.io/components/time/homeassistant.html). It is referenced by its ID under `time_component:` The display shows `!t!` until the time source is synchronized and valid.
+Since it is a clock, you need a time component, e.g., [home assistant](https://esphome.io/components/time/homeassistant.html). It is referenced by its ID under `time_component:` The display shows `!t!` until the time source is synchronized and valid.
 
 #### Font
 
-In the easy configuration is a ttf-font included, it is based on this [font](https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=13768). Or you can search for a font you like more.
+In the easy configuration is a TTF-font included, it is based on this [font](https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=13768). Or you can search for a font you like more.
 
 Not all fonts are suitable for this minimalistic display. There are public domain fonts which work well on the display, e.g., [DMDSmall](https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=5993), details on alternative fonts are [here](https://blakadder.com/esphome-pixel-clock/#fonts).
 
@@ -527,7 +527,7 @@ ehmtxv2:
 
 **special_font_xoffset** (optional, pixel): xoffset the text is aligned BASELINE_LEFT, the left defaults to `1`
 
-**rtl** (optional, boolean): if `true` write from right to left (Arabic, Hebrew etc.). Default is `false`
+**rtl** (optional, boolean): if `true` write text (but only the scroll direction, the words and numbers aren't changed!) from right to left (Arabic, Hebrew etc.). Default is `false`
 
 **matrix_component** (required, ID): ID of the addressable display
 
@@ -539,7 +539,7 @@ ehmtxv2:
 
 **default_font** (required, ID): ID of the default font
 
-**special_font** (required, ID): ID of the special font, you can reuse your default font, but occasionally it's nice to have a special font to minimize scrolling
+**special_font** (required, ID): ID of the special font, you can reuse your default font, but occasionally, it's nice to have a special font to minimize scrolling
 
 **week_start_monday** (optional, bool): default Monday is first day of week, false => Sunday
 
@@ -597,8 +597,8 @@ Numerous features are accessible with services from home assistant and lambdas y
 |`set_clock_color`|"r", "g", "b"|set the default color for the clock/date display|
 |`set_today_color"`|"r", "g", "b"|set the special color for today in the day of week line|
 |`set_weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
-|`del_screen`|"icon_name", "mode"|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
-|`force_screen`|"icon_name", "mode"|displays the selected the specified icon screen from the queue, the [mode](#modes) is a filter|
+|`del_screen`|"icon_name", “mode”|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
+|`force_screen`|"icon_name", “mode”|displays the selected the specified icon screen from the queue, the [mode](#modes) is a filter|
 |`full_screen`|"icon_name", "lifetime", "screen_time"|show the specified 8x32 icon as full screen|
 |`icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text|
 |`rainbow_icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color|
@@ -665,7 +665,7 @@ Experienced programmers can use these public methods:
 
 ### Local triggers
 
-To use the display without homeassistant automations, you may use the [advanced functionality](#change-configuration-during-runtime) with triggers. The triggers can be fired by sensors, time or by the ehmtxv2 component.
+To use the display without home assistant automations, you may use the [advanced functionality](#change-configuration-during-runtime) with triggers. The triggers can be fired by sensors, time or by the ehmtxv2 component.
 
 #### on_add_screen
 
@@ -843,7 +843,7 @@ Service **skip_screen**
 
 If there is more than one screen in the queue, it skips the actual displayed screen to the next screen.
 
-e.g. on the Ulanzi TC001
+e.g., on the Ulanzi TC001
 
 ```yaml
 binary_sensor:
@@ -892,7 +892,7 @@ This service displays the running queue and a list of icons in the logs
 
 ## Integration in Home Assistant
 
-To control your display, it has to be integrated in Home Assistant. Then it provides several services, all prefixed with the configured `devicename` e.g. "ehmtx". See the default services marked as **(D)** [above](#services), but you can add your own (see alarm and screen).
+To control your display, it has to be integrated in Home Assistant. Then it provides several services, all prefixed with the configured `devicename` e.g.,, "ehmtx". See the default services marked as **(D)** [above](#services), but you can add your own (see alarm and screen).
 
 ### Services
 
@@ -900,7 +900,7 @@ All communication with Home Assistant use the homeasistant-api. The services can
 
 ### Use in Home Assistant automations
 
-The easiest way to use ehmtx as a status display is to use the icon names as trigger id. In my example I have an icon named “wind” when the sensor.wind_speed has a new state, this automation sends the new data to the screen with the icon named “wind” and so on.
+The easiest way to use ehmtx as a status display is to use the icon names as trigger id. In my example, I have an icon named “wind” when the sensor.wind_speed has a new state, this automation sends the new data to the screen with the icon named “wind” and so on.
 
 ```yaml
 alias: EHMTX 8266 Test
@@ -1080,7 +1080,7 @@ See this [nice article](https://blakadder.com/esphome-pixel-clock/) about EsphoM
 
 Short video on Instagram [@blak_adder](https://www.insbuiltagram.com/reel/CpYVByRIaSI)
 
-See this english discussions:
+See these english discussions:
 [Share your projects](https://community.home-assistant.io/t/esphomatrix-a-simple-clock-status-display/425325)
 [ESPHOME](https://community.home-assistant.io/t/a-simple-diy-status-display-with-an-8x32-rgb-led/379051)
 
@@ -1091,20 +1091,20 @@ Or in German:
 
 ## Disclaimer
 
-THE SOFTWARE IS PROVIDED "AS IS", use at your own risk!
+THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 
 ## Thanks
 
 - **[blakadder](https://github.com/blakadder)** for his contribution (cleanup README.md, fixed sample)
 - **[andrew-codechimp](https://github.com/andrew-codechimp)** for his contribution (display on/off & del_screen "*" & show_clock with 0)
 - **[jd1](https://github.com/jd1)** for his contributions
-- **[aptonline](https://github.com/aptonline)** for his work on the ulanzi hardware
-- **[wsbtak](https://github.com/wsbtak)** for the work on the ulanzi hardware
+- **[aptonline](https://github.com/aptonline)** for his work on the Ulanzi hardware
+- **[wsbtak](https://github.com/wsbtak)** for the work on the Ulanzi hardware
 - **[ofirsnb](https://github.com/ofirsnb)** for his contributions
 - **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts and user support
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
 - **[geekofweek](https://github.com/geekofweek)** fixed sample YAML
-- **everbody** that found bugs/issues and reported them!
+- **Everybody** who found bugs/issues and reported them!
 
 ## Special thanks to all sponsors
