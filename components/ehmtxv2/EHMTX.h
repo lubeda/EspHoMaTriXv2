@@ -22,7 +22,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2023.6.2";
+static const char *const EHMTX_VERSION = "2023.6.3";
 static const char *const TAG = "EHMTXv2";
 #ifndef USE_ESP8266
 static const char *const EHMTX_LOGO = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
@@ -62,7 +62,6 @@ namespace esphome
     uint8_t brightness_;
     uint32_t boot_anim = 0;
     uint8_t screen_pointer;
-    bool week_starts_monday;
     bool show_day_of_week;
 
     std::vector<EHMTXNextScreenTrigger *> on_next_screen_triggers_;
@@ -81,16 +80,12 @@ namespace esphome
     void dump_config();
 #ifdef USE_ESP32
     PROGMEM Color text_color, alarm_color, gauge_color, gauge_bgcolor, rindicator_color,  lindicator_color,clock_color, today_color, weekday_color, rainbow_color;
-    PROGMEM std::string time_fmt;
-    PROGMEM std::string date_fmt;
     PROGMEM Color bitmap[256];
     PROGMEM Color sbitmap[64];
     PROGMEM EHMTX_Icon *icons[MAXICONS];
 #endif
 
 #ifdef USE_ESP8266
-    std::string time_fmt;
-    std::string date_fmt;
     Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, clock_color, today_color, weekday_color, rainbow_color;
     EHMTX_Icon *icons[MAXICONS];
 #endif
@@ -102,25 +97,15 @@ namespace esphome
     bool display_gauge;
     bool is_running = false;
     bool show_date;
-    #ifdef EHMTXv2_USE_RTL
-      bool rtl;
-    #endif
     uint8_t gauge_value;
     uint16_t clock_time;
     uint16_t scroll_step;
-    uint8_t scroll_count;
 
     EHMTX_queue *queue[MAXQUEUE];
     addressable_light::AddressableLightDisplay *display;
     time::RealTimeClock *clock;
 
-    int8_t default_yoffset, default_xoffset;
-    int8_t special_yoffset, special_xoffset;
     bool show_seconds;
-    uint16_t scroll_interval;  // ms to between scrollsteps
-    uint16_t rainbow_interval; // ms to between scrollsteps
-    uint16_t frame_interval;   // ms to next_frame()
-    uint16_t clock_interval;
     uint16_t hold_time; // seconds display of screen_time to extend
 
     uint8_t icon_count; // max iconnumber -1
@@ -147,31 +132,17 @@ namespace esphome
     void skip_screen();
     void hold_screen(int t = 30);
     void set_display(addressable_light::AddressableLightDisplay *disp);
-    void set_clock_interval(uint16_t t = 90);
     void set_hold_time(uint16_t t = 30);
     void set_clock_time(uint16_t t = 10);
     void set_show_day_of_week(bool b=true);
     void set_show_seconds(bool b=false);
     void set_show_date(bool b=true);
-    #ifdef EHMTXv2_USE_RTL
-      void set_rtl(bool b=false);
-    #endif
-    void set_font_offset(int8_t x, int8_t y);
-    void set_week_start(bool b);
     void set_brightness(int b);
-    void set_default_font_offset(int8_t x, int8_t y);
-    void set_special_font_offset(int8_t x, int8_t y);
     void set_display_on();
     void set_display_off();
     void set_clock(time::RealTimeClock *clock);
     void set_default_font(display::Font *font);
     void set_special_font(display::Font *font);
-    void set_frame_interval(uint16_t interval);
-    void set_scroll_interval(uint16_t interval);
-    void set_rainbow_interval(uint16_t interval);
-    void set_scroll_count(uint8_t count);
-    void set_time_format(std::string s);
-    void set_date_format(std::string s);
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
