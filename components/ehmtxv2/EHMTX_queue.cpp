@@ -120,7 +120,7 @@ namespace esphome
 
   void EHMTX_queue::update_screen()
   {
-    if (millis() - this->config_->last_rainbow_time >= this->config_->rainbow_interval)
+    if (millis() - this->config_->last_rainbow_time >= EHMTXv2_RAINBOW_INTERVALL)
     {
       this->config_->hue_++;
       if (this->config_->hue_ == 360)
@@ -143,8 +143,8 @@ namespace esphome
   void EHMTX_queue::draw()
   {
     display::Font *font = this->default_font ? this->config_->default_font : this->config_->special_font;
-    int8_t yoffset = this->default_font ? this->config_->default_xoffset : this->config_->special_xoffset;
-    int8_t xoffset = this->default_font ? this->config_->default_yoffset : this->config_->special_yoffset;
+    int8_t yoffset = this->default_font ? EHMTXv2_DEFAULT_FONT_OFFSET_Y : EHMTXv2_SPECIAL_FONT_OFFSET_Y;
+    int8_t xoffset = this->default_font ? EHMTXv2_DEFAULT_FONT_OFFSET_X : EHMTXv2_SPECIAL_FONT_OFFSET_X;
     int8_t extraoffset = 0;
     Color color_;
     if (this->config_->is_running)
@@ -201,7 +201,7 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_CLOCK) ? this->config_->rainbow_color : this->config_->clock_color;
           time_t ts = this->config_->clock->now().timestamp;
-          this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, this->config_->time_fmt.c_str(),
+          this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
                                            this->config_->clock->now());
           if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
           {
@@ -223,7 +223,7 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_DATE) ? this->config_->rainbow_color : this->config_->clock_color;
           time_t ts = this->config_->clock->now().timestamp;
-          this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, this->config_->date_fmt.c_str(),
+          this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER,EHMTXv2_DATE_FORMAT ,
                                            this->config_->clock->now());
           if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
           {
@@ -341,8 +341,8 @@ namespace esphome
       }
       else
       {
-        max_steps = (this->config_->scroll_count + 1) * (width - startx) + this->config_->scroll_count * this->pixels_;
-        display_duration = ceil((max_steps * this->config_->scroll_interval) / 1000);
+        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
         this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
       }
       break;
@@ -357,8 +357,8 @@ namespace esphome
       }
       else
       {
-        max_steps = (this->config_->scroll_count + 1) * (width - startx) + this->config_->scroll_count * this->pixels_;
-        display_duration = ceil((max_steps * this->config_->scroll_interval) / 1000);
+        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
         this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
       }
       break;

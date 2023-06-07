@@ -21,7 +21,7 @@ There are some “RGB-matrices” status displays/clocks out there, the commerci
 - [LaMetric](https://lametric.com/en-US/) commercial ~ €199
 - [Ulanzi TC001](https://www.aliexpress.com/item/1005005008682055.html) commercial ~ €50
 - [AWTRIX](https://awtrixdocs.blueforcer.de/#/) (project has been discontinued after more than 4 years in August 2022)
-- [Pixel It](https://docs.bastelbunker.de/pixelit/) (project is under active development)
+- [Pixel It](https://pixelit-project.github.io/) (project is under active development)
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of AWTRIX, optimized for the Ulanzi TC001 hardware
 
 The solutions have their pros and cons. I tried some and used AWTRIX for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of MQTT or uploading files to the ESP.
@@ -34,7 +34,7 @@ Based on a 8x32 RGB matrix, it displays a clock, the date and up to 24 other 'sc
 
 ### State
 
-After the [old](https://github.com/lubeda/EsphoMaTrix) component became favorite, there were some feature requests, which indicated that my old code was a mess. I reworked the whole code and restructured it, so it is now hopefully more extensible.
+After the [old](https://github.com/lubeda/EsphoMaTrix) component became favorite, there were some feature requests, which indicated that my old code was a mess. I reworked the whole code and restructured it, so it is now hopefully more extensible. **This software is still heavily in progress, before updating check the [breaking changes](#breaking-changes)**
 
 ### Advice
 
@@ -504,7 +504,6 @@ ehmtxv2:
   scroll_count: 2 # scroll long text at least two times
   scroll_interval: 80 # milliseconds
   rainbow_interval: 32 # milliseconds
-  frame_interval: 192 # milliseconds
   icons: 
   .....
 ```
@@ -543,9 +542,9 @@ ehmtxv2:
 
 **week_start_monday** (optional, bool): default Monday is first day of week, false => Sunday
 
-**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html)
+**default_clock_font** (optional, boolean): If true, use the default font for clock and date otherwise use the special font. (default = `true`)
 
-**frame_interval** (optional, ms): the interval in ms to display the next animation/icon frame (default = 192), should be a multiple of the [display](https://esphome.io/components/display/addressable_light.html). It can be overwritten per icon/GIF, see [icons](#icons-and-animations) parameter `frame_duration`
+**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html)
 
 **clock_interval** (optional, s): the interval in seconds to force the clock display. By default, the clock screen, if any, will be displayed according to the position in the queue. **If you set the clock_interval close to the screen_time of the clock, you will only see the clock!** (default=0)
 
@@ -1066,6 +1065,15 @@ sensor:
 
 ## Breaking changes
 
+### 2023.6.3
+
+**Due to this change these values are fixed, e.g. you can not change the date or timeformat during runtime anymore!!**
+
+- changed *_interval to be set only on compile time
+- change scroll_count to be set only on compile time
+- change font_offsets to be set only on compile time
+- change date/time_format to be set only on compile time
+
 ### 2023.5.0
 
 - renamed `indicator` to `rindicator` because there is now also a `lindicator`
@@ -1101,9 +1109,10 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[aptonline](https://github.com/aptonline)** for his work on the Ulanzi hardware
 - **[wsbtak](https://github.com/wsbtak)** for the work on the Ulanzi hardware
 - **[ofirsnb](https://github.com/ofirsnb)** for his contributions
-- **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts and user support
+- **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts and user support and work on the wiki
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
+- **[hco](https://github.com/hco)** fixing documentation
 - **[geekofweek](https://github.com/geekofweek)** fixed sample YAML
 - **Everybody** who found bugs/issues and reported them!
 

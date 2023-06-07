@@ -1,3 +1,7 @@
+P/1.1 200 OK"
+2023-06-04 12:08:17.772 ERROR (MainThread) [homeassistant.components.automation] Failed to generate automation from blueprint: Invalid blueprint: Only one type can be specified. Found select, default for dictionary value @ data['blueprint']['input']['icon_name']['selector']. Got {'select': {'mode': 'dropdown', 'options': ['error', 'github', 'precipitation', 'nina', 'waschmaschine', 'lamp', 'headphone', 'print3d', 'internet', 'speaker', 'alien', 'temp', 'garage', 'door', 'wind', 'rain', 'phone', 'fire', 'tv', 'frost', 'muell', 'cookit', 'nature', 'work', 'bike', 'amazon', 'post', 'power', 'solar', 'yoga', 'startrek', 'energy', 'sun', 'diesel', 'benzine10', 'vacuum', 'rainprecip', 'iss', 'thunder', 'nina_warning', 'mic', 'birthday', 'firework', 'coffee', 'lightning', '...
+2023-06-04 12:08:17.772 ERROR (MainThread) [homeassistant.components.automation] Failed to generate automation from blueprint: Failed to load blueprint: Unable to find lubeda/EHMTX_extended_state.yaml
+
 # introduction
 
 **Skill-level:** advanced
@@ -60,6 +64,38 @@ Take care that the indentation is correct
 ## step 3
 
 Save the changed file and reload your automations
+
+## step 4
+
+After checking if it is working, repeat the procedure for all blueprints using the icon dropdown
+
+## sample for manual automation
+
+this automation example display states with icons and a rainbow colored text for state changes of multiple icons.
+The icon is selected by the `trigger.id`, the text is dynamicaly build by the triggered state.
+
+```yaml
+alias: EHMTX State display
+trigger:
+  - platform: state
+    entity_id: sensor.001cac04_wind_speed
+    id: wind
+  - platform: state
+    entity_id: sensor.tankerkoenig_super
+    id: supere10
+condition: []
+action:
+  - service: esphome.ulanzi_rainbow_icon_screen
+    data:
+      icon_name: "{{trigger.id}}"
+      screen_time: 12
+      lifetime: 2
+      text: '{{trigger.to_state.attributes.friendly_name}}: {{trigger.to_state.state}}
+          {{trigger.to_state.attributes.unit_of_measurement}}|replace ("€","¼")| replace ("°C","¬")|replace ("℃","¬")| replace ("°F","¯")|replace ("℉","¯")|replace ("₴","¾")|replace ("₿","¨")|replace ("₩","½")|replace ("Ξ","¸")'
+      default_font: true
+mode: parallel
+max: 2
+```
 
 ## warnings
 
