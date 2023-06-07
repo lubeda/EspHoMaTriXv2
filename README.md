@@ -21,7 +21,7 @@ There are some “RGB-matrices” status displays/clocks out there, the commerci
 - [LaMetric](https://lametric.com/en-US/) commercial ~ €199
 - [Ulanzi TC001](https://www.aliexpress.com/item/1005005008682055.html) commercial ~ €50
 - [AWTRIX](https://awtrixdocs.blueforcer.de/#/) (project has been discontinued after more than 4 years in August 2022)
-- [Pixel It](https://docs.bastelbunker.de/pixelit/) (project is under active development)
+- [Pixel It](https://pixelit-project.github.io/) (project is under active development)
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of AWTRIX, optimized for the Ulanzi TC001 hardware
 
 The solutions have their pros and cons. I tried some and used AWTRIX for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of MQTT or uploading files to the ESP.
