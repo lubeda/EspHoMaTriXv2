@@ -9,4 +9,6 @@
 
 - [Ulanzi upside-down](rotate-ULANZI-display-180-degrees)
 - [Use all icons in your blueprint](use-icons-in-blueprints)
+- [Time & Date Formats](time-format)
 - [Blueprints for easier configuration](blueprints)
+
