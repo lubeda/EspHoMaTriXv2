@@ -34,7 +34,7 @@ Based on a 8x32 RGB matrix, it displays a clock, the date and up to 24 other 'sc
 
 ### State
 
-After the [old](https://github.com/lubeda/EsphoMaTrix) component became favorite, there were some feature requests, which indicated that my old code was a mess. I reworked the whole code and restructured it, so it is now hopefully more extensible.
+After the [old](https://github.com/lubeda/EsphoMaTrix) component became favorite, there were some feature requests, which indicated that my old code was a mess. I reworked the whole code and restructured it, so it is now hopefully more extensible. **This software is still heavily in progress, before updating check the [breaking changes](#breaking-changes)**
 
 ### Advice
 
@@ -1065,6 +1065,15 @@ sensor:
 
 ## Breaking changes
 
+### 2023.6.3
+
+**Due to this change these values are fixed, e.g. you can not change the date or timeformat during runtime anymore!!**
+
+- changed *_interval to be set only on compile time
+- change scroll_count to be set only on compile time
+- change font_offsets to be set only on compile time
+- change date/time_format to be set only on compile time
+
 ### 2023.5.0
 
 - renamed `indicator` to `rindicator` because there is now also a `lindicator`
@@ -1103,6 +1112,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts and user support and work on the wiki
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
+- **[hco](https://github.com/hco)** fixing documentation
 - **[geekofweek](https://github.com/geekofweek)** fixed sample YAML
 - **Everybody** who found bugs/issues and reported them!
 
