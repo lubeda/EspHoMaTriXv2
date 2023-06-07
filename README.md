@@ -1100,7 +1100,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[aptonline](https://github.com/aptonline)** for his work on the Ulanzi hardware
 - **[wsbtak](https://github.com/wsbtak)** for the work on the Ulanzi hardware
 - **[ofirsnb](https://github.com/ofirsnb)** for his contributions
-- **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts and user support
+- **[darkpoet78](https://github.com/darkpoet78/MatrixClockFonts)** for his work on optimized fonts and user support and work on the wiki
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
 - **[geekofweek](https://github.com/geekofweek)** fixed sample YAML
