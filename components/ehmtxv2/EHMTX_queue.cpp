@@ -326,14 +326,20 @@ namespace esphome
     {
       this->config_->display->get_text_bounds(0, 0, text.c_str(), this->config_->special_font, display::TextAlign::LEFT, &x, &y, &w, &h);
     }
-
+    
     this->pixels_ = w;
+    
     this->centerx_ = 0;
 
     switch (this->mode)
     {
     case MODE_RAINBOW_TEXT:
     case MODE_TEXT_SCREEN:
+    #ifdef EHMTXv2_SCROLL_SMALL_TEXT
+        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
+        this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+    #else
       if (this->pixels_ < 32)
       {
         this->screen_time_ = screen_time;
@@ -345,6 +351,7 @@ namespace esphome
         display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
         this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
       }
+    #endif
       break;
     case MODE_RAINBOW_ICON:
     case MODE_BITMAP_SMALL:
