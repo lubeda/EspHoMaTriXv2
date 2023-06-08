@@ -4,6 +4,7 @@
 
 - [Display a timer on your ehmtxv2](display-timer)
 - [weather display](weather-display)
+- [matrix used as circle](rotating-text.md)
 
 ## Configuration
 
