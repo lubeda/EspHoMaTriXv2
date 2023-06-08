@@ -1114,7 +1114,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
 - **[hco](https://github.com/hco)** fixing documentation
-- **[geekofweek](https://github.com/geekofweek)** fixed sample YAML
+- **[geekofweek](https://github.com/geekofweek)** fixed sample YAML, cleanup documentation
 - **Everybody** who found bugs/issues and reported them!
 
 ## Special thanks to all sponsors
