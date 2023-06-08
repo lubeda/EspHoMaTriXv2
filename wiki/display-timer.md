@@ -1,4 +1,4 @@
-# introduction
+# Introduction
 
 **Skill-level:** medium
 

@@ -8,7 +8,6 @@ namespace esphome
     this->config_ = config;
     this->endtime = 0;
     this->last_time = 0;
-    this->centerx_ = 0;
     this->screen_time_ = 0;
     this->mode = MODE_EMPTY;
     this->icon_name = "";
@@ -95,26 +94,30 @@ namespace esphome
     }
     width -= startx;
 
-    #ifdef EHMTXv2_USE_RTL
-      if (this->pixels_ < width)
-      {
-        result = 32 - ceil((width - this->pixels_) / 2);
-      }
-      else
-      {
+#ifdef EHMTXv2_USE_RTL
+    if (this->pixels_ < width)
+    {
+      result = 32 - ceil((width - this->pixels_) / 2);
+    }
+    else
+    {
 
-        result = startx + this->config_->scroll_step;
-      }
-    #else
+      result = startx + this->config_->scroll_step;
+    }
+#else
+  #ifdef EHMTXv2_SCROLL_SMALL_TEXT
+            result = startx - this->config_->scroll_step + width;
+  #else
       if (this->pixels_ < width)
-      {
-        result = startx + ceil((width - this->pixels_) / 2);
-      }
-      else
-      {
-        result = startx - this->config_->scroll_step + width;
-      }
-    #endif
+        {
+          result = startx + ceil((width - this->pixels_) / 2);
+        }
+        else
+        {
+          result = startx - this->config_->scroll_step + width;
+        }
+  #endif
+#endif
     return result;
   }
 
@@ -171,13 +174,13 @@ namespace esphome
           extraoffset = TEXTSTARTOFFSET;
         }
         color_ = this->text_color;
-        #ifdef EHMTXv2_USE_RTL
+#ifdef EHMTXv2_USE_RTL
           this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                         this->text.c_str());
-        #else
+#else
           this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                         this->text.c_str());
-        #endif
+#endif
         if (this->config_->display_gauge)
         {
           this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
@@ -255,13 +258,13 @@ namespace esphome
         }
 
         color_ = (this->mode == MODE_RAINBOW_ICON) ? this->config_->rainbow_color : this->text_color;
-        #ifdef EHMTXv2_USE_RTL
+#ifdef EHMTXv2_USE_RTL
           this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                         this->text.c_str());
-        #else
+#else
           this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                         this->text.c_str());
-        #endif
+#endif
         if (this->config_->display_gauge)
         {
           this->config_->display->image(2, 0, this->config_->icons[this->icon]);
@@ -286,13 +289,13 @@ namespace esphome
           extraoffset += 2;
         }
         color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
-        #ifdef EHMTXv2_USE_RTL
+#ifdef EHMTXv2_USE_RTL
           this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                         this->text.c_str());
-        #else
+#else
             this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                         this->text.c_str());
-        #endif
+#endif
         break;
       default:
         break;
@@ -329,21 +332,18 @@ namespace esphome
     
     this->pixels_ = w;
     
-    this->centerx_ = 0;
-
     switch (this->mode)
     {
     case MODE_RAINBOW_TEXT:
     case MODE_TEXT_SCREEN:
-    #ifdef EHMTXv2_SCROLL_SMALL_TEXT
+#ifdef EHMTXv2_SCROLL_SMALL_TEXT
         max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
         display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
         this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
-    #else
+#else
       if (this->pixels_ < 32)
       {
         this->screen_time_ = screen_time;
-        this->centerx_ = ceil((32 - this->pixels_) / 2);
       }
       else
       {
@@ -351,7 +351,7 @@ namespace esphome
         display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
         this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
       }
-    #endif
+#endif
       break;
     case MODE_RAINBOW_ICON:
     case MODE_BITMAP_SMALL:
@@ -360,7 +360,6 @@ namespace esphome
       if (this->pixels_ < 23)
       {
         this->screen_time_ = screen_time;
-        this->centerx_ = ceil((23 - this->pixels_) / 2);
       }
       else
       {
