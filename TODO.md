@@ -13,6 +13,7 @@
 - [x] refreshing an icon screen should extend the display time
 - [x] size of rindicator and alarm
 - [x] center text
+- [x] scroll text even if small
 - [x] alarm independent of screen
 - [x] del_screen with * and filter by type, do delete all clocks etc.
 - [x] force_screen with * and filter by type, do delete all clocks etc.
