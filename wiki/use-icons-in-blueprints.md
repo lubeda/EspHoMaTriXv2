@@ -1,8 +1,4 @@
-P/1.1 200 OK"
-2023-06-04 12:08:17.772 ERROR (MainThread) [homeassistant.components.automation] Failed to generate automation from blueprint: Invalid blueprint: Only one type can be specified. Found select, default for dictionary value @ data['blueprint']['input']['icon_name']['selector']. Got {'select': {'mode': 'dropdown', 'options': ['error', 'github', 'precipitation', 'nina', 'waschmaschine', 'lamp', 'headphone', 'print3d', 'internet', 'speaker', 'alien', 'temp', 'garage', 'door', 'wind', 'rain', 'phone', 'fire', 'tv', 'frost', 'muell', 'cookit', 'nature', 'work', 'bike', 'amazon', 'post', 'power', 'solar', 'yoga', 'startrek', 'energy', 'sun', 'diesel', 'benzine10', 'vacuum', 'rainprecip', 'iss', 'thunder', 'nina_warning', 'mic', 'birthday', 'firework', 'coffee', 'lightning', '...
-2023-06-04 12:08:17.772 ERROR (MainThread) [homeassistant.components.automation] Failed to generate automation from blueprint: Failed to load blueprint: Unable to find lubeda/EHMTX_extended_state.yaml
-
-# introduction
+# Introduction
 
 **Skill-level:** advanced
 
