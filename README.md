@@ -2,17 +2,17 @@
 
 ## Important information
 
-If you like my work, please donate me a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!!
+If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!
 
 ## Introduction
 
-A simple but very flexible DIY status display, built with a flexible 8x32 RGB LED panel, e.g., the ULANZI TC001 implemented with [esphome.io](https://esphome.io)
+An easy to setup and extensible DIY LED Matrix status display built with a 8x32 RGB LED panel, (Example: ULANZI TC001) all implemented with [esphome.io](https://esphome.io)
 
 ![sample image](./images/sample.png)
 
-If you like to tinker, you can use the custom component even as a satellite voice control microphone for home assistant. [Youtube](https://www.youtube.com/watch?v=CsOir14DCbM)
+If you like to cuztomize and tinker you can use this custom component as a satellite voice control microphone for home assistant. [Youtube](https://www.youtube.com/watch?v=CsOir14DCbM)
 
-Special use cases or tips and tricks can be found in the [WIKI](https://github.com/lubeda/EspHoMaTriXv2/wiki)
+For additioanl tips and tricks be sure to check out the [WIKI](https://github.com/lubeda/EspHoMaTriXv2/wiki)
 
 ## Background
 
@@ -24,9 +24,7 @@ There are some “RGB-matrices” status displays/clocks out there, the commerci
 - [Pixel It](https://pixelit-project.github.io/) (project is under active development)
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of AWTRIX, optimized for the Ulanzi TC001 hardware
 
-The solutions have their pros and cons. I tried some and used AWTRIX for a long time. But the cons are so big (in my opinion) that I started an esphome.io variant. Targeted to an optimized Home Assistant integration, without paid blueprints and the need of MQTT or uploading files to the ESP.
-
-But it had to be extensible, e.g., for the use as a pool thermometer or as a media player. All done by the magical power of [esphome.io](https://esphome.io).
+All of the various solutions have their pros and cons. I tried some and used AWTRIX for a long time, but I found it lacking in a lot of ways (in my opinion,) so I started work on an esphome.io variant. Targeted for an optimized and extensible Home Assistant integration without paid blueprints, MQTT broker requirement, or the need to upload files to the ESP board.
 
 ### Features
 
@@ -34,17 +32,18 @@ Based on a 8x32 RGB matrix, it displays a clock, the date and up to 24 other 'sc
 
 ### State
 
-After the [old](https://github.com/lubeda/EsphoMaTrix) component became favorite, there were some feature requests, which indicated that my old code was a mess. I reworked the whole code and restructured it, so it is now hopefully more extensible. **This software is still heavily in progress, before updating check the [breaking changes](#breaking-changes)**
+After the [v1](https://github.com/lubeda/EsphoMaTrix) component became popular and receieved additonal feature requests it became clear that yhe v1 [v1](https://github.com/lubeda/EsphoMaTrix)code was a bit of a mess. I reworked all of the code and restructured it to hopefully be much more extensible. 
+**This software is still heavily in development, before updating please check the [Breaking Changes](#breaking-changes)**
 
 ### Advice
 
-If you have the choice to use an **ESP32 device**, there are conditions where the RAM size is too limited in a ESO8266 device, so I stripped out some features and these boards, e.g., the bitmap_screen.
+It is highly recomended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESO8266 device** so some of the features had to be removed for these boards (Example: bitmap_screen).
 
 ## How to use
 
 ### The easy way
 
-There is a little hype around the Ulanzi TC001 pixel clock. The easy way works with the Ulanzi TC001 hardware. For more customization and other hardware, look [here](#the-funny-but-more-elaborate-way).
+There is a little hype around the Ulanzi TC001 pixel clock. The easy way works with the Ulanzi TC001 hardware. For more customization and other hardware, look [here](#the-advanced-way).
 
 In easy mode you'll have a clock with auto brightness control and after step 3 you can send states to the display and toggle on or off additional screen elements.
 
@@ -79,7 +78,7 @@ and after a while (~30 seconds) it should display the correct time.
 
 If not, check the esphome logs for further investigations.
 
-### The funny but more elaborate way
+### The advanced way
 
 This is for the more advanced users. If you understand the concept of esphome, you can display nearly everything with this component. You can also create your own customized esphome based display with multiple sensors, or even use it as a microphone for the new [voice assist](https://esphome.io/components/voice_assistant.html) feature from home assistant.
 
@@ -579,7 +578,7 @@ See [icon details](#icons-and-animations)
 
 ## Control your display
 
-Numerous features are accessible with services from home assistant and lambdas you can use in your YAML.
+Numerous features are accessible with services from home assistant and lambdas that you can use in your YAML.
 
 ### Public functions/services
   
@@ -596,8 +595,8 @@ Numerous features are accessible with services from home assistant and lambdas y
 |`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper-right corner|
 |`show_rindicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
 |`set_clock_color`|"r", "g", "b"|set the default color for the clock/date display|
-|`set_today_color"`|"r", "g", "b"|set the special color for today in the day of week line|
-|`set_weekday_color"`|"r", "g", "b"|set the default color in the day of week line|
+|`set_today_color`|"r", "g", "b"|set the special color for today in the day of week line|
+|`set_weekday_color`|"r", "g", "b"|set the default color in the day of week line|
 |`del_screen`|"icon_name", “mode”|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
 |`force_screen`|"icon_name", “mode”|displays the selected the specified icon screen from the queue, the [mode](#modes) is a filter|
 |`full_screen`|"icon_name", "lifetime", "screen_time"|show the specified 8x32 icon as full screen|
@@ -929,7 +928,7 @@ max: 10
 
 ## Tips
 
-### Display precision after home assistant 2023.3.0
+### Display sensor precision after home assistant 2023.3.0
 
 See [templating](https://www.home-assistant.io/docs/configuration/templating/#states) for possibilities to optimize the output
 e.g.
@@ -1006,9 +1005,9 @@ action:
       ...
 ```
 
-### Integrate in Home Assistant UI
+### Integrate into Home Assistant UI
 
-Add entities to the Home Assistant UI for interactive control of your display
+Add entities to the Home Assistant UI for interactive control of the display
 
 #### Brightness
 
@@ -1046,7 +1045,7 @@ switch:
 
 ### automatic brightness
 
-Awtrix and PixelIt have hard-coded functionality. EHMTX is also capable of building something like that by lambdas. But this is all your freedom. See the Ulanzi simple YAML as a guide.
+Awtrix and PixelIt have hard-coded functionality. EHMTX is also capable of building something like that with lambdas. Feel free to expierement as you see fit. See the Ulanzi simple YAML as a guide.
 
 Example: automatic brightness control with a bh1570 sensor
 
