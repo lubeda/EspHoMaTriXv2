@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023.6.4
+
+- introduced `scroll_small_text`  
+
 ## 2023.6.3
 
 - introduced `default_clock_font: true`  
