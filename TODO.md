@@ -2,7 +2,8 @@
 
 ## function
 
-- [ ] screen_time on ms sec base (preparing ticks base next_action) ## uint16_t ticks =  ceil(_sec /  this->config_->display.get_update_interval());
+- [ ] screen_time on ms sec base (preparing ticks base next_action) 
+- [ ] uint8_t ticks_per_second =  ceil( 1000 /  this->config_->display.get_update_interval());
 - [ ] fade in/out on screen change
 - [x] scroll left to right
 - [ ] seconds point moveable

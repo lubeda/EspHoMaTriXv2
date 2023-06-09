@@ -94,6 +94,7 @@ namespace esphome
     int display_rindicator;
     int display_lindicator;
     int display_alarm;
+    uint8_t ticks_per_second=62;
     bool display_gauge;
     bool is_running = false;
     bool show_date;
@@ -113,6 +114,8 @@ namespace esphome
     unsigned long last_rainbow_time;
     unsigned long last_anim_time;
     time_t next_action_time = 0; // when is the next screen change
+    uint32_t tick_next_action = 0; // when is the next screen change
+    uint32_t ticks_ = 0; // when is the next screen change
 
     void remove_expired_queue_element();
     uint8_t find_oldest_queue_element();
