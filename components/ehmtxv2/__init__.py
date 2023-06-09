@@ -93,6 +93,7 @@ CONF_ON_ADD_SCREEN = "on_add_screen"
 CONF_ON_EXPIRED_SCREEN= "on_expired_screen"
 CONF_SHOW_SECONDS = "show_seconds"
 CONF_SCROLL_SMALL_TEXT = "scroll_small_text"
+CONF_ALLOW_EMPTY_SCREEN = "allow_empty_screen"
 CONF_WEEK_START_MONDAY = "week_start_monday"
 CONF_ICON = "icon_name"
 CONF_TEXT = "text"
@@ -132,6 +133,9 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.boolean,
     cv.Optional(
         CONF_SCROLL_SMALL_TEXT, default=False
+    ): cv.boolean,
+    cv.Optional(
+        CONF_ALLOW_EMPTY_SCREEN, default=False
     ): cv.boolean,
     cv.Optional(
         CONF_TIME_FORMAT, default="%H:%M"
@@ -387,6 +391,7 @@ async def to_code(config):
     cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])    
     cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])    
     cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT",config[CONF_SCROLL_SMALL_TEXT])    
+    cg.add_define("EHMTXv2_ALLOW_EMPTY_SCREEN",config[CONF_ALLOW_EMPTY_SCREEN])
 
     if config[CONF_RTL]:
         cg.add_define("EHMTXv2_USE_RTL")    
