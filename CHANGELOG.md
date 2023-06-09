@@ -3,6 +3,7 @@
 ## 2023.6.4
 
 - introduced `scroll_small_text`  
+- introduced `allow_empty_screen`
 
 ## 2023.6.3
 
