@@ -135,7 +135,7 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_SCROLL_SMALL_TEXT, default=False
     ): cv.boolean,
     cv.Optional(
-        CONF_ALLOW_EMPTY_SCREEN, default=True
+        CONF_ALLOW_EMPTY_SCREEN, default=False
     ): cv.boolean,
     cv.Optional(
         CONF_TIME_FORMAT, default="%H:%M"
