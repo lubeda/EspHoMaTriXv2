@@ -527,6 +527,8 @@ ehmtxv2:
 
 **scroll_small_text** (optional, bool): normally small text is centered on the display if possible, with this set to `true` even small text is scrolled in `text_screen` and `rainbow_text_screen` (default: false)
 
+**allow_empty_screen** (optional, bool): When the queue for messages to be displayed is empty and the time screen has been removed, the time screen is normally reactivated. This option can be used to disable this behavior by setting `allow_empty_screen` to `true`. (default: false)
+
 **rtl** (optional, boolean): if `true` write text (but only the scroll direction, the words and numbers aren't changed!) from right to left (Arabic, Hebrew etc.). Default is `false`
 
 **matrix_component** (required, ID): ID of the addressable display
