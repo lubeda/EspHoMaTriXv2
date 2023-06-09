@@ -538,11 +538,7 @@ namespace esphome
         }
         else
         {
-          if(EHMTXv2_ALLOW_EMPTY_SCREEN)
-          {
-            ESP_LOGW(TAG, "tick: nothing to do.");
-          }
-          else
+          if(!EHMTXv2_ALLOW_EMPTY_SCREEN)
           {
             ESP_LOGW(TAG, "tick: nothing to do. Restarting clock display!");
             this->clock_screen(24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
