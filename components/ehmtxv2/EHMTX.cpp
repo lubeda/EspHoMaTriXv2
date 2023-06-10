@@ -244,6 +244,30 @@ namespace esphome
     }
   }
 
+#ifndef USE_ESP8266
+  void EHMTX::color_gauge(std::string text)
+  {
+    ESP_LOGD(TAG, "color_gauge: %s",text.c_str());
+    const size_t CAPACITY = JSON_ARRAY_SIZE(8);
+    StaticJsonDocument<CAPACITY> doc;
+    deserializeJson(doc, text);
+    JsonArray array = doc.as<JsonArray>();
+    uint8_t i=0;
+    for (JsonVariant v : array)
+    {
+      uint16_t buf = v.as<int>();
+
+      unsigned char b = (((buf)&0x001F) << 3);
+      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      Color c = Color(r, g, b);
+      this->cgauge[i++] = c;
+      this->display_gauge = true;
+    }
+  }
+#endif
+
+#ifdef USE_ESP8266
   void EHMTX::draw_gauge()
   {
     if (this->display_gauge)
@@ -253,6 +277,18 @@ namespace esphome
       this->display->line(0, 7, 0, this->gauge_value, this->gauge_color);
     }
   }
+#else
+  void EHMTX::draw_gauge()
+  {
+    if (this->display_gauge)
+    {
+      for (uint8_t y=0;y<8;y++){
+        this->display->draw_pixel_at(0, y, this->cgauge[y]);
+      }
+      this->display->line(1, 7, 1, 0, esphome::display::COLOR_OFF);
+    }
+  }
+#endif
 
   void EHMTX::setup()
   {
@@ -295,6 +331,7 @@ namespace esphome
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
 #ifndef USE_ESP8266
+    register_service(&EHMTX::color_gauge, "color_gauge", {"colors"});
     register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"icon", "lifetime", "screen_time"});
     register_service(&EHMTX::bitmap_small, "bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
 #endif

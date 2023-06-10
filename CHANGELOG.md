@@ -2,7 +2,8 @@
 
 ## 2023.6.5
 
-- introduced `blend_steps: `
+- introduced `blend_steps: 16`
+- introduced service color_gauge (WIP)
 
 ## 2023.6.4
 

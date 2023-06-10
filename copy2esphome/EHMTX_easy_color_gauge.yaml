@@ -1,0 +1,88 @@
+blueprint:
+  name: |-
+    ehmtxv2: colored bar/gauge at the left side
+  description: |-
+    feed this function with eight rgb565 values, to convert from rgb888 see this:
+    {{ (((red | bitwise_and(0xf8)) / 8) | int ) * 2048 + (((green | bitwise_and(0xfC)) / 4 )| int) * 32 + ((blue | bitwise_and(0xf8)) / 8 )| int }}
+  domain: script
+
+  input:
+    ehmtx_device:
+      name: Which EspHoMaTriX-device to display at?
+      selector:
+        device:
+          integration: esphome
+    pix0_color:
+      name: Color of pixel 1
+      selector:
+        color_rgb:
+      default: [240, 24, 240]
+    pix1_color:
+      name: Color of pixel 2
+      selector:
+        color_rgb:
+      default: [240, 240, 24]
+    pix2_color:
+      name: Color of pixel 3
+      selector:
+        color_rgb:
+      default: [24, 24, 240]
+    pix3_color:
+      name: Color of pixel 4
+      selector:
+        color_rgb:
+      default: [240, 24, 24]
+    pix4_color:
+      name: Color of pixel 5
+      selector:
+        color_rgb:
+      default: [24, 240, 24]
+    pix5_color:
+      name: Color of pixel 6
+      selector:
+        color_rgb:
+      default: [120, 240, 240]
+    pix6_color:
+      name: Color of pixel 7
+      selector:
+        color_rgb:
+      default: [240, 120, 240]
+    pix7_color:
+      name: Color of pixel 8
+      selector:
+        color_rgb:
+      default: [240, 120, 120]
+
+variables:
+  display: !input ehmtx_device
+  pix0: !input pix0_color
+  pix1: !input pix1_color
+  pix2: !input pix2_color
+  pix3: !input pix3_color
+  pix4: !input pix4_color
+  pix5: !input pix5_color
+  pix6: !input pix6_color
+  pix7: !input pix7_color
+  c0: |-
+    {{ (((pix0[0] | bitwise_and(0xf8)) / 8) | int ) * 2048 + (((pix0[1] | bitwise_and(0xfC)) / 4 )| int) * 32 + ((pix0[2] | bitwise_and(0xf8)) / 8 )| int }}
+  c1: |-
+    {{ (((pix1[0] | bitwise_and(0xf8)) / 8) | int ) * 2048 + (((pix1[1] | bitwise_and(0xfC)) / 4 )| int) * 32 + ((pix1[2] | bitwise_and(0xf8)) / 8 )| int }}
+  c2: |-
+    {{ (((pix2[0] | bitwise_and(0xf8)) / 8) | int ) * 2048 + (((pix2[1] | bitwise_and(0xfC)) / 4 )| int) * 32 + ((pix2[2] | bitwise_and(0xf8)) / 8 )| int }}
+  c3: |-
+    {{ (((pix3[0] | bitwise_and(0xf8)) / 8) | int ) * 2048 + (((pix3[1] | bitwise_and(0xfC)) / 4 )| int) * 32 + ((pix3[2] | bitwise_and(0xf8)) / 8 )| int }}
+  c4: |-
+    {{ (((pix4[0] | bitwise_and(0xf8)) / 8) | int ) * 2048 + (((pix4[1] | bitwise_and(0xfC)) / 4 )| int) * 32 + ((pix4[2] | bitwise_and(0xf8)) / 8 )| int }}
+  c5: |-
+    {{ (((pix5[0] | bitwise_and(0xf8)) / 8) | int ) * 2048 + (((pix5[1] | bitwise_and(0xfC)) / 4 )| int) * 32 + ((pix5[2] | bitwise_and(0xf8)) / 8 )| int }}
+  c6: |-
+    {{ (((pix6[0] | bitwise_and(0xf8)) / 8) | int ) * 2048 + (((pix6[1] | bitwise_and(0xfC)) / 4 )| int) * 32 + ((pix6[2] | bitwise_and(0xf8)) / 8 )| int }}
+  c7: |-
+    {{ (((pix7[0] | bitwise_and(0xf8)) / 8) | int ) * 2048 + (((pix7[1] | bitwise_and(0xfC)) / 4 )| int) * 32 + ((pix7[2] | bitwise_and(0xf8)) / 8 )| int }}
+
+sequence:
+  - service: |-
+      esphome.{{ device_attr(display, "name") }}_color_gauge
+    data:
+      colors: |-
+        [{{c0}},{{c1}},{{c2}},{{c3}},{{c4}},{{c5}},{{c6}},{{c7}}]
