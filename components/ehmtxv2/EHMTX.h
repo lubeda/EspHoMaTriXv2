@@ -22,7 +22,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2023.6.3";
+static const char *const EHMTX_VERSION = "2023.6.4";
 static const char *const TAG = "EHMTXv2";
 #ifndef USE_ESP8266
 static const char *const EHMTX_LOGO = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
@@ -94,6 +94,7 @@ namespace esphome
     int display_rindicator;
     int display_lindicator;
     int display_alarm;
+    uint8_t ticks_per_second=62;
     bool display_gauge;
     bool is_running = false;
     bool show_date;
@@ -113,6 +114,8 @@ namespace esphome
     unsigned long last_rainbow_time;
     unsigned long last_anim_time;
     time_t next_action_time = 0; // when is the next screen change
+    uint32_t tick_next_action = 0; // when is the next screen change
+    uint32_t ticks_ = 0; // when is the next screen change
 
     void remove_expired_queue_element();
     uint8_t find_oldest_queue_element();
@@ -190,7 +193,6 @@ namespace esphome
     EHMTX *config_;
 
   public:
-    uint8_t centerx_;
     uint16_t pixels_;
     uint16_t screen_time_;
     bool default_font;

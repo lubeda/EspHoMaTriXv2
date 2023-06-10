@@ -120,6 +120,9 @@ ehmtxv2:
   show_seconds: false
   clock_interval: 90
   scroll_interval: 120
+  scroll_small_text: true
+  default_clock_font: false
+  allow_empty_screen: true
   frame_interval: 210
   rtl: true
   default_font_id: default_font

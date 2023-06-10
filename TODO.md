@@ -2,16 +2,19 @@
 
 ## function
 
-- [ ] screen_time on ms sec base
-- [ ] scroll left to right
+- [ ] screen_time on ms sec base (preparing ticks base next_action) 
+- [ ] uint8_t ticks_per_second =  ceil( 1000 /  this->config_->display.get_update_interval());
+- [ ] fade in/out on screen change
+- [x] scroll left to right
 - [ ] seconds point moveable
-- [ ] dynamic bitmap as JSON (works partially)
+- [x] dynamic bitmap as JSON (works partially)
 - [ ] fix find_free_icon to work for bitmap screen
 - [x] alarm on all screens but full screen
 - [x] rindicator on all screens but full screen and clock
 - [x] refreshing an icon screen should extend the display time
 - [x] size of rindicator and alarm
 - [x] center text
+- [x] scroll text even if small
 - [x] alarm independent of screen
 - [x] del_screen with * and filter by type, do delete all clocks etc.
 - [x] force_screen with * and filter by type, do delete all clocks etc.
@@ -24,7 +27,7 @@
 
 ## user experience
 
-- [ ] blueprints
+- [x] blueprints
 - [ ] external HTML with more blueprint helpers (icons and modes)
 - [ ] ~~all modes in one blueprint~~
 - [x] Color in blueprints
@@ -45,7 +48,7 @@
 - [ ] simple mode sample
 - [ ] enhanced mode sample
 - [ ] remake documentation
-- [ ] more explanation for fonts
+- [x] more explanation for fonts => wiki
 - [ ] reference to https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=13768
 - [ ] sample YAML with voice
 

@@ -1,6 +1,6 @@
-# introduction
+# Introduction
 
-**Skill-level:** easy
+**Skill-level:** low
 
 To turn the display of the Ulanzi or any other device use the display settings:
 
