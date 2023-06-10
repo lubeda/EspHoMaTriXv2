@@ -11,3 +11,7 @@
 - [Use all icons in your blueprint](use-icons-in-blueprints)
 - [Time & Date Formats](time-format)
 - [Blueprints for easier configuration](blueprints)
+
+## Defective / Broken Ulanzi TC-001?
+
+- [Read this](broken-Ulanzi)
