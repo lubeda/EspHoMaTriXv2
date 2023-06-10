@@ -54,4 +54,3 @@ data:
   icon_name: "*"
   mode: 2
 ```
-
