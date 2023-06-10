@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023.6.5
+
+- introduced `blend_steps: `
+
 ## 2023.6.4
 
 - introduced `scroll_small_text`  

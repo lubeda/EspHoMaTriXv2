@@ -73,6 +73,7 @@ CONF_SCROLLCOUNT = "scroll_count"
 CONF_MATRIXCOMPONENT = "matrix_component"
 CONF_HTML = "icons2html"
 CONF_SCROLLINTERVAL = "scroll_interval"
+CONF_BLENDSTEPS = "blend_steps"
 CONF_RAINBOWINTERVAL = "rainbow_interval"
 CONF_FRAMEINTERVAL = "frame_interval"
 CONF_DEFAULT_FONT_ID = "default_font_id"
@@ -156,6 +157,8 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_SPECIAL_FONT_YOFFSET, default="6"
     ): cv.templatable(cv.int_range(min=-32, max=32)),
     cv.Optional(CONF_SCROLLINTERVAL, default="80"
+                ): cv.templatable(cv.positive_int),
+    cv.Optional(CONF_BLENDSTEPS, default="0"
                 ): cv.templatable(cv.positive_int),
     cv.Optional(CONF_RAINBOWINTERVAL, default="32"
                 ): cv.templatable(cv.positive_int),
@@ -392,6 +395,8 @@ async def to_code(config):
     cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])    
     cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT",config[CONF_SCROLL_SMALL_TEXT])    
     cg.add_define("EHMTXv2_ALLOW_EMPTY_SCREEN",config[CONF_ALLOW_EMPTY_SCREEN])
+    if (config[CONF_BLENDSTEPS]) >0:
+        cg.add_define("EHMTXv2_BLEND_STEPS",config[CONF_BLENDSTEPS])
 
     if config[CONF_RTL]:
         cg.add_define("EHMTXv2_USE_RTL")    

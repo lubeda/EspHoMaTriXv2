@@ -537,6 +537,8 @@ ehmtxv2:
 
 **show_dow** (optional, bool): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g., if you want larger fonts, defaults to true.
 
+**blend_steps** (optional, int): on screen transition you can blend in the new screen, a value of 16 works nice, defaults 0.
+
 **time_component** (required, ID): ID of the time component. The display shows `!t!` until the time source is valid.
 
 **default_font** (required, ID): ID of the default font

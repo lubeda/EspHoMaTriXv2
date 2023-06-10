@@ -505,7 +505,8 @@ namespace esphome
         this->remove_expired_queue_element();
         this->screen_pointer = this->find_last_clock();
         this->scroll_step = 0;
-
+        this->ticks_ = 0;
+        
         if (this->screen_pointer == MAXQUEUE)
         {
           this->screen_pointer = find_oldest_queue_element();
@@ -547,6 +548,16 @@ namespace esphome
           }
         }
       }
+      // blend handling
+      
+      #ifdef EHMTXv2_BLEND_STEPS          
+      if (this->ticks_<=EHMTXv2_BLEND_STEPS) {
+        uint8_t b = this->brightness_;
+        float br = lerp((float)this->ticks_/ EHMTXv2_BLEND_STEPS, 0,(float)  b/255);
+        this->display->get_light()->set_correction(br, br, br);
+      }
+      #endif
+      this->ticks_++;
     }
     else
     {
