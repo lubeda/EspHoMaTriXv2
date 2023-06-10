@@ -3,7 +3,8 @@
 ## Usage examples
 
 - [Display a timer on your ehmtxv2](display-timer)
-- [weather display](weather-display)
+- [Weather display](weather-display)
+- [Matrix used as a "circle"](rotating-text)
 
 ## Configuration
 
