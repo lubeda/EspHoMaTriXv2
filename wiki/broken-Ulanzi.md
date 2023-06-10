@@ -8,4 +8,6 @@ Your best bet is to contact the seller or Ulanzi directly for a replacement unit
 
 But some folks over at the Awtrix [github forum](https://github.com/Blueforcer/awtrix-light/issues/67) and [Discord](https://discord.com/channels/546407049148366859/1096822468737511574/1101222937501126778) say the regulator can be replaced with a STI3408B.
 
+Here as an [imgur gallery](https://imgur.com/a/2p2miqF) which may help in taking apart your Ulanzi TC-001.
+
 Good luck!
