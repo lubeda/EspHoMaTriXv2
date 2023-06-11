@@ -5,11 +5,6 @@
 - introduced `blend_steps: 16`
 - introduced service color_gauge (WIP)
 
-## 2023.6.4
-
-- introduced `scroll_small_text`  
-- introduced `allow_empty_screen`
-
 ## 2023.6.3
 
 - introduced `default_clock_font: true`  

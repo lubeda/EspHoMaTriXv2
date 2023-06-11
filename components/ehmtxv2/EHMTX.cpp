@@ -20,8 +20,6 @@ namespace esphome
     this->clock_color = Color(C_RED, C_GREEN, C_BLUE);
     this->rainbow_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->alarm_color = Color(CA_RED, CA_GREEN, CA_BLUE);
-    this->gauge_color = Color(CD_RED, CD_GREEN, CD_BLUE);
-    this->gauge_value = 0;
     this->next_action_time = 0;
     this->last_scroll_time = 0;
     this->screen_pointer = MAXQUEUE;
@@ -232,18 +230,6 @@ namespace esphome
     ESP_LOGD(TAG, "hide gauge");
   }
 
-  void EHMTX::show_gauge(int percent, int r, int g, int b, int bg_r, int bg_g, int bg_b)
-  {
-    this->display_gauge = false;
-    if (percent <= 100)
-    {
-      this->gauge_color = Color(r, g, b);
-      this->gauge_bgcolor = Color(bg_r, bg_g, bg_b);
-      this->display_gauge = true;
-      this->gauge_value = (uint8_t)(100 - percent) * 7 / 100;
-    }
-  }
-
 #ifndef USE_ESP8266
   void EHMTX::color_gauge(std::string text)
   {
@@ -265,7 +251,41 @@ namespace esphome
       this->display_gauge = true;
     }
   }
+
+  void EHMTX::show_gauge(int percent, int r, int g, int b, int bg_r, int bg_g, int bg_b)
+  {
+    if (percent <= 100)
+    {
+      Color c = Color(r, g, b);
+      Color bgc = Color(bg_r, bg_g, bg_b);
+      for (uint8_t i =0 ; i<8;i++){
+        if (percent > i * 12.5) {
+          this->cgauge[7-i] = c;
+        } else {
+          this->cgauge[7-i] = bgc;
+        }
+        
+      }
+      this->display_gauge = true;
+      ESP_LOGD(TAG, "show_gauge 2 color %d", round(percent));
+    }
+
+  }
+#else
+void EHMTX::show_gauge(int percent, int r, int g, int b, int bg_r, int bg_g, int bg_b)
+  {
+    this->display_gauge = false;
+    if (percent <= 100)
+    {
+      this->gauge_color = Color(r, g, b);
+      this->gauge_bgcolor = Color(bg_r, bg_g, bg_b);
+      this->display_gauge = true;
+      this->gauge_value = (uint8_t)(100 - percent) * 7 / 100;
+    }
+    ESP_LOGD(TAG, "show_gauge 2 color %d", round(percent));
+  }
 #endif
+
 
 #ifdef USE_ESP8266
   void EHMTX::draw_gauge()

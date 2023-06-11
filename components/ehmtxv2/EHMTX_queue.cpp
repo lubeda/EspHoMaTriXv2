@@ -173,6 +173,10 @@ namespace esphome
         {
           extraoffset = TEXTSTARTOFFSET;
         }
+        if (this->config_->display_gauge)
+        {
+          extraoffset += 2;
+        }
         color_ = this->text_color;
 #ifdef EHMTXv2_USE_RTL
           this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,

@@ -79,7 +79,7 @@ namespace esphome
     uint16_t hue_ = 0;
     void dump_config();
 #ifdef USE_ESP32
-    PROGMEM Color text_color, alarm_color, gauge_color, gauge_bgcolor, rindicator_color,  lindicator_color,clock_color, today_color, weekday_color, rainbow_color;
+    PROGMEM Color text_color, alarm_color, rindicator_color,  lindicator_color,clock_color, today_color, weekday_color, rainbow_color;
     PROGMEM Color bitmap[256];
     PROGMEM Color sbitmap[64];
     PROGMEM Color cgauge[8];
@@ -89,6 +89,7 @@ namespace esphome
 #ifdef USE_ESP8266
     Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, clock_color, today_color, weekday_color, rainbow_color;
     EHMTX_Icon *icons[MAXICONS];
+    uint8_t gauge_value;
 #endif
     display::Font *default_font;
     display::Font *special_font;
@@ -99,7 +100,7 @@ namespace esphome
     bool display_gauge;
     bool is_running = false;
     bool show_date;
-    uint8_t gauge_value;
+    
     uint16_t clock_time;
     uint16_t scroll_step;
 
