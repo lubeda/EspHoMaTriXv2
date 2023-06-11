@@ -3,7 +3,8 @@
 ## 2023.6.5
 
 - introduced `blend_steps: 16`
-- introduced service color_gauge (WIP)
+- introduced service color_gauge
+- fixed bitmap_small with gauge
 
 ## 2023.6.3
 
