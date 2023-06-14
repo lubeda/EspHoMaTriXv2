@@ -802,7 +802,7 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 *Parameters:*
 
 - ```icon_name```: Icon `id` defined in the YAML (see installation)
-- ```mode```: The mode is for internal purposes use `5`  for icon_screen
+- ```mode```: The mode is a filter to select different screen types e. g. use `5`for icon_screen
 
 ##### modes
 
@@ -810,14 +810,14 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |----|----|
 |MODE_BLANK|1|
 |MODE_CLOCK | 2|
-| MODE_DATE | 3|
-| MODE_FULL_SCREEN | 4|
-|MODE_ICON_SCREEN | 5|
-|MODE_TEXT_SCREEN | 6|
-|MODE_RAINBOW_ICON | 7|
-|MODE_RAINBOW_TEXT |8|
-| MODE_RAINBOW_CLOCK | 9|
-| MODE_RAINBOW_DATE | 10|
+|MODE_DATE | 3|
+|MODE_FULL_SCREEN| 4|
+|MODE_ICON_SCREEN| 5|
+|MODE_TEXT_SCREEN| 6|
+|MODE_RAINBOW_ICON| 7|
+|MODE_RAINBOW_TEXT|8|
+|MODE_RAINBOW_CLOCK| 9|
+|MODE_RAINBOW_DATE| 10|
 
 **(D)** Service **display_on** / **display_off**
 
