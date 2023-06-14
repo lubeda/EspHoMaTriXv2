@@ -5,6 +5,7 @@
 - introduced `blend_steps: 16`
 - introduced service color_gauge
 - fixed bitmap_small with gauge
+- fixed del_screen with "*"
 
 ## 2023.6.3
 
