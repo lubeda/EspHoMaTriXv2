@@ -8,7 +8,9 @@ blueprint:
       name: Which EspHoMaTriXv2 device to use
       selector:
         device:
-          integration: esphome
+          filter:
+          - integration: esphome
+            model: EHMTX
     trigger_sensor:
       name: Which state change triggers the automation?
       selector:
