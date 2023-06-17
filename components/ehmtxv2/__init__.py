@@ -1,6 +1,7 @@
 from argparse import Namespace
 import logging
 import io
+import json
 import requests
 
 from esphome import core, automation
@@ -34,6 +35,12 @@ logging.warning(f"")
 def rgb565_svg(x,y,r,g,b):
     return f"<rect style=\"fill:rgb({(r << 3) | (r >> 2)},{(g << 2) | (g >> 4)},{(b << 3) | (b >> 2)});\" x=\"{x*10}\" y=\"{y*10}\" width=\"10\" height=\"10\"/>"
 
+def rgb565_888(v565):
+    b = (((v565)&0x001F) << 3)
+    g = (((v565)&0x07E0) >> 3)
+    r = (((v565)&0xF800) >> 8)
+    return (r,g,b)
+
 ehmtx_ns = cg.esphome_ns.namespace("esphome")
 EHMTX_ = ehmtx_ns.class_("EHMTX", cg.Component)
 Icons_ = ehmtx_ns.class_("EHMTX_Icon")
@@ -63,6 +70,7 @@ CONF_FLAG = "flag"
 CONF_CLOCKINTERVAL = "clock_interval"
 CONF_TIMECOMPONENT = "time_component"
 CONF_LAMEID = "lameid"
+CONF_RGB565ARRAY = "str565"
 CONF_LIFETIME = "lifetime"
 CONF_ICONS = "icons"
 CONF_SHOWDOW = "show_dow"
@@ -206,6 +214,7 @@ EHMTX_SCHEMA = cv.Schema({
                 cv.Exclusive(CONF_FILE,"uri"): cv.file_,
                 cv.Exclusive(CONF_URL,"uri"): cv.url,
                 cv.Exclusive(CONF_LAMEID,"uri"): cv.string,
+                cv.Exclusive(CONF_RGB565ARRAY,"uri"): cv.string,
                 cv.Optional(CONF_RESIZE): cv.dimensions,
                 cv.Optional(
                     CONF_FRAMEDURATION, default="0"
@@ -270,7 +279,20 @@ async def to_code(config):
             if r.status_code != requests.codes.ok:
                 raise core.EsphomeError(f" ICONS: Could not download image file {conf[CONF_URL]}: {conf[CONF_ID]}")
             image = Image.open(io.BytesIO(r.content))
-        
+        elif CONF_RGB565ARRAY in conf:
+            r = list(json.loads(conf[CONF_RGB565ARRAY]))
+            if len(r) == 64:
+                image = Image.new("RGB",[8,8])
+                for y in range(0,8):
+                   for x in range(0,8):
+                        image.putpixel((x,y),rgb565_888(r[x+y*8]))
+            elif len(r) == 256:
+                image = Image.new("RGB",[32,8])
+                for y in range(0,8):
+                    for x in range(0,32):
+                        image.putpixel((x,y),rgb565_888(r[x+y*32]))
+                        
+                           
         width, height = image.size
 
         if CONF_RESIZE in conf:

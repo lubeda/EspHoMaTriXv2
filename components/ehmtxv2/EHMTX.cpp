@@ -545,7 +545,7 @@ namespace esphome
     float red, green, blue;
     esphome::hsv_to_rgb(this->hue_, 0.8, 0.8, red, green, blue);
     this->rainbow_color = Color(uint8_t(255 * red), uint8_t(255 * green), uint8_t(255 * blue));
-
+    
     if (this->is_running && this->clock->now().is_valid())
     {
       time_t ts = this->clock->now().timestamp;
@@ -609,16 +609,16 @@ namespace esphome
         }
       }
       // blend handling
-
+      
 #ifdef EHMTXv2_BLEND_STEPS
-      if (this->ticks_ <= EHMTXv2_BLEND_STEPS)
+      if ((this->ticks_ <= EHMTXv2_BLEND_STEPS)) 
       {
-        uint8_t b = this->brightness_;
-        float br = lerp((float)this->ticks_ / EHMTXv2_BLEND_STEPS, 0, (float)b / 255);
-        this->display->get_light()->set_correction(br, br, br);
+          uint8_t b = this->brightness_;
+          float br = lerp((float)this->ticks_ / EHMTXv2_BLEND_STEPS, 0, (float)b / 255);
+          this->display->get_light()->set_correction(br, br, br);
       }
 #endif
-      this->ticks_++;
+    this->ticks_++;
     }
     else
     {
@@ -1047,6 +1047,9 @@ namespace esphome
     }
 #ifdef EHMTXv2_USE_RTL
     ESP_LOGCONFIG(TAG, "RTL activated");
+#endif
+#ifdef EHMTXv2_BLEND_STEPS
+    ESP_LOGCONFIG(TAG, "Fade in activated: %d steps",EHMTXv2_BLEND_STEPS);
 #endif
     if (EHMTXv2_WEEK_START)
     {

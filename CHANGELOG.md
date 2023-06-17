@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023.7.0
+
+- icontype rgb565 array as string
+
 ## 2023.6.5
 
 - introduced `blend_steps: 16`
