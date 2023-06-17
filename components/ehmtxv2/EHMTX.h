@@ -22,7 +22,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2023.6.4";
+static const char *const EHMTX_VERSION = "2023.6.5";
 static const char *const TAG = "EHMTXv2";
 #ifndef USE_ESP8266
 static const char *const EHMTX_LOGO = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
@@ -79,15 +79,17 @@ namespace esphome
     uint16_t hue_ = 0;
     void dump_config();
 #ifdef USE_ESP32
-    PROGMEM Color text_color, alarm_color, gauge_color, gauge_bgcolor, rindicator_color,  lindicator_color,clock_color, today_color, weekday_color, rainbow_color;
+    PROGMEM Color text_color, alarm_color, rindicator_color,  lindicator_color,clock_color, today_color, weekday_color, rainbow_color;
     PROGMEM Color bitmap[256];
     PROGMEM Color sbitmap[64];
+    PROGMEM Color cgauge[8];
     PROGMEM EHMTX_Icon *icons[MAXICONS];
 #endif
 
 #ifdef USE_ESP8266
     Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, clock_color, today_color, weekday_color, rainbow_color;
     EHMTX_Icon *icons[MAXICONS];
+    uint8_t gauge_value;
 #endif
     display::Font *default_font;
     display::Font *special_font;
@@ -98,7 +100,7 @@ namespace esphome
     bool display_gauge;
     bool is_running = false;
     bool show_date;
-    uint8_t gauge_value;
+    
     uint16_t clock_time;
     uint16_t scroll_step;
 
@@ -165,6 +167,7 @@ namespace esphome
     void blank_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
 
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
+    void color_gauge(std::string text);
     void bitmap_small(std::string, std::string,int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void rainbow_icon_screen(std::string icon_name, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);

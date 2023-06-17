@@ -20,8 +20,6 @@ namespace esphome
     this->clock_color = Color(C_RED, C_GREEN, C_BLUE);
     this->rainbow_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->alarm_color = Color(CA_RED, CA_GREEN, CA_BLUE);
-    this->gauge_color = Color(CD_RED, CD_GREEN, CD_BLUE);
-    this->gauge_value = 0;
     this->next_action_time = 0;
     this->last_scroll_time = 0;
     this->screen_pointer = MAXQUEUE;
@@ -197,6 +195,7 @@ namespace esphome
     ESP_LOGW(TAG, "bitmap_screen is not available on ESP8266");
   }
 #endif
+
   uint8_t EHMTX::find_icon(std::string name)
   {
     for (uint8_t i = 0; i < this->icon_count; i++)
@@ -232,6 +231,50 @@ namespace esphome
     ESP_LOGD(TAG, "hide gauge");
   }
 
+#ifndef USE_ESP8266
+  void EHMTX::color_gauge(std::string text)
+  {
+    ESP_LOGD(TAG, "color_gauge: %s", text.c_str());
+    const size_t CAPACITY = JSON_ARRAY_SIZE(8);
+    StaticJsonDocument<CAPACITY> doc;
+    deserializeJson(doc, text);
+    JsonArray array = doc.as<JsonArray>();
+    uint8_t i = 0;
+    for (JsonVariant v : array)
+    {
+      uint16_t buf = v.as<int>();
+
+      unsigned char b = (((buf)&0x001F) << 3);
+      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      Color c = Color(r, g, b);
+      this->cgauge[i++] = c;
+      this->display_gauge = true;
+    }
+  }
+
+  void EHMTX::show_gauge(int percent, int r, int g, int b, int bg_r, int bg_g, int bg_b)
+  {
+    if (percent <= 100)
+    {
+      Color c = Color(r, g, b);
+      Color bgc = Color(bg_r, bg_g, bg_b);
+      for (uint8_t i = 0; i < 8; i++)
+      {
+        if (percent > i * 12.5)
+        {
+          this->cgauge[7 - i] = c;
+        }
+        else
+        {
+          this->cgauge[7 - i] = bgc;
+        }
+      }
+      this->display_gauge = true;
+      ESP_LOGD(TAG, "show_gauge 2 color %d", round(percent));
+    }
+  }
+#else
   void EHMTX::show_gauge(int percent, int r, int g, int b, int bg_r, int bg_g, int bg_b)
   {
     this->display_gauge = false;
@@ -242,8 +285,11 @@ namespace esphome
       this->display_gauge = true;
       this->gauge_value = (uint8_t)(100 - percent) * 7 / 100;
     }
+    ESP_LOGD(TAG, "show_gauge 2 color %d", round(percent));
   }
+#endif
 
+#ifdef USE_ESP8266
   void EHMTX::draw_gauge()
   {
     if (this->display_gauge)
@@ -253,6 +299,19 @@ namespace esphome
       this->display->line(0, 7, 0, this->gauge_value, this->gauge_color);
     }
   }
+#else
+  void EHMTX::draw_gauge()
+  {
+    if (this->display_gauge)
+    {
+      for (uint8_t y = 0; y < 8; y++)
+      {
+        this->display->draw_pixel_at(0, y, this->cgauge[y]);
+      }
+      this->display->line(1, 7, 1, 0, esphome::display::COLOR_OFF);
+    }
+  }
+#endif
 
   void EHMTX::setup()
   {
@@ -295,6 +354,7 @@ namespace esphome
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
 #ifndef USE_ESP8266
+    register_service(&EHMTX::color_gauge, "color_gauge", {"colors"});
     register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"icon", "lifetime", "screen_time"});
     register_service(&EHMTX::bitmap_small, "bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
 #endif
@@ -505,6 +565,7 @@ namespace esphome
         this->remove_expired_queue_element();
         this->screen_pointer = this->find_last_clock();
         this->scroll_step = 0;
+        this->ticks_ = 0;
 
         if (this->screen_pointer == MAXQUEUE)
         {
@@ -538,7 +599,7 @@ namespace esphome
         }
         else
         {
-          if(!EHMTXv2_ALLOW_EMPTY_SCREEN)
+          if (!EHMTXv2_ALLOW_EMPTY_SCREEN)
           {
             ESP_LOGW(TAG, "tick: nothing to do. Restarting clock display!");
             this->clock_screen(24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
@@ -547,6 +608,17 @@ namespace esphome
           }
         }
       }
+      // blend handling
+
+#ifdef EHMTXv2_BLEND_STEPS
+      if (this->ticks_ <= EHMTXv2_BLEND_STEPS)
+      {
+        uint8_t b = this->brightness_;
+        float br = lerp((float)this->ticks_ / EHMTXv2_BLEND_STEPS, 0, (float)b / 255);
+        this->display->get_light()->set_correction(br, br, br);
+      }
+#endif
+      this->ticks_++;
     }
     else
     {
@@ -620,17 +692,26 @@ namespace esphome
       if (this->queue[i]->mode == mode)
       {
         bool force = true;
-        ESP_LOGW(TAG, "del_screen: icon %s in position: %d mode %d", icon_name.c_str(), i, mode);
+        ESP_LOGD(TAG, "del_screen: icon %s in position: %s mode %d", icon_name.c_str(), this->queue[i]->icon_name.c_str(), mode);
         if ((mode == MODE_ICON_SCREEN) || (mode == MODE_FULL_SCREEN) || (mode == MODE_RAINBOW_ICON))
         {
-          if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
+          if (this->string_has_ending(icon_name, "*"))
+          {
+            std::string comparename = icon_name.substr(0, icon_name.length() - 1);
+            
+            if (this->queue[i]->icon_name.rfind(comparename, 0) != 0)
+            {
+              force = false;
+            }
+          }
+          else if(strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
           {
             force = false;
           }
         }
         if (force)
         {
-          ESP_LOGW(TAG, "del_screen: force");
+          ESP_LOGW(TAG, "del_screen: slot %d deleted",i);
           this->queue[i]->mode = MODE_EMPTY;
           this->queue[i]->endtime = 0;
           if (i == this->screen_pointer)
@@ -964,9 +1045,9 @@ namespace esphome
     {
       ESP_LOGCONFIG(TAG, "show date");
     }
-    #ifdef EHMTXv2_USE_RTL
-      ESP_LOGCONFIG(TAG, "RTL activated");
-    #endif
+#ifdef EHMTXv2_USE_RTL
+    ESP_LOGCONFIG(TAG, "RTL activated");
+#endif
     if (EHMTXv2_WEEK_START)
     {
       ESP_LOGCONFIG(TAG, "weekstart: monday");

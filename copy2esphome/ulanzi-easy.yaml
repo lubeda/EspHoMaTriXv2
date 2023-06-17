@@ -59,6 +59,9 @@ external_components:
 esphome:
   comment: "EHMTXv2 from LuBeDa"
   name: $devicename 
+  project:
+    name: "Ulanzi.EHMTXv2"
+    version: "2.0.0"
   on_boot:
     then:
       - ds1307.read_time:

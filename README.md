@@ -537,6 +537,8 @@ ehmtxv2:
 
 **show_dow** (optional, bool): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g., if you want larger fonts, defaults to true.
 
+**blend_steps** (optional, int): on screen transition you can blend in the new screen, a value of 16 works nice, defaults 0.
+
 **time_component** (required, ID): ID of the time component. The display shows `!t!` until the time source is valid.
 
 **default_font** (required, ID): ID of the default font
@@ -800,7 +802,7 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 *Parameters:*
 
 - ```icon_name```: Icon `id` defined in the YAML (see installation)
-- ```mode```: The mode is for internal purposes use `5`  for icon_screen
+- ```mode```: The mode is a filter to select different screen types e. g. use `5`for icon_screen
 
 ##### modes
 
@@ -808,14 +810,14 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |----|----|
 |MODE_BLANK|1|
 |MODE_CLOCK | 2|
-| MODE_DATE | 3|
-| MODE_FULL_SCREEN | 4|
-|MODE_ICON_SCREEN | 5|
-|MODE_TEXT_SCREEN | 6|
-|MODE_RAINBOW_ICON | 7|
-|MODE_RAINBOW_TEXT |8|
-| MODE_RAINBOW_CLOCK | 9|
-| MODE_RAINBOW_DATE | 10|
+|MODE_DATE | 3|
+|MODE_FULL_SCREEN| 4|
+|MODE_ICON_SCREEN| 5|
+|MODE_TEXT_SCREEN| 6|
+|MODE_RAINBOW_ICON| 7|
+|MODE_RAINBOW_TEXT|8|
+|MODE_RAINBOW_CLOCK| 9|
+|MODE_RAINBOW_DATE| 10|
 
 **(D)** Service **display_on** / **display_off**
 
@@ -1107,7 +1109,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 ## Thanks
 
 - **[blakadder](https://github.com/blakadder)** for his contribution (cleanup README.md, fixed sample)
-- **[andrew-codechimp](https://github.com/andrew-codechimp)** for his contribution (display on/off & del_screen "*" & show_clock with 0)
+- **[andrew-codechimp](https://github.com/andrew-codechimp)** for his contribution (display on/off & del_screen "*" & show_clock with 0) and improved blueprint slelection
 - **[jd1](https://github.com/jd1)** for his contributions
 - **[aptonline](https://github.com/aptonline)** for his work on the Ulanzi hardware
 - **[wsbtak](https://github.com/wsbtak)** for the work on the Ulanzi hardware
