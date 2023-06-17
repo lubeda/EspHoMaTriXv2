@@ -1109,7 +1109,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 ## Thanks
 
 - **[blakadder](https://github.com/blakadder)** for his contribution (cleanup README.md, fixed sample)
-- **[andrew-codechimp](https://github.com/andrew-codechimp)** for his contribution (display on/off & del_screen "*" & show_clock with 0)
+- **[andrew-codechimp](https://github.com/andrew-codechimp)** for his contribution (display on/off & del_screen "*" & show_clock with 0) and improved blueprint slelection
 - **[jd1](https://github.com/jd1)** for his contributions
 - **[aptonline](https://github.com/aptonline)** for his work on the Ulanzi hardware
 - **[wsbtak](https://github.com/wsbtak)** for the work on the Ulanzi hardware

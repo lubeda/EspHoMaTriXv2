@@ -6,6 +6,7 @@
 - introduced service color_gauge
 - fixed bitmap_small with gauge
 - fixed del_screen with "*"
+- improved blueprint selection @andrew-codechimp
 
 ## 2023.6.3
 
