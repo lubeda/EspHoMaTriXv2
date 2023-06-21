@@ -415,8 +415,10 @@ async def to_code(config):
     cg.add_define("EHMTXv2_DEFAULT_CLOCK_FONT",config[CONF_CLOCKFONT])    
     cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])    
     cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])    
-    cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT",config[CONF_SCROLL_SMALL_TEXT])    
-    cg.add_define("EHMTXv2_ALLOW_EMPTY_SCREEN",config[CONF_ALLOW_EMPTY_SCREEN])
+    if config[CONF_SCROLL_SMALL_TEXT]:
+        cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT")
+    if config[CONF_ALLOW_EMPTY_SCREEN]:
+        cg.add_define("EHMTXv2_ALLOW_EMPTY_SCREEN")
     if (config[CONF_BLENDSTEPS]) >0:
         cg.add_define("EHMTXv2_BLEND_STEPS",config[CONF_BLENDSTEPS])
 
