@@ -555,6 +555,8 @@ ehmtxv2:
 
 **icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons.  (default = `false`)
 
+**always_show_rl_indicators** (optional, boolean): If true, always show the r/l indicators on all screens. Default is to not show either on clock, date, full, and bitmap screens, left on icon, or if display gauge displayed.
+
 ***Example output:***
 ![icon preview](./images/icons_preview.png)
 

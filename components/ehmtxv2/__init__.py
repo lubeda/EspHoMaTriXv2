@@ -87,6 +87,7 @@ CONF_SPECIAL_FONT_YOFFSET = "special_font_yoffset"
 CONF_PINGPONG = "pingpong"
 CONF_TIME_FORMAT = "time_format"
 CONF_DATE_FORMAT = "date_format"
+CONF_ALWAYS_SHOW_RLINDICATORS = "always_show_rl_indicators"
 CONF_ON_NEXT_SCREEN = "on_next_screen"
 CONF_ON_NEXT_CLOCK = "on_next_clock"
 CONF_ON_ICON_ERROR = "on_icon_error"
@@ -144,6 +145,9 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(
         CONF_DATE_FORMAT, default="%d.%m."
     ): cv.string,
+    cv.Optional(
+        CONF_ALWAYS_SHOW_RLINDICATORS, default=False
+    ): cv.boolean,
     cv.Optional(
         CONF_DEFAULT_FONT_XOFFSET, default="1"
     ): cv.templatable(cv.int_range(min=-32, max=32)),
@@ -399,6 +403,9 @@ async def to_code(config):
         cg.add_define("EHMTXv2_ALLOW_EMPTY_SCREEN")
     if (config[CONF_BLENDSTEPS]) >0:
         cg.add_define("EHMTXv2_BLEND_STEPS",config[CONF_BLENDSTEPS])
+        
+    if config[CONF_ALWAYS_SHOW_RLINDICATORS]:
+        cg.add_define("EHMTXv2_ALWAYS_SHOW_RLINDICATORS")
 
     if config[CONF_RTL]:
         cg.add_define("EHMTXv2_USE_RTL")    

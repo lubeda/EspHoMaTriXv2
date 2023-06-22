@@ -1,5 +1,9 @@
 # Changelog
 
+##
+
+- added always_show_rl_indicators boolean
+
 ## 2023.6.5
 
 - introduced `blend_steps: 16`

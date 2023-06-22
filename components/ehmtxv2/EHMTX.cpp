@@ -1128,15 +1128,21 @@ namespace esphome
       {
         this->draw_gauge();
       }
+#ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
       if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
       {
+#endif
 
         this->draw_rindicator();
+#ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         if (this->queue[this->screen_pointer]->mode != MODE_ICON_SCREEN && this->queue[this->screen_pointer]->mode != MODE_RAINBOW_ICON && !this->display_gauge)
         {
+#endif
           this->draw_lindicator();
+#ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         }
       }
+#endif
       this->draw_alarm();
     }
   }
