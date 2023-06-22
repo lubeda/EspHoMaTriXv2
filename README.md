@@ -1,7 +1,7 @@
 # EspHoMaTriX version 2 (EHMTXv2)
 
 ## Very important information!!
-Since esphome 2023.6.0 this does not compile anymore!!!
+Since esphome 2023.6.0 this does not compile anymore on ESP8266 platform!!!
 
 ## Important information
 
