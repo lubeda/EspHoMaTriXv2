@@ -1,5 +1,8 @@
 # EspHoMaTriX version 2 (EHMTXv2)
 
+## Very important information!!
+Since esphome 2023.6.0 this does not compile anymore!!!
+
 ## Important information
 
 If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!
