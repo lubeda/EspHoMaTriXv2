@@ -13,6 +13,7 @@
 - [Time & Date Formats](time-format)
 - [Blueprints for easier configuration](blueprints)
 - [time and date display](time-date-display)
+- [special clock and date display duration](special-clock-and-date-display-duration)
 
 ## Defective / Broken Ulanzi TC-001?
 

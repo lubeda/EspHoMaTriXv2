@@ -1119,6 +1119,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
 - **[hco](https://github.com/hco)** fixing documentation
 - **[geekofweek](https://github.com/geekofweek)** fixed sample YAML, cleanup documentation
+- **[joncar](https://github.com/joncar)** fixed scroll small text
 - **Everybody** who found bugs/issues and reported them!
 
 ## Special thanks to all sponsors

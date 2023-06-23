@@ -3,6 +3,7 @@
 ## 2023.7.0
 
 - icontype rgb565 array as string
+- fixed scroll small text
 
 ## 2023.6.5
 
