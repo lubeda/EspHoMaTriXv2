@@ -823,6 +823,8 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_RAINBOW_TEXT|8|
 |MODE_RAINBOW_CLOCK| 9|
 |MODE_RAINBOW_DATE| 10|
+|MODE_BITMAP_SCREEN| 11|
+|MODE_BITMAP_SMALL| 12|
 
 **(D)** Service **display_on** / **display_off**
 
