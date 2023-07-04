@@ -55,6 +55,7 @@ namespace esphome
   class EHMTXIconErrorTrigger;
   class EHMTXExpiredScreenTrigger;
   class EHMTXNextClockTrigger;
+  class EHMTXStartRunningTrigger;
 
   class EHMTX : public PollingComponent, public api::CustomAPIDevice
   {
@@ -70,6 +71,7 @@ namespace esphome
     std::vector<EHMTXExpiredScreenTrigger *> on_expired_screen_triggers_;
     std::vector<EHMTXNextClockTrigger *> on_next_clock_triggers_;
     std::vector<EHMTXAddScreenTrigger *> on_add_screen_triggers_;
+    std::vector<EHMTXStartRunningTrigger *> on_start_running_triggers_;
     EHMTX_queue *find_icon_queue_element(uint8_t icon);
     EHMTX_queue *find_free_queue_element();
 
@@ -186,6 +188,7 @@ namespace esphome
     void add_on_icon_error_trigger(EHMTXIconErrorTrigger *t) { this->on_icon_error_triggers_.push_back(t); }
     void add_on_expired_screen_trigger(EHMTXExpiredScreenTrigger *t) { this->on_expired_screen_triggers_.push_back(t); }
     void add_on_next_clock_trigger(EHMTXNextClockTrigger *t) { this->on_next_clock_triggers_.push_back(t); }
+    void add_on_start_running_trigger(EHMTXStartRunningTrigger *t) { this->on_start_running_triggers_.push_back(t); }
 
     void update();
     uint8_t get_brightness();
@@ -260,6 +263,13 @@ namespace esphome
   {
   public:
     explicit EHMTXNextClockTrigger(EHMTX *parent) { parent->add_on_next_clock_trigger(this); }
+    void process();
+  };
+  
+  class EHMTXStartRunningTrigger : public Trigger<>
+  {
+  public:
+    explicit EHMTXStartRunningTrigger(EHMTX *parent) { parent->add_on_start_running_trigger(this); }
     void process();
   };
 

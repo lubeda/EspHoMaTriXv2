@@ -58,6 +58,10 @@ AddScreenTrigger = ehmtx_ns.class_(
     "EHMTXAddScreenTrigger", automation.Trigger.template(cg.std_string)
 )
 
+StartRunningTrigger = ehmtx_ns.class_(
+    "EHMTXStartRunningTrigger", automation.Trigger.template(cg.std_string)
+)
+
 CONF_URL = "url"
 CONF_FLAG = "flag"
 CONF_CLOCKINTERVAL = "clock_interval"
@@ -93,6 +97,7 @@ CONF_ON_NEXT_CLOCK = "on_next_clock"
 CONF_ON_ICON_ERROR = "on_icon_error"
 CONF_ON_ADD_SCREEN = "on_add_screen"
 CONF_ON_EXPIRED_SCREEN= "on_expired_screen"
+CONF_ON_START_RUNNING = "on_start_running"
 CONF_SHOW_SECONDS = "show_seconds"
 CONF_SCROLL_SMALL_TEXT = "scroll_small_text"
 CONF_ALLOW_EMPTY_SCREEN = "allow_empty_screen"
@@ -200,6 +205,11 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(CONF_ON_EXPIRED_SCREEN): automation.validate_automation(
         {
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(ExpiredScreenTrigger),
+        }
+    ),
+    cv.Optional(CONF_ON_START_RUNNING): automation.validate_automation(
+        {
+            cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(StartRunningTrigger),
         }
     ),
     cv.Required(CONF_ICONS): cv.All(
@@ -433,5 +443,10 @@ async def to_code(config):
     for conf in config.get(CONF_ON_ADD_SCREEN, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.uint8 , "mode")] , conf)
+
+    for conf in config.get(CONF_ON_START_RUNNING, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [] , conf)
+
 
     await cg.register_component(var, config)
