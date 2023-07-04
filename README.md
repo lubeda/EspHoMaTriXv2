@@ -809,6 +809,10 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 - ```icon_name```: Icon `id` defined in the YAML (see installation)
 - ```mode```: The mode is a filter to select different screen types e. g. use `5`for icon_screen
 
+#### on_start_running
+
+The trigger ```on_start_running``` is triggered when the display starts. It is triggered when time sync is done, and initial clock / date / version screens are loaded. This is to allow you to customize the default screens (for instance set colours for the clock).
+
 ##### modes
 
 |mode|value|

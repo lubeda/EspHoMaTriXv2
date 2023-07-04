@@ -3,6 +3,8 @@
 ##
 
 - added always_show_rl_indicators boolean
+- added on_start_running trigger to allow for additional configuration when 
+  matrix starts display
 
 ## 2023.6.5
 
