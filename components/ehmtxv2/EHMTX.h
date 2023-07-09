@@ -1,6 +1,7 @@
 #ifndef EHMTX_H
 #define EHMTX_H
 #include "esphome.h"
+#include "esphome/components/time/real_time_clock.h"
 
 const uint8_t MAXQUEUE = 24;
 const uint8_t C_RED = 240; // default
@@ -106,7 +107,7 @@ namespace esphome
 
     EHMTX_queue *queue[MAXQUEUE];
     addressable_light::AddressableLightDisplay *display;
-    time::RealTimeClock *clock;
+    esphome::time::RealTimeClock *clock;
 
     bool show_seconds;
     uint16_t hold_time; // seconds display of screen_time to extend
@@ -145,7 +146,7 @@ namespace esphome
     void set_brightness(int b);
     void set_display_on();
     void set_display_off();
-    void set_clock(time::RealTimeClock *clock);
+    void set_clock(esphome::time::RealTimeClock *clock);
     void set_default_font(display::Font *font);
     void set_special_font(display::Font *font);
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
