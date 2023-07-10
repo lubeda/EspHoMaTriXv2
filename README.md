@@ -1,5 +1,11 @@
 # EspHoMaTriX version 2 (EHMTXv2)
 
+[donation-badge]:(https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)
+[donation-url]: https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU
+
+![Home Assistant](https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white)
+[![Donate][donation-badge]][donation-url]
+
 ## Important information
 
 If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!
