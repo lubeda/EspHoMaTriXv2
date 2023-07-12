@@ -58,6 +58,10 @@ AddScreenTrigger = ehmtx_ns.class_(
     "EHMTXAddScreenTrigger", automation.Trigger.template(cg.std_string)
 )
 
+StartRunningTrigger = ehmtx_ns.class_(
+    "EHMTXStartRunningTrigger", automation.Trigger.template(cg.std_string)
+)
+
 CONF_URL = "url"
 CONF_FLAG = "flag"
 CONF_CLOCKINTERVAL = "clock_interval"
@@ -87,11 +91,13 @@ CONF_SPECIAL_FONT_YOFFSET = "special_font_yoffset"
 CONF_PINGPONG = "pingpong"
 CONF_TIME_FORMAT = "time_format"
 CONF_DATE_FORMAT = "date_format"
+CONF_ALWAYS_SHOW_RLINDICATORS = "always_show_rl_indicators"
 CONF_ON_NEXT_SCREEN = "on_next_screen"
 CONF_ON_NEXT_CLOCK = "on_next_clock"
 CONF_ON_ICON_ERROR = "on_icon_error"
 CONF_ON_ADD_SCREEN = "on_add_screen"
 CONF_ON_EXPIRED_SCREEN= "on_expired_screen"
+CONF_ON_START_RUNNING = "on_start_running"
 CONF_SHOW_SECONDS = "show_seconds"
 CONF_SCROLL_SMALL_TEXT = "scroll_small_text"
 CONF_ALLOW_EMPTY_SCREEN = "allow_empty_screen"
@@ -145,6 +151,9 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_DATE_FORMAT, default="%d.%m."
     ): cv.string,
     cv.Optional(
+        CONF_ALWAYS_SHOW_RLINDICATORS, default=False
+    ): cv.boolean,
+    cv.Optional(
         CONF_DEFAULT_FONT_XOFFSET, default="1"
     ): cv.templatable(cv.int_range(min=-32, max=32)),
     cv.Optional(
@@ -196,6 +205,11 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(CONF_ON_EXPIRED_SCREEN): automation.validate_automation(
         {
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(ExpiredScreenTrigger),
+        }
+    ),
+    cv.Optional(CONF_ON_START_RUNNING): automation.validate_automation(
+        {
+            cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(StartRunningTrigger),
         }
     ),
     cv.Required(CONF_ICONS): cv.All(
@@ -399,6 +413,9 @@ async def to_code(config):
         cg.add_define("EHMTXv2_ALLOW_EMPTY_SCREEN")
     if (config[CONF_BLENDSTEPS]) >0:
         cg.add_define("EHMTXv2_BLEND_STEPS",config[CONF_BLENDSTEPS])
+        
+    if config[CONF_ALWAYS_SHOW_RLINDICATORS]:
+        cg.add_define("EHMTXv2_ALWAYS_SHOW_RLINDICATORS")
 
     if config[CONF_RTL]:
         cg.add_define("EHMTXv2_USE_RTL")    
@@ -426,5 +443,10 @@ async def to_code(config):
     for conf in config.get(CONF_ON_ADD_SCREEN, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.uint8 , "mode")] , conf)
+
+    for conf in config.get(CONF_ON_START_RUNNING, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [] , conf)
+
 
     await cg.register_component(var, config)

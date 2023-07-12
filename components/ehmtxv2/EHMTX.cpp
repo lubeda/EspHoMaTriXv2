@@ -404,6 +404,11 @@ namespace esphome
         this->clock_screen(14 * 24 * 60, this->clock_time, EHMTXv2_DEFAULT_CLOCK_FONT, C_RED, C_GREEN, C_BLUE);
         this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, EHMTXv2_DEFAULT_CLOCK_FONT, C_RED, C_GREEN, C_BLUE);
         this->is_running = true;
+        
+        for (auto *t : on_start_running_triggers_)
+        {
+          t->process();
+        }
       }
     }
     else
@@ -1128,15 +1133,21 @@ namespace esphome
       {
         this->draw_gauge();
       }
+#ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
       if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
       {
+#endif
 
         this->draw_rindicator();
+#ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         if (this->queue[this->screen_pointer]->mode != MODE_ICON_SCREEN && this->queue[this->screen_pointer]->mode != MODE_RAINBOW_ICON && !this->display_gauge)
         {
+#endif
           this->draw_lindicator();
+#ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         }
       }
+#endif
       this->draw_alarm();
     }
   }
@@ -1162,6 +1173,11 @@ namespace esphome
   }
 
   void EHMTXNextClockTrigger::process()
+  {
+    this->trigger();
+  }
+  
+  void EHMTXStartRunningTrigger::process()
   {
     this->trigger();
   }
