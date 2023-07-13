@@ -23,12 +23,9 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2023.6.5";
+static const char *const EHMTX_VERSION = "2023.7.0";
 static const char *const TAG = "EHMTXv2";
-#ifndef USE_ESP8266
-static const char *const EHMTX_LOGO = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
-static const char *const EHMTX_SLOGO = "[2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,0,2016,0,2016,0,31,31,0,0,0,2016,0,31,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,31,31,31]";
-#endif
+
 enum show_mode : uint8_t
 {
   MODE_EMPTY = 0,
@@ -186,6 +183,13 @@ namespace esphome
     void add_on_icon_error_trigger(EHMTXIconErrorTrigger *t) { this->on_icon_error_triggers_.push_back(t); }
     void add_on_expired_screen_trigger(EHMTXExpiredScreenTrigger *t) { this->on_expired_screen_triggers_.push_back(t); }
     void add_on_next_clock_trigger(EHMTXNextClockTrigger *t) { this->on_next_clock_triggers_.push_back(t); }
+
+#ifndef USE_ESP8266
+  #ifdef EHMTXv2_BOOTLOGO
+    void display_boot_logo();
+    void display_version();
+  #endif
+#endif
 
     void update();
     uint8_t get_brightness();

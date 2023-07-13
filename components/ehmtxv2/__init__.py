@@ -71,6 +71,7 @@ CONF_CLOCKINTERVAL = "clock_interval"
 CONF_TIMECOMPONENT = "time_component"
 CONF_LAMEID = "lameid"
 CONF_RGB565ARRAY = "str565"
+CONF_BOOTLOGO = "boot_logo"
 CONF_LIFETIME = "lifetime"
 CONF_ICONS = "icons"
 CONF_SHOWDOW = "show_dow"
@@ -201,6 +202,7 @@ EHMTX_SCHEMA = cv.Schema({
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(NextClockTrigger),
         }
     ),
+    cv.Optional(CONF_BOOTLOGO): cv.string,
     cv.Optional(CONF_ON_EXPIRED_SCREEN): automation.validate_automation(
         {
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(ExpiredScreenTrigger),
@@ -415,6 +417,10 @@ async def to_code(config):
     cg.add_define("EHMTXv2_DEFAULT_CLOCK_FONT",config[CONF_CLOCKFONT])    
     cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])    
     cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])    
+    
+    if config.get(CONF_BOOTLOGO):
+        cg.add_define("EHMTXv2_BOOTLOGO",config[CONF_BOOTLOGO])
+    
     if config[CONF_SCROLL_SMALL_TEXT]:
         cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT")
     if config[CONF_ALLOW_EMPTY_SCREEN]:

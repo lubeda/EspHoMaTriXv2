@@ -354,6 +354,10 @@ namespace esphome
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
 #ifndef USE_ESP8266
+  #ifdef EHMTXv2_BOOTLOGO
+    register_service(&EHMTX::display_boot_logo, "display_boot_logo");
+    register_service(&EHMTX::display_version, "display_version");
+  #endif
     register_service(&EHMTX::color_gauge, "color_gauge", {"colors"});
     register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"icon", "lifetime", "screen_time"});
     register_service(&EHMTX::bitmap_small, "bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
@@ -375,6 +379,18 @@ namespace esphome
       this->hide_alarm();
     }
   }
+
+#ifndef USE_ESP8266
+  #ifdef EHMTXv2_BOOTLOGO
+    void EHMTX::display_boot_logo() {
+      this->bitmap_screen(EHMTXv2_BOOTLOGO, 1, 10);
+    } 
+    void EHMTX::display_version() {
+        this->bitmap_small("[2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,0,2016,0,2016,0,31,31,0,0,0,2016,0,31,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,31,31,31]", EHMTX_VERSION, 1, 10);
+    }
+
+  #endif
+#endif
 
   void EHMTX::hide_alarm()
   {
@@ -398,8 +414,9 @@ namespace esphome
       {
         ESP_LOGD(TAG, "time sync => start running");
 #ifndef USE_ESP8266
-        this->bitmap_screen(EHMTX_LOGO, 1, 10);
-        this->bitmap_small(EHMTX_SLOGO, EHMTX_VERSION, 1, 10);
+  #ifdef EHMTXv2_BOOTLOGO
+        this->bitmap_screen(EHMTXv2_BOOTLOGO, 1, 10);
+  #endif
 #endif
         this->clock_screen(14 * 24 * 60, this->clock_time, EHMTXv2_DEFAULT_CLOCK_FONT, C_RED, C_GREEN, C_BLUE);
         this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, EHMTXv2_DEFAULT_CLOCK_FONT, C_RED, C_GREEN, C_BLUE);
