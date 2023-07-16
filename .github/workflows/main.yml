@@ -40,7 +40,7 @@ jobs:
           version: latest
       - name: Build firmware with dev
         uses: esphome/build-action@v1.8.0
-        id: esphome-build
+        id: esphome-build-dev
         with:
           yaml_file: ${{ matrix.devfirmware.file }}
           version: 2023.7.0-dev
