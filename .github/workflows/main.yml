@@ -40,7 +40,7 @@ jobs:
           version: latest
       - name: Build firmware with beta
         uses: esphome/build-action@v1.8.0
-        id: esphome-build
+        id: esphome-build-beta
         with:
           yaml_file: ${{ matrix.firmware.file }}
           version: beta
