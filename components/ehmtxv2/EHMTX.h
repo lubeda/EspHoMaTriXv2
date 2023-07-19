@@ -1,7 +1,10 @@
 #ifndef EHMTX_H
 #define EHMTX_H
 #include "esphome.h"
+
 #include "esphome/components/time/real_time_clock.h"
+#include "esphome/components/animation/animation.h"
+#include "esphome/components/image/image.h"
 
 const uint8_t MAXQUEUE = 24;
 const uint8_t C_RED = 240; // default
@@ -89,8 +92,8 @@ namespace esphome
     EHMTX_Icon *icons[MAXICONS];
     uint8_t gauge_value;
 #endif
-    display::Font *default_font;
-    display::Font *special_font;
+    display::BaseFont *default_font;
+    display::BaseFont *special_font;
     int display_rindicator;
     int display_lindicator;
     int display_alarm;
@@ -144,8 +147,8 @@ namespace esphome
     void set_display_on();
     void set_display_off();
     void set_clock(esphome::time::RealTimeClock *clock);
-    void set_default_font(display::Font *font);
-    void set_special_font(display::Font *font);
+    void set_default_font(display::BaseFont *font);
+    void set_special_font(display::BaseFont *font);
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
@@ -267,13 +270,13 @@ namespace esphome
     void process();
   };
 
-  class EHMTX_Icon : public display::Animation
+  class EHMTX_Icon : public animation::Animation
   {
   protected:
     bool counting_up;
 
   public:
-    EHMTX_Icon(const uint8_t *data_start, int width, int height, uint32_t animation_frame_count, display::ImageType type, std::string icon_name, bool revers, uint16_t frame_duration);
+    EHMTX_Icon(const uint8_t *data_start, int width, int height, uint32_t animation_frame_count, esphome::image::ImageType type, std::string icon_name, bool revers, uint16_t frame_duration);
     std::string name;
     uint16_t frame_duration;
     void next_frame();
