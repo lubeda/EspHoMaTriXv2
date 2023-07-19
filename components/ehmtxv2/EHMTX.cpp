@@ -674,12 +674,12 @@ namespace esphome
       ESP_LOGI(TAG, "queue: %d empty slots", empty);
   }
 
-  void EHMTX::set_default_font(display::Font *font)
+  void EHMTX::set_default_font(display::BaseFont *font)
   {
     this->default_font = font;
   }
 
-  void EHMTX::set_special_font(display::Font *font)
+  void EHMTX::set_special_font(display::BaseFont *font)
   {
     this->special_font = font;
   }

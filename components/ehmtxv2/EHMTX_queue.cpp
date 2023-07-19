@@ -145,7 +145,7 @@ namespace esphome
 
   void EHMTX_queue::draw()
   {
-    display::Font *font = this->default_font ? this->config_->default_font : this->config_->special_font;
+    display::BaseFont *font = this->default_font ? this->config_->default_font : this->config_->special_font;
     int8_t yoffset = this->default_font ? EHMTXv2_DEFAULT_FONT_OFFSET_Y : EHMTXv2_SPECIAL_FONT_OFFSET_Y;
     int8_t xoffset = this->default_font ? EHMTXv2_DEFAULT_FONT_OFFSET_X : EHMTXv2_SPECIAL_FONT_OFFSET_X;
 
