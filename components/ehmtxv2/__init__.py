@@ -16,8 +16,7 @@ from esphome.cpp_generator import RawExpression
 _LOGGER = logging.getLogger(__name__)
 
 DEPENDENCIES = ["display", "light", "api"]
-AUTO_LOAD = ["ehmtxv2"]
-AUTO_LOAD = ["json"]
+AUTO_LOAD = ["ehmtxv2","json"]
 IMAGE_TYPE_RGB565 = 4
 MAXFRAMES = 110
 MAXICONS = 90
@@ -454,5 +453,5 @@ async def to_code(config):
     for conf in config.get(CONF_ON_ADD_SCREEN, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.uint8 , "mode")] , conf)
-
+   
     await cg.register_component(var, config)

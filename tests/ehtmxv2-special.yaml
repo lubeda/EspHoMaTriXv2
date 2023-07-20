@@ -53,7 +53,7 @@ esp8266:
   board: $board
 
 font:
-  - file: EHMTXv2.ttf
+  - file: CalciumThinTall.ttf
     size: 16
     id: default_font
     glyphs:  |
@@ -128,6 +128,7 @@ ehmtxv2:
   rtl: true
   default_font_id: default_font
   special_font_id: default_font 
+  default_font_yoffset: 8
   icons: 
     - id: error
       lameid: 40530

@@ -59,7 +59,7 @@ In easy mode you'll have a clock with auto brightness control and after step 3 y
 Copy these files from the source folder `copy2esphome`:
 
 - ulanzi-simple.yaml
-- EHMTXv2.ttf
+- CalciumThinTall.ttf
 
 to your esphome directory (usually /config/esphome). In your esphome dashboard, you will find a new device named `ulanzi-easy`.
 
@@ -429,11 +429,11 @@ You can configure two fonts if you like.
 
 Trip5 is also providing special fonts for 8x32 matrices in his [repo](https://github.com/trip5/MatrixClockFonts)
 
-For Europeans starters, you can use the font EHMTXv2.ttf of the copy2esphome folder.
+dbuezas has also contributed tow optimized fonts with umlauts for this kind of display CalciumThinTall.ttf and CalciumSuperThinTall.ttf. They are included in the copy2esphome folder
 
 ```yaml
 font:
-  - file: EHMTXv2.ttf
+  - file: CalciumThinTall.ttf
     id: default_font
     size: 16
     glyphs:  |
@@ -1128,6 +1128,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 ## Thanks
 
 - **[blakadder](https://github.com/blakadder)** for his contribution (cleanup README.md, fixed sample)
+- **[dbuezas](https://github.com/dbuezas)** for his fonts [infos](https://github.com/lubeda/EspHoMaTriXv2/issues/63)
 - **[andrew-codechimp](https://github.com/andrew-codechimp)** for his contribution (display on/off & del_screen "*" & show_clock with 0) and improved blueprint slelection
 - **[jd1](https://github.com/jd1)** for his contributions
 - **[aptonline](https://github.com/aptonline)** for his work on the Ulanzi hardware

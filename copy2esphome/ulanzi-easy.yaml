@@ -78,7 +78,7 @@ esp32:
   board: esp32dev
 
 font:
-  - file: EHMTXv2.ttf
+  - file: CalciumThinTall.ttf
     size: 16
     id: default_font
     glyphs:  |
