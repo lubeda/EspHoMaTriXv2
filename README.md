@@ -1,5 +1,9 @@
 # EspHoMaTriX version 2 (EHMTXv2)
 
+## Warning
+
+Sorry but there this modules is highly dependend from the esphome releases. You can expect that some breaking changes in esphome breaks my code. So This version of EspHoMaTriX is working from esphome **2023.7.0** upwards (hopefully).
+
 ## Important information
 
 If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!
