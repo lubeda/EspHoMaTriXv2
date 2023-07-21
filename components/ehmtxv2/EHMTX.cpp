@@ -11,7 +11,6 @@ namespace esphome
     this->display_lindicator = 0;
     this->display_alarm = 0;
     this->clock_time = 10;
-    this->hold_time = 10;
     this->icon_count = 0;
     this->hue_ = 0;
     this->text_color = Color(C_RED, C_GREEN, C_BLUE);
@@ -421,6 +420,10 @@ namespace esphome
         this->clock_screen(14 * 24 * 60, this->clock_time, EHMTXv2_DEFAULT_CLOCK_FONT, C_RED, C_GREEN, C_BLUE);
         this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, EHMTXv2_DEFAULT_CLOCK_FONT, C_RED, C_GREEN, C_BLUE);
         this->is_running = true;
+        for (auto *t : on_start_running_triggers_)
+        {
+          t->process();
+        }
       }
     }
     else
@@ -651,8 +654,7 @@ namespace esphome
 
   void EHMTX::hold_screen(int time)
   {
-    this->next_action_time += this->hold_time;
-    this->hold_time = time;
+    this->next_action_time = this->clock->now().timestamp + time;
   }
 
   void EHMTX::get_status()
@@ -1148,17 +1150,28 @@ namespace esphome
       {
         this->draw_gauge();
       }
-      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
-      {
+      #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
+        if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
+        {
+      #endif
 
         this->draw_rindicator();
+      #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         if (this->queue[this->screen_pointer]->mode != MODE_ICON_SCREEN && this->queue[this->screen_pointer]->mode != MODE_RAINBOW_ICON && !this->display_gauge)
         {
+      #endif
           this->draw_lindicator();
+      #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         }
       }
+    #endif
       this->draw_alarm();
     }
+  }
+
+  void EHMTXStartRunningTrigger::process()
+  {
+    this->trigger();
   }
 
   void EHMTXNextScreenTrigger::process(std::string iconname, std::string text)

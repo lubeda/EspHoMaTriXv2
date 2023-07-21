@@ -54,6 +54,7 @@ namespace esphome
   class EHMTXIconErrorTrigger;
   class EHMTXExpiredScreenTrigger;
   class EHMTXNextClockTrigger;
+  class EHMTXStartRunningTrigger;
 
   class EHMTX : public PollingComponent, public api::CustomAPIDevice
   {
@@ -68,6 +69,7 @@ namespace esphome
     std::vector<EHMTXIconErrorTrigger *> on_icon_error_triggers_;
     std::vector<EHMTXExpiredScreenTrigger *> on_expired_screen_triggers_;
     std::vector<EHMTXNextClockTrigger *> on_next_clock_triggers_;
+    std::vector<EHMTXStartRunningTrigger *> on_start_running_triggers_;
     std::vector<EHMTXAddScreenTrigger *> on_add_screen_triggers_;
     EHMTX_queue *find_icon_queue_element(uint8_t icon);
     EHMTX_queue *find_free_queue_element();
@@ -109,7 +111,6 @@ namespace esphome
     esphome::time::RealTimeClock *clock;
 
     bool show_seconds;
-    uint16_t hold_time; // seconds display of screen_time to extend
 
     uint8_t icon_count; // max iconnumber -1
     unsigned long last_scroll_time;
@@ -137,7 +138,6 @@ namespace esphome
     void skip_screen();
     void hold_screen(int t = 30);
     void set_display(addressable_light::AddressableLightDisplay *disp);
-    void set_hold_time(uint16_t t = 30);
     void set_clock_time(uint16_t t = 10);
     void set_show_day_of_week(bool b=true);
     void set_show_seconds(bool b=false);
@@ -185,7 +185,7 @@ namespace esphome
     void add_on_icon_error_trigger(EHMTXIconErrorTrigger *t) { this->on_icon_error_triggers_.push_back(t); }
     void add_on_expired_screen_trigger(EHMTXExpiredScreenTrigger *t) { this->on_expired_screen_triggers_.push_back(t); }
     void add_on_next_clock_trigger(EHMTXNextClockTrigger *t) { this->on_next_clock_triggers_.push_back(t); }
-
+    void add_on_start_running_trigger(EHMTXStartRunningTrigger *t) { this->on_start_running_triggers_.push_back(t); }
 #ifndef USE_ESP8266
   #ifdef EHMTXv2_BOOTLOGO
     void display_boot_logo();
@@ -253,6 +253,13 @@ namespace esphome
   public:
     explicit EHMTXIconErrorTrigger(EHMTX *parent) { parent->add_on_icon_error_trigger(this); }
     void process(std::string);
+  };
+
+ class EHMTXStartRunningTrigger : public Trigger<>
+  {
+  public:
+    explicit EHMTXStartRunningTrigger(EHMTX *parent) { parent->add_on_start_running_trigger(this); }
+    void process();
   };
 
   class EHMTXExpiredScreenTrigger : public Trigger<std::string, std::string>

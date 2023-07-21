@@ -44,6 +44,10 @@ ehmtx_ns = cg.esphome_ns.namespace("esphome")
 EHMTX_ = ehmtx_ns.class_("EHMTX", cg.Component)
 Icons_ = ehmtx_ns.class_("EHMTX_Icon")
 
+StartRunningTrigger = ehmtx_ns.class_(
+    "EHMTXStartRunningTrigger", automation.Trigger.template(cg.std_string)
+)
+
 NextScreenTrigger = ehmtx_ns.class_(
     "EHMTXNextScreenTrigger", automation.Trigger.template(cg.std_string)
 )
@@ -67,6 +71,7 @@ AddScreenTrigger = ehmtx_ns.class_(
 CONF_URL = "url"
 CONF_FLAG = "flag"
 CONF_CLOCKINTERVAL = "clock_interval"
+CONF_ALWAYS_SHOW_RLINDICATORS = "always_show_rl_indicators"
 CONF_TIMECOMPONENT = "time_component"
 CONF_LAMEID = "lameid"
 CONF_RGB565ARRAY = "str565"
@@ -95,6 +100,7 @@ CONF_SPECIAL_FONT_YOFFSET = "special_font_yoffset"
 CONF_PINGPONG = "pingpong"
 CONF_TIME_FORMAT = "time_format"
 CONF_DATE_FORMAT = "date_format"
+CONF_ON_START_RUNNING = "on_start_running"
 CONF_ON_NEXT_SCREEN = "on_next_screen"
 CONF_ON_NEXT_CLOCK = "on_next_clock"
 CONF_ON_ICON_ERROR = "on_icon_error"
@@ -150,6 +156,9 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_TIME_FORMAT, default="%H:%M"
     ): cv.string,
     cv.Optional(
+        CONF_ALWAYS_SHOW_RLINDICATORS, default=False
+    ): cv.boolean,
+    cv.Optional(
         CONF_DATE_FORMAT, default="%d.%m."
     ): cv.string,
     cv.Optional(
@@ -199,6 +208,11 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(CONF_ON_NEXT_CLOCK): automation.validate_automation(
         {
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(NextClockTrigger),
+        }
+    ),
+    cv.Optional(CONF_ON_START_RUNNING): automation.validate_automation(
+        {
+            cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(StartRunningTrigger),
         }
     ),
     cv.Optional(CONF_BOOTLOGO): cv.string,
@@ -403,6 +417,9 @@ async def to_code(config):
 
     cg.add(var.set_brightness(config[CONF_BRIGHTNESS]))
     
+    if config[CONF_ALWAYS_SHOW_RLINDICATORS]:
+        cg.add_define("EHMTXv2_ALWAYS_SHOW_RLINDICATORS")
+
     cg.add_define("EHMTXv2_SCROLL_INTERVALL",config[CONF_SCROLLINTERVAL])
     cg.add_define("EHMTXv2_RAINBOW_INTERVALL",config[CONF_RAINBOWINTERVAL])
     cg.add_define("EHMTXv2_FRAME_INTERVALL",config[CONF_FRAMEINTERVAL])
@@ -454,4 +471,8 @@ async def to_code(config):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.uint8 , "mode")] , conf)
    
+    for conf in config.get(CONF_ON_START_RUNNING, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [] , conf)
+
     await cg.register_component(var, config)
