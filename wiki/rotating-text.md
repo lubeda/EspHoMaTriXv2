@@ -13,7 +13,7 @@ ehmtxv2:
   ...
 ```
 
-to display text thas is scrolled arounf the display even if it is short and normally should be centered.
+to display text thas is scrolled around the display even if it is short and normally should be centered.
 
 To display time you can use this automation:
 

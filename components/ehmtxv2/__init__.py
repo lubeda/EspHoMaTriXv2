@@ -1,6 +1,7 @@
 from argparse import Namespace
 import logging
 import io
+import json
 import requests
 
 from esphome import core, automation
@@ -15,8 +16,7 @@ from esphome.cpp_generator import RawExpression
 _LOGGER = logging.getLogger(__name__)
 
 DEPENDENCIES = ["display", "light", "api"]
-AUTO_LOAD = ["ehmtxv2"]
-AUTO_LOAD = ["json"]
+AUTO_LOAD = ["ehmtxv2","json"]
 IMAGE_TYPE_RGB565 = 4
 MAXFRAMES = 110
 MAXICONS = 90
@@ -35,9 +35,19 @@ logging.warning(f"")
 def rgb565_svg(x,y,r,g,b):
     return f"<rect style=\"fill:rgb({(r << 3) | (r >> 2)},{(g << 2) | (g >> 4)},{(b << 3) | (b >> 2)});\" x=\"{x*10}\" y=\"{y*10}\" width=\"10\" height=\"10\"/>"
 
+def rgb565_888(v565):
+    b = (((v565)&0x001F) << 3)
+    g = (((v565)&0x07E0) >> 3)
+    r = (((v565)&0xF800) >> 8)
+    return (r,g,b)
+
 ehmtx_ns = cg.esphome_ns.namespace("esphome")
 EHMTX_ = ehmtx_ns.class_("EHMTX", cg.Component)
 Icons_ = ehmtx_ns.class_("EHMTX_Icon")
+
+StartRunningTrigger = ehmtx_ns.class_(
+    "EHMTXStartRunningTrigger", automation.Trigger.template(cg.std_string)
+)
 
 NextScreenTrigger = ehmtx_ns.class_(
     "EHMTXNextScreenTrigger", automation.Trigger.template(cg.std_string)
@@ -62,8 +72,11 @@ AddScreenTrigger = ehmtx_ns.class_(
 CONF_URL = "url"
 CONF_FLAG = "flag"
 CONF_CLOCKINTERVAL = "clock_interval"
+CONF_ALWAYS_SHOW_RLINDICATORS = "always_show_rl_indicators"
 CONF_TIMECOMPONENT = "time_component"
 CONF_LAMEID = "lameid"
+CONF_RGB565ARRAY = "str565"
+CONF_BOOTLOGO = "boot_logo"
 CONF_LIFETIME = "lifetime"
 CONF_ICONS = "icons"
 CONF_SHOWDOW = "show_dow"
@@ -88,6 +101,7 @@ CONF_SPECIAL_FONT_YOFFSET = "special_font_yoffset"
 CONF_PINGPONG = "pingpong"
 CONF_TIME_FORMAT = "time_format"
 CONF_DATE_FORMAT = "date_format"
+CONF_ON_START_RUNNING = "on_start_running"
 CONF_ON_NEXT_SCREEN = "on_next_screen"
 CONF_ON_NEXT_CLOCK = "on_next_clock"
 CONF_ON_ICON_ERROR = "on_icon_error"
@@ -143,6 +157,9 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_TIME_FORMAT, default="%H:%M"
     ): cv.string,
     cv.Optional(
+        CONF_ALWAYS_SHOW_RLINDICATORS, default=False
+    ): cv.boolean,
+    cv.Optional(
         CONF_DATE_FORMAT, default="%d.%m."
     ): cv.string,
     cv.Optional(
@@ -194,6 +211,12 @@ EHMTX_SCHEMA = cv.Schema({
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(NextClockTrigger),
         }
     ),
+    cv.Optional(CONF_ON_START_RUNNING): automation.validate_automation(
+        {
+            cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(StartRunningTrigger),
+        }
+    ),
+    cv.Optional(CONF_BOOTLOGO): cv.string,
     cv.Optional(CONF_ON_EXPIRED_SCREEN): automation.validate_automation(
         {
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(ExpiredScreenTrigger),
@@ -207,6 +230,7 @@ EHMTX_SCHEMA = cv.Schema({
                 cv.Exclusive(CONF_FILE,"uri"): cv.file_,
                 cv.Exclusive(CONF_URL,"uri"): cv.url,
                 cv.Exclusive(CONF_LAMEID,"uri"): cv.string,
+                cv.Exclusive(CONF_RGB565ARRAY,"uri"): cv.string,
                 cv.Optional(CONF_RESIZE): cv.dimensions,
                 cv.Optional(
                     CONF_FRAMEDURATION, default="0"
@@ -271,7 +295,20 @@ async def to_code(config):
             if r.status_code != requests.codes.ok:
                 raise core.EsphomeError(f" ICONS: Could not download image file {conf[CONF_URL]}: {conf[CONF_ID]}")
             image = Image.open(io.BytesIO(r.content))
-        
+        elif CONF_RGB565ARRAY in conf:
+            r = list(json.loads(conf[CONF_RGB565ARRAY]))
+            if len(r) == 64:
+                image = Image.new("RGB",[8,8])
+                for y in range(0,8):
+                   for x in range(0,8):
+                        image.putpixel((x,y),rgb565_888(r[x+y*8]))
+            elif len(r) == 256:
+                image = Image.new("RGB",[32,8])
+                for y in range(0,8):
+                    for x in range(0,32):
+                        image.putpixel((x,y),rgb565_888(r[x+y*32]))
+                        
+                           
         width, height = image.size
 
         if CONF_RESIZE in conf:
@@ -381,6 +418,9 @@ async def to_code(config):
 
     cg.add(var.set_brightness(config[CONF_BRIGHTNESS]))
     
+    if config[CONF_ALWAYS_SHOW_RLINDICATORS]:
+        cg.add_define("EHMTXv2_ALWAYS_SHOW_RLINDICATORS")
+
     cg.add_define("EHMTXv2_SCROLL_INTERVALL",config[CONF_SCROLLINTERVAL])
     cg.add_define("EHMTXv2_RAINBOW_INTERVALL",config[CONF_RAINBOWINTERVAL])
     cg.add_define("EHMTXv2_FRAME_INTERVALL",config[CONF_FRAMEINTERVAL])
@@ -394,6 +434,10 @@ async def to_code(config):
     cg.add_define("EHMTXv2_DEFAULT_CLOCK_FONT",config[CONF_CLOCKFONT])    
     cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])    
     cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])    
+    
+    if config.get(CONF_BOOTLOGO):
+        cg.add_define("EHMTXv2_BOOTLOGO",config[CONF_BOOTLOGO])
+    
     if config[CONF_SCROLL_SMALL_TEXT]:
         cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT")
     if config[CONF_ALLOW_EMPTY_SCREEN]:
@@ -427,5 +471,9 @@ async def to_code(config):
     for conf in config.get(CONF_ON_ADD_SCREEN, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.uint8 , "mode")] , conf)
+   
+    for conf in config.get(CONF_ON_START_RUNNING, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [] , conf)
 
     await cg.register_component(var, config)

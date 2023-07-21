@@ -11,13 +11,11 @@ namespace esphome
     this->display_lindicator = 0;
     this->display_alarm = 0;
     this->clock_time = 10;
-    this->hold_time = 10;
     this->icon_count = 0;
     this->hue_ = 0;
     this->text_color = Color(C_RED, C_GREEN, C_BLUE);
     this->today_color = Color(C_RED, C_GREEN, C_BLUE);
     this->weekday_color = Color(CD_RED, CD_GREEN, CD_BLUE);
-    this->clock_color = Color(C_RED, C_GREEN, C_BLUE);
     this->rainbow_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->alarm_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->next_action_time = 0;
@@ -94,12 +92,6 @@ namespace esphome
   {
     this->weekday_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
     ESP_LOGD(TAG, "default weekday color: %d g: %d b: %d", r, g, b);
-  }
-
-  void EHMTX::set_clock_color(int r, int g, int b)
-  {
-    this->clock_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
-    ESP_LOGD(TAG, "default clock color r: %d g: %d b: %d", r, g, b);
   }
 
   bool EHMTX::string_has_ending(std::string const &fullString, std::string const &ending)
@@ -329,7 +321,6 @@ namespace esphome
     register_service(&EHMTX::show_rindicator, "show_rindicator", {"r", "g", "b", "size"});
     register_service(&EHMTX::show_lindicator, "show_lindicator", {"r", "g", "b", "size"});
 
-    register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
     register_service(&EHMTX::set_today_color, "set_today_color", {"r", "g", "b"});
     register_service(&EHMTX::set_weekday_color, "set_weekday_color", {"r", "g", "b"});
 
@@ -354,6 +345,10 @@ namespace esphome
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
 #ifndef USE_ESP8266
+  #ifdef EHMTXv2_BOOTLOGO
+    register_service(&EHMTX::display_boot_logo, "display_boot_logo");
+    register_service(&EHMTX::display_version, "display_version");
+  #endif
     register_service(&EHMTX::color_gauge, "color_gauge", {"colors"});
     register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"icon", "lifetime", "screen_time"});
     register_service(&EHMTX::bitmap_small, "bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
@@ -375,6 +370,18 @@ namespace esphome
       this->hide_alarm();
     }
   }
+
+#ifndef USE_ESP8266
+  #ifdef EHMTXv2_BOOTLOGO
+    void EHMTX::display_boot_logo() {
+      this->bitmap_screen(EHMTXv2_BOOTLOGO, 1, 10);
+    } 
+    void EHMTX::display_version() {
+        this->bitmap_small("[2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,0,2016,0,2016,0,31,31,0,0,0,2016,0,31,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,31,31,31]", EHMTX_VERSION, 1, 10);
+    }
+
+  #endif
+#endif
 
   void EHMTX::hide_alarm()
   {
@@ -398,12 +405,18 @@ namespace esphome
       {
         ESP_LOGD(TAG, "time sync => start running");
 #ifndef USE_ESP8266
-        this->bitmap_screen(EHMTX_LOGO, 1, 10);
-        this->bitmap_small(EHMTX_SLOGO, EHMTX_VERSION, 1, 10);
+  #ifdef EHMTXv2_BOOTLOGO
+        this->bitmap_screen(EHMTXv2_BOOTLOGO, 1, 10);
+  #endif
 #endif
         this->clock_screen(14 * 24 * 60, this->clock_time, EHMTXv2_DEFAULT_CLOCK_FONT, C_RED, C_GREEN, C_BLUE);
         this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, EHMTXv2_DEFAULT_CLOCK_FONT, C_RED, C_GREEN, C_BLUE);
         this->is_running = true;
+        for (auto *t : on_start_running_triggers_)
+        {
+          ESP_LOGD(TAG, "on_start_running_triggers");
+          t->process();
+        }
       }
     }
     else
@@ -545,7 +558,7 @@ namespace esphome
     float red, green, blue;
     esphome::hsv_to_rgb(this->hue_, 0.8, 0.8, red, green, blue);
     this->rainbow_color = Color(uint8_t(255 * red), uint8_t(255 * green), uint8_t(255 * blue));
-
+    
     if (this->is_running && this->clock->now().is_valid())
     {
       time_t ts = this->clock->now().timestamp;
@@ -608,16 +621,16 @@ namespace esphome
         }
       }
       // blend handling
-
+      
 #ifdef EHMTXv2_BLEND_STEPS
-      if (this->ticks_ <= EHMTXv2_BLEND_STEPS)
+      if ((this->ticks_ <= EHMTXv2_BLEND_STEPS)) 
       {
-        uint8_t b = this->brightness_;
-        float br = lerp((float)this->ticks_ / EHMTXv2_BLEND_STEPS, 0, (float)b / 255);
-        this->display->get_light()->set_correction(br, br, br);
+          uint8_t b = this->brightness_;
+          float br = lerp((float)this->ticks_ / EHMTXv2_BLEND_STEPS, 0, (float)b / 255);
+          this->display->get_light()->set_correction(br, br, br);
       }
 #endif
-      this->ticks_++;
+    this->ticks_++;
     }
     else
     {
@@ -634,8 +647,7 @@ namespace esphome
 
   void EHMTX::hold_screen(int time)
   {
-    this->next_action_time += this->hold_time;
-    this->hold_time = time;
+    this->next_action_time = this->clock->now().timestamp + time;
   }
 
   void EHMTX::get_status()
@@ -877,7 +889,6 @@ namespace esphome
   void EHMTX::clock_screen(int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
     EHMTX_queue *screen = this->find_free_queue_element();
-
     screen->text_color = Color(r, g, b);
     ESP_LOGD(TAG, "clock_screen_color lifetime: %d screen_time: %d red: %d green: %d blue: %d", lifetime, screen_time, r, g, b);
     screen->mode = MODE_CLOCK;
@@ -1047,6 +1058,9 @@ namespace esphome
 #ifdef EHMTXv2_USE_RTL
     ESP_LOGCONFIG(TAG, "RTL activated");
 #endif
+#ifdef EHMTXv2_BLEND_STEPS
+    ESP_LOGCONFIG(TAG, "Fade in activated: %d steps",EHMTXv2_BLEND_STEPS);
+#endif
     if (EHMTXv2_WEEK_START)
     {
       ESP_LOGCONFIG(TAG, "weekstart: monday");
@@ -1128,17 +1142,28 @@ namespace esphome
       {
         this->draw_gauge();
       }
-      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
-      {
+      #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
+        if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
+        {
+      #endif
 
         this->draw_rindicator();
+      #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         if (this->queue[this->screen_pointer]->mode != MODE_ICON_SCREEN && this->queue[this->screen_pointer]->mode != MODE_RAINBOW_ICON && !this->display_gauge)
         {
+      #endif
           this->draw_lindicator();
+      #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         }
       }
+    #endif
       this->draw_alarm();
     }
+  }
+
+  void EHMTXStartRunningTrigger::process()
+  {
+    this->trigger();
   }
 
   void EHMTXNextScreenTrigger::process(std::string iconname, std::string text)

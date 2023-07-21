@@ -24,6 +24,10 @@ jobs:
           - file:  tests/ehtmxv2-special.yaml
             name: EHMTX template 8266
             manifest_filename: ehtmxv2-special-template-manifest.json
+        devfirmware:
+          - file: tests/ulanzi-easy.yaml
+            name: Ulanzi-Easy
+            manifest_filename: ulanzi-easy-manifest.json
       fail-fast: false
     steps:
       - name: Checkout source code
@@ -34,3 +38,9 @@ jobs:
         with:
           yaml_file: ${{ matrix.firmware.file }}
           version: latest
+      # - name: Build firmware with beta
+      #   uses: esphome/build-action@v1.8.0
+      #   id: esphome-build-beta
+      #   with:
+      #     yaml_file: ${{ matrix.firmware.file }}
+      #     version: beta

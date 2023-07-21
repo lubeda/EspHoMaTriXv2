@@ -13,6 +13,14 @@ substitutions:
   scl_pin: GPIO22 
   sda_pin: GPIO21 
 
+animation:
+  - id: animation_black
+    file: 1pixel.gif
+
+image:
+  - id: image_black
+    file: 1pixel.gif
+
 switch:
   - platform: template
     name: "Auto-Adjust Brightness"
@@ -75,7 +83,7 @@ esp32:
   board: esp32dev
 
 font:
-  - file: EHMTXv2.ttf
+  - file: mateine.ttf
     size: 16
     id: default_font
     glyphs:  |
@@ -230,7 +238,9 @@ ehmtxv2:
   date_format: "%d.%m."
   show_seconds: false
   default_font_id: default_font
+  default_font_yoffset: 8
   special_font_id: default_font 
+  special_font_yoffset: 8
   icons: 
     - id: error
       lameid: 40530

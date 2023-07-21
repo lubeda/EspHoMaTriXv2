@@ -1,6 +1,7 @@
 #ifndef EHMTX_H
 #define EHMTX_H
 #include "esphome.h"
+
 #include "esphome/components/time/real_time_clock.h"
 #include "esphome/components/animation/animation.h"
 
@@ -24,12 +25,9 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2023.6.5";
+static const char *const EHMTX_VERSION = "2023.7.0";
 static const char *const TAG = "EHMTXv2";
-#ifndef USE_ESP8266
-static const char *const EHMTX_LOGO = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
-static const char *const EHMTX_SLOGO = "[2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,0,2016,0,2016,0,31,31,0,0,0,2016,0,31,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,31,31,31]";
-#endif
+
 enum show_mode : uint8_t
 {
   MODE_EMPTY = 0,
@@ -56,6 +54,7 @@ namespace esphome
   class EHMTXIconErrorTrigger;
   class EHMTXExpiredScreenTrigger;
   class EHMTXNextClockTrigger;
+  class EHMTXStartRunningTrigger;
 
   class EHMTX : public PollingComponent, public api::CustomAPIDevice
   {
@@ -70,6 +69,7 @@ namespace esphome
     std::vector<EHMTXIconErrorTrigger *> on_icon_error_triggers_;
     std::vector<EHMTXExpiredScreenTrigger *> on_expired_screen_triggers_;
     std::vector<EHMTXNextClockTrigger *> on_next_clock_triggers_;
+    std::vector<EHMTXStartRunningTrigger *> on_start_running_triggers_;
     std::vector<EHMTXAddScreenTrigger *> on_add_screen_triggers_;
     EHMTX_queue *find_icon_queue_element(uint8_t icon);
     EHMTX_queue *find_free_queue_element();
@@ -81,7 +81,7 @@ namespace esphome
     uint16_t hue_ = 0;
     void dump_config();
 #ifdef USE_ESP32
-    PROGMEM Color text_color, alarm_color, rindicator_color,  lindicator_color,clock_color, today_color, weekday_color, rainbow_color;
+    PROGMEM Color text_color, alarm_color, rindicator_color,  lindicator_color, today_color, weekday_color, rainbow_color;
     PROGMEM Color bitmap[256];
     PROGMEM Color sbitmap[64];
     PROGMEM Color cgauge[8];
@@ -89,7 +89,7 @@ namespace esphome
 #endif
 
 #ifdef USE_ESP8266
-    Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, clock_color, today_color, weekday_color, rainbow_color;
+    Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, today_color, weekday_color, rainbow_color;
     EHMTX_Icon *icons[MAXICONS];
     uint8_t gauge_value;
 #endif
@@ -111,7 +111,6 @@ namespace esphome
     esphome::time::RealTimeClock *clock;
 
     bool show_seconds;
-    uint16_t hold_time; // seconds display of screen_time to extend
 
     uint8_t icon_count; // max iconnumber -1
     unsigned long last_scroll_time;
@@ -139,7 +138,6 @@ namespace esphome
     void skip_screen();
     void hold_screen(int t = 30);
     void set_display(addressable_light::AddressableLightDisplay *disp);
-    void set_hold_time(uint16_t t = 30);
     void set_clock_time(uint16_t t = 10);
     void set_show_day_of_week(bool b=true);
     void set_show_seconds(bool b=false);
@@ -152,7 +150,6 @@ namespace esphome
     void set_special_font(display::BaseFont *font);
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
-    void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void set_today_color(int r, int g, int b);
     void set_weekday_color(int r, int g, int b);
     void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
@@ -187,6 +184,13 @@ namespace esphome
     void add_on_icon_error_trigger(EHMTXIconErrorTrigger *t) { this->on_icon_error_triggers_.push_back(t); }
     void add_on_expired_screen_trigger(EHMTXExpiredScreenTrigger *t) { this->on_expired_screen_triggers_.push_back(t); }
     void add_on_next_clock_trigger(EHMTXNextClockTrigger *t) { this->on_next_clock_triggers_.push_back(t); }
+    void add_on_start_running_trigger(EHMTXStartRunningTrigger *t) { this->on_start_running_triggers_.push_back(t); }
+#ifndef USE_ESP8266
+  #ifdef EHMTXv2_BOOTLOGO
+    void display_boot_logo();
+    void display_version();
+  #endif
+#endif
 
     void update();
     uint8_t get_brightness();
@@ -248,6 +252,13 @@ namespace esphome
   public:
     explicit EHMTXIconErrorTrigger(EHMTX *parent) { parent->add_on_icon_error_trigger(this); }
     void process(std::string);
+  };
+
+ class EHMTXStartRunningTrigger : public Trigger<>
+  {
+  public:
+    explicit EHMTXStartRunningTrigger(EHMTX *parent) { parent->add_on_start_running_trigger(this); }
+    void process();
   };
 
   class EHMTXExpiredScreenTrigger : public Trigger<std::string, std::string>

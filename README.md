@@ -1,8 +1,31 @@
 # EspHoMaTriX version 2 (EHMTXv2)
 
-## Warning
+[donation-badge]:https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white
+[donation-url]: https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU
 
-Sorry but there this modules is highly dependend from the esphome releases. You can expect that some breaking changes in esphome breaks my code. So This version of EspHoMaTriX is working from esphome **2023.7.0** upwards (hopefully).
+![Home Assistant](https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white)
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+[![Donate][donation-badge]][donation-url]
+
+## Attention
+
+Some updates of esphome will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files neccessary.
+
+You have to add this to your YAML
+
+```yaml
+image:
+   - file: 1pixel.gif
+     id: breaking20237
+
+animation:
+  - file: 1pixel.gif
+    id: breaking20237
+```
+
+You have also to copy the file 1pixel.gif from the copy2esphome folder to the directory with your yaml.
+
+Also there might be [breaking changes](#breaking-changes) due to a redesign of EspHoMaTriXv2.
 
 ## Important information
 
@@ -56,7 +79,7 @@ In easy mode you'll have a clock with auto brightness control and after step 3 y
 Copy these files from the source folder `copy2esphome`:
 
 - ulanzi-simple.yaml
-- EHMTXv2.ttf
+- mateine.ttf
 
 to your esphome directory (usually /config/esphome). In your esphome dashboard, you will find a new device named `ulanzi-easy`.
 
@@ -426,11 +449,11 @@ You can configure two fonts if you like.
 
 Trip5 is also providing special fonts for 8x32 matrices in his [repo](https://github.com/trip5/MatrixClockFonts)
 
-For Europeans starters, you can use the font EHMTXv2.ttf of the copy2esphome folder.
+dbuezas has also contributed tow optimized fonts with umlauts for this kind of display `mateine.ttf` and `mateineThin.ttf`. They are included in the copy2esphome folder
 
 ```yaml
 font:
-  - file: EHMTXv2.ttf
+  - file: mateine.ttf
     id: default_font
     size: 16
     glyphs:  |
@@ -557,7 +580,17 @@ ehmtxv2:
 
 **clock_interval** (optional, s): the interval in seconds to force the clock display. By default, the clock screen, if any, will be displayed according to the position in the queue. **If you set the clock_interval close to the screen_time of the clock, you will only see the clock!** (default=0)
 
+**boot_logo** (optional, string , only on ESP32): Display a fullscreen logo defined as rgb565 array.
+
+```yaml
+  boot_logo: "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]" 
+```
+
+If defined you can use the services `display_boot_logo` and `display_version` to display the defined logo or the version of ehmtx.
+
 **icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons.  (default = `false`)
+
+**always_show_rl_indicators** (optional, boolean): If true, always show the r/l indicators on all screens. Default is to not show either on clock, date, full, and bitmap screens, left on icon, or if display gauge displayed. (default = `false`)
 
 ***Example output:***
 ![icon preview](./images/icons_preview.png)
@@ -602,7 +635,6 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`show_gauge"`|"percent", "r", "g", "b"|set the height of the gauge according to the percentage in the given color|
 |`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper-right corner|
 |`show_rindicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
-|`set_clock_color`|"r", "g", "b"|set the default color for the clock/date display|
 |`set_today_color`|"r", "g", "b"|set the special color for today in the day of week line|
 |`set_weekday_color`|"r", "g", "b"|set the default color in the day of week line|
 |`del_screen`|"icon_name", “mode”|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
@@ -699,6 +731,10 @@ ehmtxv2:
             - icon.c_str()
             - mode
 ```
+
+#### on_start_running
+
+The trigger ```on_start_running``` is triggered when the display starts. It is triggered when time sync is done, and initial clock / date / version screens are loaded. This is to allow you to customize the default screens (for instance set colours for the clock).
 
 #### on_icon_error
 
@@ -822,6 +858,8 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_RAINBOW_TEXT|8|
 |MODE_RAINBOW_CLOCK| 9|
 |MODE_RAINBOW_DATE| 10|
+|MODE_BITMAP_SCREEN| 11|
+|MODE_BITMAP_SMALL| 12|
 
 **(D)** Service **display_on** / **display_off**
 
@@ -866,7 +904,7 @@ binary_sensor:
 
 Service **hold_screen**
 
-Displays the current screen for a configured amount (see **hold_time**) (default=30) seconds longer.
+Displays the current screen for a configured amount (default=30) seconds longer.
 
 e.g., on the Ulanzi TC001
 
@@ -1074,6 +1112,11 @@ sensor:
 
 ## Breaking changes
 
+### 2023.7.0
+
+- removed automatic boot logo display
+- removed set_clock_color since clock_screen and date_screen will set color anyway
+
 ### 2023.6.3
 
 **Due to this change these values are fixed, e.g. you can not change the date or timeformat during runtime anymore!!**
@@ -1113,6 +1156,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 ## Thanks
 
 - **[blakadder](https://github.com/blakadder)** for his contribution (cleanup README.md, fixed sample)
+- **[dbuezas](https://github.com/dbuezas)** for his fonts [infos](https://github.com/lubeda/EspHoMaTriXv2/issues/63)
+- **[jfurtner](https://github.com/jfurtner)** for his the on_start_running trigger and a new parameter
 - **[andrew-codechimp](https://github.com/andrew-codechimp)** for his contribution (display on/off & del_screen "*" & show_clock with 0) and improved blueprint slelection
 - **[jd1](https://github.com/jd1)** for his contributions
 - **[aptonline](https://github.com/aptonline)** for his work on the Ulanzi hardware
@@ -1123,6 +1168,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
 - **[hco](https://github.com/hco)** fixing documentation
 - **[geekofweek](https://github.com/geekofweek)** fixed sample YAML, cleanup documentation
+- **[joncar](https://github.com/joncar)** fixed scroll small text
 - **Everybody** who found bugs/issues and reported them!
 
 ## Special thanks to all sponsors

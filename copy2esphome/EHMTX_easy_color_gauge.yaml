@@ -8,10 +8,12 @@ blueprint:
 
   input:
     ehmtx_device:
-      name: Which EspHoMaTriX-device to display at?
+      name: Which EspHoMaTriXv2 device to use
       selector:
         device:
-          integration: esphome
+          filter:
+          - integration: esphome
+            model: EHMTXv2
     pix0_color:
       name: Color of pixel 1
       selector:
