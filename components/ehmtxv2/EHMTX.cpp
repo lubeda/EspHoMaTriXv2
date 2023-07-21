@@ -16,7 +16,6 @@ namespace esphome
     this->text_color = Color(C_RED, C_GREEN, C_BLUE);
     this->today_color = Color(C_RED, C_GREEN, C_BLUE);
     this->weekday_color = Color(CD_RED, CD_GREEN, CD_BLUE);
-    this->clock_color = Color(C_RED, C_GREEN, C_BLUE);
     this->rainbow_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->alarm_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->next_action_time = 0;
@@ -93,12 +92,6 @@ namespace esphome
   {
     this->weekday_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
     ESP_LOGD(TAG, "default weekday color: %d g: %d b: %d", r, g, b);
-  }
-
-  void EHMTX::set_clock_color(int r, int g, int b)
-  {
-    this->clock_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
-    ESP_LOGD(TAG, "default clock color r: %d g: %d b: %d", r, g, b);
   }
 
   bool EHMTX::string_has_ending(std::string const &fullString, std::string const &ending)
@@ -328,7 +321,6 @@ namespace esphome
     register_service(&EHMTX::show_rindicator, "show_rindicator", {"r", "g", "b", "size"});
     register_service(&EHMTX::show_lindicator, "show_lindicator", {"r", "g", "b", "size"});
 
-    register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
     register_service(&EHMTX::set_today_color, "set_today_color", {"r", "g", "b"});
     register_service(&EHMTX::set_weekday_color, "set_weekday_color", {"r", "g", "b"});
 
@@ -422,6 +414,7 @@ namespace esphome
         this->is_running = true;
         for (auto *t : on_start_running_triggers_)
         {
+          ESP_LOGD(TAG, "on_start_running_triggers");
           t->process();
         }
       }
@@ -896,7 +889,6 @@ namespace esphome
   void EHMTX::clock_screen(int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
     EHMTX_queue *screen = this->find_free_queue_element();
-
     screen->text_color = Color(r, g, b);
     ESP_LOGD(TAG, "clock_screen_color lifetime: %d screen_time: %d red: %d green: %d blue: %d", lifetime, screen_time, r, g, b);
     screen->mode = MODE_CLOCK;

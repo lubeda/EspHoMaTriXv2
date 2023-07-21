@@ -7,6 +7,26 @@
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 [![Donate][donation-badge]][donation-url]
 
+## Attention
+
+Some updates of esphome will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files neccessary.
+
+You have to add this to your YAML
+
+```yaml
+image:
+   - file: 1pixel.gif
+     id: breaking20237
+
+animation:
+  - file: 1pixel.gif
+    id: breaking20237
+```
+
+You have also to copy the file 1pixel.gif from the copy2esphome folder to the directory with your yaml.
+
+Also there might be [breaking changes](#breaking-changes) due to a redesign of EspHoMaTriXv2.
+
 ## Important information
 
 If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!
@@ -615,7 +635,6 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`show_gauge"`|"percent", "r", "g", "b"|set the height of the gauge according to the percentage in the given color|
 |`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper-right corner|
 |`show_rindicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
-|`set_clock_color`|"r", "g", "b"|set the default color for the clock/date display|
 |`set_today_color`|"r", "g", "b"|set the special color for today in the day of week line|
 |`set_weekday_color`|"r", "g", "b"|set the default color in the day of week line|
 |`del_screen`|"icon_name", “mode”|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
@@ -1096,6 +1115,7 @@ sensor:
 ### 2023.7.0
 
 - removed automatic boot logo display
+- removed set_clock_color since clock_screen and date_screen will set color anyway
 
 ### 2023.6.3
 
@@ -1137,6 +1157,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 
 - **[blakadder](https://github.com/blakadder)** for his contribution (cleanup README.md, fixed sample)
 - **[dbuezas](https://github.com/dbuezas)** for his fonts [infos](https://github.com/lubeda/EspHoMaTriXv2/issues/63)
+- **[jfurtner](https://github.com/jfurtner)** for his the on_start_running trigger and a new parameter
 - **[andrew-codechimp](https://github.com/andrew-codechimp)** for his contribution (display on/off & del_screen "*" & show_clock with 0) and improved blueprint slelection
 - **[jd1](https://github.com/jd1)** for his contributions
 - **[aptonline](https://github.com/aptonline)** for his work on the Ulanzi hardware

@@ -10,6 +10,14 @@ external_components:
       path: ../components
     components: [ ehmtxv2 ]   
 
+animation:
+  - id: animation_black
+    file: 1pixel.gif
+
+image:
+  - id: image_black
+    file: 1pixel.gif
+
 esphome:
   comment: "EHMTXv2 TEXT from LuBeDa 8266"
   name: $devicename 
@@ -33,7 +41,6 @@ esphome:
       id(rgb8x32)->hold_screen();
       id(rgb8x32)->show_gauge(100,0,200);
       id(rgb8x32)->hide_gauge();
-      id(rgb8x32)->set_clock_color(200,100,50);
       id(rgb8x32)->set_today_color(200,100,50);
       id(rgb8x32)->set_weekday_color(200,100,50);
       id(rgb8x32)->full_screen("scale");

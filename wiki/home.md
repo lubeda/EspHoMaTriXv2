@@ -14,6 +14,7 @@
 - [Blueprints for easier configuration](blueprints)
 - [time and date display](time-date-display)
 - [special clock and date display duration](special-clock-and-date-display-duration)
+- [set parameter on startup](startup-settings)
 
 ## Problems
 

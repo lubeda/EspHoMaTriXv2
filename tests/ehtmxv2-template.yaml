@@ -3,7 +3,15 @@ substitutions:
   friendly_name: LED Matrix
   board: esp32dev
   matrix_pin: GPIO32 
-  
+
+animation:
+  - id: animation_black
+    file: 1pixel.gif
+
+image:
+  - id: image_black
+    file: 1pixel.gif
+
 external_components:
   - source:
       type: local
@@ -33,7 +41,6 @@ esphome:
       id(rgb8x32)->show_gauge(100,0,200);
       id(rgb8x32)->show_gauge(40,0,200,0,100,100,100);
       id(rgb8x32)->hide_gauge();
-      id(rgb8x32)->set_clock_color(200,100,50);
       id(rgb8x32)->set_today_color(200,100,50);
       id(rgb8x32)->set_weekday_color(200,100,50);
       id(rgb8x32)->full_screen("scale");
