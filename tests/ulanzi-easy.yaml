@@ -13,6 +13,14 @@ substitutions:
   scl_pin: GPIO22 
   sda_pin: GPIO21 
 
+animation:
+  - id: animation_black
+    file: 1pixel.gif
+
+image:
+  - id: image_black
+    file: 1pixel.gif
+
 switch:
   - platform: template
     name: "Auto-Adjust Brightness"
