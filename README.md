@@ -449,7 +449,7 @@ You can configure two fonts if you like.
 
 Trip5 is also providing special fonts for 8x32 matrices in his [repo](https://github.com/trip5/MatrixClockFonts)
 
-dbuezas has also contributed tow optimized fonts with umlauts for this kind of display CalciumThinTall.ttf and CalciumSuperThinTall.ttf. They are included in the copy2esphome folder
+dbuezas has also contributed tow optimized fonts with umlauts for this kind of display `mateine.ttf` and `mateineThin.ttf`. They are included in the copy2esphome folder
 
 ```yaml
 font:
