@@ -570,6 +570,8 @@ If defined you can use the services `display_boot_logo` and `display_version` to
 
 **icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons.  (default = `false`)
 
+**always_show_rl_indicators** (optional, boolean): If true, always show the r/l indicators on all screens. Default is to not show either on clock, date, full, and bitmap screens, left on icon, or if display gauge displayed. (default = `false`)
+
 ***Example output:***
 ![icon preview](./images/icons_preview.png)
 
@@ -711,6 +713,10 @@ ehmtxv2:
             - mode
 ```
 
+#### on_start_running
+
+The trigger ```on_start_running``` is triggered when the display starts. It is triggered when time sync is done, and initial clock / date / version screens are loaded. This is to allow you to customize the default screens (for instance set colours for the clock).
+
 #### on_icon_error
 
 The trigger ```on_icon_error``` is triggered if you try to add a screen with a non defined icon. In lambda's you can use one local string variable:
@@ -833,6 +839,8 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_RAINBOW_TEXT|8|
 |MODE_RAINBOW_CLOCK| 9|
 |MODE_RAINBOW_DATE| 10|
+|MODE_BITMAP_SCREEN| 11|
+|MODE_BITMAP_SMALL| 12|
 
 **(D)** Service **display_on** / **display_off**
 
@@ -877,7 +885,7 @@ binary_sensor:
 
 Service **hold_screen**
 
-Displays the current screen for a configured amount (see **hold_time**) (default=30) seconds longer.
+Displays the current screen for a configured amount (default=30) seconds longer.
 
 e.g., on the Ulanzi TC001
 
