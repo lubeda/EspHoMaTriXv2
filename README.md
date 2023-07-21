@@ -20,7 +20,7 @@ image:
 
 animation:
   - file: 1pixel.gif
-    id: breaking20237
+    id: breaking202371
 ```
 
 You have also to copy the file 1pixel.gif from the copy2esphome folder to the directory with your yaml.
