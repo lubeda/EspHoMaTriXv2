@@ -20,7 +20,7 @@ esp8266:
   board: d1_mini
 
 font: 
-  - file: CalciumThinTall.ttf
+  - file: mateine.ttf
     id: default_font
     size: 16
     glyphs:  |

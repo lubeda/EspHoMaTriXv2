@@ -7,8 +7,7 @@
   matrix starts display
 - icontype rgb565 array as string
 - fixed scroll small text
-- remove EHMTXv2.ttf
-- introduced CalciumThinTall.ttf from @dbuezas [samples](https://github.com/lubeda/EspHoMaTriXv2/issues/63)
+- introduced mateine.ttf and mateineThin.ttf from @dbuezas [samples](https://github.com/lubeda/EspHoMaTriXv2/issues/63)
 - fixed hold_screen [issue](https://github.com/lubeda/EspHoMaTriXv2/issues/58)
 
 ## 2023.6.5

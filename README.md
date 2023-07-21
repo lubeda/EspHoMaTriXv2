@@ -59,7 +59,7 @@ In easy mode you'll have a clock with auto brightness control and after step 3 y
 Copy these files from the source folder `copy2esphome`:
 
 - ulanzi-simple.yaml
-- CalciumThinTall.ttf
+- mateine.ttf
 
 to your esphome directory (usually /config/esphome). In your esphome dashboard, you will find a new device named `ulanzi-easy`.
 
@@ -433,7 +433,7 @@ dbuezas has also contributed tow optimized fonts with umlauts for this kind of d
 
 ```yaml
 font:
-  - file: CalciumThinTall.ttf
+  - file: mateine.ttf
     id: default_font
     size: 16
     glyphs:  |
