@@ -9,7 +9,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build-stable:
     name: Build ${{ matrix.firmware.name }}
     runs-on: ubuntu-latest
     strategy:
@@ -38,9 +38,25 @@ jobs:
         with:
           yaml_file: ${{ matrix.firmware.file }}
           version: latest
-      # - name: Build firmware with beta
-      #   uses: esphome/build-action@v1.8.0
-      #   id: esphome-build-beta
-      #   with:
-      #     yaml_file: ${{ matrix.firmware.file }}
-      #     version: beta
+  build-develop:
+    name: Build ${{ matrix.firmware.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        firmware:
+          - file: tests/ulanzi-easy.yaml
+            name: Ulanzi-Easy
+            manifest_filename: ulanzi-easy-manifest.json
+          - file:  tests/ehtmxv2-special.yaml
+            name: EHMTX template 8266
+            manifest_filename: ehtmxv2-special-template-manifest.json
+      fail-fast: false
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3.3.0
+      - name: Build firmware
+        uses: esphome/build-action@v1.8.0
+        id: esphome-build
+        with:
+          yaml_file: ${{ matrix.firmware.file }}
+          version: beta
