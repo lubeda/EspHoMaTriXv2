@@ -323,6 +323,7 @@ namespace esphome
 
     register_service(&EHMTX::set_today_color, "set_today_color", {"r", "g", "b"});
     register_service(&EHMTX::set_weekday_color, "set_weekday_color", {"r", "g", "b"});
+    register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
 
     register_service(&EHMTX::del_screen, "del_screen", {"icon_name", "mode"});
     register_service(&EHMTX::force_screen, "force_screen", {"icon_name", "mode"});
@@ -388,6 +389,13 @@ namespace esphome
     this->display_alarm = 0;
     ESP_LOGD(TAG, "hide alarm");
   }
+
+  void EHMTX::set_clock_color(int r, int g, int b)
+  {
+    this->clock_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+    ESP_LOGD(TAG, "default clock color r: %d g: %d b: %d", r, g, b);
+  }
+
 
   void EHMTX::blank_screen(int lifetime, int showtime)
   {
