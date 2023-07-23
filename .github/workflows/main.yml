@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - develop
+      - 2023.7.1
       - main
   pull_request:
 
