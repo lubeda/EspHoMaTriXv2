@@ -3,6 +3,7 @@ blueprint:
     ehmtxv2: Show screen elements on 8x32 RGB-matrix
   description: Add a gauge, indicator or alarm element to your EspHoMaTriXv2 display
   domain: automation
+  source_url: https://github.com/lubeda/EspHoMaTriXv2/tree/main/copy2esphome
   input:
     ehmtx_device:
       name: Which EspHoMaTriXv2 device to use
