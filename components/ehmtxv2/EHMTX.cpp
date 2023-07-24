@@ -16,6 +16,7 @@ namespace esphome
     this->text_color = Color(C_RED, C_GREEN, C_BLUE);
     this->today_color = Color(C_RED, C_GREEN, C_BLUE);
     this->weekday_color = Color(CD_RED, CD_GREEN, CD_BLUE);
+    this->clock_color = Color(C_RED, C_GREEN, C_BLUE);
     this->rainbow_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->alarm_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->next_action_time = 0;
@@ -323,6 +324,7 @@ namespace esphome
 
     register_service(&EHMTX::set_today_color, "set_today_color", {"r", "g", "b"});
     register_service(&EHMTX::set_weekday_color, "set_weekday_color", {"r", "g", "b"});
+    register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
 
     register_service(&EHMTX::del_screen, "del_screen", {"icon_name", "mode"});
     register_service(&EHMTX::force_screen, "force_screen", {"icon_name", "mode"});
@@ -388,6 +390,13 @@ namespace esphome
     this->display_alarm = 0;
     ESP_LOGD(TAG, "hide alarm");
   }
+
+  void EHMTX::set_clock_color(int r, int g, int b)
+  {
+    this->clock_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+    ESP_LOGD(TAG, "default clock color r: %d g: %d b: %d", r, g, b);
+  }
+
 
   void EHMTX::blank_screen(int lifetime, int showtime)
   {
@@ -614,7 +623,7 @@ namespace esphome
         {
 #ifndef EHMTXv2_ALLOW_EMPTY_SCREEN
           ESP_LOGW(TAG, "tick: nothing to do. Restarting clock display!");
-          this->clock_screen(24 * 60, this->clock_time, false, C_RED, C_GREEN, C_BLUE);
+          this->clock_screen(24 * 60, this->clock_time, false, this->clock_color[0], this->clock_color[1], this->clock_color[2]);
           this->date_screen(24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
           this->next_action_time = ts + this->clock_time;
 #endif

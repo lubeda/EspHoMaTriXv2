@@ -25,7 +25,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2023.7.0";
+static const char *const EHMTX_VERSION = "2023.7.1";
 static const char *const TAG = "EHMTXv2";
 
 enum show_mode : uint8_t
@@ -81,7 +81,7 @@ namespace esphome
     uint16_t hue_ = 0;
     void dump_config();
 #ifdef USE_ESP32
-    PROGMEM Color text_color, alarm_color, rindicator_color,  lindicator_color, today_color, weekday_color, rainbow_color;
+    PROGMEM Color text_color, alarm_color, rindicator_color,  lindicator_color, today_color, weekday_color, rainbow_color, clock_color;
     PROGMEM Color bitmap[256];
     PROGMEM Color sbitmap[64];
     PROGMEM Color cgauge[8];
@@ -89,7 +89,7 @@ namespace esphome
 #endif
 
 #ifdef USE_ESP8266
-    Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, today_color, weekday_color, rainbow_color;
+    Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, today_color, weekday_color, rainbow_color, clock_color;
     EHMTX_Icon *icons[MAXICONS];
     uint8_t gauge_value;
 #endif
@@ -152,6 +152,7 @@ namespace esphome
     void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void set_today_color(int r, int g, int b);
     void set_weekday_color(int r, int g, int b);
+    void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
     void show_gauge(int v, int r = C_RED, int g = C_GREEN, int b = C_BLUE,int bgr = CG_GREY, int bgg = CG_GREY, int bgb = CG_GREY); // int because of register_service
     void hide_gauge();

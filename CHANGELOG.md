@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023.7.1
+
+- reinroduced set_clock_color
+
 ## 2023.7.0
 
 - added always_show_rl_indicators boolean
