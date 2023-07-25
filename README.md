@@ -637,6 +637,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`show_rindicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
 |`set_today_color`|"r", "g", "b"|set the special color for today in the day of week line|
 |`set_weekday_color`|"r", "g", "b"|set the default color in the day of week line|
+|`set_clock_color`|"r", "g", "b"|set the default color of clock and date display|
 |`del_screen`|"icon_name", “mode”|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
 |`force_screen`|"icon_name", “mode”|displays the selected the specified icon screen from the queue, the [mode](#modes) is a filter|
 |`full_screen`|"icon_name", "lifetime", "screen_time"|show the specified 8x32 icon as full screen|

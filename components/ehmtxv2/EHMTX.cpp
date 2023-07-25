@@ -394,6 +394,10 @@ namespace esphome
   void EHMTX::set_clock_color(int r, int g, int b)
   {
     this->clock_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+    this->del_screen("*", 3);
+    this->del_screen("*", 2);
+    this->clock_screen(24 * 60, this->clock_time, false, this->clock_color[0], this->clock_color[1], this->clock_color[2]);
+    this->date_screen(24 * 60, (int)this->clock_time / 2, false,this->clock_color[0], this->clock_color[1], this->clock_color[2]);
     ESP_LOGD(TAG, "default clock color r: %d g: %d b: %d", r, g, b);
   }
 
