@@ -631,6 +631,10 @@ namespace esphome
           this->date_screen(24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
           this->next_action_time = ts + this->clock_time;
 #endif
+          for (auto *t : on_empty_queue_triggers_)
+          {
+            t->process();
+          }
         }
       }
       // blend handling
@@ -1178,6 +1182,12 @@ namespace esphome
   {
     this->trigger();
   }
+
+  void EHMTXEmptyQueue  Trigger::process()
+  {
+    this->trigger();
+  }
+
 
   void EHMTXNextScreenTrigger::process(std::string iconname, std::string text)
   {

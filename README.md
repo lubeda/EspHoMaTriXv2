@@ -9,6 +9,12 @@
 
 ## Attention
 
+### EspHoMaTriX 2023.8.0
+
+A lot of users asked for special behavior, e.g. display date but no time or vice versa. Display nothing at all e.g. during night. I like to implement a lot of the requestes but ist hard to keep the known default behaviour. In this version i will provide a yaml mit the default behaviour but there will be less hardcoded by me, instead you have your freedom to do  all in your YAML.
+
+### esphome 2023.7.0
+
 Some updates of esphome will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files neccessary.
 
 You have to add this to your YAML
@@ -1112,6 +1118,10 @@ sensor:
 ```
 
 ## Breaking changes
+
+### 2023.8.0
+
+- removed a lot of the default settings to configure the display with your lambdas e.g. on_empty_queue:
 
 ### 2023.7.0
 

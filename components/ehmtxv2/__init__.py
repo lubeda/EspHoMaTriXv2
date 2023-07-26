@@ -49,6 +49,10 @@ StartRunningTrigger = ehmtx_ns.class_(
     "EHMTXStartRunningTrigger", automation.Trigger.template(cg.std_string)
 )
 
+EmptyQueueTrigger = ehmtx_ns.class_(
+    "EHMTXEmptyQueueTrigger", automation.Trigger.template(cg.std_string)
+)
+
 NextScreenTrigger = ehmtx_ns.class_(
     "EHMTXNextScreenTrigger", automation.Trigger.template(cg.std_string)
 )
@@ -70,7 +74,6 @@ AddScreenTrigger = ehmtx_ns.class_(
 )
 
 CONF_URL = "url"
-CONF_FLAG = "flag"
 CONF_CLOCKINTERVAL = "clock_interval"
 CONF_ALWAYS_SHOW_RLINDICATORS = "always_show_rl_indicators"
 CONF_TIMECOMPONENT = "time_component"
@@ -102,6 +105,7 @@ CONF_PINGPONG = "pingpong"
 CONF_TIME_FORMAT = "time_format"
 CONF_DATE_FORMAT = "date_format"
 CONF_ON_START_RUNNING = "on_start_running"
+CONF_ON_EMPTY_QUEUE = "on_empty_queue"
 CONF_ON_NEXT_SCREEN = "on_next_screen"
 CONF_ON_NEXT_CLOCK = "on_next_clock"
 CONF_ON_ICON_ERROR = "on_icon_error"
@@ -189,6 +193,11 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(CONF_ON_NEXT_SCREEN): automation.validate_automation(
         {
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(NextScreenTrigger),
+        }
+    ),
+    cv.Optional(CONF_ON_EMPTY_QUEUE): automation.validate_automation(
+        {
+            cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(EmptyQueueTrigger),
         }
     ),
     cv.Optional(CONF_ON_ICON_ERROR): automation.validate_automation(
@@ -455,6 +464,10 @@ async def to_code(config):
     for conf in config.get(CONF_ON_NEXT_SCREEN, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.std_string, "text")], conf)
+
+    for conf in config.get(CONF_ON_EMPTY_QUEUE, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [], conf)
 
     for conf in config.get(CONF_ON_NEXT_CLOCK, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)

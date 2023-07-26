@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023.8.0
+
+- added on_empty_queue trigger
+
 ## 2023.7.1
 
 - reintroduced set_clock_color
