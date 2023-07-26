@@ -3,14 +3,13 @@ name: Build
 on:
   workflow_dispatch:
   push:
-    branches:
-      - 2023.7.1
-      - main
+    tags: 
+      - develop
   pull_request:
 
 jobs:
   build-stable:
-    name: Build ${{ matrix.firmware.name }}
+    name: Build stable ${{ matrix.firmware.name }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -39,7 +38,7 @@ jobs:
           yaml_file: ${{ matrix.firmware.file }}
           version: latest
   build-develop:
-    name: Build ${{ matrix.firmware.name }}
+    name: Build develop ${{ matrix.firmware.name }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
