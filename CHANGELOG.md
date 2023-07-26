@@ -2,7 +2,7 @@
 
 ## 2023.7.1
 
-- reinroduced set_clock_color
+- reintroduced set_clock_color
 
 ## 2023.7.0
 
