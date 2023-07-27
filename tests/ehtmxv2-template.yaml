@@ -130,6 +130,7 @@ ehmtxv2:
   show_seconds: false
   clock_interval: 90
   rtl: true
+  blend_steps: 30
   default_font_id: default_font
   default_font_yoffset: 8
   special_font_id: default_font 

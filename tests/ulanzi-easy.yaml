@@ -13,14 +13,6 @@ substitutions:
   scl_pin: GPIO22 
   sda_pin: GPIO21 
 
-animation:
-  - id: animation_black
-    file: 1pixel.gif
-
-image:
-  - id: image_black
-    file: 1pixel.gif
-
 switch:
   - platform: template
     name: "Auto-Adjust Brightness"
@@ -67,6 +59,9 @@ external_components:
 esphome:
   comment: "EHMTXv2 from LuBeDa"
   name: $devicename 
+  project:
+    name: "Ulanzi.EHMTXv2"
+    version: "2.0.0"
   on_boot:
     then:
       - ds1307.read_time:
@@ -83,7 +78,7 @@ esp32:
   board: esp32dev
 
 font:
-  - file: mateine.ttf
+  - file: Cmateine.ttf
     size: 16
     id: default_font
     glyphs:  |
@@ -238,9 +233,7 @@ ehmtxv2:
   date_format: "%d.%m."
   show_seconds: false
   default_font_id: default_font
-  default_font_yoffset: 8
   special_font_id: default_font 
-  special_font_yoffset: 8
   icons: 
     - id: error
       lameid: 40530
@@ -258,6 +251,18 @@ ehmtxv2:
       lameid: 2819
     - id: sleep8x32
       url: https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif 
+  on_empty_queue:
+    then:
+      lambda: |-
+        id(rgb8x32)->clock_screen(10,10);
+        id(rgb8x32)->date_screen(10,5);
+  on_start_running:
+     then:
+       lambda: |-
+          id(rgb8x32)->bitmap_screen("[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",1,10);
+          id(rgb8x32)->bitmap_small("[2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,0,2016,0,2016,0,31,31,0,0,0,2016,0,31,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,31,31,31]", "2023.x.y", 1, 10);
+          id(rgb8x32)->clock_screen(10,10);
+          id(rgb8x32)->date_screen(10,5);
   on_next_screen:
     - homeassistant.event:
         event: esphome.new_screen
