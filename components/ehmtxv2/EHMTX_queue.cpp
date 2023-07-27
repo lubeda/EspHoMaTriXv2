@@ -157,6 +157,7 @@ namespace esphome
       case MODE_EMPTY:
         break;
       case MODE_BLANK:
+        this->config_->display->clear();
         break;
 #ifndef USE_ESP8266
       case MODE_BITMAP_SCREEN:

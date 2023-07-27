@@ -393,6 +393,7 @@ namespace esphome
     scr->screen_time_ = showtime;
     scr->mode = MODE_BLANK;
     scr->endtime = this->clock->now().timestamp + lifetime * 60;
+    ESP_LOGD(TAG, "blank screen");
   }
 
   void EHMTX::update() // called from polling component
@@ -509,6 +510,7 @@ namespace esphome
               case MODE_EMPTY:
                 break;
               case MODE_BLANK:
+                infotext = "blank";
                 break;
               case MODE_CLOCK:
                 infotext = "clock";
@@ -541,6 +543,7 @@ namespace esphome
       }
     }
   }
+  
   void EHMTX::tick()
   {
     this->hue_++;
@@ -580,7 +583,6 @@ namespace esphome
 
         if (this->screen_pointer != MAXQUEUE)
         {
-
           this->queue[this->screen_pointer]->last_time = ts + this->queue[this->screen_pointer]->screen_time_;
           if (this->queue[this->screen_pointer]->icon < this->icon_count)
           {
@@ -605,9 +607,12 @@ namespace esphome
         }
         else
         {
-          if (this->clock->now().timestamp % 15) 
+          this->display->clear();
+          this->display->draw_pixel_at(16,7,Color(200,100,50));
+          
+          if (this->clock->now().timestamp % 139) 
           {
-            ESP_LOGW(TAG, "tick: nothing to do.");
+            ESP_LOGW(TAG, "empty queue");
           }
           for (auto *t : on_empty_queue_triggers_)
           {
@@ -653,6 +658,7 @@ namespace esphome
              this->clock->now().hour, this->clock->now().minute);
     ESP_LOGI(TAG, "status brightness: %d (0..255)", this->brightness_);
     ESP_LOGI(TAG, "status date format: %s", EHMTXv2_DATE_FORMAT);
+    ESP_LOGI(TAG, "screen_pointer: %d", this->screen_pointer);
     ESP_LOGI(TAG, "status time format: %s", EHMTXv2_TIME_FORMAT);
     ESP_LOGI(TAG, "status alarm_color: RGB(%d,%d,%d)", this->alarm_color.r, this->alarm_color.g, this->alarm_color.b);
     if (this->show_display)

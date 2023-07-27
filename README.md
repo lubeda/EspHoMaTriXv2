@@ -30,7 +30,7 @@ For the old default behavior use this trigger in your YAML:
           id(rgb8x32)->date_screen(10,5);
 ```
 
-The on_start_runnig trigger is called after the device boot once. The on_empty_queue-trigger is called when there is nothing in the queue. With the examples you will always have a clock and date displayed. If you don't like or want other colors e.t.c. feel free the change your YAML and have fun.
+The `on_start_runnig`-trigger is called after the device boot once. The `on_empty_queue`-trigger is called when there is nothing in the queue. With the examples you will always have a clock and date displayed. If you don't like or want other colors e.t.c. feel free the change your YAML and have fun.
 
 If you don't add this trigger you have a blank display until your hosts add screens via service calls.
 
@@ -733,6 +733,36 @@ Experienced programmers can use these public methods:
 
 To use the display without home assistant automations, you may use the [advanced functionality](#change-configuration-during-runtime) with triggers. The triggers can be fired by sensors, time or by the ehmtxv2 component.
 
+#### on_empty_queue
+
+This trigger is called without parameters every time the queue is empty.
+
+See the examples:
+
+##### Show icon_screen if queue is empty
+
+```yaml
+on_empty_screen:
+     then:
+       lambda: |-
+          id(rgb8x32)->icon_screen("error","I'm bored`);
+```
+
+#### on_start_running
+
+This trigger is called without parameters once after the device boot.
+
+See the examples:
+
+##### Show only date after boot
+
+```yaml
+on_start_running:
+     then:
+       lambda: |-
+          id(rgb8x32)->date_screen(10,5);
+```
+
 #### on_add_screen
 
 There is a trigger available to do some local magic. The trigger ```on_add_screen``` is triggered every time a new screen with an icon is added to the queue. In lambda's you can use two local variables:
@@ -1142,6 +1172,7 @@ sensor:
 
 - removed a lot of the default settings to configure the display with your lambdas e.g. on_empty_queue:
 - removed boot_logo and replaced it within the samples yamls
+- removed show_date
 - removed allow_empty_screens, use `no_defaults: true` and
 
   ```yaml
