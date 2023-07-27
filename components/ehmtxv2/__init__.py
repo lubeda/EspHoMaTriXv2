@@ -79,7 +79,6 @@ CONF_ALWAYS_SHOW_RLINDICATORS = "always_show_rl_indicators"
 CONF_TIMECOMPONENT = "time_component"
 CONF_LAMEID = "lameid"
 CONF_RGB565ARRAY = "str565"
-CONF_BOOTLOGO = "boot_logo"
 CONF_LIFETIME = "lifetime"
 CONF_ICONS = "icons"
 CONF_SHOWDOW = "show_dow"
@@ -113,7 +112,6 @@ CONF_ON_ADD_SCREEN = "on_add_screen"
 CONF_ON_EXPIRED_SCREEN= "on_expired_screen"
 CONF_SHOW_SECONDS = "show_seconds"
 CONF_SCROLL_SMALL_TEXT = "scroll_small_text"
-CONF_ALLOW_EMPTY_SCREEN = "allow_empty_screen"
 CONF_WEEK_START_MONDAY = "week_start_monday"
 CONF_ICON = "icon_name"
 CONF_TEXT = "text"
@@ -153,9 +151,6 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.boolean,
     cv.Optional(
         CONF_SCROLL_SMALL_TEXT, default=False
-    ): cv.boolean,
-    cv.Optional(
-        CONF_ALLOW_EMPTY_SCREEN, default=False
     ): cv.boolean,
     cv.Optional(
         CONF_TIME_FORMAT, default="%H:%M"
@@ -225,7 +220,6 @@ EHMTX_SCHEMA = cv.Schema({
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(StartRunningTrigger),
         }
     ),
-    cv.Optional(CONF_BOOTLOGO): cv.string,
     cv.Optional(CONF_ON_EXPIRED_SCREEN): automation.validate_automation(
         {
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(ExpiredScreenTrigger),
@@ -444,13 +438,9 @@ async def to_code(config):
     cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])    
     cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])    
     
-    if config.get(CONF_BOOTLOGO):
-        cg.add_define("EHMTXv2_BOOTLOGO",config[CONF_BOOTLOGO])
-    
     if config[CONF_SCROLL_SMALL_TEXT]:
         cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT")
-    if config[CONF_ALLOW_EMPTY_SCREEN]:
-        cg.add_define("EHMTXv2_ALLOW_EMPTY_SCREEN")
+
     if (config[CONF_BLENDSTEPS]) >0:
         cg.add_define("EHMTXv2_BLEND_STEPS",config[CONF_BLENDSTEPS])
 

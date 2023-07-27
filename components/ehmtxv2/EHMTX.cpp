@@ -13,12 +13,7 @@ namespace esphome
     this->clock_time = 10;
     this->icon_count = 0;
     this->hue_ = 0;
-    this->text_color = Color(C_RED, C_GREEN, C_BLUE);
-    this->today_color = Color(C_RED, C_GREEN, C_BLUE);
-    this->weekday_color = Color(CD_RED, CD_GREEN, CD_BLUE);
-    this->clock_color = Color(C_RED, C_GREEN, C_BLUE);
     this->rainbow_color = Color(CA_RED, CA_GREEN, CA_BLUE);
-    this->alarm_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->next_action_time = 0;
     this->last_scroll_time = 0;
     this->screen_pointer = MAXQUEUE;
@@ -325,6 +320,7 @@ namespace esphome
     register_service(&EHMTX::set_today_color, "set_today_color", {"r", "g", "b"});
     register_service(&EHMTX::set_weekday_color, "set_weekday_color", {"r", "g", "b"});
     register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
+    register_service(&EHMTX::set_text_color, "set_text_color", {"r", "g", "b"});
 
     register_service(&EHMTX::del_screen, "del_screen", {"icon_name", "mode"});
     register_service(&EHMTX::force_screen, "force_screen", {"icon_name", "mode"});
@@ -347,10 +343,6 @@ namespace esphome
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
 #ifndef USE_ESP8266
-  #ifdef EHMTXv2_BOOTLOGO
-    register_service(&EHMTX::display_boot_logo, "display_boot_logo");
-    register_service(&EHMTX::display_version, "display_version");
-  #endif
     register_service(&EHMTX::color_gauge, "color_gauge", {"colors"});
     register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"icon", "lifetime", "screen_time"});
     register_service(&EHMTX::bitmap_small, "bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
@@ -373,18 +365,6 @@ namespace esphome
     }
   }
 
-#ifndef USE_ESP8266
-  #ifdef EHMTXv2_BOOTLOGO
-    void EHMTX::display_boot_logo() {
-      this->bitmap_screen(EHMTXv2_BOOTLOGO, 1, 10);
-    } 
-    void EHMTX::display_version() {
-        this->bitmap_small("[2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,0,2016,0,2016,0,31,31,0,0,0,2016,0,31,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,31,31,31]", EHMTX_VERSION, 1, 10);
-    }
-
-  #endif
-#endif
-
   void EHMTX::hide_alarm()
   {
     this->display_alarm = 0;
@@ -397,10 +377,15 @@ namespace esphome
     this->del_screen("*", 3);
     this->del_screen("*", 2);
     this->clock_screen(24 * 60, this->clock_time, false, this->clock_color[0], this->clock_color[1], this->clock_color[2]);
-    this->date_screen(24 * 60, (int)this->clock_time / 2, false,this->clock_color[0], this->clock_color[1], this->clock_color[2]);
+    this->date_screen(24 * 60, (int)this->clock_time / 2, false, this->clock_color[0], this->clock_color[1], this->clock_color[2]);
     ESP_LOGD(TAG, "default clock color r: %d g: %d b: %d", r, g, b);
   }
 
+  void EHMTX::set_text_color(int r, int g, int b)
+  {
+    this->text_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+    ESP_LOGD(TAG, "default text color r: %d g: %d b: %d", r, g, b);
+  }
 
   void EHMTX::blank_screen(int lifetime, int showtime)
   {
@@ -417,14 +402,9 @@ namespace esphome
       if (this->clock->now().is_valid())
       {
         ESP_LOGD(TAG, "time sync => start running");
-#ifndef USE_ESP8266
-  #ifdef EHMTXv2_BOOTLOGO
-        this->bitmap_screen(EHMTXv2_BOOTLOGO, 1, 10);
-  #endif
-#endif
-        this->clock_screen(14 * 24 * 60, this->clock_time, EHMTXv2_DEFAULT_CLOCK_FONT, C_RED, C_GREEN, C_BLUE);
-        this->date_screen(14 * 24 * 60, (int)this->clock_time / 2, EHMTXv2_DEFAULT_CLOCK_FONT, C_RED, C_GREEN, C_BLUE);
+
         this->is_running = true;
+
         for (auto *t : on_start_running_triggers_)
         {
           ESP_LOGD(TAG, "on_start_running_triggers");
@@ -571,7 +551,7 @@ namespace esphome
     float red, green, blue;
     esphome::hsv_to_rgb(this->hue_, 0.8, 0.8, red, green, blue);
     this->rainbow_color = Color(uint8_t(255 * red), uint8_t(255 * green), uint8_t(255 * blue));
-    
+
     if (this->is_running && this->clock->now().is_valid())
     {
       time_t ts = this->clock->now().timestamp;
@@ -625,12 +605,10 @@ namespace esphome
         }
         else
         {
-#ifndef EHMTXv2_ALLOW_EMPTY_SCREEN
-          ESP_LOGW(TAG, "tick: nothing to do. Restarting clock display!");
-          this->clock_screen(24 * 60, this->clock_time, false, this->clock_color[0], this->clock_color[1], this->clock_color[2]);
-          this->date_screen(24 * 60, (int)this->clock_time / 2, false, C_RED, C_GREEN, C_BLUE);
-          this->next_action_time = ts + this->clock_time;
-#endif
+          if (this->clock->now().timestamp % 15) 
+          {
+            ESP_LOGW(TAG, "tick: nothing to do.");
+          }
           for (auto *t : on_empty_queue_triggers_)
           {
             t->process();
@@ -638,16 +616,16 @@ namespace esphome
         }
       }
       // blend handling
-      
+
 #ifdef EHMTXv2_BLEND_STEPS
-      if ((this->ticks_ <= EHMTXv2_BLEND_STEPS)) 
+      if ((this->ticks_ <= EHMTXv2_BLEND_STEPS))
       {
-          uint8_t b = this->brightness_;
-          float br = lerp((float)this->ticks_ / EHMTXv2_BLEND_STEPS, 0, (float)b / 255);
-          this->display->get_light()->set_correction(br, br, br);
+        uint8_t b = this->brightness_;
+        float br = lerp((float)this->ticks_ / EHMTXv2_BLEND_STEPS, 0, (float)b / 255);
+        this->display->get_light()->set_correction(br, br, br);
       }
 #endif
-    this->ticks_++;
+      this->ticks_++;
     }
     else
     {
@@ -726,20 +704,20 @@ namespace esphome
           if (this->string_has_ending(icon_name, "*"))
           {
             std::string comparename = icon_name.substr(0, icon_name.length() - 1);
-            
+
             if (this->queue[i]->icon_name.rfind(comparename, 0) != 0)
             {
               force = false;
             }
           }
-          else if(strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
+          else if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
           {
             force = false;
           }
         }
         if (force)
         {
-          ESP_LOGW(TAG, "del_screen: slot %d deleted",i);
+          ESP_LOGW(TAG, "del_screen: slot %d deleted", i);
           this->queue[i]->mode = MODE_EMPTY;
           this->queue[i]->endtime = 0;
           if (i == this->screen_pointer)
@@ -1076,7 +1054,7 @@ namespace esphome
     ESP_LOGCONFIG(TAG, "RTL activated");
 #endif
 #ifdef EHMTXv2_BLEND_STEPS
-    ESP_LOGCONFIG(TAG, "Fade in activated: %d steps",EHMTXv2_BLEND_STEPS);
+    ESP_LOGCONFIG(TAG, "Fade in activated: %d steps", EHMTXv2_BLEND_STEPS);
 #endif
     if (EHMTXv2_WEEK_START)
     {
@@ -1159,21 +1137,21 @@ namespace esphome
       {
         this->draw_gauge();
       }
-      #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
-        if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
-        {
-      #endif
+#ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
+      if (this->queue[this->screen_pointer]->mode != MODE_CLOCK && this->queue[this->screen_pointer]->mode != MODE_DATE && this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
+      {
+#endif
 
         this->draw_rindicator();
-      #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
+#ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         if (this->queue[this->screen_pointer]->mode != MODE_ICON_SCREEN && this->queue[this->screen_pointer]->mode != MODE_RAINBOW_ICON && !this->display_gauge)
         {
-      #endif
+#endif
           this->draw_lindicator();
-      #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
+#ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         }
       }
-    #endif
+#endif
       this->draw_alarm();
     }
   }
@@ -1183,11 +1161,10 @@ namespace esphome
     this->trigger();
   }
 
-  void EHMTXEmptyQueue  Trigger::process()
+  void EHMTXEmptyQueueTrigger::process()
   {
     this->trigger();
   }
-
 
   void EHMTXNextScreenTrigger::process(std::string iconname, std::string text)
   {

@@ -152,8 +152,9 @@ namespace esphome
     void set_special_font(display::BaseFont *font);
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
-    void set_today_color(int r, int g, int b);
-    void set_weekday_color(int r, int g, int b);
+    void set_text_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void set_today_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void set_weekday_color(int r = CD_RED, int g = CD_GREEN, int b = CD_BLUE);
     void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
     void show_gauge(int v, int r = C_RED, int g = C_GREEN, int b = C_BLUE,int bgr = CG_GREY, int bgg = CG_GREY, int bgb = CG_GREY); // int because of register_service
@@ -189,13 +190,6 @@ namespace esphome
     void add_on_expired_screen_trigger(EHMTXExpiredScreenTrigger *t) { this->on_expired_screen_triggers_.push_back(t); }
     void add_on_next_clock_trigger(EHMTXNextClockTrigger *t) { this->on_next_clock_triggers_.push_back(t); }
     void add_on_start_running_trigger(EHMTXStartRunningTrigger *t) { this->on_start_running_triggers_.push_back(t); }
-#ifndef USE_ESP8266
-  #ifdef EHMTXv2_BOOTLOGO
-    void display_boot_logo();
-    void display_version();
-  #endif
-#endif
-
     void update();
     uint8_t get_brightness();
   };
