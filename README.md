@@ -11,7 +11,28 @@
 
 ### EspHoMaTriX 2023.8.0
 
-A lot of users asked for special behavior, e.g. display date but no time or vice versa. Display nothing at all e.g. during night. I like to implement a lot of the requestes but ist hard to keep the known default behaviour. In this version i will provide a yaml mit the default behaviour but there will be less hardcoded by me, instead you have your freedom to do  all in your YAML.
+A lot of users asked for special behavior, e.g. display date but no time or vice versa. Display nothing at all e.g. during night. I like to implement a lot of the requestes but ist hard to keep the known default behaviour. In this version i will provide a YAML with the default behaviour but there will be less hardcoded by me, instead you have your freedom to do  all in your YAML.
+
+For the old default behavior use this trigger in your YAML:
+
+```yaml
+  on_empty_queue:
+    then:
+      lambda: |-
+        id(rgb8x32)->clock_screen(10,10);
+        id(rgb8x32)->date_screen(10,5);
+  on_start_running:
+     then:
+       lambda: |-
+          id(rgb8x32)->bitmap_screen("[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",1,10);
+          id(rgb8x32)->bitmap_small("[2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,0,2016,0,2016,0,31,31,0,0,0,2016,0,31,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,31,31,31]", "2023.x.y", 1, 10);
+          id(rgb8x32)->clock_screen(10,10);
+          id(rgb8x32)->date_screen(10,5);
+```
+
+The on_start_runnig trigger is called after the device boot once. The on_empty_queue-trigger is called when there is nothing in the queue. With the examples you will always have a clock and date displayed. If you don't like or want other colors e.t.c. feel free the change your YAML and have fun.
+
+If you don't add this trigger you have a blank display until your hosts add screens via service calls.
 
 ### esphome 2023.7.0
 
