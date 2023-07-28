@@ -389,11 +389,15 @@ namespace esphome
 
   void EHMTX::blank_screen(int lifetime, int showtime)
   {
-    auto scr = this->find_free_queue_element();
-    scr->screen_time_ = showtime;
-    scr->mode = MODE_BLANK;
-    scr->endtime = this->clock->now().timestamp + lifetime * 60;
-    ESP_LOGD(TAG, "blank screen");
+    EHMTX_queue *screen = this->find_free_queue_element();
+    screen->mode = MODE_BLANK;
+    screen->screen_time_ = showtime;
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process("blank",(uint8_t)screen->mode);
+    }
+    screen->status();
   }
 
   void EHMTX::update() // called from polling component
@@ -607,10 +611,7 @@ namespace esphome
         }
         else
         {
-          this->display->clear();
-          this->display->draw_pixel_at(16,7,Color(200,100,50));
-          
-          if (this->clock->now().timestamp % 139) 
+          if (this->clock->now().timestamp % 500) 
           {
             ESP_LOGW(TAG, "empty queue");
           }
@@ -659,8 +660,13 @@ namespace esphome
     ESP_LOGI(TAG, "status brightness: %d (0..255)", this->brightness_);
     ESP_LOGI(TAG, "status date format: %s", EHMTXv2_DATE_FORMAT);
     ESP_LOGI(TAG, "screen_pointer: %d", this->screen_pointer);
+    if (this->screen_pointer != MAXQUEUE){
+      ESP_LOGI(TAG, "current screen mode: %d", this->queue[this->screen_pointer]->mode);
+    } else {
+      ESP_LOGI(TAG, "screenpointer at max");
+    }
     ESP_LOGI(TAG, "status time format: %s", EHMTXv2_TIME_FORMAT);
-    ESP_LOGI(TAG, "status alarm_color: RGB(%d,%d,%d)", this->alarm_color.r, this->alarm_color.g, this->alarm_color.b);
+    ESP_LOGI(TAG, "status date format: %s", EHMTXv2_DATE_FORMAT);
     if (this->show_display)
     {
       ESP_LOGI(TAG, "status display on");
@@ -818,9 +824,7 @@ namespace esphome
 
   void EHMTX::rainbow_date_screen(int lifetime, int screen_time, bool default_font)
   {
-    ESP_LOGD(TAG, "rainbow_date_screen lifetime: %d screen_time: %d", lifetime, screen_time);
-    if (this->show_date)
-    {
+      ESP_LOGD(TAG, "rainbow_date_screen lifetime: %d screen_time: %d", lifetime, screen_time);
       EHMTX_queue *screen = this->find_free_queue_element();
 
       screen->mode = MODE_RAINBOW_DATE;
@@ -828,11 +832,6 @@ namespace esphome
       screen->screen_time_ = screen_time;
       screen->endtime = this->clock->now().timestamp + lifetime * 60;
       screen->status();
-    }
-    else
-    {
-      ESP_LOGW(TAG, "rainbow_date_screen disabled because show_date=false");
-    }
   }
 
   void EHMTX::text_screen(std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
@@ -902,22 +901,16 @@ namespace esphome
   void EHMTX::date_screen(int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
     ESP_LOGD(TAG, "date_screen lifetime: %d screen_time: %d red: %d green: %d blue: %d", lifetime, screen_time, r, g, b);
-    if (this->show_date)
-    {
-      EHMTX_queue *screen = this->find_free_queue_element();
+    EHMTX_queue *screen = this->find_free_queue_element();
 
-      screen->text_color = Color(r, g, b);
+    screen->text_color = Color(r, g, b);
 
-      screen->mode = MODE_DATE;
-      screen->screen_time_ = screen_time;
-      screen->default_font = default_font;
-      screen->endtime = this->clock->now().timestamp + lifetime * 60;
-      screen->status();
-    }
-    else
-    {
-      ESP_LOGW(TAG, "date_screen disabled because show_date=false");
-    }
+    screen->mode = MODE_DATE;
+    screen->screen_time_ = screen_time;
+    screen->default_font = default_font;
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    screen->status();
+  
   }
 
   EHMTX_queue *EHMTX::find_icon_queue_element(uint8_t icon)
@@ -945,19 +938,6 @@ namespace esphome
       }
     }
     return this->queue[0];
-  }
-
-  void EHMTX::set_show_date(bool b)
-  {
-    this->show_date = b;
-    if (b)
-    {
-      ESP_LOGI(TAG, "show date");
-    }
-    else
-    {
-      ESP_LOGI(TAG, "don't show date");
-    }
   }
 
   void EHMTX::set_show_seconds(bool b)
@@ -1051,10 +1031,6 @@ namespace esphome
     if (this->show_day_of_week)
     {
       ESP_LOGCONFIG(TAG, "show day of week");
-    }
-    if (this->show_date)
-    {
-      ESP_LOGCONFIG(TAG, "show date");
     }
 #ifdef EHMTXv2_USE_RTL
     ESP_LOGCONFIG(TAG, "RTL activated");

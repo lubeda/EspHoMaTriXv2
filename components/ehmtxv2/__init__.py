@@ -83,7 +83,6 @@ CONF_RGB565ARRAY = "str565"
 CONF_LIFETIME = "lifetime"
 CONF_ICONS = "icons"
 CONF_SHOWDOW = "show_dow"
-CONF_SHOWDATE = "show_date"
 CONF_RTL = "rtl"
 CONF_FRAMEDURATION = "frame_duration"
 CONF_SCROLLCOUNT = "scroll_count"
@@ -95,7 +94,6 @@ CONF_RAINBOWINTERVAL = "rainbow_interval"
 CONF_FRAMEINTERVAL = "frame_interval"
 CONF_DEFAULT_FONT_ID = "default_font_id"
 CONF_DEFAULT_FONT = "default_font"
-CONF_CLOCKFONT = "default_clock_font"
 CONF_DEFAULT_FONT_XOFFSET = "default_font_xoffset"
 CONF_DEFAULT_FONT_YOFFSET = "default_font_yoffset"
 CONF_SPECIAL_FONT_ID = "special_font_id"
@@ -129,9 +127,6 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(
         CONF_HTML, default=False
     ): cv.boolean,
-    cv.Optional(
-        CONF_CLOCKFONT, default=True
-    ): cv.boolean,
      cv.Optional(
         CONF_RTL, default=False
     ): cv.boolean,
@@ -139,16 +134,10 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_SHOW_SECONDS, default=False
     ): cv.boolean,
     cv.Optional(
-        CONF_SHOWDATE, default=True
-    ): cv.boolean,
-    cv.Optional(
         CONF_WEEK_START_MONDAY, default=True
     ): cv.boolean,
     cv.Optional(
         CONF_SHOWDOW, default=True
-    ): cv.boolean,
-    cv.Optional(
-        CONF_SHOWDATE, default=True
     ): cv.boolean,
     cv.Optional(
         CONF_SCROLL_SMALL_TEXT, default=False
@@ -435,7 +424,6 @@ async def to_code(config):
     cg.add_define("EHMTXv2_DEFAULT_FONT_OFFSET_Y",config[CONF_DEFAULT_FONT_YOFFSET])
     cg.add_define("EHMTXv2_SPECIAL_FONT_OFFSET_X",config[CONF_SPECIAL_FONT_XOFFSET])
     cg.add_define("EHMTXv2_SPECIAL_FONT_OFFSET_Y",config[CONF_SPECIAL_FONT_YOFFSET])
-    cg.add_define("EHMTXv2_DEFAULT_CLOCK_FONT",config[CONF_CLOCKFONT])    
     cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])    
     cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])    
     
@@ -449,7 +437,7 @@ async def to_code(config):
         cg.add_define("EHMTXv2_USE_RTL")    
     
     cg.add(var.set_show_day_of_week(config[CONF_SHOWDOW]))  
-    cg.add(var.set_show_date(config[CONF_SHOWDATE]))
+
     cg.add(var.set_show_seconds(config[CONF_SHOW_SECONDS]))
     
     for conf in config.get(CONF_ON_NEXT_SCREEN, []):

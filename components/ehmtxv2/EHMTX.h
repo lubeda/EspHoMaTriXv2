@@ -103,8 +103,7 @@ namespace esphome
     uint8_t ticks_per_second=62;
     bool display_gauge;
     bool is_running = false;
-    bool show_date;
-    
+        
     uint16_t clock_time;
     uint16_t scroll_step;
 
@@ -143,7 +142,6 @@ namespace esphome
     void set_clock_time(uint16_t t = 10);
     void set_show_day_of_week(bool b=true);
     void set_show_seconds(bool b=false);
-    void set_show_date(bool b=true);
     void set_brightness(int b);
     void set_display_on();
     void set_display_off();

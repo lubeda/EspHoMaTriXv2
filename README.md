@@ -585,8 +585,6 @@ ehmtxv2:
 
 **matrix_component** (required, ID): ID of the addressable display
 
-**show_date** (optional, bool): show the date in the loop (rainbow and normal), defaults to true.
-
 **show_dow** (optional, bool): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g., if you want larger fonts, defaults to true.
 
 **blend_steps** (optional, int): on screen transition you can blend in the new screen, a value of 16 works nice, defaults 0.
@@ -598,8 +596,6 @@ ehmtxv2:
 **special_font** (required, ID): ID of the special font, you can reuse your default font, but occasionally, it's nice to have a special font to minimize scrolling
 
 **week_start_monday** (optional, bool): default Monday is first day of week, false => Sunday
-
-**default_clock_font** (optional, boolean): If true, use the default font for clock and date otherwise use the special font. (default = `true`)
 
 **scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html)
 

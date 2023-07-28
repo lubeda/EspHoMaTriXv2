@@ -128,7 +128,6 @@ ehmtxv2:
   clock_interval: 90
   scroll_interval: 120
   scroll_small_text: true
-  default_clock_font: false
   blend_steps: 16
   frame_interval: 210
   rtl: true

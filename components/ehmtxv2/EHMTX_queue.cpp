@@ -156,11 +156,9 @@ namespace esphome
       {
       case MODE_EMPTY:
         break;
-      case MODE_BLANK:
-        this->config_->display->clear();
-        break;
-#ifndef USE_ESP8266
+
       case MODE_BITMAP_SCREEN:
+#ifndef USE_ESP8266
         for (uint8_t x = 0; x < 32; x++)
         {
           for (uint8_t y = 0; y < 8; y++)
@@ -168,8 +166,11 @@ namespace esphome
             this->config_->display->draw_pixel_at(x, y, this->config_->bitmap[x + y * 32]);
           }
         }
+#endif
         break;
+
       case MODE_BITMAP_SMALL:
+#ifndef USE_ESP8266
         color_ = this->text_color;
 #ifdef EHMTXv2_USE_RTL
         this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
@@ -200,9 +201,9 @@ namespace esphome
             }
           }
         }
-
-        break;
 #endif
+        break;
+
       case MODE_RAINBOW_CLOCK:
       case MODE_CLOCK:
         if (this->config_->clock->now().is_valid()) // valid time
@@ -284,7 +285,11 @@ namespace esphome
                                       this->text.c_str());
 #endif
         break;
+      case MODE_BLANK:
+          this->config_->display->clear();
+        break;
       default:
+        ESP_LOGD("draw", "Upps");
         break;
       }
       this->update_screen();
