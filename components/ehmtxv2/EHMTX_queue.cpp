@@ -150,6 +150,7 @@ namespace esphome
     int8_t xoffset = this->default_font ? EHMTXv2_DEFAULT_FONT_OFFSET_X : EHMTXv2_SPECIAL_FONT_OFFSET_X;
 
     Color color_;
+
     if (this->config_->is_running)
     {
       switch (this->mode)
@@ -286,7 +287,7 @@ namespace esphome
 #endif
         break;
       case MODE_BLANK:
-          this->config_->display->clear();
+          this->config_->display->fill(Color());
         break;
       default:
         ESP_LOGD("draw", "Upps");
