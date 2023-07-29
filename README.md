@@ -425,7 +425,6 @@ display:
   - platform: addressable_light
     id: ehmtx_display
     .....
-    auto_clear_enabled: true
     lambda: |-
       id(rgb8x32)->tick();
       id(rgb8x32)->draw();

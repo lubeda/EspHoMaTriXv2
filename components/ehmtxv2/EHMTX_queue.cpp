@@ -160,8 +160,6 @@ namespace esphome
       switch (this->mode)
       {
       case MODE_BLANK:
-        this->config_->display->draw_pixel_at(0, 0,Color(0,150,0));
-        // this->config_->display->fill(Color());
         break;     
       case MODE_COLOR:
         this->config_->display->fill(this->text_color);
