@@ -1,0 +1,54 @@
+blueprint:
+  name: |-
+    ehmtxv2: colored screen
+  description: |-
+    show a full screen color on your display
+  domain: script
+  source_url: https://github.com/lubeda/EspHoMaTriXv2/tree/main/copy2esphome
+  input:
+    ehmtx_device:
+      name: Which EspHoMaTriXv2 device to use
+      selector:
+        device:
+          filter:
+          - integration: esphome
+            model: EHMTXv2
+    lifetime:
+      name: How many minutes is this screen kept in the loop?
+      selector:
+        number:
+          min: 1
+          max: 1440
+          step: 1
+      default: 2
+    screen_time:
+      name: Minimum display time of this screen per loop in seconds?
+      selector:
+        number:
+          min: 6
+          max: 120
+          step: 1
+      default: 12
+    pix0_color:
+      name: Color of screen
+      selector:
+        color_rgb:
+      default: [240, 24, 240]
+
+variables:
+  display: !input ehmtx_device
+  pix0: !input pix0_color
+  c0: |-
+    {{ (((pix0[0] | bitwise_and(0xf8)) / 8) | int ) * 2048 + (((pix0[1] | bitwise_and(0xfC)) / 4 )| int) * 32 + ((pix0[2] | bitwise_and(0xf8)) / 8 )| int }}
+sequence:
+  - service: |-
+      esphome.{{ device_attr(display, "name") }}_color_screen
+    data:
+      screen_time: !input screen_time
+      lifetime: !input lifetime
+      r: |-
+        {{ c0[0] }}
+      g: |-
+        {{ c0[1] }}
+      b: |-
+        {{ c0[2] }}

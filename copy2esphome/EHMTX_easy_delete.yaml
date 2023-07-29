@@ -49,6 +49,8 @@ blueprint:
               value: "11"
             - label: "MODE_BITMAP_SMALL (*)"
               value: "12"
+            - label: "MODE_COLOR (*)"
+              value: "13"
       default: "5"
     icon_name:
       name: The icon to specify a screen.

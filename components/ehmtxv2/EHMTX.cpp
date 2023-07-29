@@ -340,6 +340,7 @@ namespace esphome
     register_service(&EHMTX::rainbow_date_screen, "rainbow_date_screen", {"lifetime", "screen_time", "default_font"});
 
     register_service(&EHMTX::blank_screen, "blank_screen", {"lifetime", "screen_time"});
+    register_service(&EHMTX::color_screen, "color_screen", {"lifetime", "screen_time", "r", "g", "b"});
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
 #ifndef USE_ESP8266
@@ -450,6 +451,7 @@ namespace esphome
     {
       ESP_LOGD(TAG, "oldest queue element is: %d",hit);
     }
+    this->queue[hit]->status();
     return hit;
   }
 
@@ -502,6 +504,9 @@ namespace esphome
                 break;
               case MODE_BLANK:
                 infotext = "blank";
+                break;
+              case MODE_COLOR:
+                infotext = "color";
                 break;
               case MODE_CLOCK:
                 infotext = "clock";
@@ -836,6 +841,21 @@ namespace esphome
     screen->status();
   }
 
+  void EHMTX::color_screen(int lifetime, int showtime, int r, int g, int b)
+  {
+    EHMTX_queue *screen = this->find_free_queue_element();
+    screen->mode = MODE_COLOR;
+    screen->screen_time_ = showtime;
+    screen->text_color = Color(r, g, b);
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process("color",(uint8_t)screen->mode);
+    }
+    screen->status();
+  }
+
+
   void EHMTX::text_screen(std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
     EHMTX_queue *screen = this->find_free_queue_element();
@@ -1112,7 +1132,7 @@ namespace esphome
     }
   }
 
-  void EHMTX::draw()
+  void HOT EHMTX::draw()
   {
     if ((this->is_running) && (this->show_display) )
     {

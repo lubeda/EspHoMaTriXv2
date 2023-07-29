@@ -738,7 +738,7 @@ See the examples:
 ##### Show icon_screen if queue is empty
 
 ```yaml
-on_empty_screen:
+on_empty_queue:
      then:
        lambda: |-
           id(rgb8x32)->icon_screen("error","I'm bored`);
@@ -912,6 +912,7 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_RAINBOW_DATE| 10|
 |MODE_BITMAP_SCREEN| 11|
 |MODE_BITMAP_SMALL| 12|
+|MODE_COLOR| 13|
 
 **(D)** Service **display_on** / **display_off**
 

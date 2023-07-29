@@ -26,6 +26,9 @@ namespace esphome
     case MODE_BLANK:
       ESP_LOGD(TAG, "queue: blank screen for %d sec", this->screen_time_);
       break;
+    case MODE_COLOR:
+      ESP_LOGD(TAG, "queue: color screen for %d sec", this->screen_time_);
+      break;
     case MODE_CLOCK:
       ESP_LOGD(TAG, "queue: clock for: %d sec", this->screen_time_);
       break;
@@ -157,9 +160,12 @@ namespace esphome
       switch (this->mode)
       {
       case MODE_BLANK:
-          // since clwear above
-        break;
-      
+        this->config_->display->draw_pixel_at(0, 0,Color(0,150,0));
+        // this->config_->display->fill(Color());
+        break;     
+      case MODE_COLOR:
+        this->config_->display->fill(this->text_color);
+        break;     
       case MODE_BITMAP_SCREEN:
 #ifndef USE_ESP8266
         for (uint8_t x = 0; x < 32; x++)
@@ -289,7 +295,8 @@ namespace esphome
 #endif
         break;
       default:
-        ESP_LOGD("draw", "Upps");
+        ESP_LOGD(TAG, "now screen to draw!");          
+        this->config_->next_action_time = 0;
         break;
       }
       this->update_screen();
