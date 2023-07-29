@@ -153,11 +153,13 @@ namespace esphome
 
     if (this->config_->is_running)
     {
+      this->config_->display->clear();
       switch (this->mode)
       {
-      case MODE_EMPTY:
+      case MODE_BLANK:
+          // since clwear above
         break;
-
+      
       case MODE_BITMAP_SCREEN:
 #ifndef USE_ESP8266
         for (uint8_t x = 0; x < 32; x++)
@@ -285,9 +287,6 @@ namespace esphome
         this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
 #endif
-        break;
-      case MODE_BLANK:
-          this->config_->display->fill(Color());
         break;
       default:
         ESP_LOGD("draw", "Upps");

@@ -387,19 +387,6 @@ namespace esphome
     ESP_LOGD(TAG, "default text color r: %d g: %d b: %d", r, g, b);
   }
 
-  void EHMTX::blank_screen(int lifetime, int showtime)
-  {
-    EHMTX_queue *screen = this->find_free_queue_element();
-    screen->mode = MODE_BLANK;
-    screen->screen_time_ = showtime;
-    screen->endtime = this->clock->now().timestamp + lifetime * 60;
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process("blank",(uint8_t)screen->mode);
-    }
-    screen->status();
-  }
-
   void EHMTX::update() // called from polling component
   {
     if (!this->is_running)
@@ -461,7 +448,7 @@ namespace esphome
     }
     if (hit != MAXQUEUE)
     {
-      this->queue[hit]->status();
+      ESP_LOGD(TAG, "oldest queue element is: %d",hit);
     }
     return hit;
   }
@@ -588,6 +575,7 @@ namespace esphome
         if (this->screen_pointer != MAXQUEUE)
         {
           this->queue[this->screen_pointer]->last_time = ts + this->queue[this->screen_pointer]->screen_time_;
+          // todo nur bei animationen
           if (this->queue[this->screen_pointer]->icon < this->icon_count)
           {
             this->icons[this->queue[this->screen_pointer]->icon]->set_frame(0);
@@ -611,12 +599,10 @@ namespace esphome
         }
         else
         {
-          if (this->clock->now().timestamp % 500) 
-          {
-            ESP_LOGW(TAG, "empty queue");
-          }
+          this->next_action_time = ts;
           for (auto *t : on_empty_queue_triggers_)
           {
+            ESP_LOGD(TAG, "on_empty_queue trigger");
             t->process();
           }
         }
@@ -636,6 +622,7 @@ namespace esphome
     else
     {
       uint8_t w = (2 + (uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
+      this->display->clear();
       this->display->rectangle(0, 2, w, 4, this->rainbow_color); // Color(120, 190, 40));
       this->boot_anim++;
     }
@@ -741,6 +728,8 @@ namespace esphome
     }
   }
 
+  
+
   void EHMTX::icon_screen(std::string iconname, std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
     uint8_t icon = this->find_icon(iconname.c_str());
@@ -832,6 +821,19 @@ namespace esphome
       screen->screen_time_ = screen_time;
       screen->endtime = this->clock->now().timestamp + lifetime * 60;
       screen->status();
+  }
+
+  void EHMTX::blank_screen(int lifetime, int showtime)
+  {
+    EHMTX_queue *screen = this->find_free_queue_element();
+    screen->mode = MODE_BLANK;
+    screen->screen_time_ = showtime;
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process("blank",(uint8_t)screen->mode);
+    }
+    screen->status();
   }
 
   void EHMTX::text_screen(std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
@@ -1112,9 +1114,11 @@ namespace esphome
 
   void EHMTX::draw()
   {
-    if ((this->is_running) && (this->show_display) && (this->screen_pointer != MAXQUEUE))
+    if ((this->is_running) && (this->show_display) )
     {
-      this->queue[this->screen_pointer]->draw();
+      if (this->screen_pointer != MAXQUEUE) {
+        this->queue[this->screen_pointer]->draw();  
+      }
       if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN && this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
       {
         this->draw_gauge();
