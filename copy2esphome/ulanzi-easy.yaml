@@ -117,12 +117,6 @@ api:
             rtttl: !lambda 'return tune;'
 
 sensor:
-  - platform: sht3xd
-    temperature:
-      name: "$devicename Temperature"
-    humidity:
-      name: "$devicename Relative Humidity"
-    update_interval: 60s
   - platform: adc
     pin: $battery_pin
     name: "$devicename Battery"
