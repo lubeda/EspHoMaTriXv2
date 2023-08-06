@@ -3,6 +3,7 @@
 ## 2023.8.0
 
 - added on_empty_queue trigger
+- added bitmap-convert.html to help creating rgb565 arrays
 
 ## 2023.7.1
 

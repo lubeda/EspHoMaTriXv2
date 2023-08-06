@@ -214,7 +214,7 @@ void full_screen(string iconname, int =D_LIFETIME, int screen_time=D_SCREEN_TIME
 
 **This feature is only available on ESP32 platform!!!!!**
 
-For 8x32 images as text. You can generate these images with, e.g., [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator)
+For 8x32 images as text. You can generate these images with, e.g., [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator) or just open bitmap-convert.html in your browser and select images you want. For good results the images should have a ratio of 4x1 or 1x1 to look good on your display. For better results you could add black borders as needed to your image.
 
 ###### service via API
 

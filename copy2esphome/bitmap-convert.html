@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EHMTX scale bitmap tool</title>
+    <style>
+        #output {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .scaled-image {
+            border: 1px solid black;
+            margin: 5px;
+            transform: scale(4);
+            transform-origin: top left;
+        }
+
+        canvas {
+            display: none; /* Hide the original canvas elements */
+        }
+    </style>
+</head>
+<body>
+    <H1>EHMTX Bitmap Converter</H1>
+    <input type="file" id="fileInput" accept="image/*">
+    <H2>Result</H2>
+    <div id="output"></div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const image = new Image();
+                image.onload = function () {
+                    const scaledImage1 = scaleImage(image, 32, 8);
+                    const scaledImage2 = scaleImage(image, 8, 8);
+                    const rgb565Array1 = convertToRGB565Array(scaledImage1);
+                    const rgb565Array2 = convertToRGB565Array(scaledImage2);
+
+                    displayImages(scaledImage1, scaledImage2, rgb565Array1, rgb565Array2);
+                };
+                image.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function scaleImage(image, width, height) {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(image, 0, 0, width, height);
+            return canvas;
+        }
+
+        function convertToRGB565Array(image) {
+            const ctx = image.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, image.width, image.height).data;
+            const rgb565Array = [];
+
+            for (let i = 0; i < imageData.length; i += 4) {
+                const r = imageData[i] >> 3;
+                const g = imageData[i + 1] >> 2;
+                const b = imageData[i + 2] >> 3;
+                const rgb565 = (r << 11) | (g << 5) | b;
+                rgb565Array.push(rgb565);
+            }
+
+            return rgb565Array;
+        }
+
+        function displayImages(image1, image2, rgb565Array1, rgb565Array2) {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = '';
+
+            const canvas1 = document.createElement('canvas');
+            canvas1.width = image1.width;
+            canvas1.height = image1.height;
+            const ctx1 = canvas1.getContext('2d');
+            ctx1.drawImage(image1, 0, 0);
+            outputDiv.appendChild(canvas1);
+
+            const paragraph1 = document.createElement('p');
+            paragraph1.textContent = '32 x 8 bitmap:';
+            outputDiv.appendChild(paragraph1);
+
+            const pre1 = document.createElement('pre');
+            pre1.textContent = '[' + rgb565Array1.join(', ') + ']';
+            paragraph1.appendChild(pre1);
+
+            const scaledImage1 = document.createElement('img');
+            scaledImage1.src = canvas1.toDataURL();
+            scaledImage1.classList.add('scaled-image');
+            outputDiv.appendChild(scaledImage1);
+
+            const copyButton1 = document.createElement('button');
+            copyButton1.textContent = 'copy bitmap screen';
+            copyButton1.addEventListener('click', function () {
+                copyToClipboard('[' + rgb565Array1.join(', ') + ']');
+            });
+            paragraph1.appendChild(copyButton1);
+
+            const canvas2 = document.createElement('canvas');
+            canvas2.width = image2.width;
+            canvas2.height = image2.height;
+            const ctx2 = canvas2.getContext('2d');
+            ctx2.drawImage(image2, 0, 0);
+            outputDiv.appendChild(canvas2);
+
+            const paragraph2 = document.createElement('p');
+            paragraph2.textContent = '8x8 small bitmap';
+            outputDiv.appendChild(paragraph2);
+
+            const pre2 = document.createElement('pre');
+            pre2.textContent = '[' + rgb565Array2.join(', ') + ']';
+            paragraph2.appendChild(pre2);
+
+            const scaledImage2 = document.createElement('img');
+            scaledImage2.src = canvas2.toDataURL();
+            scaledImage2.classList.add('scaled-image');
+            outputDiv.appendChild(scaledImage2);
+
+            const copyButton2 = document.createElement('button');
+            copyButton2.textContent = 'copy bitmap screen';
+            copyButton2.addEventListener('click', function () {
+                copyToClipboard('[' + rgb565Array2.join(', ') + ']');
+            });
+            paragraph2.appendChild(copyButton2);
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('Copied to clipboard:\n' + text);
+        }
+    </script>
+</body>
+</html>
