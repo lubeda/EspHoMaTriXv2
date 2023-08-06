@@ -293,7 +293,7 @@ namespace esphome
 #endif
         break;
       default:
-        ESP_LOGD(TAG, "now screen to draw!");          
+        ESP_LOGD(TAG, "no screen to draw!");          
         this->config_->next_action_time = 0;
         break;
       }
