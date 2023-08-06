@@ -724,10 +724,11 @@ namespace esphome
           ESP_LOGW(TAG, "del_screen: slot %d deleted", i);
           this->queue[i]->mode = MODE_EMPTY;
           this->queue[i]->endtime = 0;
+          this->queue[i]->last_time = this->clock->now().timestamp;
           if (i == this->screen_pointer)
           {
             this->next_action_time = this->clock->now().timestamp;
-          }
+          }  
         }
       }
     }
