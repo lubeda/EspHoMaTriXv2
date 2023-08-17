@@ -1238,7 +1238,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[hco](https://github.com/hco)** fixing documentation
 - **[geekofweek](https://github.com/geekofweek)** fixed sample YAML, cleanup documentation
 - **[joncar](https://github.com/joncar)** fixed scroll small text
-- **[TheGroundZero](https://github.com/TheGroundZero)** PR and discussion about bootloop
+- **[TheGroundZero](https://github.com/TheGroundZero)** PRs and discussion about bootloop
 - **Everybody** who found bugs/issues and reported them!
 
 ## Special thanks to all sponsors
