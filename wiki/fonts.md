@@ -69,8 +69,7 @@ ehmtx:
   ....
 ```
 
-
-## Trip5s fonts
+## Trip5's fonts
 
 Details for this fonts are well documented in his repo
 
