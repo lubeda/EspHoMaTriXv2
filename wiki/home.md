@@ -23,4 +23,4 @@
 
 ## Defective / Broken Ulanzi TC-001?
 
-- [Read this](broken-Ulanzi)
+- [hint to repair](broken-Ulanzi)
