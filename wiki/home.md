@@ -15,6 +15,7 @@
 - [time and date display](time-date-display)
 - [special clock and date display duration](special-clock-and-date-display-duration)
 - [set parameter on startup](startup-settings)
+- [fonts for the display](fonts)
 
 ## Problems
 
