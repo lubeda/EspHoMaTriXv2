@@ -8,6 +8,6 @@ This component provides some blueprints. Because there are so many options and p
 
 With this blueprint you can easily react on state changes of a sensor.
 
-![screenshot](https://github.com/lubeda/EspHoMaTriXv2/blob/develop/wiki/blueprint-extended-dialog.png?raw=true)
+![screenshot](https://github.com/lubeda/EspHoMaTriXv2/blob/main/wiki/blueprint-extended-dialog.png?raw=true)
 
 ## Bonus! They are free

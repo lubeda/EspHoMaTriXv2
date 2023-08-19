@@ -79,7 +79,7 @@ esp32:
 
 font:
   # Font included in this folder
-  # - file: Cmateine.ttf
+  # - file: mateine.ttf
   #   size: 16
   #   id: default_font
   #   glyphs:  |
