@@ -78,11 +78,24 @@ esp32:
   board: esp32dev
 
 font:
-  - file: mateine.ttf
-    size: 16
+  # Font included in this folder
+  # - file: mateine.ttf
+  #   size: 16
+  #   id: default_font
+  #   glyphs:  |
+  #     !?"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnÖÄÜöäüopqrstuvwxyz@<>ß§€/
+  # Matrix Clock Fonts
+  # Grab these from https://github.com/trip5/MatrixClockFonts
+  # See https://github.com/lubeda/EspHoMaTriXv2#font
+  # Store in a "fonts" subfolder of your ESPHome config folder or change paths below
+  - file: fonts/MatrixClock-Light8.bdf
     id: default_font
     glyphs:  |
-      !?"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnÖÄÜöäüopqrstuvwxyz@<>ß§€/
+      ! "#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz°
+  - file: fonts/MatrixClock-Chunky6.bdf
+    id: special_font
+    glyphs:  |
+      ! "#$%&'()*+,-./0123456789:APMTapmt
   
 binary_sensor:
   - platform: status
@@ -232,8 +245,15 @@ ehmtxv2:
   time_format: "%H:%M"
   date_format: "%d.%m."
   show_seconds: false
+  # Uncomment below if using the mateine font
+  # default_font_id: default_font
+  # special_font_id: default_font
+  # Comment out below if using mateine font
   default_font_id: default_font
-  special_font_id: default_font 
+  default_font_yoffset: 8
+  special_font_id: special_font
+  special_font_yoffset: 6
+  # until here
   boot_logo: "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]"
   icons: 
     - id: error
