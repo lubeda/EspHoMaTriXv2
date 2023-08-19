@@ -1,7 +1,8 @@
 name: Publish wiki
 on:
   push:
-    branches: [main]
+    branches: 
+      - 2023.8.0
     paths:
       - wiki/**
       - .github/workflows/wiki.yml
