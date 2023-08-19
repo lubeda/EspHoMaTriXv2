@@ -3,6 +3,7 @@ on:
   push:
     branches: 
       - 2023.8.0
+      - main
     paths:
       - wiki/**
       - .github/workflows/wiki.yml
