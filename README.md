@@ -78,6 +78,7 @@ There are some “RGB-matrices” status displays/clocks out there, the commerci
 - [Ulanzi TC001](https://www.aliexpress.com/item/1005005008682055.html) commercial ~ €50
 - [AWTRIX](https://awtrixdocs.blueforcer.de/#/) (project has been discontinued after more than 4 years in August 2022)
 - [Pixel It](https://pixelit-project.github.io/) (project is under active development)
+- [Pixelix](https://github.com/BlueAndi/esp-rgb-led-matrix) controlled via REST API or Websocket
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of AWTRIX, optimized for the Ulanzi TC001 hardware
 
 All of the various solutions have their pros and cons. I tried some and used AWTRIX for a long time, but I found it lacking in a lot of ways (in my opinion,) so I started work on an esphome.io variant. Targeted for an optimized and extensible Home Assistant integration without paid blueprints, MQTT broker requirement, or the need to upload files to the ESP board.
