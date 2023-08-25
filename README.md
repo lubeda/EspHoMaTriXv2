@@ -38,7 +38,7 @@ If you don't add this trigger you have a blank display until your hosts add scre
 
 ### esphome 2023.7.0
 
-Some updates of esphome will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files neccessary.
+Some updates of esphome will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
 
 You have to add this to your YAML
 
@@ -110,8 +110,13 @@ Copy these files from the source folder `copy2esphome`:
 
 - ulanzi-simple.yaml
 - mateine.ttf
+- Optional: `1pixel.gif` See: [Attention](#attention)
 
-to your esphome directory (usually /config/esphome). In your esphome dashboard, you will find a new device named `ulanzi-easy`.
+to your esphome directory (usually `/config/esphome`).
+
+Grab the font files, that are used in `ulanzi-simple.yaml` from https://github.com/trip5/MatrixClockFonts and save them in `/config/esphome/fonts`.
+
+In your esphome dashboard, you will find a new device named `ulanzi-easy`.
 
 #### Step 2
 
@@ -1243,6 +1248,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[joncar](https://github.com/joncar)** fixed scroll small text
 - **[TheGroundZero](https://github.com/TheGroundZero)** PRs and discussion about bootloop
 - **[N3rdix](https://github.com/N3rdix)** PRs
+- **[lukasleitsch](https://github.com/lukasleitsch)** PRs
 - **Everybody** who found bugs/issues and reported them!
 
 ## Special thanks to all sponsors
