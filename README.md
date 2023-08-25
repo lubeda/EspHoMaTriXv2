@@ -11,7 +11,7 @@
 
 ## Attention
 
-Some updates of esphome will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files neccessary.
+Some updates of esphome will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
 
 You have to add this to your YAML
 
@@ -80,10 +80,14 @@ In easy mode you'll have a clock with auto brightness control and after step 3 y
 
 Copy these files from the source folder `copy2esphome`:
 
-- ulanzi-simple.yaml
-- mateine.ttf
+- `ulanzi-simple.yaml`
+- Optional: `1pixel.gif` See: [Attention](#attention)
 
-to your esphome directory (usually /config/esphome). In your esphome dashboard, you will find a new device named `ulanzi-easy`.
+to your esphome directory (usually `/config/esphome`). 
+
+Grab the font files, that are used in `ulanzi-simple.yaml` from https://github.com/trip5/MatrixClockFonts and save them in `/config/esphome/fonts`.
+
+In your esphome dashboard, you will find a new device named `ulanzi-easy`.
 
 #### Step 2
 
