@@ -3,7 +3,6 @@
 #include "esphome.h"
 
 #include "esphome/components/time/real_time_clock.h"
-#include "esphome/components/animation/animation.h"
 
 const uint8_t MAXQUEUE = 24;
 const uint8_t C_RED = 240; // default

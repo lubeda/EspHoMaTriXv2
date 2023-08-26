@@ -40,6 +40,19 @@ If you don't add this trigger you have a blank display until your hosts add scre
 
 Some updates of esphome will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
 
+#### Compile errors `animation.h` is missing
+
+```cpp
+Error:
+In file included from src/esphome.h:25,
+                 from src/esphome/components/ehmtx/EHMTX.cpp:1:
+src/esphome/components/ehmtx/EHMTX.h:6:10: fatal error: esphome/components/animation/animation.h: No such file or directory
+ #include "esphome/components/animation/animation.h"
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+... 
+```
+
 You have to add this to your YAML
 
 ```yaml
