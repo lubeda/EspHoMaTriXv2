@@ -99,6 +99,7 @@ blueprint:
 variables:
   display: !input ehmtx_device
   bfriendly: !input use_friendly
+  use_colors: !input use_colors
   def_color: !input default_color
   lo_color: !input low_color
   hi_color: !input high_color
