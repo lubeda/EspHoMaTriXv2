@@ -101,6 +101,7 @@ variables:
   display: !input ehmtx_device
   bfriendly: !input use_friendly
   def_color: !input default_color
+  use_colors: !input use_colors
   lo_color: !input low_color
   hi_color: !input high_color
 
