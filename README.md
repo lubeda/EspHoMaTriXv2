@@ -90,7 +90,7 @@ There are some “RGB-matrices” status displays/clocks out there, the commerci
 - [LaMetric](https://lametric.com/en-US/) commercial ~ €199
 - [Ulanzi TC001](https://www.aliexpress.com/item/1005005008682055.html) commercial ~ €50
 - [AWTRIX](https://awtrixdocs.blueforcer.de/#/) (project has been discontinued after more than 4 years in August 2022)
-- [Pixel It](https://pixelit-project.github.io/) (project is under active development)
+- [PixelIt](https://github.com/pixelit-project/PixelIt) (project is under active development)
 - [Pixelix](https://github.com/BlueAndi/esp-rgb-led-matrix) controlled via REST API or Websocket
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of AWTRIX, optimized for the Ulanzi TC001 hardware
 
