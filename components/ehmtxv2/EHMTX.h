@@ -1,7 +1,7 @@
 #ifndef EHMTX_H
 #define EHMTX_H
 #include "esphome.h"
-
+#define USE_Fireplugin
 #include "esphome/components/time/real_time_clock.h"
 
 const uint8_t MAXQUEUE = 24;
@@ -42,7 +42,8 @@ enum show_mode : uint8_t
   MODE_RAINBOW_DATE = 10,
   MODE_BITMAP_SCREEN = 11,
   MODE_BITMAP_SMALL = 12,
-  MODE_COLOR = 13
+  MODE_COLOR = 13,
+  MODE_FIRE = 14
 };
 
 namespace esphome
@@ -80,6 +81,11 @@ namespace esphome
     void setup() override;
     EHMTX();
 
+
+
+#ifdef USE_Fireplugin
+    void fire_screen( int lifetime, int screen_time);
+#endif    
     uint16_t hue_ = 0;
     void dump_config();
 #ifdef USE_ESP32
@@ -219,7 +225,7 @@ namespace esphome
 #endif
 
     EHMTX_queue(EHMTX *config);
-
+    Color heatColor(uint8_t temperature);
     void status();
     void draw();
     bool isfree();

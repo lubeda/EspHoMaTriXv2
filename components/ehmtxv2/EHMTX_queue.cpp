@@ -3,6 +3,71 @@
 namespace esphome
 {
 
+#ifdef USE_Fireplugin
+    const size_t   m_heatSize = 8*32; /**< Number of heat temperatures */
+    uint8_t*     m_heat = new(std::nothrow) uint8_t[m_heatSize];
+    /**
+     * Cooling: How much does the air cool as it rises?
+     * Less cooling => taller flames.
+     * More cooling => shorter flames.
+     */
+    static const uint8_t    COOLING     = 60U;
+
+    /**
+     * Sparking: What chance (out of 255) is there that a new spark will be lit?
+     * Higher chance = more roaring fire.  Lower chance = more flickery fire.
+     */
+    static const uint8_t    SPARKING    = 120U;
+
+    /**
+     * Approximates a 'black body radiation' spectrum for a given 'heat' level.
+     * This is useful for animations of 'fire'.
+     * Heat is specified as an arbitrary scale from 0 (cool) to 255 (hot).
+     * This is NOT a chromatically correct 'black body radiation'
+     * spectrum, but it's surprisingly close, and it's fast and small.
+     */
+    Color heatColor(uint8_t temperature);
+#endif
+#ifdef USE_Fireplugin
+
+Color EHMTX_queue::heatColor(uint8_t temperature)
+{
+    Color heatColor;
+
+    /* Scale 'heat' down from 0-255 to 0-191, which can then be easily divided
+     * into three equal 'thirds' of 64 units each.
+     */
+    uint8_t t192        = static_cast<uint32_t>(temperature) * 191U / 255U;
+
+    /* Calculate a value that ramps up from zero to 255 in each 'third' of the scale. */
+    uint8_t heatRamp    = t192 & 0x3fU; /* 0..63 */
+
+    /* Scale up to 0..252 */
+    heatRamp <<= 2;
+
+    /* Now figure out which third of the spectrum we're in. */
+    if (t192 & 0x80U)
+    {
+        /* We're in the hottest third */
+        heatColor = Color(255U,255U,heatRamp);    /* Ramp up blue */
+    }
+    else if (t192 & 0x40U)
+    {
+        /* We're in the middle third */
+        heatColor = Color(255U,heatRamp,0U);          /* No blue */
+    }
+    else
+    {
+        /* We're in the coolest third */
+        heatColor = Color(heatRamp, 0,0); 
+    }
+
+    return heatColor;
+}
+
+#endif
+
+
   EHMTX_queue::EHMTX_queue(EHMTX *config)
   {
     this->config_ = config;
@@ -55,6 +120,9 @@ namespace esphome
       break;
     case MODE_RAINBOW_DATE:
       ESP_LOGD(TAG, "queue: date for: %d sec", this->screen_time_);
+      break;
+    case MODE_FIRE:
+      ESP_LOGD(TAG, "queue: fire for: %d sec", this->screen_time_);
       break;
 
 #ifndef USE_ESP8266
@@ -292,6 +360,80 @@ namespace esphome
                                       this->text.c_str());
 #endif
         break;
+      #ifdef USE_Fireplugin
+      case MODE_FIRE:
+{
+    int16_t x       = 0;
+    int16_t y       = 0;
+
+    for(x = 0; x < 32; ++x)
+    {
+        /* Step 1) Cool down every cell a little bit */
+        for(y = 0; y < 8; ++y)
+        {
+            uint8_t     coolDownTemperature = random(0, ((COOLING * 10U) / 8)) + 2U;
+            uint32_t    heatPos             = x + y * 32;
+
+            if (coolDownTemperature >= m_heat[heatPos])
+            {
+                m_heat[heatPos] = 0U;
+            }
+            else
+            {
+                m_heat[heatPos] -= coolDownTemperature;
+            }
+        }
+
+        /* Step 2) Heat from each cell drifts 'up' and diffuses a little bit */
+        for(y = 0; y < (8 - 1U); ++y)
+        {
+            uint16_t    diffusHeat  = 0U;
+
+            if ((8 - 2U) > y)
+            {
+                diffusHeat += m_heat[x + (y + 1) * 32];
+                diffusHeat += m_heat[x + (y + 1) * 32];
+                diffusHeat += m_heat[x + (y + 2) * 32];
+                diffusHeat /= 3U;
+            }
+            else
+            {
+                diffusHeat += m_heat[x + (y + 0) * 32];
+                diffusHeat += m_heat[x + (y + 0) * 32];
+                diffusHeat += m_heat[x + (y + 1) * 32];
+                diffusHeat /= 3U;
+            }
+
+            m_heat[x + y * 32] = diffusHeat;
+        }
+
+        /* Step 3) Randomly ignite new 'sparks' of heat near the bottom */
+        if (random(0, 255) < SPARKING)
+        {
+            uint8_t     randValue   = random(160, 255);
+            uint32_t    heatPos     = x + (8 - 1U) * 32;
+            uint16_t    heat        = m_heat[heatPos] + randValue;
+
+            if (UINT8_MAX < heat)
+            {
+                m_heat[heatPos] = 255U;
+            }
+            else
+            {
+                m_heat[heatPos] = heat;
+            }
+        }
+
+        /* Step 4) Map from heat cells to LED colors */
+        for(y = 0; y < 8; ++y)
+        {
+            this->config_->display->draw_pixel_at(x, y, heatColor(m_heat[x + y * 32]));
+        }
+    }
+}
+
+        break;
+      #endif
       default:
         ESP_LOGD(TAG, "no screen to draw!");          
         this->config_->next_action_time = 0;

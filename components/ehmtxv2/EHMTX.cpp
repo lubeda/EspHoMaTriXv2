@@ -349,6 +349,9 @@ namespace esphome
     register_service(&EHMTX::bitmap_small, "bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
 #endif
 
+    #ifdef USE_Fireplugin
+      register_service(&EHMTX::fire_screen, "fire_screen", {"lifetime", "screen_time"});
+    #endif
     ESP_LOGD(TAG, "Setup and running!");
   }
 
@@ -527,6 +530,9 @@ namespace esphome
                 break;
               case MODE_BITMAP_SCREEN:
                 infotext = "BITMAP";
+                break;
+              case MODE_FIRE:
+                infotext = "FIRE";
                 break;
               default:
                 break;
@@ -881,6 +887,21 @@ namespace esphome
     screen->status();
   }
 
+void EHMTX::fire_screen( int lifetime, int screen_time)
+  {
+    EHMTX_queue *screen = this->find_icon_queue_element(0);
+    screen->mode = MODE_FIRE;
+    screen->icon = 0;
+    screen->screen_time_ = screen_time;
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process("Fire", (uint8_t)screen->mode);
+    }
+    ESP_LOGD(TAG, "fire screen: lifetime: %d screen_time:%d ", lifetime, screen_time);
+    screen->status();
+  }
+
   void EHMTX::full_screen(std::string iconname, int lifetime, int screen_time)
   {
     uint8_t icon = this->find_icon(iconname.c_str());
@@ -1077,6 +1098,7 @@ namespace esphome
     ESP_LOGD(TAG, "add_icon no.: %d name: %s frame_duration: %d ms", this->icon_count, icon->name.c_str(), icon->frame_duration);
     this->icon_count++;
   }
+
 
   void EHMTX::draw_alarm()
   {
