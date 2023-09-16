@@ -1,4 +1,8 @@
+# "night mode"
 
+**Skill-level:** low
+
+**minimum version:** 2023.8.0
 
 ```yaml
 globals:
