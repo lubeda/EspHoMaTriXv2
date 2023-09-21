@@ -85,7 +85,7 @@ Copy these files from the source folder `copy2esphome`:
 
 to your esphome directory (usually `/config/esphome`). 
 
-Grab the font files, that are used in `ulanzi-simple.yaml` from https://github.com/trip5/MatrixClockFonts and save them in `/config/esphome/fonts`.
+Grab the font files, that are used in `ulanzi-simple.yaml` from https://github.com/trip5/Matrix-Fonts and save them in `/config/esphome/fonts`.
 
 In your esphome dashboard, you will find a new device named `ulanzi-easy`.
 
@@ -453,7 +453,7 @@ Not all fonts are suitable for this minimalistic display. There are public domai
 
 You can configure two fonts if you like.
 
-Trip5 is also providing special fonts for 8x32 matrices in his [repo](https://github.com/trip5/MatrixClockFonts)
+Trip5 is also providing special fonts for 8x32 matrices in his [repo](https://github.com/trip5/Matrix-Fonts)
 
 dbuezas has also contributed tow optimized fonts with umlauts for this kind of display `mateine.ttf` and `mateineThin.ttf`. They are included in the copy2esphome folder
 
@@ -1170,7 +1170,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[aptonline](https://github.com/aptonline)** for his work on the Ulanzi hardware
 - **[wsbtak](https://github.com/wsbtak)** for the work on the Ulanzi hardware
 - **[ofirsnb](https://github.com/ofirsnb)** for his contributions
-- **[trip5](https://github.com/trip5/MatrixClockFonts)** for his work on optimized fonts and user support and work on the wiki
+- **[trip5](https://github.com/trip5)** for his work on optimized fonts and user support and work on the wiki
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
 - **[hco](https://github.com/hco)** fixing documentation

@@ -17,6 +17,6 @@ Due to limitations of the display there are only some font useful here are some 
 [8 pixel font thin]https://github.com/lubeda/EspHoMaTriXv2/blob/main/copy2esphome/mateineThin.ttf
 ![sample](https://github.com/lubeda/EspHoMaTriXv2/blob/main/wiki/mateinethinfont.png?raw=true)
 
-## Trip5s fonts
+## Trip5's Matrix Fonts
 
-[REPO](https://github.com/trip5/MatrixClockFonts)
+[REPO](https://github.com/trip5/Matrix-Fonts)
