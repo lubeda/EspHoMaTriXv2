@@ -43,7 +43,8 @@ enum show_mode : uint8_t
   MODE_BITMAP_SCREEN = 11,
   MODE_BITMAP_SMALL = 12,
   MODE_COLOR = 13,
-  MODE_FIRE = 14
+  MODE_FIRE = 14,
+  MODE_ICON_CLOCK = 15
 };
 
 namespace esphome
@@ -136,7 +137,7 @@ namespace esphome
     uint8_t find_icon(std::string name);
     uint8_t find_last_clock();
     bool string_has_ending(std::string const &fullString, std::string const &ending);
-    void draw_day_of_week();
+    void draw_day_of_week(bool small=false);
     void show_all_icons();
     void tick();
     void draw();
@@ -168,6 +169,7 @@ namespace esphome
     void hide_alarm();
     void full_screen(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void icon_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void icon_clock(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void date_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);

@@ -4,43 +4,43 @@ namespace esphome
 {
 
 #ifdef USE_Fireplugin
-    const size_t   m_heatSize = 8*32; /**< Number of heat temperatures */
-    uint8_t*     m_heat = new(std::nothrow) uint8_t[m_heatSize];
-    /**
-     * Cooling: How much does the air cool as it rises?
-     * Less cooling => taller flames.
-     * More cooling => shorter flames.
-     */
-    static const uint8_t    COOLING     = 60U;
+  const size_t m_heatSize = 8 * 32; /**< Number of heat temperatures */
+  uint8_t *m_heat = new (std::nothrow) uint8_t[m_heatSize];
+  /**
+   * Cooling: How much does the air cool as it rises?
+   * Less cooling => taller flames.
+   * More cooling => shorter flames.
+   */
+  static const uint8_t COOLING = 60U;
 
-    /**
-     * Sparking: What chance (out of 255) is there that a new spark will be lit?
-     * Higher chance = more roaring fire.  Lower chance = more flickery fire.
-     */
-    static const uint8_t    SPARKING    = 120U;
+  /**
+   * Sparking: What chance (out of 255) is there that a new spark will be lit?
+   * Higher chance = more roaring fire.  Lower chance = more flickery fire.
+   */
+  static const uint8_t SPARKING = 120U;
 
-    /**
-     * Approximates a 'black body radiation' spectrum for a given 'heat' level.
-     * This is useful for animations of 'fire'.
-     * Heat is specified as an arbitrary scale from 0 (cool) to 255 (hot).
-     * This is NOT a chromatically correct 'black body radiation'
-     * spectrum, but it's surprisingly close, and it's fast and small.
-     */
-    Color heatColor(uint8_t temperature);
+  /**
+   * Approximates a 'black body radiation' spectrum for a given 'heat' level.
+   * This is useful for animations of 'fire'.
+   * Heat is specified as an arbitrary scale from 0 (cool) to 255 (hot).
+   * This is NOT a chromatically correct 'black body radiation'
+   * spectrum, but it's surprisingly close, and it's fast and small.
+   */
+  Color heatColor(uint8_t temperature);
 #endif
 #ifdef USE_Fireplugin
 
-Color EHMTX_queue::heatColor(uint8_t temperature)
-{
+  Color EHMTX_queue::heatColor(uint8_t temperature)
+  {
     Color heatColor;
 
     /* Scale 'heat' down from 0-255 to 0-191, which can then be easily divided
      * into three equal 'thirds' of 64 units each.
      */
-    uint8_t t192        = static_cast<uint32_t>(temperature) * 191U / 255U;
+    uint8_t t192 = static_cast<uint32_t>(temperature) * 191U / 255U;
 
     /* Calculate a value that ramps up from zero to 255 in each 'third' of the scale. */
-    uint8_t heatRamp    = t192 & 0x3fU; /* 0..63 */
+    uint8_t heatRamp = t192 & 0x3fU; /* 0..63 */
 
     /* Scale up to 0..252 */
     heatRamp <<= 2;
@@ -48,25 +48,24 @@ Color EHMTX_queue::heatColor(uint8_t temperature)
     /* Now figure out which third of the spectrum we're in. */
     if (t192 & 0x80U)
     {
-        /* We're in the hottest third */
-        heatColor = Color(255U,255U,heatRamp);    /* Ramp up blue */
+      /* We're in the hottest third */
+      heatColor = Color(255U, 255U, heatRamp); /* Ramp up blue */
     }
     else if (t192 & 0x40U)
     {
-        /* We're in the middle third */
-        heatColor = Color(255U,heatRamp,0U);          /* No blue */
+      /* We're in the middle third */
+      heatColor = Color(255U, heatRamp, 0U); /* No blue */
     }
     else
     {
-        /* We're in the coolest third */
-        heatColor = Color(heatRamp, 0,0); 
+      /* We're in the coolest third */
+      heatColor = Color(heatRamp, 0, 0);
     }
 
     return heatColor;
-}
+  }
 
 #endif
-
 
   EHMTX_queue::EHMTX_queue(EHMTX *config)
   {
@@ -105,6 +104,9 @@ Color EHMTX_queue::heatColor(uint8_t temperature)
       break;
     case MODE_ICON_SCREEN:
       ESP_LOGD(TAG, "queue: icon screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      break;
+    case MODE_ICON_CLOCK:
+      ESP_LOGD(TAG, "queue: icon time: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
       break;
     case MODE_TEXT_SCREEN:
       ESP_LOGD(TAG, "queue: text text: \"%s\" for: %d sec", this->text.c_str(), this->screen_time_);
@@ -149,6 +151,7 @@ Color EHMTX_queue::heatColor(uint8_t temperature)
     case MODE_RAINBOW_ICON:
     case MODE_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
+    case MODE_ICON_CLOCK:
       startx = 8;
       break;
     case MODE_TEXT_SCREEN:
@@ -228,10 +231,10 @@ Color EHMTX_queue::heatColor(uint8_t temperature)
       switch (this->mode)
       {
       case MODE_BLANK:
-        break;     
+        break;
       case MODE_COLOR:
         this->config_->display->fill(this->text_color);
-        break;     
+        break;
       case MODE_BITMAP_SCREEN:
 #ifndef USE_ESP8266
         for (uint8_t x = 0; x < 32; x++)
@@ -326,6 +329,21 @@ Color EHMTX_queue::heatColor(uint8_t temperature)
       case MODE_FULL_SCREEN:
         this->config_->display->image(0, 0, this->config_->icons[this->icon]);
         break;
+      case MODE_ICON_CLOCK:
+        if (this->config_->clock->now().is_valid()) // valid time
+        {
+          color_ = this->text_color;
+          time_t ts = this->config_->clock->now().timestamp;
+          this->config_->display->strftime(xoffset + 13 + 8, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
+                                           this->config_->clock->now());
+          this->config_->display->image(2, 0, this->config_->icons[this->icon]);
+          this->config_->draw_day_of_week(true);
+        }
+        else
+        {
+          this->config_->display->print(13 + 8 + xoffset, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!t!");
+        }
+        break;
       case MODE_ICON_SCREEN:
       case MODE_RAINBOW_ICON:
       {
@@ -360,82 +378,82 @@ Color EHMTX_queue::heatColor(uint8_t temperature)
                                       this->text.c_str());
 #endif
         break;
-      #ifdef USE_Fireplugin
+#ifdef USE_Fireplugin
       case MODE_FIRE:
-{
-    int16_t x       = 0;
-    int16_t y       = 0;
+      {
+        int16_t x = 0;
+        int16_t y = 0;
 
-    for(x = 0; x < 32; ++x)
-    {
-        /* Step 1) Cool down every cell a little bit */
-        for(y = 0; y < 8; ++y)
+        for (x = 0; x < 32; ++x)
         {
-            uint8_t     coolDownTemperature = random(0, ((COOLING * 10U) / 8)) + 2U;
-            uint32_t    heatPos             = x + y * 32;
+          /* Step 1) Cool down every cell a little bit */
+          for (y = 0; y < 8; ++y)
+          {
+            uint8_t coolDownTemperature = random(0, ((COOLING * 10U) / 8)) + 2U;
+            uint32_t heatPos = x + y * 32;
 
             if (coolDownTemperature >= m_heat[heatPos])
             {
-                m_heat[heatPos] = 0U;
+              m_heat[heatPos] = 0U;
             }
             else
             {
-                m_heat[heatPos] -= coolDownTemperature;
+              m_heat[heatPos] -= coolDownTemperature;
             }
-        }
+          }
 
-        /* Step 2) Heat from each cell drifts 'up' and diffuses a little bit */
-        for(y = 0; y < (8 - 1U); ++y)
-        {
-            uint16_t    diffusHeat  = 0U;
+          /* Step 2) Heat from each cell drifts 'up' and diffuses a little bit */
+          for (y = 0; y < (8 - 1U); ++y)
+          {
+            uint16_t diffusHeat = 0U;
 
             if ((8 - 2U) > y)
             {
-                diffusHeat += m_heat[x + (y + 1) * 32];
-                diffusHeat += m_heat[x + (y + 1) * 32];
-                diffusHeat += m_heat[x + (y + 2) * 32];
-                diffusHeat /= 3U;
+              diffusHeat += m_heat[x + (y + 1) * 32];
+              diffusHeat += m_heat[x + (y + 1) * 32];
+              diffusHeat += m_heat[x + (y + 2) * 32];
+              diffusHeat /= 3U;
             }
             else
             {
-                diffusHeat += m_heat[x + (y + 0) * 32];
-                diffusHeat += m_heat[x + (y + 0) * 32];
-                diffusHeat += m_heat[x + (y + 1) * 32];
-                diffusHeat /= 3U;
+              diffusHeat += m_heat[x + (y + 0) * 32];
+              diffusHeat += m_heat[x + (y + 0) * 32];
+              diffusHeat += m_heat[x + (y + 1) * 32];
+              diffusHeat /= 3U;
             }
 
             m_heat[x + y * 32] = diffusHeat;
-        }
+          }
 
-        /* Step 3) Randomly ignite new 'sparks' of heat near the bottom */
-        if (random(0, 255) < SPARKING)
-        {
-            uint8_t     randValue   = random(160, 255);
-            uint32_t    heatPos     = x + (8 - 1U) * 32;
-            uint16_t    heat        = m_heat[heatPos] + randValue;
+          /* Step 3) Randomly ignite new 'sparks' of heat near the bottom */
+          if (random(0, 255) < SPARKING)
+          {
+            uint8_t randValue = random(160, 255);
+            uint32_t heatPos = x + (8 - 1U) * 32;
+            uint16_t heat = m_heat[heatPos] + randValue;
 
             if (UINT8_MAX < heat)
             {
-                m_heat[heatPos] = 255U;
+              m_heat[heatPos] = 255U;
             }
             else
             {
-                m_heat[heatPos] = heat;
+              m_heat[heatPos] = heat;
             }
-        }
+          }
 
-        /* Step 4) Map from heat cells to LED colors */
-        for(y = 0; y < 8; ++y)
-        {
+          /* Step 4) Map from heat cells to LED colors */
+          for (y = 0; y < 8; ++y)
+          {
             this->config_->display->draw_pixel_at(x, y, heatColor(m_heat[x + y * 32]));
+          }
         }
-    }
-}
+      }
 
-        break;
-      #endif
+      break;
+#endif
       default:
-        ESP_LOGD(TAG, "no screen to draw!");          
+        ESP_LOGD(TAG, "no screen to draw!");
         this->config_->next_action_time = 0;
         break;
       }

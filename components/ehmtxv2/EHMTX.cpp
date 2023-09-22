@@ -18,6 +18,8 @@ namespace esphome
     this->last_scroll_time = 0;
     this->screen_pointer = MAXQUEUE;
     this->is_running = false;
+    this->set_today_color();
+    this->set_weekday_color();
 
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
@@ -30,7 +32,7 @@ namespace esphome
   {
     if (size > 0)
     {
-      this->rindicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+      this->rindicator_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
       this->display_rindicator = size & 3;
       ESP_LOGD(TAG, "show rindicator size: %d r: %d g: %d b: %d", size, r, g, b);
     }
@@ -44,7 +46,7 @@ namespace esphome
   {
     if (size > 0)
     {
-      this->lindicator_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+      this->lindicator_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
       this->display_lindicator = size & 3;
       ESP_LOGD(TAG, "show lindicator size: %d r: %d g: %d b: %d", size, r, g, b);
     }
@@ -80,13 +82,13 @@ namespace esphome
 
   void EHMTX::set_today_color(int r, int g, int b)
   {
-    this->today_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+    this->today_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
     ESP_LOGD(TAG, "default today color r: %d g: %d b: %d", r, g, b);
   }
 
   void EHMTX::set_weekday_color(int r, int g, int b)
   {
-    this->weekday_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+    this->weekday_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
     ESP_LOGD(TAG, "default weekday color: %d g: %d b: %d", r, g, b);
   }
 
@@ -327,6 +329,8 @@ namespace esphome
 
     register_service(&EHMTX::full_screen, "full_screen", {"icon_name", "lifetime", "screen_time"});
     register_service(&EHMTX::icon_screen, "icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+    register_service(&EHMTX::icon_clock, "icon_clock", {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+    
     register_service(&EHMTX::rainbow_icon_screen, "rainbow_icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font"});
 
     register_service(&EHMTX::text_screen, "text_screen", {"text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
@@ -359,7 +363,7 @@ namespace esphome
   {
     if (size > 0)
     {
-      this->alarm_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+      this->alarm_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
       this->display_alarm = size & 3;
       ESP_LOGD(TAG, "show alarm size: %d color r: %d g: %d b: %d", size, r, g, b);
     }
@@ -377,7 +381,7 @@ namespace esphome
 
   void EHMTX::set_clock_color(int r, int g, int b)
   {
-    this->clock_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+    this->clock_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
     this->del_screen("*", 3);
     this->del_screen("*", 2);
     this->clock_screen(24 * 60, this->clock_time, false, this->clock_color[0], this->clock_color[1], this->clock_color[2]);
@@ -387,7 +391,7 @@ namespace esphome
 
   void EHMTX::set_text_color(int r, int g, int b)
   {
-    this->text_color = Color((uint8_t)r & 248, (uint8_t)g & 252, (uint8_t)b & 248);
+    this->text_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
     ESP_LOGD(TAG, "default text color r: %d g: %d b: %d", r, g, b);
   }
 
@@ -420,7 +424,7 @@ namespace esphome
       if (this->queue[i]->mode == mode)
       {
         bool force = true;
-        if ((mode == MODE_ICON_SCREEN) || (mode == MODE_FULL_SCREEN) || (mode == MODE_RAINBOW_ICON))
+        if ((mode == MODE_ICON_SCREEN) || (mode == MODE_ICON_CLOCK) ||(mode == MODE_FULL_SCREEN) || (mode == MODE_RAINBOW_ICON))
         {
           if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
           {
@@ -522,6 +526,7 @@ namespace esphome
                 break;
               case MODE_ICON_SCREEN:
               case MODE_RAINBOW_ICON:
+              case MODE_ICON_CLOCK:
                 infotext = this->queue[i]->icon_name.c_str();
                 break;
               case MODE_RAINBOW_TEXT:
@@ -712,7 +717,7 @@ namespace esphome
       {
         bool force = true;
         ESP_LOGD(TAG, "del_screen: icon %s in position: %s mode %d", icon_name.c_str(), this->queue[i]->icon_name.c_str(), mode);
-        if ((mode == MODE_ICON_SCREEN) || (mode == MODE_FULL_SCREEN) || (mode == MODE_RAINBOW_ICON))
+        if ((mode == MODE_ICON_SCREEN) || (mode == MODE_ICON_CLOCK) ||(mode == MODE_FULL_SCREEN) || (mode == MODE_RAINBOW_ICON))
         {
           if (this->string_has_ending(icon_name, "*"))
           {
@@ -773,6 +778,36 @@ namespace esphome
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
     ESP_LOGD(TAG, "icon screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
+    screen->status();
+  }
+
+  void EHMTX::icon_clock(std::string iconname, int lifetime, int screen_time, bool default_font, int r, int g, int b)
+  {
+    uint8_t icon = this->find_icon(iconname.c_str());
+
+    if (icon >= this->icon_count)
+    {
+      ESP_LOGW(TAG, "icon %d not found => default: 0", icon);
+      icon = 0;
+      for (auto *t : on_icon_error_triggers_)
+      {
+        t->process(iconname);
+      }
+    }
+    EHMTX_queue *screen = this->find_free_queue_element();
+
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    screen->text_color = Color(r, g, b);
+    screen->default_font = default_font;
+    screen->mode = MODE_ICON_CLOCK;
+    screen->icon_name = iconname;
+    screen->icon = icon;
+    screen->screen_time_ =  screen_time;
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process(screen->icon_name, (uint8_t)screen->mode);
+    }
+    ESP_LOGD(TAG, "icon timen icon: %d iconname: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), lifetime, screen_time);
     screen->status();
   }
 
@@ -1047,21 +1082,37 @@ void EHMTX::fire_screen( int lifetime, int screen_time)
     ESP_LOGD(TAG, "set_clock");
   }
 
-  void EHMTX::draw_day_of_week()
+  void EHMTX::draw_day_of_week(bool small)
   {
     if (this->show_day_of_week)
     {
       auto dow = this->clock->now().day_of_week - 1; // SUN = 0
-      for (uint8_t i = 0; i <= 6; i++)
+      if (! small)
       {
-        if (((!EHMTXv2_WEEK_START) && (dow == i)) ||
-            ((EHMTXv2_WEEK_START) && ((dow == (i + 1)) || ((dow == 0 && i == 6)))))
+        for (uint8_t i = 0; i <= 6; i++)
         {
-          this->display->line(2 + i * 4, 7, i * 4 + 4, 7, this->today_color);
+          if (((!EHMTXv2_WEEK_START) && (dow == i)) ||
+              ((EHMTXv2_WEEK_START) && ((dow == (i + 1)) || ((dow == 0 && i == 6)))))
+          {
+            this->display->line(2 + i * 4, 7, i * 4 + 4, 7, this->today_color);
+          }
+          else
+          {
+            this->display->line(2 + i * 4, 7, i * 4 + 4, 7, this->weekday_color);
+          }
         }
-        else
+      } else {
+        for (uint8_t i = 0; i <= 6; i++)
         {
-          this->display->line(2 + i * 4, 7, i * 4 + 4, 7, this->weekday_color);
+          if (((!EHMTXv2_WEEK_START) && (dow == i)) ||
+              ((EHMTXv2_WEEK_START) && ((dow == (i + 1)) || ((dow == 0 && i == 6)))))
+          {
+            this->display->line(9+2 + i * 3, 7, 9 + i * 3 + 3, 7, this->today_color);
+          }
+          else
+          {          
+            this->display->line(9+2 + i * 3, 7, 9 + i * 3 + 3, 7, this->weekday_color);
+          }
         }
       }
     }
