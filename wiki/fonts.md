@@ -73,4 +73,4 @@ ehmtx:
 
 Details for this fonts are well documented in his repo
 
-[REPO](https://github.com/trip5/MatrixClockFonts)
+[REPO](https://github.com/trip5/Matrix-Fonts)

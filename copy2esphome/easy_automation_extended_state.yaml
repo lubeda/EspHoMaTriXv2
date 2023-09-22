@@ -83,7 +83,7 @@ blueprint:
       default: true
     darkpoet78_replace:
       name: Use special character provided by darkpoet78 fonts (default=false)
-      description: If you are using the bdf fonts of https://github.com/darkpoet78/MatrixClockFonts you have to translate some character e.g. the euro sign. This flag actives the translation.
+      description: If you are using the bdf fonts of https://github.com/darkpoet78/Matrix-Fonts you have to translate some character e.g. the euro sign. This flag actives the translation.
       selector:
         boolean:
       default: false
