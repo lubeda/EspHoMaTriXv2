@@ -85,14 +85,14 @@ font:
   #   glyphs:  |
   #     !?"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnÖÄÜöäüopqrstuvwxyz@<>ß§€/
   # Matrix Clock Fonts
-  # Grab these from https://github.com/trip5/MatrixClockFonts
+  # Grab these from https://github.com/trip5/Matrix-Fonts
   # See https://github.com/lubeda/EspHoMaTriXv2#font
   # Store in a "fonts" subfolder of your ESPHome config folder or change paths below
-  - file: fonts/MatrixClock-Light8.bdf
+  - file: fonts/MatrixLight8.bdf
     id: default_font
     glyphs:  |
       ! "#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz°
-  - file: fonts/MatrixClock-Chunky6.bdf
+  - file: fonts/MatrixChunky6.bdf
     id: special_font
     glyphs:  |
       ! "#$%&'()*+,-./0123456789:APMTapmt
