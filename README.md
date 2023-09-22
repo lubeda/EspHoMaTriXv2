@@ -231,6 +231,22 @@ full_screen => {"icon_name", "lifetime", "screen_time"}
 void full_screen(string iconname, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
 ```
 
+##### icon clock
+
+display the clock with an icon. the time format an the show_dow are the same as the normal clock.
+
+###### service via API
+
+```c
+icon_clock => {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+```
+
+###### Lambda
+
+```c
+void icon_clock(std::string iconname, int lifetime, int screen_time, bool default_font, int r, int g, int b)
+```
+
 ##### bitmap screen
 
 **This feature is only available on ESP32 platform!!!!!**
