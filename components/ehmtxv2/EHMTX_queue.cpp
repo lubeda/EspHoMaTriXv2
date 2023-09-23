@@ -106,7 +106,10 @@ namespace esphome
       ESP_LOGD(TAG, "queue: icon screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
       break;
     case MODE_ICON_CLOCK:
-      ESP_LOGD(TAG, "queue: icon time: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      break;
+    case MODE_ALERT_SCREEN:
+      ESP_LOGD(TAG, "queue: icon \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
       break;
     case MODE_TEXT_SCREEN:
       ESP_LOGD(TAG, "queue: text text: \"%s\" for: %d sec", this->text.c_str(), this->screen_time_);
@@ -152,6 +155,7 @@ namespace esphome
     case MODE_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
     case MODE_ICON_CLOCK:
+    case MODE_ALERT_SCREEN:
       startx = 8;
       break;
     case MODE_TEXT_SCREEN:
@@ -345,6 +349,7 @@ namespace esphome
         }
         break;
       case MODE_ICON_SCREEN:
+      case MODE_ALERT_SCREEN:
       case MODE_RAINBOW_ICON:
       {
         color_ = (this->mode == MODE_RAINBOW_ICON) ? this->config_->rainbow_color : this->text_color;
@@ -513,6 +518,7 @@ namespace esphome
     case MODE_RAINBOW_ICON:
     case MODE_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
+    case MODE_ALERT_SCREEN:
       startx = 8;
       if (this->pixels_ < 23)
       {

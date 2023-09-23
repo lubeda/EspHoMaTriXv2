@@ -44,7 +44,8 @@ enum show_mode : uint8_t
   MODE_BITMAP_SMALL = 12,
   MODE_COLOR = 13,
   MODE_FIRE = 14,
-  MODE_ICON_CLOCK = 15
+  MODE_ICON_CLOCK = 15,
+  MODE_ALERT_SCREEN = 16
 };
 
 namespace esphome
@@ -170,6 +171,7 @@ namespace esphome
     void hide_alarm();
     void full_screen(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void icon_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void alert_screen(std::string iconname, std::string text, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE);
     void icon_clock(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);

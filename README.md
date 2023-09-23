@@ -204,6 +204,7 @@ void date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool def
 ```c
 icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
 rainbow_icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default_font"}
+alert_screen => {"iconname","text", "screen_time", "default_font", "r", "g", "b"}
 ```
 
 ###### Lambda
@@ -211,7 +212,10 @@ rainbow_icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default
 ```c
 void icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
 void rainbow_icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true);
+void alert_screen(std::string iconname, std::string text, int screen_time, bool default_font, int r, int g, int b)
 ```
+
+`icon_screen` and `rainbow_icon_screen` are in the queue for `lifetime` minutes. `alert_screen` is displayed once, imidiatly for at least `screentime` seconds for long text the dcreentime is calculated automagically.
 
 ##### full_screen
 
@@ -951,6 +955,7 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_COLOR| 13|
 |MODE_FIRE| 14|
 |MODE_ICON_CLOCK| 15|
+|MODE_ALERT_SCREEN| 16|
 
 **(D)** Service **display_on** / **display_off**
 
@@ -1280,7 +1285,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[TheGroundZero](https://github.com/TheGroundZero)** PRs and discussion about bootloop
 - **[N3rdix](https://github.com/N3rdix)** PRs
 - **[lukasleitsch](https://github.com/lukasleitsch)** PRs
-- **[andrewjswan](https://github.com/andrewjswan)** Boot animation centered and [issue](https://github.com/lubeda/EspHoMaTriXv2/issues/84)
+- **[andrewjswan](https://github.com/andrewjswan)** Boot animation centered. `alert_screen` and [issue](https://github.com/lubeda/EspHoMaTriXv2/issues/84)
 - **Everybody** who found bugs/issues and reported them!
 
 ## Special thanks to all sponsors

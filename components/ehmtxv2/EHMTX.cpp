@@ -329,6 +329,7 @@ namespace esphome
 
     register_service(&EHMTX::full_screen, "full_screen", {"icon_name", "lifetime", "screen_time"});
     register_service(&EHMTX::icon_screen, "icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+    register_service(&EHMTX::alert_screen, "alert_screen", {"iconname","text", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::icon_clock, "icon_clock", {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     
     register_service(&EHMTX::rainbow_icon_screen, "rainbow_icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font"});
@@ -442,6 +443,7 @@ namespace esphome
       }
     }
   }
+
   uint8_t EHMTX::find_oldest_queue_element()
   {
     uint8_t hit = MAXQUEUE;
@@ -749,6 +751,41 @@ namespace esphome
   }
 
   
+void EHMTX::alert_screen(std::string iconname, std::string text, int screen_time, bool default_font, int r, int g, int b)
+  {
+    uint8_t icon = this->find_icon(iconname.c_str());
+
+    if (icon >= this->icon_count)
+    {
+      ESP_LOGW(TAG, "icon %d not found => default: 0", icon);
+      icon = 0;
+      for (auto *t : on_icon_error_triggers_)
+      {
+        t->process(iconname);
+      }
+    }
+    EHMTX_queue *screen = this->find_mode_queue_element(MODE_ALERT_SCREEN);
+
+    screen->text = text;
+    
+    screen->text_color = Color(r, g, b);
+    screen->default_font = default_font;
+    screen->mode = MODE_ALERT_SCREEN;
+    screen->icon_name = iconname;
+    screen->icon = icon;
+    screen->calc_scroll_time(text, screen_time);
+    // time needed for scrolling
+    screen->endtime = this->clock->now().timestamp + screen->screen_time_ + 1;
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process(screen->icon_name, (uint8_t)screen->mode);
+    }
+    ESP_LOGD(TAG, "alert screen icon: %d iconname: %s text: %s screen_time: %d", icon, iconname.c_str(), text.c_str(), screen_time);
+    screen->status();
+
+    force_screen(iconname, MODE_ALERT_SCREEN);
+  }
+
 
   void EHMTX::icon_screen(std::string iconname, std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
