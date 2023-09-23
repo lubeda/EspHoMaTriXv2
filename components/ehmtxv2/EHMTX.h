@@ -76,6 +76,7 @@ namespace esphome
     std::vector<EHMTXStartRunningTrigger *> on_start_running_triggers_;
     std::vector<EHMTXAddScreenTrigger *> on_add_screen_triggers_;
     EHMTX_queue *find_icon_queue_element(uint8_t icon);
+    EHMTX_queue *find_mode_queue_element(uint8_t mode);
     EHMTX_queue *find_free_queue_element();
 
   public:

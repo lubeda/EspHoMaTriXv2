@@ -126,7 +126,7 @@ namespace esphome
       this->bitmap[i++] = c;
     }
 
-    EHMTX_queue *screen = this->find_free_queue_element();
+    EHMTX_queue *screen = this->find_mode_queue_element(MODE_BITMAP_SCREEN);
 
     screen->text = "";
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
@@ -160,8 +160,8 @@ namespace esphome
       this->sbitmap[i++] = c;
     }
 
-    EHMTX_queue *screen = this->find_free_queue_element();
-
+    EHMTX_queue *screen = this->find_mode_queue_element(MODE_BITMAP_SMALL);
+    
     screen->text = text;
     screen->text_color = Color(r, g, b);
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
@@ -794,7 +794,7 @@ namespace esphome
         t->process(iconname);
       }
     }
-    EHMTX_queue *screen = this->find_free_queue_element();
+    EHMTX_queue *screen = this->find_mode_queue_element(MODE_ICON_CLOCK);
 
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->text_color = Color(r, g, b);
@@ -807,7 +807,7 @@ namespace esphome
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "icon timen icon: %d iconname: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), lifetime, screen_time);
+    ESP_LOGD(TAG, "icon clock icon: %d iconname: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), lifetime, screen_time);
     screen->status();
   }
 
@@ -844,7 +844,7 @@ namespace esphome
 
   void EHMTX::rainbow_clock_screen(int lifetime, int screen_time, bool default_font)
   {
-    EHMTX_queue *screen = this->find_free_queue_element();
+    EHMTX_queue *screen = this->find_mode_queue_element(MODE_RAINBOW_CLOCK);
 
     ESP_LOGD(TAG, "rainbow_clock_screen lifetime: %d screen_time: %d", lifetime, screen_time);
     screen->mode = MODE_RAINBOW_CLOCK;
@@ -864,7 +864,7 @@ namespace esphome
   void EHMTX::rainbow_date_screen(int lifetime, int screen_time, bool default_font)
   {
       ESP_LOGD(TAG, "rainbow_date_screen lifetime: %d screen_time: %d", lifetime, screen_time);
-      EHMTX_queue *screen = this->find_free_queue_element();
+      EHMTX_queue *screen = this->find_mode_queue_element(MODE_RAINBOW_DATE);
 
       screen->mode = MODE_RAINBOW_DATE;
       screen->default_font = default_font;
@@ -927,7 +927,7 @@ namespace esphome
 
 void EHMTX::fire_screen( int lifetime, int screen_time)
   {
-    EHMTX_queue *screen = this->find_icon_queue_element(0);
+    EHMTX_queue *screen = this->find_mode_queue_element(MODE_FIRE);
     screen->mode = MODE_FIRE;
     screen->icon = 0;
     screen->screen_time_ = screen_time;
@@ -970,7 +970,7 @@ void EHMTX::fire_screen( int lifetime, int screen_time)
 
   void EHMTX::clock_screen(int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
-    EHMTX_queue *screen = this->find_free_queue_element();
+    EHMTX_queue *screen = this->find_mode_queue_element(MODE_CLOCK);
     screen->text_color = Color(r, g, b);
     ESP_LOGD(TAG, "clock_screen_color lifetime: %d screen_time: %d red: %d green: %d blue: %d", lifetime, screen_time, r, g, b);
     screen->mode = MODE_CLOCK;
@@ -1021,6 +1021,21 @@ void EHMTX::fire_screen( int lifetime, int screen_time)
     }
     return this->queue[0];
   }
+
+  EHMTX_queue *EHMTX::find_mode_queue_element(uint8_t mode)
+  {
+    time_t ts = this->clock->now().timestamp;
+    for (size_t i = 0; i < MAXQUEUE; i++)
+    {
+      if (this->queue[i]->mode == mode)
+      {
+        ESP_LOGD(TAG, "find screen: found by mode %d", i);
+        return this->queue[i];
+      }
+    }
+    return this->find_free_queue_element();
+  }
+
 
   void EHMTX::set_show_seconds(bool b)
   {

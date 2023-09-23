@@ -233,7 +233,7 @@ void full_screen(string iconname, int =D_LIFETIME, int screen_time=D_SCREEN_TIME
 
 ##### icon clock
 
-display the clock with an icon. the time format an the show_dow are the same as the normal clock.
+display the clock with an icon. the time format an the show_dow are the same as the normal clock. take care of the font size, the time should not need more then 23 pixels width.
 
 ###### service via API
 

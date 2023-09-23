@@ -81,9 +81,9 @@ blueprint:
       selector:
         boolean:
       default: true
-    darkpoet78_replace:
-      name: Use special character provided by darkpoet78 fonts (default=false)
-      description: If you are using the bdf fonts of https://github.com/darkpoet78/Matrix-Fonts you have to translate some character e.g. the euro sign. This flag actives the translation.
+    trip5_replace:
+      name: Use special character provided by trip5 fonts (default=false)
+      description: If you are using the bdf fonts of https://github.com/trip5/Matrix-Fonts you have to translate some character e.g. the euro sign. This flag actives the translation.
       selector:
         boolean:
       default: false
@@ -100,13 +100,13 @@ variables:
     {{trigger.to_state.state}} {{trigger.to_state.attributes.unit_of_measurement}}
   textstr: |-
     {% if bfriendly %}
-      {% if darkpoet78_replace %}
+      {% if trip5_replace %}
         {{ f_text |replace ("€","¼")| replace ("°C","¬")|replace ("℃","¬")| replace ("°F","¯")|replace ("℉","¯")|replace ("₴","¾")|replace ("₿","¨")|replace ("₩","½")|replace ("Ξ","¸") }}
       {% else %}  
         {{ f_text }}
       {% endif %}
     {% else %}
-      {% if darkpoet78_replace %}
+      {% if trip5_replace %}
         {{ n_text |replace ("€","¼")| replace ("°C","¬")|replace ("℃","¬")| replace ("°F","¯")|replace ("℉","¯")|replace ("₴","¾")|replace ("₿","¨")|replace ("₩","½")|replace ("Ξ","¸") }}
       {% else %}  
         {{ n_text }}
