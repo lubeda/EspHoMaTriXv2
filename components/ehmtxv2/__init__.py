@@ -334,7 +334,7 @@ async def to_code(config):
             for frameIndex in range(frames):
                 
                 image.seek(frameIndex)
-                frame = image.convert("RGB")
+                frame = image.convert("RGBA")
                 if CONF_RESIZE in conf:
                     frame = frame.resize([width, height])
 
@@ -351,11 +351,12 @@ async def to_code(config):
                     R = pix[0] >> 3
                     G = pix[1] >> 2
                     B = pix[2] >> 3
+                                            
                     x = (i % width)
                     y = i//width
                     i +=1
                     rgb = (R << 11) | (G << 5) | B
-                    if rgb == 0x0020:
+                    if pix[3] < 128:
                         rgb = 0
                     html_string += rgb565_svg(x,y,R,G,B)
                     data[pos] = rgb >> 8
