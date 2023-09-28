@@ -338,14 +338,14 @@ namespace esphome
         {
           color_ = this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
-          this->config_->display->strftime(xoffset + 13 + 8, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
+          this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
                                            this->config_->clock->now());
-          this->config_->display->image(2, 0, this->config_->icons[this->icon]);
+          this->config_->display->image(0, 0, this->config_->icons[this->icon]);
           this->config_->draw_day_of_week(true);
         }
         else
         {
-          this->config_->display->print(13 + 8 + xoffset, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!t!");
+          this->config_->display->print( xoffset + 19, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!t!");
         }
         break;
       case MODE_ICON_SCREEN:
