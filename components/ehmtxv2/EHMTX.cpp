@@ -1159,11 +1159,11 @@ void EHMTX::fire_screen( int lifetime, int screen_time)
           if (((!EHMTXv2_WEEK_START) && (dow == i)) ||
               ((EHMTXv2_WEEK_START) && ((dow == (i + 1)) || ((dow == 0 && i == 6)))))
           {
-            this->display->line(9+2 + i * 3, 7, 9 + i * 3 + 3, 7, this->today_color);
+            this->display->line(10 + i * 3, 7, 11 + i * 3 , 7, this->today_color);
           }
           else
           {          
-            this->display->line(9+2 + i * 3, 7, 9 + i * 3 + 3, 7, this->weekday_color);
+            this->display->line(10 + i * 3, 7, 11 + i * 3 , 7, this->weekday_color);
           }
         }
       }
