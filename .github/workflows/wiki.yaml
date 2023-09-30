@@ -4,6 +4,7 @@ on:
     branches: 
       - main
       - 2023.8.0
+      - 2023.9.0
     paths:
       - wiki/**
       - .github/workflows/wiki.yaml
