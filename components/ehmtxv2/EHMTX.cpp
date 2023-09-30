@@ -1146,6 +1146,7 @@ void EHMTX::graph_screen(int lifetime, int screen_time,int r,int g,int b)
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->mode = MODE_GRAPH_SCREEN;
     screen->text_color = Color(r, g, b);
+    // this->graph->set_line_color(this->text_color);
     screen->screen_time_ = screen_time;
     for (auto *t : on_add_screen_triggers_)
     {
