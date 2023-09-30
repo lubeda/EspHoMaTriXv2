@@ -2,9 +2,9 @@
 
 **Skill-level:** high
 
-**minimum version:** 2023.10.0
+**minimum version:** 2023.9.0
 
-To use graphs on your display you have to add a graph to your yaml, only this graph can be displayed
+To use graphs on your display you have to add a graph to your yaml, only this graph can be displayed. Depending on your values you should set the loglevel of the graphs component to error
 
 ```yaml
 logger:
