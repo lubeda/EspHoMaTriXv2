@@ -956,6 +956,7 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_FIRE| 14|
 |MODE_ICON_CLOCK| 15|
 |MODE_ALERT_SCREEN| 16|
+|MODE_GRAPH_SCREEN | 17|
 
 **(D)** Service **display_on** / **display_off**
 

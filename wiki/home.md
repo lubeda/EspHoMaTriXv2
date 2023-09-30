@@ -17,6 +17,7 @@
 - [set parameter on startup](startup-settings)
 - [fonts for the display](fonts)
 - [small clock with icon](icon-clock)
+- [showing graphs on the display](using-graphs)
 
 ## Problems
 

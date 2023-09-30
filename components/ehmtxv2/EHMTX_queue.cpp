@@ -99,6 +99,9 @@ namespace esphome
     case MODE_DATE:
       ESP_LOGD(TAG, "queue: date for: %d sec", this->screen_time_);
       break;
+    case MODE_GRAPH_SCREEN:
+      ESP_LOGD(TAG, "queue: graph for: %d sec", this->screen_time_);
+      break;
     case MODE_FULL_SCREEN:
       ESP_LOGD(TAG, "queue: full screen: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
       break;
@@ -250,7 +253,10 @@ namespace esphome
         }
 #endif
         break;
-
+      #ifdef USE_GRAPH
+      case MODE_GRAPH_SCREEN:
+        this->config_->display->graph(0,0, this->config_->graph,this->text_color);
+    #endif
       case MODE_BITMAP_SMALL:
 #ifndef USE_ESP8266
         color_ = this->text_color;

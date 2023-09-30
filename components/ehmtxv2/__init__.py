@@ -5,7 +5,7 @@ import json
 import requests
 
 from esphome import core, automation
-from esphome.components import display, font, time
+from esphome.components import display, font, time, graph
 import esphome.components.image as espImage
 import esphome.config_validation as cv
 import esphome.codegen as cg
@@ -114,11 +114,13 @@ CONF_SCROLL_SMALL_TEXT = "scroll_small_text"
 CONF_WEEK_START_MONDAY = "week_start_monday"
 CONF_ICON = "icon_name"
 CONF_TEXT = "text"
+CONF_GRAPH = "display_graph"
 
 EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_ID): cv.declare_id(EHMTX_),
     cv.Required(CONF_TIMECOMPONENT): cv.use_id(time),
     cv.Required(CONF_MATRIXCOMPONENT): cv.use_id(display),
+    cv.Optional(CONF_GRAPH): cv.use_id(graph),
     cv.Required(CONF_DEFAULT_FONT_ID): cv.use_id(font),
     cv.Required(CONF_SPECIAL_FONT_ID): cv.use_id(font),
     cv.Optional(
@@ -402,6 +404,9 @@ async def to_code(config):
     
     disp = await cg.get_variable(config[CONF_MATRIXCOMPONENT])
     cg.add(var.set_display(disp))
+
+    ehmtxgraph = await cg.get_variable(config[CONF_GRAPH])
+    cg.add(var.set_graph(ehmtxgraph))
 
     ehmtxtime = await cg.get_variable(config[CONF_TIMECOMPONENT])
     cg.add(var.set_clock(ehmtxtime))

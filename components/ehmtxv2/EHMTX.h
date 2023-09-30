@@ -24,7 +24,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2023.8.0";
+static const char *const EHMTX_VERSION = "2023.9.0";
 static const char *const TAG = "EHMTXv2";
 
 enum show_mode : uint8_t
@@ -45,7 +45,8 @@ enum show_mode : uint8_t
   MODE_COLOR = 13,
   MODE_FIRE = 14,
   MODE_ICON_CLOCK = 15,
-  MODE_ALERT_SCREEN = 16
+  MODE_ALERT_SCREEN = 16,
+  MODE_GRAPH_SCREEN = 17
 };
 
 namespace esphome
@@ -119,6 +120,10 @@ namespace esphome
     EHMTX_queue *queue[MAXQUEUE];
     addressable_light::AddressableLightDisplay *display;
     esphome::time::RealTimeClock *clock;
+    #ifdef USE_GRAPH
+      void graph_screen(int lifetime = 2 , int screen_time = 20 ,int r= C_RED ,int g=C_GREEN,int b=C_BLUE);
+      graph::Graph *graph;
+    #endif
 
     bool show_seconds;
 
@@ -155,6 +160,9 @@ namespace esphome
     void set_display_on();
     void set_display_off();
     void set_clock(esphome::time::RealTimeClock *clock);
+    #ifdef USE_GRAPH
+      void set_graph(esphome::graph::Graph *graph);
+    #endif
     void set_default_font(display::BaseFont *font);
     void set_special_font(display::BaseFont *font);
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
