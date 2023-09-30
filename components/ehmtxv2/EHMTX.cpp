@@ -332,7 +332,7 @@ namespace esphome
     register_service(&EHMTX::alert_screen, "alert_screen", {"iconname","text", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::icon_clock, "icon_clock", {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     #ifdef USE_GRAPH
-      register_service(&EHMTX::graph_screen, "graph_screen", {"lifetime", "screen_time", "r", "g", "b"});
+      register_service(&EHMTX::graph_screen, "graph_screen", {"lifetime", "screen_time"});
     #endif
     register_service(&EHMTX::rainbow_icon_screen, "rainbow_icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font"});
 
@@ -1137,7 +1137,7 @@ void EHMTX::fire_screen( int lifetime, int screen_time)
     ESP_LOGD(TAG, "set_graph");
   }
 
-void EHMTX::graph_screen(int lifetime, int screen_time,int r,int g,int b)
+void EHMTX::graph_screen(int lifetime, int screen_time)
   {
     ESP_LOGD(TAG, "graph screen: lifetime: %d screen_time: %d", lifetime, screen_time);
     
@@ -1145,8 +1145,6 @@ void EHMTX::graph_screen(int lifetime, int screen_time,int r,int g,int b)
 
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->mode = MODE_GRAPH_SCREEN;
-    screen->text_color = Color(r, g, b);
-    // this->graph->set_line_color(this->text_color);
     screen->screen_time_ = screen_time;
     for (auto *t : on_add_screen_triggers_)
     {

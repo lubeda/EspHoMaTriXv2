@@ -121,7 +121,7 @@ namespace esphome
     addressable_light::AddressableLightDisplay *display;
     esphome::time::RealTimeClock *clock;
     #ifdef USE_GRAPH
-      void graph_screen(int lifetime = 2 , int screen_time = 20 ,int r= C_RED ,int g=C_GREEN,int b=C_BLUE);
+      void graph_screen(int lifetime = 2 , int screen_time = 20);
       graph::Graph *graph;
     #endif
 
