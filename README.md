@@ -204,7 +204,7 @@ void date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool def
 ```c
 icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
 rainbow_icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default_font"}
-alert_screen => {"iconname","text", "screen_time", "default_font", "r", "g", "b"}
+alert_screen => {"icon_name","text", "screen_time", "default_font", "r", "g", "b"}
 ```
 
 ###### Lambda
@@ -212,7 +212,7 @@ alert_screen => {"iconname","text", "screen_time", "default_font", "r", "g", "b"
 ```c
 void icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
 void rainbow_icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true);
-void alert_screen(std::string iconname, std::string text, int screen_time, bool default_font, int r, int g, int b)
+void alert_screen(std::string icon_name, std::string text, int screen_time, bool default_font, int r, int g, int b)
 ```
 
 `icon_screen` and `rainbow_icon_screen` are in the queue for `lifetime` minutes. `alert_screen` is displayed once, imidiatly for at least `screentime` seconds for long text the dcreentime is calculated automagically.
@@ -841,7 +841,7 @@ ehmtxv2:
   ....
   on_next_screen:
     lambda: |-
-        ESP_LOGD("Check CONFIG","Iconname: %s",icon.c_str());
+        ESP_LOGD("Check CONFIG","Icon_name: %s",icon.c_str());
 ```
 
 #### on_next_screen
@@ -861,7 +861,7 @@ ehmtxv2:
   ....
   on_next_screen:
     lambda: |-
-        ESP_LOGD("TriggerTest","Iconname: %s",icon.c_str());
+        ESP_LOGD("TriggerTest","Icon_name: %s",icon.c_str());
         ESP_LOGI("TriggerTest","Text: %s",text.c_str());
 ```
 
@@ -1287,7 +1287,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[N3rdix](https://github.com/N3rdix)** PRs
 - **[lukasleitsch](https://github.com/lukasleitsch)** PRs
 - **[andrewjswan](https://github.com/andrewjswan)** Boot animation centered. `alert_screen` and [issue](https://github.com/lubeda/EspHoMaTriXv2/issues/84)
-- **[malinovsku](https://github.com/malinovsku)** Issues and testing 
+- **[malinovsku](https://github.com/malinovsku)** Issues and testing. 
 - **Everybody** who found bugs/issues and reported them!
 
 ## Special thanks to all sponsors

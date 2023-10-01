@@ -329,7 +329,7 @@ namespace esphome
 
     register_service(&EHMTX::full_screen, "full_screen", {"icon_name", "lifetime", "screen_time"});
     register_service(&EHMTX::icon_screen, "icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
-    register_service(&EHMTX::alert_screen, "alert_screen", {"iconname","text", "screen_time", "default_font", "r", "g", "b"});
+    register_service(&EHMTX::alert_screen, "alert_screen", {"icon_name","text", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::icon_clock, "icon_clock", {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     #ifdef USE_GRAPH
       register_service(&EHMTX::graph_screen, "graph_screen", {"lifetime", "screen_time"});
