@@ -1287,6 +1287,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[N3rdix](https://github.com/N3rdix)** PRs
 - **[lukasleitsch](https://github.com/lukasleitsch)** PRs
 - **[andrewjswan](https://github.com/andrewjswan)** Boot animation centered. `alert_screen` and [issue](https://github.com/lubeda/EspHoMaTriXv2/issues/84)
+- **[malinovsku](https://github.com/malinovsku)** Issues and testing 
 - **Everybody** who found bugs/issues and reported them!
 
 ## Special thanks to all sponsors
