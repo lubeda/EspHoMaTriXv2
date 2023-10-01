@@ -253,10 +253,11 @@ namespace esphome
         }
 #endif
         break;
-      #ifdef USE_GRAPH
+#ifdef USE_GRAPH
       case MODE_GRAPH_SCREEN:
         this->config_->display->graph(0,0, this->config_->graph);
-    #endif
+        break;
+#endif
       case MODE_BITMAP_SMALL:
 #ifndef USE_ESP8266
         color_ = this->text_color;
