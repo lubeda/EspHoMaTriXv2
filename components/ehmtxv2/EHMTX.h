@@ -85,8 +85,6 @@ namespace esphome
     void setup() override;
     EHMTX();
 
-
-
 #ifdef USE_Fireplugin
     void fire_screen( int lifetime, int screen_time);
 #endif    

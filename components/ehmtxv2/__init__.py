@@ -358,7 +358,7 @@ async def to_code(config):
                     y = i//width
                     i +=1
                     rgb = (R << 11) | (G << 5) | B
-                    if pix[3] < 128:
+                    if pix[3] < 64:
                         rgb = 0
                     html_string += rgb565_svg(x,y,R,G,B)
                     data[pos] = rgb >> 8
