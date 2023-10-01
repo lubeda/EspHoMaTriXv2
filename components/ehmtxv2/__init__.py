@@ -405,8 +405,9 @@ async def to_code(config):
     disp = await cg.get_variable(config[CONF_MATRIXCOMPONENT])
     cg.add(var.set_display(disp))
 
-    ehmtxgraph = await cg.get_variable(config[CONF_GRAPH])
-    cg.add(var.set_graph(ehmtxgraph))
+    if CONF_GRAPH in config:
+        ehmtxgraph = await cg.get_variable(config[CONF_GRAPH])
+        cg.add(var.set_graph(ehmtxgraph))
 
     ehmtxtime = await cg.get_variable(config[CONF_TIMECOMPONENT])
     cg.add(var.set_clock(ehmtxtime))
