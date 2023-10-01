@@ -135,7 +135,7 @@ namespace esphome
 
     void remove_expired_queue_element();
     uint8_t find_oldest_queue_element();
-    uint8_t find_icon_in_queue(std::string);
+    uint8_t find_screen_in_queue(std::string);
     void force_screen(std::string name, int mode = MODE_ICON_SCREEN);
     void add_icon(EHMTX_Icon *icon);
     bool show_display = false;
@@ -188,7 +188,7 @@ namespace esphome
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void color_gauge(std::string text);
     void bitmap_small(std::string, std::string,int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void rainbow_icon_screen(std::string icon_name, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
+    void rainbow_icon_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_date_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
@@ -228,11 +228,11 @@ namespace esphome
 
 #ifdef USE_ESP32
     PROGMEM std::string text;
-    PROGMEM std::string icon_name;
+    PROGMEM std::string screen_id;
 #endif
 #ifdef USE_ESP8266
     std::string text;
-    std::string icon_name;
+    std::string screen_id;
 #endif
 
     EHMTX_queue(EHMTX *config);

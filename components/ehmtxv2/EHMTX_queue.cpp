@@ -74,7 +74,7 @@ namespace esphome
     this->last_time = 0;
     this->screen_time_ = 0;
     this->mode = MODE_EMPTY;
-    this->icon_name = "";
+    this->screen_id = "";
     this->icon = 0;
     this->text = "";
     this->default_font = true;
@@ -103,22 +103,22 @@ namespace esphome
       ESP_LOGD(TAG, "queue: graph for: %d sec", this->screen_time_);
       break;
     case MODE_FULL_SCREEN:
-      ESP_LOGD(TAG, "queue: full screen: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: full screen: \"%s\" for: %d sec", this->screen_id.c_str(), this->screen_time_);
       break;
     case MODE_ICON_SCREEN:
-      ESP_LOGD(TAG, "queue: icon screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon screen: \"%s\" text: %s for: %d sec", this->screen_id.c_str(), this->text.c_str(), this->screen_time_);
       break;
     case MODE_ICON_CLOCK:
-      ESP_LOGD(TAG, "queue: icon \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon \"%s\" for: %d sec", this->screen_id.c_str(), this->screen_time_);
       break;
     case MODE_ALERT_SCREEN:
-      ESP_LOGD(TAG, "queue: icon \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon \"%s\" for: %d sec", this->screen_id.c_str(), this->screen_time_);
       break;
     case MODE_TEXT_SCREEN:
       ESP_LOGD(TAG, "queue: text text: \"%s\" for: %d sec", this->text.c_str(), this->screen_time_);
       break;
     case MODE_RAINBOW_ICON:
-      ESP_LOGD(TAG, "queue: rainbow icon: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: rainbow icon: \"%s\" text: %s for: %d sec", this->screen_id.c_str(), this->text.c_str(), this->screen_time_);
       break;
     case MODE_RAINBOW_TEXT:
       ESP_LOGD(TAG, "queue: rainbow text: \"%s\" for: %d sec", this->text.c_str(), this->screen_time_);

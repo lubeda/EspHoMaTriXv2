@@ -115,6 +115,7 @@ CONF_WEEK_START_MONDAY = "week_start_monday"
 CONF_ICON = "icon_name"
 CONF_TEXT = "text"
 CONF_GRAPH = "display_graph"
+CONF_SCREEN = "screen_id"
 
 EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_ID): cv.declare_id(EHMTX_),
