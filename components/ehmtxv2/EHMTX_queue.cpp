@@ -78,6 +78,7 @@ namespace esphome
     this->icon = 0;
     this->text = "";
     this->default_font = true;
+    this->progress = -1;
   }
 
   void EHMTX_queue::status()
@@ -108,11 +109,17 @@ namespace esphome
     case MODE_ICON_SCREEN:
       ESP_LOGD(TAG, "queue: icon screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
       break;
+    case MODE_ICON_PROGRESS:
+      ESP_LOGD(TAG, "queue: icon progress: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      break;
     case MODE_ICON_CLOCK:
-      ESP_LOGD(TAG, "queue: icon \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon clock: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      break;
+    case MODE_ICON_DATE:
+      ESP_LOGD(TAG, "queue: icon date: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
       break;
     case MODE_ALERT_SCREEN:
-      ESP_LOGD(TAG, "queue: icon \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
       break;
     case MODE_TEXT_SCREEN:
       ESP_LOGD(TAG, "queue: text text: \"%s\" for: %d sec", this->text.c_str(), this->screen_time_);
@@ -124,10 +131,10 @@ namespace esphome
       ESP_LOGD(TAG, "queue: rainbow text: \"%s\" for: %d sec", this->text.c_str(), this->screen_time_);
       break;
     case MODE_RAINBOW_CLOCK:
-      ESP_LOGD(TAG, "queue: clock for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: rainbow clock for: %d sec", this->screen_time_);
       break;
     case MODE_RAINBOW_DATE:
-      ESP_LOGD(TAG, "queue: date for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: rainbow date for: %d sec", this->screen_time_);
       break;
     case MODE_FIRE:
       ESP_LOGD(TAG, "queue: fire for: %d sec", this->screen_time_);
@@ -158,7 +165,9 @@ namespace esphome
     case MODE_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
     case MODE_ICON_CLOCK:
+    case MODE_ICON_DATE:
     case MODE_ALERT_SCREEN:
+    case MODE_ICON_PROGRESS:
       startx = 8;
       break;
     case MODE_TEXT_SCREEN:
@@ -349,6 +358,49 @@ namespace esphome
                                            this->config_->clock->now());
           this->config_->display->image(0, 0, this->config_->icons[this->icon]);
           this->config_->draw_day_of_week(true);
+
+          // TODO: Add a color to display text on the icon 
+          if (this->icon_name == "day")
+          {
+            this->config_->display->printf(0, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%d", this->config_->clock->now().day_of_month / 10 % 10);
+            this->config_->display->printf(5, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%d", this->config_->clock->now().day_of_month % 10);
+          }
+          if (this->icon_name == "weekday")
+          {
+            // TODO: Added for testing for now, will need to rethink it [andrewjswan]
+            std::string day[]={"SU","MO","TU","WE","TH","FR","SA"};
+            this->config_->display->printf(0, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%s", day[this->config_->clock->now().day_of_week - 1][0]);
+            this->config_->display->printf(5, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%s", day[this->config_->clock->now().day_of_week - 1][1]);
+          }
+        }
+        else
+        {
+          this->config_->display->print( xoffset + 19, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!t!");
+        }
+        break;
+      case MODE_ICON_DATE:
+        if (this->config_->clock->now().is_valid()) // valid time
+        {
+          color_ = this->text_color;
+          time_t ts = this->config_->clock->now().timestamp;
+          this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
+                                           this->config_->clock->now());
+          this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          this->config_->draw_day_of_week(true);
+
+          // TODO: Add a color to display text on the icon 
+          if (this->icon_name == "day")
+          {
+            this->config_->display->printf(0, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%d", this->config_->clock->now().day_of_month / 10 % 10);
+            this->config_->display->printf(5, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%d", this->config_->clock->now().day_of_month % 10);
+          }
+          if (this->icon_name == "weekday")
+          {
+            // TODO: Added for testing for now, will need to rethink it [andrewjswan]
+            std::string day[]={"SU","MO","TU","WE","TH","FR","SA"};
+            this->config_->display->printf(0, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%s", day[this->config_->clock->now().day_of_week - 1][0]);
+            this->config_->display->printf(5, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%s", day[this->config_->clock->now().day_of_week - 1][1]);
+          }
         }
         else
         {
@@ -358,6 +410,7 @@ namespace esphome
       case MODE_ICON_SCREEN:
       case MODE_ALERT_SCREEN:
       case MODE_RAINBOW_ICON:
+      case MODE_ICON_PROGRESS:
       {
         color_ = (this->mode == MODE_RAINBOW_ICON) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
@@ -367,15 +420,31 @@ namespace esphome
         this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
 #endif
-        if (this->config_->display_gauge)
+        if (this->mode == MODE_ICON_PROGRESS)
         {
-          this->config_->display->image(2, 0, this->config_->icons[this->icon]);
-          this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
+          if (this->progress >= 0)
+          {
+            color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100, 255, 255).to_rgb();
+            this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
+            this->config_->display->line(9, 7, 9 + this->progress * 22 / 100, 7, color_);
+          }
+          else
+          {
+            this->config_->display->line(9, 7, 31, 7, esphome::display::COLOR_OFF);
+          }
         }
         else
         {
-          this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
-          this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          if (this->config_->display_gauge)
+          {
+            this->config_->display->image(2, 0, this->config_->icons[this->icon]);
+            this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
+          }
+          else
+          {
+            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
+            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          }
         }
       }
       break;
@@ -526,6 +595,7 @@ namespace esphome
     case MODE_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
     case MODE_ALERT_SCREEN:
+    case MODE_ICON_PROGRESS:
       startx = 8;
       if (this->pixels_ < 23)
       {
