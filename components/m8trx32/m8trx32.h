@@ -35,6 +35,8 @@ public:
         lifetime_= lifetime;
         screen_time_= screen_time;
         mode_ = mode;
+        endtime_ = ;
+        last_time=0;
     }
     
     virtual void draw() {
@@ -46,12 +48,17 @@ public:
     virtual void update() {
         ESP_LOGD(TAG, "base update");
     }
+    virtual void status() {
+        ESP_LOGD(TAG, "base status");
+    }
 
 private:
     std::string name_;
     uint16_t lifetime_=5;
     uint16_t screen_time_=10;
     show_mode mode_;
+    time_t endtime_ = this->clock->now().timestamp + lifetime * 60;;
+    time_t last_time_;
 };
 
 class ClockScreen : public BaseScreen {
@@ -63,8 +70,14 @@ public:
        color_ = color;
     }
 
+    void draw()
+    {
+
+      
+    }
+
     private:
-        bool default_font_;
+        Font default_font_;
         Color color_;
     
 };
@@ -107,12 +120,7 @@ public:
     M8TRX32();
 
     uint16_t hue_ = 0;
-    void dump_config();
-    PROGMEM Color text_color, alarm_color, rindicator_color,  lindicator_color, today_color, weekday_color, rainbow_color, clock_color;
-    PROGMEM Color bitmap[256];
-    PROGMEM Color sbitmap[64];
-    PROGMEM Color cgauge[8];
-
+    
     display::BaseFont *default_font;
     display::BaseFont *special_font;
     uint8_t ticks_per_second=62;
@@ -141,6 +149,10 @@ public:
     void add_on_expired_screen_trigger(M8TRX32ExpiredScreenTrigger *t) { this->on_expired_screen_triggers_.push_back(t); }
     void add_on_next_clock_trigger(M8TRX32NextClockTrigger *t) { this->on_next_clock_triggers_.push_back(t); }
     void add_on_start_running_trigger(M8TRX32StartRunningTrigger *t) { this->on_start_running_triggers_.push_back(t); }
+ 
+    void clock_screen(const std::string& name, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void color_screen(const std::string& name, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+
   };
 
     

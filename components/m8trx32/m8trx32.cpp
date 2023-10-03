@@ -3,6 +3,16 @@
 namespace esphome
 {
 
+    void M8TRX32::clock_screen(const std::string& name, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE)
+    {
+        screenList.insert(ClockScreen("Clock",1440, 10, false, Color(r,g,b) ) ;
+    }
+    
+    void M8TRX32::color_screen(const std::string& name, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, int r = C_RED, int g = C_GREEN, int b = C_BLUE)
+    {
+        screenList.insert(ClockScreen("Color",1440, 10, Color(r,g,b) ) ;
+    }
+        
     void M8TRX32::tick()
     {
         this->hue_++;
