@@ -613,6 +613,7 @@ namespace esphome
           {
             for (auto *t : on_next_screen_triggers_)
             {
+              ESP_LOGD(TAG, "on_next_screen trigger");
               t->process(this->queue[this->screen_pointer]->icon_name, this->queue[this->screen_pointer]->text);
             }
           }
@@ -641,9 +642,6 @@ namespace esphome
     }
     else
     {
-      // uint8_t w = (2 + (uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
-      // this->display->clear();
-      // this->display->rectangle(0, 2, w, 4, this->rainbow_color); // Color(120, 190, 40));
       uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim/ 16)) % 32;
       uint8_t l = 32 / 2 - w / 2 ;
       this->display->rectangle(l, 2, w, 4, this->rainbow_color); 
