@@ -382,7 +382,7 @@ namespace esphome
             uint8_t d = this->config_->clock->now().day_of_month;
 
             this->config_->display->printf(0, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
-            this->config_->display->printf(7, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+            this->config_->display->printf(9, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
           }
           if (this->icon_name == "weekday")
           {
@@ -391,7 +391,7 @@ namespace esphome
             uint8_t wd = this->config_->clock->now().day_of_week;
 
             this->config_->display->printf(0, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
-            this->config_->display->printf(7, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+            this->config_->display->printf(9, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
           }
         }
         else
