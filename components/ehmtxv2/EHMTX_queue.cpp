@@ -379,14 +379,14 @@ namespace esphome
           if (this->icon_name == "day")
           {
             this->config_->display->printf(0, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%d", this->config_->clock->now().day_of_month / 10 % 10);
-            this->config_->display->printf(5, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%d", this->config_->clock->now().day_of_month % 10);
+            this->config_->display->printf(7, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_RIGHT, "%d", this->config_->clock->now().day_of_month % 10);
           }
           if (this->icon_name == "weekday")
           {
             // TODO: Added for testing for now, will need to rethink it [andrewjswan]
             std::string day[]={"SU","MO","TU","WE","TH","FR","SA"};
             this->config_->display->printf(0, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%s", day[this->config_->clock->now().day_of_week - 1][0]);
-            this->config_->display->printf(5, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%s", day[this->config_->clock->now().day_of_week - 1][1]);
+            this->config_->display->printf(7, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_RIGHT, "%s", day[this->config_->clock->now().day_of_week - 1][1]);
           }
         }
         else
@@ -399,7 +399,6 @@ namespace esphome
       case MODE_ALERT_SCREEN:
       case MODE_RAINBOW_ICON:
       case MODE_ICON_PROGRESS:
-      {
         color_ = (this->mode == MODE_RAINBOW_ICON) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
         this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
@@ -412,13 +411,11 @@ namespace esphome
         {
           if (this->progress >= 0)
           {
-            color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100, 255, 255).to_rgb();
-            this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
+            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
+            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+
+            color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100, 240, 240).to_rgb();
             this->config_->display->line(9, 7, 9 + this->progress * 22 / 100, 7, color_);
-          }
-          else
-          {
-            this->config_->display->line(9, 7, 31, 7, esphome::display::COLOR_OFF);
           }
         }
         else
@@ -434,8 +431,8 @@ namespace esphome
             this->config_->display->image(0, 0, this->config_->icons[this->icon]);
           }
         }
-      }
-      break;
+        break;
+
       case MODE_TEXT_SCREEN:
       case MODE_RAINBOW_TEXT:
         color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
@@ -447,9 +444,9 @@ namespace esphome
                                       this->text.c_str());
 #endif
         break;
+
 #ifdef USE_Fireplugin
       case MODE_FIRE:
-      {
         int16_t x = 0;
         int16_t y = 0;
 
@@ -517,10 +514,9 @@ namespace esphome
             this->config_->display->draw_pixel_at(x, y, heatColor(m_heat[x + y * 32]));
           }
         }
-      }
-
-      break;
+        break;
 #endif
+
       default:
         ESP_LOGD(TAG, "no screen to draw!");
         this->config_->next_action_time = 0;
