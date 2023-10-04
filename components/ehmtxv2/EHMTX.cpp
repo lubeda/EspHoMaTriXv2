@@ -802,7 +802,7 @@ namespace esphome
   
   void EHMTX::alert_screen(std::string iconname, std::string text, int screen_time, bool default_font, int r, int g, int b)
   {
-    uint8_t icon = this->find_icon(icon_name.c_str());
+    uint8_t icon = this->find_icon(iconname.c_str());
 
     if (icon >= this->icon_count)
     {
@@ -810,7 +810,7 @@ namespace esphome
       icon = 0;
       for (auto *t : on_icon_error_triggers_)
       {
-        t->process(icon_name);
+        t->process(iconname);
       }
     }
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_ALERT_SCREEN);
@@ -820,7 +820,7 @@ namespace esphome
     screen->text_color = Color(r, g, b);
     screen->default_font = default_font;
     screen->mode = MODE_ALERT_SCREEN;
-    screen->icon_name = icon_name;
+    screen->icon_name = iconname;
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
     // time needed for scrolling
@@ -829,10 +829,10 @@ namespace esphome
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "alert screen icon: %d iconname: %s text: %s screen_time: %d", icon, icon_name.c_str(), text.c_str(), screen_time);
+    ESP_LOGD(TAG, "alert screen icon: %d iconname: %s text: %s screen_time: %d", icon, iconname.c_str(), text.c_str(), screen_time);
     screen->status();
 
-    force_screen(icon_name, MODE_ALERT_SCREEN);
+    force_screen(iconname, MODE_ALERT_SCREEN);
   }
 
   void EHMTX::icon_screen(std::string iconname, std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)

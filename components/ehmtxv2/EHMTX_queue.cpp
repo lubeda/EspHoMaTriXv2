@@ -148,6 +148,7 @@ namespace esphome
       ESP_LOGD(TAG, "queue: small bitmap for: %d sec", this->screen_time_);
       break;
 #endif
+
     default:
       ESP_LOGD(TAG, "queue: UPPS");
       break;
@@ -378,15 +379,19 @@ namespace esphome
           // TODO: Add a color to display text on the icon 
           if (this->icon_name == "day")
           {
-            this->config_->display->printf(0, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%d", this->config_->clock->now().day_of_month / 10 % 10);
-            this->config_->display->printf(7, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_RIGHT, "%d", this->config_->clock->now().day_of_month % 10);
+            uint8_t d = this->config_->clock->now().day_of_month;
+
+            this->config_->display->printf(0, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+            this->config_->display->printf(7, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
           }
           if (this->icon_name == "weekday")
           {
             // TODO: Added for testing for now, will need to rethink it [andrewjswan]
-            std::string day[]={"SU","MO","TU","WE","TH","FR","SA"};
-            this->config_->display->printf(0, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%s", day[this->config_->clock->now().day_of_week - 1][0]);
-            this->config_->display->printf(7, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_RIGHT, "%s", day[this->config_->clock->now().day_of_week - 1][1]);
+            std::string weekdays = "SUMOTUWETHFRSA"; // F("SUMOTUWETHFRSA")
+            uint8_t wd = this->config_->clock->now().day_of_week;
+
+            this->config_->display->printf(0, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
+            this->config_->display->printf(7, yoffset, font, esphome::display::COLOR_OFF, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
           }
         }
         else
@@ -447,6 +452,7 @@ namespace esphome
 
 #ifdef USE_Fireplugin
       case MODE_FIRE:
+      {
         int16_t x = 0;
         int16_t y = 0;
 
@@ -514,7 +520,8 @@ namespace esphome
             this->config_->display->draw_pixel_at(x, y, heatColor(m_heat[x + y * 32]));
           }
         }
-        break;
+      }
+      break;
 #endif
 
       default:
