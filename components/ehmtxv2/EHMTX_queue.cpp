@@ -397,33 +397,33 @@ namespace esphome
               {
               // Base line from Font
               case 1:
-                this->config_->display->printf(1, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(0, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
                 this->config_->display->printf(8, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
                 break;
               // Base line from Font
               case 2:
-                this->config_->display->printf(1, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
-                this->config_->display->printf(9, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+                this->config_->display->printf(0, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(8, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
                 break;
               // Static Base line
               case 3:
-                this->config_->display->printf(0, 7, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
-                this->config_->display->printf(9, 7, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+                this->config_->display->printf(0, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(8, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
                 break;
               // Static Base line
               case 4:
-                this->config_->display->printf(1, 7, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
-                this->config_->display->printf(8, 7, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+                this->config_->display->printf(0, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(8, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
                 break;
               // Static Base line
               case 5:
-                this->config_->display->printf(1, 7, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
-                this->config_->display->printf(9, 7, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+                this->config_->display->printf(0, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(8, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
                 break;
               // Base line from Font
               default:
                 this->config_->display->printf(0, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
-                this->config_->display->printf(9, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+                this->config_->display->printf(8, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
                 break;
               }
             }
@@ -431,40 +431,40 @@ namespace esphome
             if (this->icon_name.find("weekday") != std::string::npos)
             {
               // TODO: Added for testing for now, will need to rethink it [andrewjswan]
-              std::string weekdays = "SUMOTUWETHFRSA"; // F("SUMOTUWETHFRSA")
+              // std::string weekdays = "SUMOTUWETHFRSA"; // F("SUMOTUWETHFRSA")
               uint8_t wd = this->config_->clock->now().day_of_week;
 
               switch (mode)
               {
               // Base line from Font
               case 1:
-                this->config_->display->printf(1, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
-                this->config_->display->printf(8, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+                this->config_->display->printf(1, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2]));
+                this->config_->display->printf(8, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2 + 1]));
                 break;
               // Base line from Font
               case 2:
-                this->config_->display->printf(1, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
-                this->config_->display->printf(9, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+                this->config_->display->printf(1, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2]));
+                this->config_->display->printf(9, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2 + 1]));
                 break;
               // Static Base line
               case 3:
-                this->config_->display->printf(0, 7, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
-                this->config_->display->printf(9, 7, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+                this->config_->display->printf(0, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2]));
+                this->config_->display->printf(9, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2 + 1]));
                 break;
               // Static Base line
               case 4:
-                this->config_->display->printf(1, 7, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
-                this->config_->display->printf(8, 7, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+                this->config_->display->printf(1, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2]));
+                this->config_->display->printf(8, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2 + 1]));
                 break;
               // Static Base line
               case 5:
-                this->config_->display->printf(1, 7, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
-                this->config_->display->printf(9, 7, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+                this->config_->display->printf(1, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2]));
+                this->config_->display->printf(9, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2 + 1]));
                 break;
               // Base line from Font
               default:
-                this->config_->display->printf(0, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
-                this->config_->display->printf(9, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+                this->config_->display->printf(0, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2]));
+                this->config_->display->printf(9, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2 + 1]));
                 break;
               }
             }

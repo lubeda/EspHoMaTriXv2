@@ -108,6 +108,7 @@ CONF_ON_NEXT_SCREEN = "on_next_screen"
 CONF_ON_NEXT_CLOCK = "on_next_clock"
 CONF_ON_ICON_ERROR = "on_icon_error"
 CONF_ON_ADD_SCREEN = "on_add_screen"
+CONF_WEEKDAYTEXT = "weekdays"
 CONF_ON_EXPIRED_SCREEN= "on_expired_screen"
 CONF_SHOW_SECONDS = "show_seconds"
 CONF_SCROLL_SMALL_TEXT = "scroll_small_text"
@@ -146,6 +147,9 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.boolean,
     cv.Optional(
         CONF_TIME_FORMAT, default="%H:%M"
+    ): cv.string,
+    cv.Optional(
+        CONF_WEEKDAYTEXT, default="SOMODIMIDOFRSA"
     ): cv.string,
     cv.Optional(
         CONF_ALWAYS_SHOW_RLINDICATORS, default=False
@@ -422,6 +426,9 @@ async def to_code(config):
     
     if config[CONF_ALWAYS_SHOW_RLINDICATORS]:
         cg.add_define("EHMTXv2_ALWAYS_SHOW_RLINDICATORS")
+
+    if config[CONF_WEEKDAYTEXT]:
+        cg.add_define("EHMTXv2_WEEKDAYTEXT",config[CONF_WEEKDAYTEXT])
 
     cg.add_define("EHMTXv2_SCROLL_INTERVALL",config[CONF_SCROLLINTERVAL])
     cg.add_define("EHMTXv2_RAINBOW_INTERVALL",config[CONF_RAINBOWINTERVAL])
