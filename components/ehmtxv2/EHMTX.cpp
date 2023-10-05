@@ -264,7 +264,7 @@ namespace esphome
         }
       }
       this->display_gauge = true;
-      ESP_LOGD(TAG, "show_gauge 2 color %d", round(percent));
+      ESP_LOGD(TAG, "show_gauge 2 color %d", percent);
     }
   }
 #else
@@ -278,7 +278,7 @@ namespace esphome
       this->display_gauge = true;
       this->gauge_value = (uint8_t)(100 - percent) * 7 / 100;
     }
-    ESP_LOGD(TAG, "show_gauge 2 color %d", round(percent));
+    ESP_LOGD(TAG, "show_gauge 2 color %d", percent);
   }
 #endif
 
