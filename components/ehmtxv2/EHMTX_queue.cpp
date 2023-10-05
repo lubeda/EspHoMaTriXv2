@@ -414,13 +414,13 @@ namespace esphome
 #endif
         if (this->mode == MODE_ICON_PROGRESS)
         {
-          if (this->progress >= 0)
-          {
-            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
-            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
+          this->config_->display->image(0, 0, this->config_->icons[this->icon]);
 
-            color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100, 240, 240).to_rgb();
-            this->config_->display->line(9, 7, 9 + this->progress * 22 / 100, 7, color_);
+          if (this->progress != 0)
+          {
+            color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100 + (this->progress < 0 ? 120 : 0), 240, 240).to_rgb();
+            this->config_->display->line(9, 7, 9 + abs(this->progress) * 22 / 100, 7, color_);
           }
         }
         else
