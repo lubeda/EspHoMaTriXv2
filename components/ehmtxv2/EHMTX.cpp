@@ -15,6 +15,8 @@ namespace esphome
     this->icon_count = 0;
     this->hue_ = 0;
     this->rainbow_color = Color(CA_RED, CA_GREEN, CA_BLUE);
+    this->info_lcolor = Color(CG_GREY, CG_GREY, CG_GREY);
+    this->info_rcolor = Color(CG_GREY, CG_GREY, CG_GREY);
     this->next_action_time = 0;
     this->last_scroll_time = 0;
     this->screen_pointer = MAXQUEUE;
@@ -358,6 +360,7 @@ namespace esphome
     register_service(&EHMTX::set_weekday_color, "set_weekday_color", {"r", "g", "b"});
     register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
     register_service(&EHMTX::set_text_color, "set_text_color", {"r", "g", "b"});
+    register_service(&EHMTX::set_infotext_color, "set_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b"});
 
     register_service(&EHMTX::del_screen, "del_screen", {"icon_name", "mode"});
     register_service(&EHMTX::force_screen, "force_screen", {"icon_name", "mode"});
@@ -440,8 +443,15 @@ namespace esphome
 
   void EHMTX::set_text_color(int r, int g, int b)
   {
-    this->text_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
+    this->text_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
     ESP_LOGD(TAG, "default text color r: %d g: %d b: %d", r, g, b);
+  }
+
+  void EHMTX::set_infotext_color(int lr, int lg, int lb, int rr, int rg, int rb)
+  {
+    this->info_lcolor = Color((uint8_t)lr, (uint8_t)lg, (uint8_t)lb);
+    this->info_rcolor = Color((uint8_t)rr, (uint8_t)rg, (uint8_t)rb);
+    ESP_LOGD(TAG, "info text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d", lr, lg, lb, rr, rg, rb);
   }
 
   void EHMTX::update() // called from polling component
