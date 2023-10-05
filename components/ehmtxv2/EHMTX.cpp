@@ -360,7 +360,7 @@ namespace esphome
     register_service(&EHMTX::set_weekday_color, "set_weekday_color", {"r", "g", "b"});
     register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
     register_service(&EHMTX::set_text_color, "set_text_color", {"r", "g", "b"});
-    register_service(&EHMTX::set_infotext_color, "set_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b"});
+    register_service(&EHMTX::set_infotext_color, "set_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b","default_font","y_offset"});
 
     register_service(&EHMTX::del_screen, "del_screen", {"icon_name", "mode"});
     register_service(&EHMTX::force_screen, "force_screen", {"icon_name", "mode"});
@@ -447,11 +447,13 @@ namespace esphome
     ESP_LOGD(TAG, "default text color r: %d g: %d b: %d", r, g, b);
   }
 
-  void EHMTX::set_infotext_color(int lr, int lg, int lb, int rr, int rg, int rb)
+  void EHMTX::set_infotext_color(int lr, int lg, int lb, int rr, int rg, int rb,bool df,int y_offset)
   {
     this->info_lcolor = Color((uint8_t)lr, (uint8_t)lg, (uint8_t)lb);
     this->info_rcolor = Color((uint8_t)rr, (uint8_t)rg, (uint8_t)rb);
-    ESP_LOGD(TAG, "info text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d", lr, lg, lb, rr, rg, rb);
+    this->info_font = df;
+    this->info_y_offset = y_offset;
+    ESP_LOGD(TAG, "info text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", lr, lg, lb, rr, rg, rb,y_offset);
   }
 
   void EHMTX::update() // called from polling component

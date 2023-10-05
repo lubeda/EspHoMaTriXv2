@@ -93,6 +93,8 @@ namespace esphome
 #endif    
     uint16_t hue_ = 0;
     void dump_config();
+    bool info_font=true;
+    bool info_y_offset=0;
 #ifdef USE_ESP32
     PROGMEM Color text_color, alarm_color, rindicator_color, lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor;
     PROGMEM Color bitmap[256];
@@ -172,7 +174,7 @@ namespace esphome
     void set_today_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void set_weekday_color(int r = CD_RED, int g = CD_GREEN, int b = CD_BLUE);
     void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void set_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY);
+    void set_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY,bool info_font=true,int y_offset=0);
 
     void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
     void show_gauge(int v, int r = C_RED, int g = C_GREEN, int b = C_BLUE,int bgr = CG_GREY, int bgg = CG_GREY, int bgb = CG_GREY); // int because of register_service
