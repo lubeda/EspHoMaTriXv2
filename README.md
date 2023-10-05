@@ -8,6 +8,20 @@
 [![Donate][donation-badge]][donation-url]
 [![Publish wiki](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/wiki.yaml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/wiki.yaml)
 [![Build](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml)
+[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
+
+### EspHoMaTriX 2023.9.1
+- Added the ability to specify a screen ID - `icon_name|screen_id`
+- Added icon and date output screen - `icon_date(iconname, lifetime, screen_time, default_font, r, g, b)`
+- If pass a screen identifier with the value `[day, weekday]` like `icon_name|day`, and a backing icon to `icon_clock` or `icon_date`, it will display text.
+- Added a screen with the ability to display a progress bar, progress value `(-100..100)` - `icon_screen_progress(iconname, text, progress, lifetime, screen_time, default_font, r, g, b)`
+
+### EspHoMaTriX 2023.9.0
+- Added the ability to display graph as defined in the YAML file
+
+### EspHoMaTriX 2023.8.0
+- Added icon and time output screen - `icon_clock(iconname, lifetime, screen_time, default_font, r, g, b)`
+- Added alert screen - `alert_screen(iconname, text, screen_time, default_font, r, g, b)`
 
 ## Attention
 
@@ -36,7 +50,7 @@ The `on_start_runnig`-trigger is called after the device boot once. The `on_empt
 
 If you don't add this trigger you have a blank display until your hosts add screens via service calls.
 
-### esphome 2023.7.0
+### ESPHome 2023.7.0
 
 Some updates of esphome will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
 
@@ -711,18 +725,25 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`blank_screen`|"lifetime", "screen_time"|"show" an empty screen|
 |`date_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the date|
 |`brightness`|"value"|set the display brightness|
+|`alert_screen`|"icon_name", "text", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text, screen forced and lifetime = screen_time|
+|`icon_screen_progress`|"icon_name", "text", "progress", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text and with progress bar on bottom|
+|`icon_clock`|"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with time, there is support for [displaying text on top of the icon](#icon_text)|
+|`icon_date`|"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with date, there is support for [displaying text on top of the icon](#icon_text)|
+|`graph_screen`|lifetime", "screen_time"|show graph as defined in the YAML file|
+|`set_infotext_color`|"left_r", "left_g", "left_b", "right_r", "right_g", "right_b"|set the special color for left and right char on info text|
 
 #### Parameter description
 
-"r", "g", "b": Color components for red, green, and blue 0..255
-"size": The size of the rindicator or alarm, 1-3
-"percent": values from 0..100
-"icon_name": the id of the icon to show, as defined in the YAML file
-"text": a text message to display
-"lifetime": how long does this screen stay in the queue (minutes)
-"screen_time": how long is this screen display in the loop (seconds). For short text without scrolling it is shown the defined time, longer text is scrolled at least `scroll_count` times.
-"default_font": use the default font (true) or the special font (false)
-"value": the brightness 0..255 
+- **r, g, b**: Color components for red, green, and blue 0..255
+- **size**: The size of the rindicator or alarm, 1-3
+- **percent**: values from 0..100
+- **icon_name**: the id of the icon to show, as defined in the YAML file, it is also possible to set the arbitrary [screen identifier](#screen_id), for example `icon_name|screen_id`
+- **text**: a text message to display
+- **lifetime**: how long does this screen stay in the queue (minutes)
+- **screen_time**: how long is this screen display in the loop (seconds). For short text without scrolling it is shown the defined time, longer text is scrolled at least `scroll_count` times.
+- **default_font**: use the default font (true) or the special font (false)
+- **progress**: сan take a value from -100 to 100, the color of the progress bar is calculated automatically, if the progress is in the range `0..100`, then `from red to green`, if in the range `-100..0`, then from `green to red`.
+- **value**: the brightness 0..255 
 
 ### Local lambdas
 
@@ -957,6 +978,8 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_ICON_CLOCK| 15|
 |MODE_ALERT_SCREEN| 16|
 |MODE_GRAPH_SCREEN | 17|
+|MODE_ICON_DATE | 18|
+|MODE_ICON_PROGRESS | 19|
 
 **(D)** Service **display_on** / **display_off**
 
@@ -1032,6 +1055,47 @@ This service displays the running queue and a list of icons in the logs
 [13:10:10][I][EHMTX:186]: status icon: 3 name: wind
 [13:10:10][I][EHMTX:186]: status icon: 4 name: rain
 ```
+
+## Advanced options
+
+##### screen_id
+
+Screen identifier allows you to display the same icons on the same screen type without overlapping each other, for example, weather and weather forecast:
+```yaml
+- service: esphome.esp_pixel_clock_icon_screen
+  data:
+    icon_name: "weather_{{ states('weather.current_weather') | replace('-','_') }}|weather"
+...
+- service: esphome.esp_pixel_clock_icon_screen
+  data:
+    icon_name: "weather_{{ states('weather.forecast_weather') | replace('-','_') }}|forecast"
+...
+```
+If the screen identifier is specified, then all work on identification of the screen is carried out by it, as well as in functions like `del_screen`, `force_screen` it **will be necessary to specify it** and **not the name of the icon**.
+
+##### icon_text
+
+A common format for specifying output options: `icon|mode#draw_mode`
+- `icon` - Icon from YAML that will be displayed
+- `mode` - Mode, what will be displayed on the icon
+- `draw_mode` - Mode how the text will be displayed on the icon
+
+**mode** that are supported:
+- `day` - Displays the current day of the month on the icon
+- `weekday` - Displays the current day of the week on the icon 
+
+**draw_mode** that are supported:
+- 0 - default - left and right - baseline from font
+- 1 - center - baseline from font
+- 2 - center - right - baseline from font
+- 3 - left and right - baseline 7
+- 4 - center - baseline 7
+- 5 - center - right - baseline 7
+
+https://github.com/lubeda/EspHoMaTriXv2/issues/92
+
+**Example**: `calendar|day#1` - Show the calendar icon, display the current day of the month on it with the numbers centered.
+
 
 ## Integration in Home Assistant
 

@@ -24,7 +24,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2023.9.0";
+static const char *const EHMTX_VERSION = "2023.9.1";
 static const char *const TAG = "EHMTXv2";
 
 enum show_mode : uint8_t
@@ -46,7 +46,9 @@ enum show_mode : uint8_t
   MODE_FIRE = 14,
   MODE_ICON_CLOCK = 15,
   MODE_ALERT_SCREEN = 16,
-  MODE_GRAPH_SCREEN = 17
+  MODE_GRAPH_SCREEN = 17,
+  MODE_ICON_DATE = 18,
+  MODE_ICON_PROGRESS = 19
 };
 
 namespace esphome
@@ -79,6 +81,7 @@ namespace esphome
     std::vector<EHMTXAddScreenTrigger *> on_add_screen_triggers_;
     EHMTX_queue *find_icon_queue_element(uint8_t icon);
     EHMTX_queue *find_mode_queue_element(uint8_t mode);
+    EHMTX_queue *find_mode_icon_queue_element(uint8_t mode, std::string name);
     EHMTX_queue *find_free_queue_element();
 
   public:
@@ -91,7 +94,7 @@ namespace esphome
     uint16_t hue_ = 0;
     void dump_config();
 #ifdef USE_ESP32
-    PROGMEM Color text_color, alarm_color, rindicator_color,  lindicator_color, today_color, weekday_color, rainbow_color, clock_color;
+    PROGMEM Color text_color, alarm_color, rindicator_color, lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor;
     PROGMEM Color bitmap[256];
     PROGMEM Color sbitmap[64];
     PROGMEM Color cgauge[8];
@@ -99,7 +102,7 @@ namespace esphome
 #endif
 
 #ifdef USE_ESP8266
-    Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, today_color, weekday_color, rainbow_color, clock_color;
+    Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor;
     EHMTX_Icon *icons[MAXICONS];
     uint8_t gauge_value;
 #endif
@@ -169,6 +172,8 @@ namespace esphome
     void set_today_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void set_weekday_color(int r = CD_RED, int g = CD_GREEN, int b = CD_BLUE);
     void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void set_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY);
+
     void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
     void show_gauge(int v, int r = C_RED, int g = C_GREEN, int b = C_BLUE,int bgr = CG_GREY, int bgg = CG_GREY, int bgb = CG_GREY); // int because of register_service
     void hide_gauge();
@@ -179,11 +184,13 @@ namespace esphome
     void icon_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void alert_screen(std::string icon, std::string text, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE);
     void icon_clock(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void icon_date(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void date_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void blank_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void color_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void icon_screen_progress(std::string icon, std::string text, int progress, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
 
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void color_gauge(std::string text);
@@ -225,6 +232,7 @@ namespace esphome
     uint16_t scroll_reset;
     Color text_color;
     show_mode mode;
+    int8_t progress;
 
 #ifdef USE_ESP32
     PROGMEM std::string text;

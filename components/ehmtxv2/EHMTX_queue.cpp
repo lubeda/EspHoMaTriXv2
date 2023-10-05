@@ -78,6 +78,7 @@ namespace esphome
     this->icon = 0;
     this->text = "";
     this->default_font = true;
+    this->progress = -1;
   }
 
   void EHMTX_queue::status()
@@ -108,11 +109,17 @@ namespace esphome
     case MODE_ICON_SCREEN:
       ESP_LOGD(TAG, "queue: icon screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
       break;
+    case MODE_ICON_PROGRESS:
+      ESP_LOGD(TAG, "queue: icon progress: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      break;
     case MODE_ICON_CLOCK:
-      ESP_LOGD(TAG, "queue: icon \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon clock: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      break;
+    case MODE_ICON_DATE:
+      ESP_LOGD(TAG, "queue: icon date: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
       break;
     case MODE_ALERT_SCREEN:
-      ESP_LOGD(TAG, "queue: icon \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
       break;
     case MODE_TEXT_SCREEN:
       ESP_LOGD(TAG, "queue: text text: \"%s\" for: %d sec", this->text.c_str(), this->screen_time_);
@@ -124,10 +131,10 @@ namespace esphome
       ESP_LOGD(TAG, "queue: rainbow text: \"%s\" for: %d sec", this->text.c_str(), this->screen_time_);
       break;
     case MODE_RAINBOW_CLOCK:
-      ESP_LOGD(TAG, "queue: clock for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: rainbow clock for: %d sec", this->screen_time_);
       break;
     case MODE_RAINBOW_DATE:
-      ESP_LOGD(TAG, "queue: date for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: rainbow date for: %d sec", this->screen_time_);
       break;
     case MODE_FIRE:
       ESP_LOGD(TAG, "queue: fire for: %d sec", this->screen_time_);
@@ -141,6 +148,7 @@ namespace esphome
       ESP_LOGD(TAG, "queue: small bitmap for: %d sec", this->screen_time_);
       break;
 #endif
+
     default:
       ESP_LOGD(TAG, "queue: UPPS");
       break;
@@ -158,7 +166,9 @@ namespace esphome
     case MODE_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
     case MODE_ICON_CLOCK:
+    case MODE_ICON_DATE:
     case MODE_ALERT_SCREEN:
+    case MODE_ICON_PROGRESS:
       startx = 8;
       break;
     case MODE_TEXT_SCREEN:
@@ -239,9 +249,11 @@ namespace esphome
       {
       case MODE_BLANK:
         break;
+
       case MODE_COLOR:
         this->config_->display->fill(this->text_color);
         break;
+
       case MODE_BITMAP_SCREEN:
 #ifndef USE_ESP8266
         for (uint8_t x = 0; x < 32; x++)
@@ -253,11 +265,13 @@ namespace esphome
         }
 #endif
         break;
-      #ifdef USE_GRAPH
+
+#ifdef USE_GRAPH
       case MODE_GRAPH_SCREEN:
         this->config_->display->graph(0,0, this->config_->graph);
         break;
-    #endif
+#endif
+
       case MODE_BITMAP_SMALL:
 #ifndef USE_ESP8266
         color_ = this->text_color;
@@ -315,6 +329,7 @@ namespace esphome
           this->config_->display->print(15 + xoffset, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!t!");
         }
         break;
+
       case MODE_RAINBOW_DATE:
       case MODE_DATE:
         if (this->config_->clock->now().is_valid())
@@ -337,28 +352,134 @@ namespace esphome
           this->config_->display->print(xoffset + 15, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!d!");
         }
         break;
+
       case MODE_FULL_SCREEN:
         this->config_->display->image(0, 0, this->config_->icons[this->icon]);
         break;
+
       case MODE_ICON_CLOCK:
+      case MODE_ICON_DATE:
         if (this->config_->clock->now().is_valid()) // valid time
         {
           color_ = this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
-          this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
-                                           this->config_->clock->now());
+          if (this->mode == MODE_ICON_CLOCK)
+          {
+            this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
+                                             this->config_->clock->now());
+          }
+          else
+          {
+            this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
+                                             this->config_->clock->now());
+          }
           this->config_->display->image(0, 0, this->config_->icons[this->icon]);
           this->config_->draw_day_of_week(true);
+
+          if (this->icon_name.find("day") != std::string::npos || this->icon_name.find("weekday") != std::string::npos)
+          {
+            int mode = 0;
+            std::size_t pos = icon_name.find("#");
+            if (pos != std::string::npos)
+            {
+              std::string str_mode = icon_name.substr(pos + 1);
+              if (str_mode.length())
+              {
+                mode = std::stoi(str_mode);
+              }
+            }
+
+            if (this->icon_name.find("day") != std::string::npos)
+            {
+              uint8_t d = this->config_->clock->now().day_of_month;
+
+              switch (mode)
+              {
+              // Base line from Font
+              case 1:
+                this->config_->display->printf(1, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(8, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+                break;
+              // Base line from Font
+              case 2:
+                this->config_->display->printf(1, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(9, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+                break;
+              // Static Base line
+              case 3:
+                this->config_->display->printf(0, 7, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(9, 7, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+                break;
+              // Static Base line
+              case 4:
+                this->config_->display->printf(1, 7, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(8, 7, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+                break;
+              // Static Base line
+              case 5:
+                this->config_->display->printf(1, 7, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(9, 7, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+                break;
+              // Base line from Font
+              default:
+                this->config_->display->printf(0, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(9, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+                break;
+              }
+            }
+
+            if (this->icon_name.find("weekday") != std::string::npos)
+            {
+              // TODO: Added for testing for now, will need to rethink it [andrewjswan]
+              std::string weekdays = "SUMOTUWETHFRSA"; // F("SUMOTUWETHFRSA")
+              uint8_t wd = this->config_->clock->now().day_of_week;
+
+              switch (mode)
+              {
+              // Base line from Font
+              case 1:
+                this->config_->display->printf(1, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
+                this->config_->display->printf(8, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+                break;
+              // Base line from Font
+              case 2:
+                this->config_->display->printf(1, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
+                this->config_->display->printf(9, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+                break;
+              // Static Base line
+              case 3:
+                this->config_->display->printf(0, 7, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
+                this->config_->display->printf(9, 7, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+                break;
+              // Static Base line
+              case 4:
+                this->config_->display->printf(1, 7, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
+                this->config_->display->printf(8, 7, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+                break;
+              // Static Base line
+              case 5:
+                this->config_->display->printf(1, 7, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
+                this->config_->display->printf(9, 7, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+                break;
+              // Base line from Font
+              default:
+                this->config_->display->printf(0, yoffset, font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (weekdays[(wd - 1) * 2]));
+                this->config_->display->printf(9, yoffset, font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (weekdays[(wd - 1) * 2 + 1]));
+                break;
+              }
+            }
+          }
         }
         else
         {
           this->config_->display->print( xoffset + 19, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!t!");
         }
         break;
+
       case MODE_ICON_SCREEN:
       case MODE_ALERT_SCREEN:
       case MODE_RAINBOW_ICON:
-      {
+      case MODE_ICON_PROGRESS:
         color_ = (this->mode == MODE_RAINBOW_ICON) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
         this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
@@ -367,18 +488,32 @@ namespace esphome
         this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
 #endif
-        if (this->config_->display_gauge)
-        {
-          this->config_->display->image(2, 0, this->config_->icons[this->icon]);
-          this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
-        }
-        else
+        if (this->mode == MODE_ICON_PROGRESS)
         {
           this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
           this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+
+          if (this->progress != 0)
+          {
+            color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100 + (this->progress < 0 ? 120 : 0), 240, 240).to_rgb();
+            this->config_->display->line(9, 7, 9 + abs(this->progress) * 22 / 100, 7, color_);
+          }
         }
-      }
-      break;
+        else
+        {
+          if (this->config_->display_gauge)
+          {
+            this->config_->display->image(2, 0, this->config_->icons[this->icon]);
+            this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
+          }
+          else
+          {
+            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
+            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          }
+        }
+        break;
+
       case MODE_TEXT_SCREEN:
       case MODE_RAINBOW_TEXT:
         color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
@@ -390,6 +525,7 @@ namespace esphome
                                       this->text.c_str());
 #endif
         break;
+
 #ifdef USE_Fireplugin
       case MODE_FIRE:
       {
@@ -461,9 +597,9 @@ namespace esphome
           }
         }
       }
-
       break;
 #endif
+
       default:
         ESP_LOGD(TAG, "no screen to draw!");
         this->config_->next_action_time = 0;
@@ -526,6 +662,7 @@ namespace esphome
     case MODE_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
     case MODE_ALERT_SCREEN:
+    case MODE_ICON_PROGRESS:
       startx = 8;
       if (this->pixels_ < 23)
       {
