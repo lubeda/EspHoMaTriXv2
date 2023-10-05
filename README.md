@@ -13,6 +13,11 @@
 - Added the ability to specify a screen ID - `icon_name|screen_id`
 - Added icon and date output screen - `icon_date(iconname, lifetime, screen_time, default_font, r, g, b)`
 - If pass a screen identifier with the value `[day, weekday]` like `icon_name|day`, and a backing icon to `icon_clock` or `icon_date`, it will display text.
+
+New YAML option `weekdays: "SUMOTUWETHFRSA"` and new function to customize the info text over the icon:
+`set_infotext_color(200,100,100,100,100,200,false,2);` 
+"set_infotext_color"("left_r", "left_g", "left_b", "right_r", "right_g", "right_b","default_font","y_offset");
+
 - Added a screen with the ability to display a progress bar, progress value `(-100..100)` - `icon_screen_progress(iconname, text, progress, lifetime, screen_time, default_font, r, g, b)`
 
 ### EspHoMaTriX 2023.9.0
