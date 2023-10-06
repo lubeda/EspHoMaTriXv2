@@ -1354,6 +1354,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[TheGroundZero](https://github.com/TheGroundZero)** PRs and discussion about bootloop
 - **[N3rdix](https://github.com/N3rdix)** PRs
 - **[lukasleitsch](https://github.com/lukasleitsch)** PRs
+- **[trvrnrth](https://github.com/trvrnrth)** PRs with fixing an error
 - **[andrewjswan](https://github.com/andrewjswan)** Boot animation centered. `alert_screen` and [issue](https://github.com/lubeda/EspHoMaTriXv2/issues/84) and the additions to 2023.9.1
 - **Added by [andrewjswan](https://github.com/andrewjswan)**[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 - **[malinovsku](https://github.com/malinovsku)** Issues and testing. 
