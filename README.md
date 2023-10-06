@@ -11,21 +11,24 @@
 
 ### EspHoMaTriX 2023.9.1
 - Added the ability to specify a screen ID - `icon_name|screen_id`
-- Added icon and date output screen - `icon_date(iconname, lifetime, screen_time, default_font, r, g, b)`
+- Added icon and date output screen
+  - `icon_date(iconname, lifetime, screen_time, default_font, r, g, b)`
 - If pass a screen identifier with the value `[day, weekday]` like `icon_name|day`, and a backing icon to `icon_clock` or `icon_date`, it will display text.
+- New YAML option `weekdays: "SUMOTUWETHFRSA"` and new function to customize the info text over the icon:
+  - `set_infotext_color(200,100,100,100,100,200,false,2);` 
+  - `set_infotext_color("left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset");`
 
-New YAML option `weekdays: "SUMOTUWETHFRSA"` and new function to customize the info text over the icon:
-`set_infotext_color(200,100,100,100,100,200,false,2);` 
-"set_infotext_color"("left_r", "left_g", "left_b", "right_r", "right_g", "right_b","default_font","y_offset");
-
-- Added a screen with the ability to display a progress bar, progress value `(-100..100)` - `icon_screen_progress(iconname, text, progress, lifetime, screen_time, default_font, r, g, b)`
+- Added a screen with the ability to display a progress bar, progress value `(-100..100)`
+  - `icon_screen_progress(iconname, text, progress, lifetime, screen_time, default_font, r, g, b)`
 
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
 
 ### EspHoMaTriX 2023.8.0
-- Added icon and time output screen - `icon_clock(iconname, lifetime, screen_time, default_font, r, g, b)`
-- Added alert screen - `alert_screen(iconname, text, screen_time, default_font, r, g, b)`
+- Added icon and time output screen
+  - `icon_clock(iconname, lifetime, screen_time, default_font, r, g, b)`
+- Added alert screen
+  - `alert_screen(iconname, text, screen_time, default_font, r, g, b)`
 
 ## Attention
 
@@ -1089,16 +1092,15 @@ A common format for specifying output options: `icon|mode#draw_mode`
 - `weekday` - Displays the current day of the week on the icon 
 
 **draw_mode** that are supported:
-- 0 - default - left and right - baseline from font
-- 1 - center - baseline from font
-- 2 - center - right - baseline from font
-- 3 - left and right - baseline 7
-- 4 - center - baseline 7
-- 5 - center - right - baseline 7
+- 0 - default - To the edges
+- 1 - To the center
+- 2 - Left to center, Right to edge
+- 3 - To the center, the left one is a pixel higher
+- 4 - To the center, the right one is a pixel higher
 
-https://github.com/lubeda/EspHoMaTriXv2/issues/92
+https://github.com/lubeda/EspHoMaTriXv2/issues/92#issuecomment-1750184472
 
-**Example**: `calendar|day#1` - Show the calendar icon, display the current day of the month on it with the numbers centered.
+**Example**: `calendar|day#1` - Show the `calendar` icon, display the current day of the month on it with the numbers centered.
 
 
 ## Integration in Home Assistant
@@ -1355,7 +1357,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[N3rdix](https://github.com/N3rdix)** PRs
 - **[lukasleitsch](https://github.com/lukasleitsch)** PRs
 - **[andrewjswan](https://github.com/andrewjswan)** Boot animation centered. `alert_screen` and [issue](https://github.com/lubeda/EspHoMaTriXv2/issues/84) and the additions to 2023.9.1
-- **Added by [andrewjswan](https://github.com/andrewjswan)**[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
+- **Added by [andrewjswan](https://github.com/andrewjswan)** [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 - **[malinovsku](https://github.com/malinovsku)** Issues and testing. 
 - **Everybody** who found bugs/issues and reported them!
 
