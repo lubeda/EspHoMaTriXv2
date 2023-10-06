@@ -394,7 +394,7 @@ namespace esphome
             uint8_t x_left = 0;  // Leftmost point
             uint8_t x_right = 9; // Rightmost point
 
-            if (this->icon_name.find("day") != std::string::npos)
+            if (this->icon_name.rfind("day", 0) == 0)
             {
               uint8_t d = this->config_->clock->now().day_of_month;
 
@@ -410,14 +410,14 @@ namespace esphome
               // To the center, the right one is a pixel higher.
               case 4:
                 x_left = (l_width < 5) ? 5 - l_width : 0;
-                x_right = 5;
+                x_right = 4;
                 break;
               // Left to center, Right to edge
               case 2:
                 x_left = (l_width < 5) ? 5 - l_width : 0;
                 x_right = x_right - r_width;
                 break;
-              // To the edges 
+              // To the edges
               default:
                 x_right = x_right - r_width;
                 break;
@@ -425,7 +425,7 @@ namespace esphome
               this->config_->display->printf(x_left, yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
               this->config_->display->printf(x_right, yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
             }
-            else // if (this->icon_name.find("weekday") != std::string::npos)
+            else // if (this->icon_name.rfind("weekday", 0) == 0)
             {
               uint8_t wd = this->config_->clock->now().day_of_week;
 
@@ -444,14 +444,14 @@ namespace esphome
               // To the center, the right one is a pixel higher.
               case 4:
                 x_left = (l_width < 5) ? 5 - l_width : 0;
-                x_right = 5;
+                x_right = 4;
                 break;
               // Left to center, Right to edge
               case 2:
                 x_left = (l_width < 5) ? 5 - l_width : 0;
                 x_right = x_right - r_width;
                 break;
-              // To the edges 
+              // To the edges
               default:
                 x_right = x_right - r_width;
                 break;
