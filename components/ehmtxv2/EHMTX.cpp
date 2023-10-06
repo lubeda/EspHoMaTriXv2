@@ -16,7 +16,7 @@ namespace esphome
     this->hue_ = 0;
     this->rainbow_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->info_lcolor = Color(CG_GREY, CG_GREY, CG_GREY);
-    this->info_rcolor = Color(CG_GREY, CG_GREY, CG_GREY);
+    this->info_rcolor = Color(CG_GREY * 2, CG_GREY * 2, CG_GREY * 2);
     this->next_action_time = 0;
     this->last_scroll_time = 0;
     this->screen_pointer = MAXQUEUE;
@@ -360,7 +360,7 @@ namespace esphome
     register_service(&EHMTX::set_weekday_color, "set_weekday_color", {"r", "g", "b"});
     register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
     register_service(&EHMTX::set_text_color, "set_text_color", {"r", "g", "b"});
-    register_service(&EHMTX::set_infotext_color, "set_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b","default_font","y_offset"});
+    register_service(&EHMTX::set_infotext_color, "set_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset"});
 
     register_service(&EHMTX::del_screen, "del_screen", {"icon_name", "mode"});
     register_service(&EHMTX::force_screen, "force_screen", {"icon_name", "mode"});
@@ -447,7 +447,7 @@ namespace esphome
     ESP_LOGD(TAG, "default text color r: %d g: %d b: %d", r, g, b);
   }
 
-  void EHMTX::set_infotext_color(int lr, int lg, int lb, int rr, int rg, int rb,bool df,int y_offset)
+  void EHMTX::set_infotext_color(int lr, int lg, int lb, int rr, int rg, int rb, bool df, int y_offset)
   {
     this->info_lcolor = Color((uint8_t)lr, (uint8_t)lg, (uint8_t)lb);
     this->info_rcolor = Color((uint8_t)rr, (uint8_t)rg, (uint8_t)rb);
@@ -1343,6 +1343,53 @@ namespace esphome
         }
       }
     }
+  }
+
+  int EHMTX::GetTextBounds(esphome::display::BaseFont *font, const char *buffer)
+  {
+      int x = 0;      // A pointer to store the returned x coordinate of the upper left corner in. 
+      int y = 0;      // A pointer to store the returned y coordinate of the upper left corner in.
+      int width = 0;  // A pointer to store the returned text width in.
+      int height = 0; // A pointer to store the returned text height in. 
+      this->display->get_text_bounds(0, 0, buffer, font, esphome::display::TextAlign::TOP_LEFT, &x, &y, &width, &height);
+      return width;
+  }
+
+  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char raw_char)
+  {
+      char temp_buffer[80];
+      sprintf(temp_buffer, formatting, raw_char);
+      return GetTextBounds(font, temp_buffer);
+  }
+
+  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char *raw_text)
+  {
+      char temp_buffer[80];
+      sprintf(temp_buffer, formatting, raw_text);
+      return GetTextBounds(font, temp_buffer);
+  }
+
+  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const int raw_int)
+  {
+      char temp_buffer[80];
+      sprintf(temp_buffer, formatting, raw_int);
+      return GetTextBounds(font, temp_buffer);
+  }
+
+  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const float raw_float)
+  {
+      char temp_buffer[80];
+      sprintf(temp_buffer, formatting, raw_float);
+      return GetTextBounds(font, temp_buffer);
+  }
+
+  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, esphome::ESPTime time)
+  {
+      auto c_tm = time.to_c_tm();
+      size_t buffer_length = 80;
+      char temp_buffer[buffer_length];
+      strftime(temp_buffer, buffer_length, formatting, &c_tm);
+      return GetTextBounds(font, temp_buffer);
   }
 
   void EHMTX::dump_config()

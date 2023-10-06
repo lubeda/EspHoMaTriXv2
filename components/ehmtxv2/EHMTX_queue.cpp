@@ -380,20 +380,84 @@ namespace esphome
 
           if (this->icon_name.find("day") != std::string::npos || this->icon_name.find("weekday") != std::string::npos)
           {
-
-            if (this->icon_name.find("weekday") != std::string::npos)
+            int mode = 0;
+            std::size_t pos = icon_name.find("#");
+            if (pos != std::string::npos)
             {
-              uint8_t wd = this->config_->clock->now().day_of_week;
+              std::string str_mode = icon_name.substr(pos + 1);
+              if (str_mode.length())
+              {
+                mode = std::stoi(str_mode);
+              }
+            }
 
-              
-                this->config_->display->printf(0, yoffset+this->config_->info_y_offset, info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2]));
-                this->config_->display->printf(9, yoffset+this->config_->info_y_offset, info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2 + 1]));
-            }else
+            uint8_t x_left = 0;  // Leftmost point
+            uint8_t x_right = 9; // Rightmost point
+
+            if (this->icon_name.find("day") != std::string::npos)
             {
               uint8_t d = this->config_->clock->now().day_of_month;
 
-              this->config_->display->printf(0, yoffset+this->config_->info_y_offset, info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
-              this->config_->display->printf(8, yoffset+this->config_->info_y_offset, info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_RIGHT, "%d", d % 10);
+              // The symbol consists of a visible part, and an empty area to the right with a width of one point.
+              uint8_t l_width = this->config_->GetTextWidth(info_font, "%d", d / 10 % 10);
+              uint8_t r_width = this->config_->GetTextWidth(info_font, "%d", d % 10);
+              switch (mode)
+              {
+              // To the center
+              case 1:
+              // To the center, the left one is a pixel higher.
+              case 3:
+              // To the center, the right one is a pixel higher.
+              case 4:
+                x_left = (l_width < 5) ? 5 - l_width : 0;
+                x_right = 5;
+                break;
+              // Left to center, Right to edge
+              case 2:
+                x_left = (l_width < 5) ? 5 - l_width : 0;
+                x_right = x_right - r_width;
+                break;
+              // To the edges 
+              default:
+                x_right = x_right - r_width;
+                break;
+              }
+              this->config_->display->printf(x_left, yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+              this->config_->display->printf(x_right, yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
+            }
+            else // if (this->icon_name.find("weekday") != std::string::npos)
+            {
+              uint8_t wd = this->config_->clock->now().day_of_week;
+
+              ESP_LOGW("ajs", "Char Left: %d Right: %d", this->config_->GetTextWidth(info_font, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2])),
+                                                         this->config_->GetTextWidth(info_font, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2])));
+
+              // The symbol consists of a visible part, and an empty area to the right with a width of one point.
+              uint8_t l_width = this->config_->GetTextWidth(info_font, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2]));
+              uint8_t r_width = this->config_->GetTextWidth(info_font, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2]));
+              switch (mode)
+              {
+              // To the center
+              case 1:
+              // To the center, the left one is a pixel higher.
+              case 3:
+              // To the center, the right one is a pixel higher.
+              case 4:
+                x_left = (l_width < 5) ? 5 - l_width : 0;
+                x_right = 5;
+                break;
+              // Left to center, Right to edge
+              case 2:
+                x_left = (l_width < 5) ? 5 - l_width : 0;
+                x_right = x_right - r_width;
+                break;
+              // To the edges 
+              default:
+                x_right = x_right - r_width;
+                break;
+              }
+              this->config_->display->printf(x_left, yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2]));
+              this->config_->display->printf(x_right, yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2 + 1]));
             }
           }
         }
