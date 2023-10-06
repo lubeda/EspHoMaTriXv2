@@ -429,9 +429,6 @@ namespace esphome
             {
               uint8_t wd = this->config_->clock->now().day_of_week;
 
-              ESP_LOGW("ajs", "Char Left: %d Right: %d", this->config_->GetTextWidth(info_font, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2])),
-                                                         this->config_->GetTextWidth(info_font, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2])));
-
               // The symbol consists of a visible part, and an empty area to the right with a width of one point.
               uint8_t l_width = this->config_->GetTextWidth(info_font, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2]));
               uint8_t r_width = this->config_->GetTextWidth(info_font, "%c", (EHMTXv2_WEEKDAYTEXT[(wd - 1) * 2]));
