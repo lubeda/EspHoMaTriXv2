@@ -78,7 +78,7 @@ namespace esphome
     this->icon = 0;
     this->text = "";
     this->default_font = true;
-    this->progress = -1;
+    this->progress = 0;
   }
 
   void EHMTX_queue::status()
@@ -483,7 +483,7 @@ namespace esphome
 
           if (this->progress != 0)
           {
-            color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100 + (this->progress < 0 ? 120 : 0), 240, 240).to_rgb();
+            color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100 + (this->progress < 0 ? 120 : 0), 255, 240).to_rgb();
             this->config_->display->line(9, 7, 9 + abs(this->progress) * 22 / 100, 7, color_);
           }
         }

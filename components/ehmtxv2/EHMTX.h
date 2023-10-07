@@ -94,7 +94,7 @@ namespace esphome
     uint16_t hue_ = 0;
     void dump_config();
     bool info_font = true;
-    bool info_y_offset = 0;
+    int8_t info_y_offset = 0;
 #ifdef USE_ESP32
     PROGMEM Color text_color, alarm_color, rindicator_color, lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor;
     PROGMEM Color bitmap[256];
