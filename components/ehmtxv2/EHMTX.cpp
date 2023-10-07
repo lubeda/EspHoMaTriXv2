@@ -13,7 +13,7 @@ namespace esphome
     this->display_alarm = 0;
     this->clock_time = 10;
     this->icon_count = 0;
-    this->hue_ = 0;
+    this->hue_ = 180;
     this->rainbow_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->info_lcolor = Color(CG_GREY, CG_GREY, CG_GREY);
     this->info_rcolor = Color(CG_GREY * 2, CG_GREY * 2, CG_GREY * 2);
@@ -1345,6 +1345,40 @@ namespace esphome
     }
   }
 
+  int EHMTX::GetWeekdayCharCount()
+  {
+    int count = 0;
+  
+    for (int i = 0; i < strlen(EHMTXv2_WEEKDAYTEXT);) 
+    {
+      if(EHMTXv2_WEEKDAYTEXT[i] & 0x80) 
+      {
+        if(EHMTXv2_WEEKDAYTEXT[i] & 0x20) 
+        {
+          if(EHMTXv2_WEEKDAYTEXT[i] & 0x10) 
+          {
+            i += 4;
+          } 
+          else 
+          {
+            i += 3;
+          }
+        } 
+        else 
+        {
+          i += 2;
+        }
+      }
+      else
+      {
+        i += 1;
+      }
+      count++;
+    }
+
+    return count;
+  }
+
   std::string EHMTX::GetWeekdayChar(int position)
   {
     std::string weekday_char = "";
@@ -1383,9 +1417,10 @@ namespace esphome
       {
         return weekday_char;
       }
-      pos++;
       weekday_char = "";
+      pos++;
     }
+
     return "";
   }
 

@@ -208,6 +208,7 @@ namespace esphome
     void draw_rindicator();
     void draw_lindicator();
 
+    int GetWeekdayCharCount();
     std::string GetWeekdayChar(int position);
 
     int GetTextBounds(esphome::display::BaseFont *font, const char *buffer);
