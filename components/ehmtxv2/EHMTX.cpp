@@ -906,7 +906,8 @@ namespace esphome
     screen->mode = MODE_ICON_PROGRESS;
     screen->icon_name = id;
     screen->icon = icon;
-    screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100 : progress;
+    screen->progress = (progress < 0) ? 0 : progress;
+    screen->progress = (progress > 100) ? 100;
     screen->calc_scroll_time(text, screen_time);
     for (auto *t : on_add_screen_triggers_)
     {
