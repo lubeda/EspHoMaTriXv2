@@ -428,37 +428,50 @@ namespace esphome
             else // if (this->icon_name.rfind("weekday", 0) == 0)
             {
               uint8_t wd = this->config_->clock->now().day_of_week;
+              uint8_t weekday_count = this->config_->GetWeekdayCharCount();
 
-              std::string left = this->config_->GetWeekdayChar((wd - 1) * 2);
-              std::string right = this->config_->GetWeekdayChar((wd - 1) * 2 + 1);
-
-              // The symbol consists of a visible part, and an empty area to the right with a width of one point.
-              uint8_t l_width = this->config_->GetTextWidth(info_font, "%s", left.c_str());
-              uint8_t r_width = this->config_->GetTextWidth(info_font, "%s", right.c_str());
-
-              switch (mode)
+              if (weekday_count > 7)
               {
-              // To the center
-              case 1:
-              // To the center, the left one is a pixel higher.
-              case 3:
-              // To the center, the right one is a pixel higher.
-              case 4:
-                x_left = (l_width < 5) ? 5 - l_width : 0;
-                x_right = 4;
-                break;
-              // Left to center, Right to edge
-              case 2:
-                x_left = (l_width < 5) ? 5 - l_width : 0;
-                x_right = x_right - r_width;
-                break;
-              // To the edges
-              default:
-                x_right = x_right - r_width;
-                break;
+                std::string left = this->config_->GetWeekdayChar((wd - 1) * 2);
+                std::string right = this->config_->GetWeekdayChar((wd - 1) * 2 + 1);
+
+                // The symbol consists of a visible part, and an empty area to the right with a width of one point.
+                uint8_t l_width = this->config_->GetTextWidth(info_font, "%s", left.c_str());
+                uint8_t r_width = this->config_->GetTextWidth(info_font, "%s", right.c_str());
+
+                switch (mode)
+                {
+                // To the center
+                case 1:
+                // To the center, the left one is a pixel higher.
+                case 3:
+                // To the center, the right one is a pixel higher.
+                case 4:
+                  x_left = (l_width < 5) ? 5 - l_width : 0;
+                  x_right = 4;
+                  break;
+                // Left to center, Right to edge
+                case 2:
+                  x_left = (l_width < 5) ? 5 - l_width : 0;
+                  x_right = x_right - r_width;
+                  break;
+                // To the edges
+                default:
+                  x_right = x_right - r_width;
+                  break;
+                }
+                this->config_->display->printf(x_left, yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%s", left.c_str());
+                this->config_->display->printf(x_right, yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%s", right.c_str());
               }
-              this->config_->display->printf(x_left, yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%s", left.c_str());
-              this->config_->display->printf(x_right, yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%s", right.c_str());
+              else
+              {
+                std::string weekday = this->config_->GetWeekdayChar(wd - 1);
+
+                // The symbol consists of a visible part, and an empty area to the right with a width of one point.
+                uint8_t c_width = this->config_->GetTextWidth(info_font, "%s", weekday.c_str());
+                x_left = 4 - (c_width - 1) / 2;
+                this->config_->display->printf(x_left, yoffset + this->config_->info_y_offset, info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%s", weekday.c_str());
+              }
             }
           }
         }
