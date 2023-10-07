@@ -1345,51 +1345,95 @@ namespace esphome
     }
   }
 
+  std::string EHMTX::GetWeekdayChar(int position)
+  {
+    std::string weekday_char = "";
+    int pos = 0;
+  
+    for (int i = 0; i < strlen(EHMTXv2_WEEKDAYTEXT);) 
+    {
+      weekday_char = weekday_char + EHMTXv2_WEEKDAYTEXT[i];
+      if(EHMTXv2_WEEKDAYTEXT[i] & 0x80) 
+      {
+        weekday_char = weekday_char + EHMTXv2_WEEKDAYTEXT[i + 1];
+        if(EHMTXv2_WEEKDAYTEXT[i] & 0x20) 
+        {
+          weekday_char = weekday_char + EHMTXv2_WEEKDAYTEXT[i + 2];
+          if(EHMTXv2_WEEKDAYTEXT[i] & 0x10) 
+          {
+            weekday_char = weekday_char + EHMTXv2_WEEKDAYTEXT[i + 3];
+            i += 4;
+          } 
+          else 
+          {
+            i += 3;
+          }
+        } 
+        else 
+        {
+          i += 2;
+        }
+      }
+      else
+      {
+        i += 1;
+      }
+
+      if (pos == position)
+      {
+        return weekday_char;
+      }
+      pos++;
+      weekday_char = "";
+    }
+    return "";
+  }
+
   int EHMTX::GetTextBounds(esphome::display::BaseFont *font, const char *buffer)
   {
-      int x = 0;      // A pointer to store the returned x coordinate of the upper left corner in. 
-      int y = 0;      // A pointer to store the returned y coordinate of the upper left corner in.
-      int width = 0;  // A pointer to store the returned text width in.
-      int height = 0; // A pointer to store the returned text height in. 
-      this->display->get_text_bounds(0, 0, buffer, font, esphome::display::TextAlign::TOP_LEFT, &x, &y, &width, &height);
-      return width;
+    int x = 0;      // A pointer to store the returned x coordinate of the upper left corner in. 
+    int y = 0;      // A pointer to store the returned y coordinate of the upper left corner in.
+    int width = 0;  // A pointer to store the returned text width in.
+    int height = 0; // A pointer to store the returned text height in. 
+    this->display->get_text_bounds(0, 0, buffer, font, esphome::display::TextAlign::TOP_LEFT, &x, &y, &width, &height);
+    return width;
   }
 
   int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char raw_char)
   {
-      char temp_buffer[80];
-      sprintf(temp_buffer, formatting, raw_char);
-      return GetTextBounds(font, temp_buffer);
+    char temp_buffer[80];
+    sprintf(temp_buffer, formatting, raw_char);
+    return GetTextBounds(font, temp_buffer);
   }
 
   int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char *raw_text)
   {
-      char temp_buffer[80];
-      sprintf(temp_buffer, formatting, raw_text);
-      return GetTextBounds(font, temp_buffer);
+    char temp_buffer[80];
+    sprintf(temp_buffer, formatting, raw_text);
+    return GetTextBounds(font, temp_buffer);
   }
 
   int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const int raw_int)
   {
-      char temp_buffer[80];
-      sprintf(temp_buffer, formatting, raw_int);
-      return GetTextBounds(font, temp_buffer);
+    char temp_buffer[80];
+    sprintf(temp_buffer, formatting, raw_int);
+    return GetTextBounds(font, temp_buffer);
   }
 
   int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const float raw_float)
   {
-      char temp_buffer[80];
-      sprintf(temp_buffer, formatting, raw_float);
-      return GetTextBounds(font, temp_buffer);
+    char temp_buffer[80];
+    sprintf(temp_buffer, formatting, raw_float);
+    return GetTextBounds(font, temp_buffer);
   }
 
   int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, esphome::ESPTime time)
   {
-      auto c_tm = time.to_c_tm();
-      size_t buffer_length = 80;
-      char temp_buffer[buffer_length];
-      strftime(temp_buffer, buffer_length, formatting, &c_tm);
-      return GetTextBounds(font, temp_buffer);
+    auto c_tm = time.to_c_tm();
+    size_t buffer_length = 80;
+    char temp_buffer[buffer_length];
+    strftime(temp_buffer, buffer_length, formatting, &c_tm);
+    return GetTextBounds(font, temp_buffer);
   }
 
   void EHMTX::dump_config()
