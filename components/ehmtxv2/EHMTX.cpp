@@ -1,5 +1,7 @@
 #include "esphome.h"
 #include <sstream>
+#include <vector>
+//#include <iostream>
 
 namespace esphome
 {
@@ -772,6 +774,42 @@ namespace esphome
     this->special_font = font;
   }
 
+std::string EHMTX::replace_time_date(std::string time_date, std::string replace_from_string, std::string replace_to_string)  // Replace Time Date Strings / Trip5
+  {
+    std::string replace_from_arr[30]; // AM + PM + 7 Days + 12 Months = 21 but 30 to be safe
+    std::string replace_to_arr[30];
+    std::string replace_from;
+    std::string replace_to;
+    uint16_t replace_arr_n;
+    if (replace_from_string != "" && replace_to_string != "")
+    {
+      std::istringstream iss_from(replace_from_string);
+      std::vector<std::string> replace_from_arr;
+      for(std::string s_from;iss_from>>s_from;)
+          replace_from_arr.push_back(s_from);
+      replace_arr_n = replace_from_arr.size();
+      std::istringstream iss_to(replace_to_string);
+      std::vector<std::string> replace_to_arr;
+      for(std::string s_to;iss_to>>s_to;)
+          replace_to_arr.push_back(s_to);
+      if (replace_to_arr.size() > replace_arr_n) { replace_arr_n = replace_to_arr.size(); }
+    uint16_t k = 0;
+    do
+      {
+        size_t pos = 0;
+        replace_from = replace_from_arr[k];
+        replace_to = replace_to_arr[k];
+        while (((pos = time_date.find(replace_from, pos)) != std::string::npos) && (pos !=0))
+        {
+          time_date.replace(pos, replace_from.length(), replace_to);
+          pos += replace_to.length();
+        }
+      k++;
+      } while (k < replace_arr_n);
+    }
+    return time_date;
+  }
+
   void EHMTX::del_screen(std::string icon_name, int mode)
   {
     for (uint8_t i = 0; i < MAXQUEUE; i++)
@@ -1379,7 +1417,6 @@ namespace esphome
     ESP_LOGD(TAG, "add_icon no.: %d name: %s frame_duration: %d ms", this->icon_count, icon->name.c_str(), icon->frame_duration);
     this->icon_count++;
   }
-
 
   void EHMTX::draw_alarm()
   {

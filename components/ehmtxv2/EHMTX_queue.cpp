@@ -315,8 +315,17 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_CLOCK) ? this->config_->rainbow_color : this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
-          this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
-                                           this->config_->clock->now());
+          if (EHMTXv2_REPLACE_TIME_DATE_FROM != "" && EHMTXv2_REPLACE_TIME_DATE_TO != "") // check for replace active
+          {
+            std::string time_old = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
+            time_old = this->config_->replace_time_date(time_old, EHMTXv2_REPLACE_TIME_DATE_FROM, EHMTXv2_REPLACE_TIME_DATE_TO);
+            const char* time_new = &time_old[0];
+            this->config_->display->print(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, time_new);
+          } else {
+            this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
+                                             this->config_->clock->now());                    
+          }
+
           if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
           {
             this->config_->display->draw_pixel_at(0, 0, color_);
@@ -338,8 +347,16 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_DATE) ? this->config_->rainbow_color : this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
-          this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
-                                           this->config_->clock->now());
+          if (EHMTXv2_REPLACE_TIME_DATE_FROM != "" && EHMTXv2_REPLACE_TIME_DATE_TO != "") // check for replace active
+          {
+            std::string time_old = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
+            time_old = this->config_->replace_time_date(time_old, EHMTXv2_REPLACE_TIME_DATE_FROM, EHMTXv2_REPLACE_TIME_DATE_TO);
+            const char* time_new = &time_old[0];
+            this->config_->display->print(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, time_new);
+          } else {
+            this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
+                                             this->config_->clock->now());
+          }
           if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
           {
             this->config_->display->draw_pixel_at(0, 0, color_);
@@ -611,4 +628,7 @@ namespace esphome
 
     ESP_LOGD(TAG, "calc_scroll_time: mode: %d text: \"%s\" pixels %d calculated: %d defined: %d max_steps: %d", this->mode, text.c_str(), this->pixels_, this->screen_time_, screen_time, this->scroll_reset);
   }
+  
 }
+
+

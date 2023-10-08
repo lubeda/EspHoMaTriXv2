@@ -159,6 +159,12 @@ namespace esphome
     void set_clock_time(uint16_t t = 10);
     void set_show_day_of_week(bool b=true);
     void set_show_seconds(bool b=false);
+
+    //std::string replace_time_date_from;
+    //std::string replace_time_date_to;
+    std::string replace_time_date(std::string time_old, std::string replace_time_date_from, std::string replace_time_date_to);
+    //void set_replace_time_date (std::string replace_time_date_from, std::string replace_time_date_to);
+
     void set_brightness(int b);
     void set_display_on();
     void set_display_off();
@@ -168,6 +174,7 @@ namespace esphome
     #endif
     void set_default_font(display::BaseFont *font);
     void set_special_font(display::BaseFont *font);
+
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void set_text_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
