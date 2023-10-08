@@ -5,6 +5,7 @@ on:
       - main
       - 2023.8.0
       - 2023.9.0
+      - 2023.9.1
     paths:
       - wiki/**
       - .github/workflows/wiki.yaml

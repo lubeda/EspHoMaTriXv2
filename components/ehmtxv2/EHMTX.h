@@ -93,8 +93,8 @@ namespace esphome
 #endif    
     uint16_t hue_ = 0;
     void dump_config();
-    bool info_font=true;
-    bool info_y_offset=0;
+    bool info_font = true;
+    int8_t info_y_offset = 0;
 #ifdef USE_ESP32
     PROGMEM Color text_color, alarm_color, rindicator_color, lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor;
     PROGMEM Color bitmap[256];
@@ -181,7 +181,7 @@ namespace esphome
     void set_today_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void set_weekday_color(int r = CD_RED, int g = CD_GREEN, int b = CD_BLUE);
     void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void set_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY,bool info_font=true,int y_offset=0);
+    void set_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY, bool info_font = true, int y_offset = 0);
 
     void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
     void show_gauge(int v, int r = C_RED, int g = C_GREEN, int b = C_BLUE,int bgr = CG_GREY, int bgg = CG_GREY, int bgb = CG_GREY); // int because of register_service
@@ -215,6 +215,16 @@ namespace esphome
     void draw_rindicator();
     void draw_lindicator();
 
+    int GetWeekdayCharCount();
+    std::string GetWeekdayChar(int position);
+
+    int GetTextBounds(esphome::display::BaseFont *font, const char *buffer);
+    int GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char raw_char);
+    int GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char *raw_text);
+    int GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const int raw_int);
+    int GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const float raw_float);
+    int GetTextWidth(esphome::display::BaseFont *font, const char* formatting, esphome::ESPTime time);
+
     void add_on_next_screen_trigger(EHMTXNextScreenTrigger *t) { this->on_next_screen_triggers_.push_back(t); }
     void add_on_empty_queue_trigger(EHMTXEmptyQueueTrigger *t) { this->on_empty_queue_triggers_.push_back(t); }
     void add_on_add_screen_trigger(EHMTXAddScreenTrigger *t) { this->on_add_screen_triggers_.push_back(t); }
@@ -223,6 +233,7 @@ namespace esphome
     void add_on_next_clock_trigger(EHMTXNextClockTrigger *t) { this->on_next_clock_triggers_.push_back(t); }
     void add_on_start_running_trigger(EHMTXStartRunningTrigger *t) { this->on_start_running_triggers_.push_back(t); }
     void update();
+
     uint8_t get_brightness();
   };
 
