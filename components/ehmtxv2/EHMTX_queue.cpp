@@ -409,6 +409,8 @@ namespace esphome
               case 3:
               // To the center, the right one is a pixel higher.
               case 4:
+              // To the center, without leading 0
+              case 5:
                 x_left = (l_width < 5) ? 5 - l_width : 0;
                 x_right = 4;
                 break;
@@ -422,8 +424,16 @@ namespace esphome
                 x_right = x_right - r_width;
                 break;
               }
-              this->config_->display->printf(x_left, yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
-              this->config_->display->printf(x_right, yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
+              if (mode == 5 && (d / 10 % 10) == 0)
+              {
+                x_right = 4 - (r_width - 1) / 2;
+                this->config_->display->printf(x_right, yoffset + this->config_->info_y_offset, info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
+              }
+              else
+              {
+                this->config_->display->printf(x_left, yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(x_right, yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
+              }
             }
             else // if (this->icon_name.rfind("weekday", 0) == 0)
             {
