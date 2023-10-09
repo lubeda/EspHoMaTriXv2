@@ -791,8 +791,8 @@ namespace esphome
   {
     std::string replace_from_string = EHMTXv2_REPLACE_TIME_DATE_FROM;
     std::string replace_to_string = EHMTXv2_REPLACE_TIME_DATE_TO;
-    std::string replace_from_arr[30]; // AM + PM + 7 Days + 12 Months = 21 but 30 to be safe
-    std::string replace_to_arr[30];
+    std::string replace_from_arr[50]; // AM + PM + 7 Days + 12 Months = 21 but 50 to be super-safe
+    std::string replace_to_arr[50];
     std::string replace_from;
     std::string replace_to;
     uint16_t replace_arr_n;

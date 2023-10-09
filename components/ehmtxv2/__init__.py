@@ -446,8 +446,12 @@ async def to_code(config):
             logging.warning(f"replace_time_date_from: and replace_time_date_to: do not have matching pairs! (not using replacements)\n\r")
             cg.add(var.set_replace_time_date_active(False))
         else:
-            logging.info(f"replace_time_date_from: and replace_time_date_to: defined (using replacements)\n\r")
-            cg.add(var.set_replace_time_date_active(True))
+            if (len(config[CONF_REPLACE_TIME_DATE_FROM].split())) > 50:
+                logging.warning(f"replace_time_date_from: and replace_time_date_to: exceeds 30! (not using replacements)\n\r")
+                cg.add(var.set_replace_time_date_active(False))
+            else:
+                logging.info(f"replace_time_date_from: and replace_time_date_to: defined (using replacements)\n\r")
+                cg.add(var.set_replace_time_date_active(True))
     else:
         cg.add(var.set_replace_time_date_active(False))
         if config[CONF_REPLACE_TIME_DATE_TO]:
