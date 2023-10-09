@@ -1098,6 +1098,7 @@ A common format for specifying output options: `icon|mode#draw_mode`
 - 2 - Left to center, Right to edge
 - 3 - To the center, the left one is a pixel higher
 - 4 - To the center, the right one is a pixel higher
+- 5 - To the center, without leading 0 (**only for day**)
 
 https://github.com/lubeda/EspHoMaTriXv2/issues/92#issuecomment-1750184472
 
