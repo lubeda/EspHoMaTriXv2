@@ -438,11 +438,22 @@ async def to_code(config):
     if config[CONF_WEEKDAYTEXT]:
         cg.add_define("EHMTXv2_WEEKDAYTEXT",config[CONF_WEEKDAYTEXT])
 
-    if config[CONF_REPLACE_TIME_DATE_FROM]:
-        cg.add_define("EHMTXv2_REPLACE_TIME_DATE_FROM",config[CONF_REPLACE_TIME_DATE_FROM])
+    cg.add_define("EHMTXv2_REPLACE_TIME_DATE_TO",config[CONF_REPLACE_TIME_DATE_TO])
+    cg.add_define("EHMTXv2_REPLACE_TIME_DATE_FROM",config[CONF_REPLACE_TIME_DATE_FROM])
 
-    if config[CONF_REPLACE_TIME_DATE_TO]:
-        cg.add_define("EHMTXv2_REPLACE_TIME_DATE_TO",config[CONF_REPLACE_TIME_DATE_TO])
+    if config[CONF_REPLACE_TIME_DATE_FROM] and config[CONF_REPLACE_TIME_DATE_TO]:
+        if (len(config[CONF_REPLACE_TIME_DATE_FROM].split())) != (len(config[CONF_REPLACE_TIME_DATE_TO].split())):
+            logging.warning(f"replace_time_date_from: and replace_time_date_to: do not have matching pairs! (not using replacements)\n\r")
+            cg.add(var.set_replace_time_date_active(False))
+        else:
+            logging.info(f"replace_time_date_from: and replace_time_date_to: defined (using replacements)\n\r")
+            cg.add(var.set_replace_time_date_active(True))
+    else:
+        cg.add(var.set_replace_time_date_active(False))
+        if config[CONF_REPLACE_TIME_DATE_TO]:
+            logging.warning(f"replace_time_date_to: defined but no replace_time_date_from:! (not using replacements)\n\r")
+        if config[CONF_REPLACE_TIME_DATE_FROM]:
+            logging.warning(f"replace_time_date_from: defined but no replace_time_date_to:! (not using replacements)\n\r")
 
     cg.add_define("EHMTXv2_SCROLL_INTERVALL",config[CONF_SCROLLINTERVAL])
     cg.add_define("EHMTXv2_RAINBOW_INTERVALL",config[CONF_RAINBOWINTERVAL])

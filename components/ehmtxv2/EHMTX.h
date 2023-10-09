@@ -159,12 +159,6 @@ namespace esphome
     void set_clock_time(uint16_t t = 10);
     void set_show_day_of_week(bool b=true);
     void set_show_seconds(bool b=false);
-
-    //std::string replace_time_date_from;
-    //std::string replace_time_date_to;
-    std::string replace_time_date(std::string time_old, std::string replace_time_date_from, std::string replace_time_date_to);
-    //void set_replace_time_date (std::string replace_time_date_from, std::string replace_time_date_to);
-
     void set_brightness(int b);
     void set_display_on();
     void set_display_off();
@@ -215,6 +209,9 @@ namespace esphome
     void draw_rindicator();
     void draw_lindicator();
 
+    void set_replace_time_date_active(bool b=false);
+    bool replace_time_date_active;
+    std::string replace_time_date(std::string time_date);
     int GetWeekdayCharCount();
     std::string GetWeekdayChar(int position);
 

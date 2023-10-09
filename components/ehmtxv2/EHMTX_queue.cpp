@@ -315,17 +315,15 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_CLOCK) ? this->config_->rainbow_color : this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
-          if (EHMTXv2_REPLACE_TIME_DATE_FROM != "" && EHMTXv2_REPLACE_TIME_DATE_TO != "") // check for replace active
+          if (this->config_->replace_time_date_active) // check for replace active
           {
-            std::string time_old = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
-            time_old = this->config_->replace_time_date(time_old, EHMTXv2_REPLACE_TIME_DATE_FROM, EHMTXv2_REPLACE_TIME_DATE_TO);
-            const char* time_new = &time_old[0];
-            this->config_->display->print(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, time_new);
+            std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
+            time_new = this->config_->replace_time_date(time_new);
+            this->config_->display->printf(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
           } else {
             this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
                                              this->config_->clock->now());                    
           }
-
           if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
           {
             this->config_->display->draw_pixel_at(0, 0, color_);
@@ -347,15 +345,14 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_DATE) ? this->config_->rainbow_color : this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
-          if (EHMTXv2_REPLACE_TIME_DATE_FROM != "" && EHMTXv2_REPLACE_TIME_DATE_TO != "") // check for replace active
+          if (this->config_->replace_time_date_active) // check for replace active
           {
-            std::string time_old = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
-            time_old = this->config_->replace_time_date(time_old, EHMTXv2_REPLACE_TIME_DATE_FROM, EHMTXv2_REPLACE_TIME_DATE_TO);
-            const char* time_new = &time_old[0];
-            this->config_->display->print(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, time_new);
+            std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
+            time_new = this->config_->replace_time_date(time_new);
+            this->config_->display->printf(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
           } else {
             this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
-                                             this->config_->clock->now());
+                                             this->config_->clock->now());                    
           }
           if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
           {
@@ -384,13 +381,27 @@ namespace esphome
           time_t ts = this->config_->clock->now().timestamp;
           if (this->mode == MODE_ICON_CLOCK)
           {
-            this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
-                                             this->config_->clock->now());
+            if (this->config_->replace_time_date_active) // check for replace active
+            {
+              std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
+              time_new = this->config_->replace_time_date(time_new);
+              this->config_->display->printf(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+            } else {
+              this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
+                                               this->config_->clock->now());
+            }
           }
           else
           {
-            this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
-                                             this->config_->clock->now());
+            if (this->config_->replace_time_date_active) // check for replace active
+            {
+              std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
+              time_new = this->config_->replace_time_date(time_new);
+              this->config_->display->printf(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+            } else {
+              this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
+                                               this->config_->clock->now());
+            }
           }
           this->config_->display->image(0, 0, this->config_->icons[this->icon]);
           this->config_->draw_day_of_week(true);

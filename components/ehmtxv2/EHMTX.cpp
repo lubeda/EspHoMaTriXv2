@@ -1,7 +1,7 @@
 #include "esphome.h"
 #include <sstream>
 #include <vector>
-//#include <iostream>
+#include <algorithm>
 
 namespace esphome
 {
@@ -774,8 +774,23 @@ namespace esphome
     this->special_font = font;
   }
 
-std::string EHMTX::replace_time_date(std::string time_date, std::string replace_from_string, std::string replace_to_string)  // Replace Time Date Strings / Trip5
+  void EHMTX::set_replace_time_date_active(bool b)
   {
+    this->replace_time_date_active = b;
+    if (b)
+    {
+      ESP_LOGI(TAG, "replace_time_date on");
+    }
+    else
+    {
+      ESP_LOGI(TAG, "replace_time_date off");
+    }
+  }
+
+  std::string EHMTX::replace_time_date(std::string time_date)  // Replace Time Date Strings / Trip5
+  {
+    std::string replace_from_string = EHMTXv2_REPLACE_TIME_DATE_FROM;
+    std::string replace_to_string = EHMTXv2_REPLACE_TIME_DATE_TO;
     std::string replace_from_arr[30]; // AM + PM + 7 Days + 12 Months = 21 but 30 to be safe
     std::string replace_to_arr[30];
     std::string replace_from;
@@ -792,19 +807,21 @@ std::string EHMTX::replace_time_date(std::string time_date, std::string replace_
       std::vector<std::string> replace_to_arr;
       for(std::string s_to;iss_to>>s_to;)
           replace_to_arr.push_back(s_to);
-      if (replace_to_arr.size() > replace_arr_n) { replace_arr_n = replace_to_arr.size(); }
+      if (replace_to_arr.size() < replace_arr_n) { replace_arr_n = replace_to_arr.size(); }
     uint16_t k = 0;
     do
       {
-        size_t pos = 0;
-        replace_from = replace_from_arr[k];
-        replace_to = replace_to_arr[k];
-        while (((pos = time_date.find(replace_from, pos)) != std::string::npos) && (pos !=0))
+        std::vector<std::uint8_t> data(time_date.begin(), time_date.end());
+        std::vector<std::uint8_t> pattern(replace_from_arr[k].begin(), replace_from_arr[k].end());
+        std::vector<std::uint8_t> replaceData(replace_to_arr[k].begin(), replace_to_arr[k].end());
+        std::vector<std::uint8_t>::iterator itr;
+        while((itr = std::search(data.begin(), data.end(), pattern.begin(), pattern.end())) != data.end())
         {
-          time_date.replace(pos, replace_from.length(), replace_to);
-          pos += replace_to.length();
+          data.erase(itr, itr + pattern.size());
+          data.insert(itr, replaceData.begin(), replaceData.end());
         }
-      k++;
+        time_date = std::string(data.begin(), data.end());
+        k++;
       } while (k < replace_arr_n);
     }
     return time_date;
