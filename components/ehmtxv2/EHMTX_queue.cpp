@@ -424,7 +424,7 @@ namespace esphome
                 x_right = x_right - r_width;
                 break;
               }
-              if (mode == 5 && (d / 10 % 10) == 0)
+              if (mode == 5 && (d < 10))
               {
                 x_right = 4 - (r_width - 1) / 2;
                 this->config_->display->printf(x_right, yoffset + this->config_->info_y_offset, info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
