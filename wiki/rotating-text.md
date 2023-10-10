@@ -1,4 +1,4 @@
-# Introduction
+# Rotating Text
 
 **Skill-level:** medium
 

@@ -1,4 +1,4 @@
-# fonts
+# Fonts
 
 **Skill-level:** all
 
