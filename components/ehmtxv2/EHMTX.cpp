@@ -23,6 +23,7 @@ namespace esphome
     this->is_running = false;
     this->set_today_color();
     this->set_weekday_color();
+    this->night_mode = false;
 
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
@@ -81,6 +82,18 @@ namespace esphome
   {
     this->show_display = true;
     ESP_LOGD(TAG, "display on");
+  }
+
+  void EHMTX::set_night_mode_off()
+  {
+    this->night_mode = false;
+    ESP_LOGD(TAG, "night mode off");
+  }
+
+  void EHMTX::set_night_mode_on()
+  {
+    this->night_mode = true;
+    ESP_LOGD(TAG, "night mode on");
   }
 
   void EHMTX::set_today_color(int r, int g, int b)
@@ -362,6 +375,9 @@ namespace esphome
     register_service(&EHMTX::set_text_color, "set_text_color", {"r", "g", "b"});
     register_service(&EHMTX::set_infotext_color, "set_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset"});
 
+    register_service(&EHMTX::set_night_mode_on, "night_mode_on");
+    register_service(&EHMTX::set_night_mode_off, "night_mode_off");
+
     register_service(&EHMTX::del_screen, "del_screen", {"icon_name", "mode"});
     register_service(&EHMTX::force_screen, "force_screen", {"icon_name", "mode"});
 
@@ -511,6 +527,22 @@ namespace esphome
     time_t last_time = this->clock->now().timestamp;
     for (size_t i = 0; i < MAXQUEUE; i++)
     {
+      if (this->night_mode)
+      {
+        bool skip = true;
+        for (auto id : EHMTXv2_CONF_NIGNT_MODE_SCREENS)
+        {
+          if (this->queue[i]->mode == id)
+          {
+            skip = false;
+          }
+        }
+        if (skip)
+        {
+          continue;
+        }
+      }
+
       if ((this->queue[i]->endtime > 0) && (this->queue[i]->last_time < last_time))
       {
         hit = i;
@@ -533,6 +565,22 @@ namespace esphome
       time_t ts = this->clock->now().timestamp;
       for (size_t i = 0; i < MAXQUEUE; i++)
       {
+        if (this->night_mode)
+        {
+          bool skip = true;
+          for (auto id : EHMTXv2_CONF_NIGNT_MODE_SCREENS)
+          {
+            if (this->queue[i]->mode == id)
+            {
+              skip = false;
+            }
+          }
+          if (skip)
+          {
+            continue;
+          }
+        }
+
         if ((this->queue[i]->mode == MODE_CLOCK) || (this->queue[i]->mode == MODE_RAINBOW_CLOCK) || (this->queue[i]->mode == MODE_ICON_CLOCK))
         {
           if (ts > (this->queue[i]->last_time + EHMTXv2_CLOCK_INTERVALL))
@@ -743,6 +791,14 @@ namespace esphome
     else
     {
       ESP_LOGI(TAG, "status display off");
+    }
+    if (this->night_mode)
+    {
+      ESP_LOGI(TAG, "status night mode on");
+    }
+    else
+    {
+      ESP_LOGI(TAG, "status night mode off");
     }
 
     this->queue_status();
@@ -1275,6 +1331,7 @@ namespace esphome
   {
     this->display = disp;
     this->show_display = true;
+    this->night_mode = false;
     ESP_LOGD(TAG, "set_display");
   }
 
@@ -1566,7 +1623,8 @@ namespace esphome
   {
     if ((this->is_running) && (this->show_display) )
     {
-      if (this->screen_pointer != MAXQUEUE) {
+      if (this->screen_pointer != MAXQUEUE) 
+      {
         this->queue[this->screen_pointer]->draw();  
       }
       if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN &&
@@ -1582,8 +1640,8 @@ namespace esphome
           this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
       {
 #endif
-
         this->draw_rindicator();
+
 #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         if (this->queue[this->screen_pointer]->mode != MODE_ICON_SCREEN &&
             this->queue[this->screen_pointer]->mode != MODE_RAINBOW_ICON &&

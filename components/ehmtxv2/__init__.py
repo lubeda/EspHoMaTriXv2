@@ -116,6 +116,9 @@ CONF_WEEK_START_MONDAY = "week_start_monday"
 CONF_ICON = "icon_name"
 CONF_TEXT = "text"
 CONF_GRAPH = "display_graph"
+CONF_NIGNT_MODE_SCREENS = "night_mode_screens"
+
+DAFAULT_NIGNT_MODE_SCREENS = [2,3,16]
 
 EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_ID): cv.declare_id(EHMTX_),
@@ -221,6 +224,9 @@ EHMTX_SCHEMA = cv.Schema({
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(ExpiredScreenTrigger),
         }
     ),
+    cv.Optional(CONF_NIGNT_MODE_SCREENS, default=DAFAULT_NIGNT_MODE_SCREENS): cv.All(
+            cv.ensure_list(cv.one_of(1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19)), cv.Length(min=1, max=5)
+        ),
     cv.Required(CONF_ICONS): cv.All(
         cv.ensure_list(
             {
@@ -452,6 +458,9 @@ async def to_code(config):
     if config[CONF_RTL]:
         cg.add_define("EHMTXv2_USE_RTL")    
     
+    if config[CONF_NIGNT_MODE_SCREENS]:
+        cg.add_define("EHMTXv2_CONF_NIGNT_MODE_SCREENS",config[CONF_NIGNT_MODE_SCREENS])
+
     cg.add(var.set_show_day_of_week(config[CONF_SHOWDOW]))  
 
     cg.add(var.set_show_seconds(config[CONF_SHOW_SECONDS]))

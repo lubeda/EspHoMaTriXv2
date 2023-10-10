@@ -10,6 +10,10 @@
 [![Build](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml)
 
 ### EspHoMaTriX 2023.9.1
+- Added night mode
+  - `night_mode_on`
+  - `night_mode_off`
+  - New Yaml option `night_mode_screens: [2, 3, 16]` - list of screens to be displayed in night mode.
 - Added the ability to specify a screen ID - `icon_name|screen_id`
 - Added icon and date output screen
   - `icon_date(iconname, lifetime, screen_time, default_font, r, g, b)`
