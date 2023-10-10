@@ -18,9 +18,9 @@
   - `set_infotext_color(200,100,100,100,100,200,false,2);` 
   - `set_infotext_color("left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset");`
   - `weekdays` - the order of the days of the week, from Sunday to Saturday.
-
 - Added a screen with the ability to display a progress bar, progress value `(-100..100)`
   - `icon_screen_progress(iconname, text, progress, lifetime, screen_time, default_font, r, g, b)`
+- Added `replace_time_date_to:` and `replace_time_date_from:` which allow replacing the system date & time text (anything!)
 
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
@@ -35,7 +35,7 @@
 
 ### EspHoMaTriX 2023.8.0
 
-A lot of users asked for special behavior, e.g. display date but no time or vice versa. Display nothing at all e.g. during night. I like to implement a lot of the requestes but ist hard to keep the known default behaviour. In this version i will provide a YAML with the default behaviour but there will be less hardcoded by me, instead you have your freedom to do  all in your YAML.
+A lot of users asked for special behavior, e.g. display date but no time or vice versa. Display nothing at all e.g. during night. I like to implement a lot of the requests but it's hard to keep the known default behaviour. In this version i will provide a YAML with the default behaviour but there will be less hardcoded by me, instead you have your freedom to do  all in your YAML.
 
 For the old default behavior use this trigger in your YAML:
 
