@@ -62,6 +62,8 @@ namespace esphome
   class EHMTXExpiredScreenTrigger;
   class EHMTXNextClockTrigger;
   class EHMTXStartRunningTrigger;
+  class EHMTXShowDisplayTrigger;
+  class EHMTXNightModeTrigger;
 
   class EHMTX : public PollingComponent, public api::CustomAPIDevice
   {
@@ -79,6 +81,8 @@ namespace esphome
     std::vector<EHMTXNextClockTrigger *> on_next_clock_triggers_;
     std::vector<EHMTXStartRunningTrigger *> on_start_running_triggers_;
     std::vector<EHMTXAddScreenTrigger *> on_add_screen_triggers_;
+    std::vector<EHMTXShowDisplayTrigger *> on_show_display_triggers_;
+    std::vector<EHMTXNightModeTrigger *> on_night_mode_triggers_;
     EHMTX_queue *find_icon_queue_element(uint8_t icon);
     EHMTX_queue *find_mode_queue_element(uint8_t mode);
     EHMTX_queue *find_mode_icon_queue_element(uint8_t mode, std::string name);
@@ -228,6 +232,8 @@ namespace esphome
     void add_on_expired_screen_trigger(EHMTXExpiredScreenTrigger *t) { this->on_expired_screen_triggers_.push_back(t); }
     void add_on_next_clock_trigger(EHMTXNextClockTrigger *t) { this->on_next_clock_triggers_.push_back(t); }
     void add_on_start_running_trigger(EHMTXStartRunningTrigger *t) { this->on_start_running_triggers_.push_back(t); }
+    void add_on_show_display_trigger(EHMTXShowDisplayTrigger *t) { this->on_show_display_triggers_.push_back(t); }
+    void add_on_night_mode_trigger(EHMTXNightModeTrigger *t) { this->on_night_mode_triggers_.push_back(t); }
     void update();
 
     uint8_t get_brightness();
@@ -318,6 +324,20 @@ namespace esphome
   public:
     explicit EHMTXNextClockTrigger(EHMTX *parent) { parent->add_on_next_clock_trigger(this); }
     void process();
+  };
+
+  class EHMTXShowDisplayTrigger : public Trigger<bool>
+  {
+  public:
+    explicit EHMTXShowDisplayTrigger(EHMTX *parent) { parent->add_on_show_display_trigger(this); }
+    void process(bool);
+  };
+
+  class EHMTXNightModeTrigger : public Trigger<bool>
+  {
+  public:
+    explicit EHMTXNightModeTrigger(EHMTX *parent) { parent->add_on_night_mode_trigger(this); }
+    void process(bool);
   };
 
   class EHMTX_Icon : public animation::Animation

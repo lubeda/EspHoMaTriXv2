@@ -74,6 +74,14 @@ AddScreenTrigger = ehmtx_ns.class_(
     "EHMTXAddScreenTrigger", automation.Trigger.template(cg.std_string)
 )
 
+ShowDisplayTrigger = ehmtx_ns.class_(
+    "EHMTXShowDisplayTrigger", automation.Trigger.template(cg.std_string)
+)
+
+NightModeTrigger = ehmtx_ns.class_(
+    "EHMTXNightModeTrigger", automation.Trigger.template(cg.std_string)
+)
+
 CONF_URL = "url"
 CONF_CLOCKINTERVAL = "clock_interval"
 CONF_ALWAYS_SHOW_RLINDICATORS = "always_show_rl_indicators"
@@ -108,6 +116,8 @@ CONF_ON_NEXT_SCREEN = "on_next_screen"
 CONF_ON_NEXT_CLOCK = "on_next_clock"
 CONF_ON_ICON_ERROR = "on_icon_error"
 CONF_ON_ADD_SCREEN = "on_add_screen"
+CONF_ON_SHOW_DISPLAY = "on_show_display"
+CONF_ON_NIGHT_MODE = "on_night_mode"
 CONF_WEEKDAYTEXT = "weekdays"
 CONF_ON_EXPIRED_SCREEN= "on_expired_screen"
 CONF_SHOW_SECONDS = "show_seconds"
@@ -222,6 +232,16 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(CONF_ON_EXPIRED_SCREEN): automation.validate_automation(
         {
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(ExpiredScreenTrigger),
+        }
+    ),
+    cv.Optional(CONF_ON_SHOW_DISPLAY): automation.validate_automation(
+        {
+            cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(ShowDisplayTrigger),
+        }
+    ),
+    cv.Optional(CONF_ON_NIGHT_MODE): automation.validate_automation(
+        {
+            cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(NightModeTrigger),
         }
     ),
     cv.Optional(CONF_NIGNT_MODE_SCREENS, default=DAFAULT_NIGNT_MODE_SCREENS): cv.All(

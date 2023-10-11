@@ -76,24 +76,44 @@ namespace esphome
   {
     this->show_display = false;
     ESP_LOGD(TAG, "display off");
+
+    for (auto *t : on_show_display_triggers_)
+    {
+      t->process(this->show_display);
+    }
   }
 
   void EHMTX::set_display_on()
   {
     this->show_display = true;
     ESP_LOGD(TAG, "display on");
+
+    for (auto *t : on_show_display_triggers_)
+    {
+      t->process(this->show_display);
+    }
   }
 
   void EHMTX::set_night_mode_off()
   {
     this->night_mode = false;
     ESP_LOGD(TAG, "night mode off");
+
+    for (auto *t : on_night_mode_triggers_)
+    {
+      t->process(this->night_mode);
+    }
   }
 
   void EHMTX::set_night_mode_on()
   {
     this->night_mode = true;
     ESP_LOGD(TAG, "night mode on");
+
+    for (auto *t : on_night_mode_triggers_)
+    {
+      t->process(this->night_mode);
+    }
   }
 
   void EHMTX::set_today_color(int r, int g, int b)
@@ -1554,6 +1574,9 @@ namespace esphome
     {
       ESP_LOGCONFIG(TAG, "weekstart: sunday");
     }
+    ESP_LOGCONFIG(TAG, "Weekdays: %s Count: %d", EHMTXv2_WEEKDAYTEXT, this->GetWeekdayCharCount());
+    ESP_LOGCONFIG(TAG, "Display: %s", this->show_display ? "On" : "Off");
+    ESP_LOGCONFIG(TAG, "Night mode: %s", this->night_mode ? "On" : "Off");
   }
 
   void EHMTX::add_icon(EHMTX_Icon *icon)
@@ -1562,7 +1585,6 @@ namespace esphome
     ESP_LOGD(TAG, "add_icon no.: %d name: %s frame_duration: %d ms", this->icon_count, icon->name.c_str(), icon->frame_duration);
     this->icon_count++;
   }
-
 
   void EHMTX::draw_alarm()
   {
@@ -1690,5 +1712,15 @@ namespace esphome
   void EHMTXNextClockTrigger::process()
   {
     this->trigger();
+  }
+
+  void EHMTXShowDisplayTrigger::process(bool state)
+  {
+    this->trigger(state);
+  }
+
+  void EHMTXNightModeTrigger::process(bool state)
+  {
+    this->trigger(state);
   }
 }
