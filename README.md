@@ -14,10 +14,13 @@
 - Added icon and date output screen
   - `icon_date(iconname, lifetime, screen_time, default_font, r, g, b)`
 - If pass a screen identifier with the value `[day, weekday]` like `icon_name|day`, and a backing icon to `icon_clock` or `icon_date`, it will display text.
-- New YAML option `weekdays: "SUMOTUWETHFRSA"` and new function to customize the info text over the icon:
+- New YAML option `weekdays: "SUMOTUWETHFRSA"` (**7 or 14** characters) and new function to customize the info text over the icon:
   - `set_infotext_color(200,100,100,100,100,200,false,2);` 
   - `set_infotext_color("left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset");`
   - `weekdays` - the order of the days of the week, from Sunday to Saturday.
+- Example for **weekdays**:
+  - `weekdays: "일월화수목금토"`
+  - `weekdays: "НДПНВТСРЧТПТСБ"`
 
 - Added a screen with the ability to display a progress bar, progress value `(-100..100)`
   - `icon_screen_progress(iconname, text, progress, lifetime, screen_time, default_font, r, g, b)`
@@ -659,6 +662,13 @@ ehmtxv2:
 
 **week_start_monday** (optional, bool): default Monday is first day of week, false => Sunday
 
+**weekdays** (optional, string, default: "SUMOTUWETHFRSA"): Abbreviations of the days of the week, starting from Sunday, from *7 to 14* characters.
+
+Example:
+  - `weekdays: "SUMOTUWETHFRSA"`
+  - `weekdays: "일월화수목금토"`
+  - `weekdays: "НДПНВТСРЧТПТСБ"`
+
 **scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html)
 
 **clock_interval** (optional, s): the interval in seconds to force the clock display. By default, the clock screen, if any, will be displayed according to the position in the queue. **If you set the clock_interval close to the screen_time of the clock, you will only see the clock!** (default=0)
@@ -1098,6 +1108,7 @@ A common format for specifying output options: `icon|mode#draw_mode`
 - 2 - Left to center, Right to edge
 - 3 - To the center, the left one is a pixel higher
 - 4 - To the center, the right one is a pixel higher
+- 5 - To the center, without leading 0 (**only for day**)
 
 https://github.com/lubeda/EspHoMaTriXv2/issues/92#issuecomment-1750184472
 
