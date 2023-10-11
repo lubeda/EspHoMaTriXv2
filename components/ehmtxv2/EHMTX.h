@@ -62,6 +62,8 @@ namespace esphome
   class EHMTXExpiredScreenTrigger;
   class EHMTXNextClockTrigger;
   class EHMTXStartRunningTrigger;
+  class EHMTXShowDisplayTrigger;
+  class EHMTXNightModeTrigger;
 
   class EHMTX : public PollingComponent, public api::CustomAPIDevice
   {
@@ -79,6 +81,8 @@ namespace esphome
     std::vector<EHMTXNextClockTrigger *> on_next_clock_triggers_;
     std::vector<EHMTXStartRunningTrigger *> on_start_running_triggers_;
     std::vector<EHMTXAddScreenTrigger *> on_add_screen_triggers_;
+    std::vector<EHMTXShowDisplayTrigger *> on_show_display_triggers_;
+    std::vector<EHMTXNightModeTrigger *> on_night_mode_triggers_;
     EHMTX_queue *find_icon_queue_element(uint8_t icon);
     EHMTX_queue *find_mode_queue_element(uint8_t mode);
     EHMTX_queue *find_mode_icon_queue_element(uint8_t mode, std::string name);
@@ -144,6 +148,7 @@ namespace esphome
     void force_screen(std::string name, int mode = MODE_ICON_SCREEN);
     void add_icon(EHMTX_Icon *icon);
     bool show_display = false;
+    bool night_mode = false;
     uint8_t find_icon(std::string name);
     uint8_t find_last_clock();
     bool string_has_ending(std::string const &fullString, std::string const &ending);
@@ -162,6 +167,8 @@ namespace esphome
     void set_brightness(int b);
     void set_display_on();
     void set_display_off();
+    void set_night_mode_off();
+    void set_night_mode_on();
     void set_clock(esphome::time::RealTimeClock *clock);
     #ifdef USE_GRAPH
       void set_graph(esphome::graph::Graph *graph);
@@ -229,6 +236,8 @@ namespace esphome
     void add_on_expired_screen_trigger(EHMTXExpiredScreenTrigger *t) { this->on_expired_screen_triggers_.push_back(t); }
     void add_on_next_clock_trigger(EHMTXNextClockTrigger *t) { this->on_next_clock_triggers_.push_back(t); }
     void add_on_start_running_trigger(EHMTXStartRunningTrigger *t) { this->on_start_running_triggers_.push_back(t); }
+    void add_on_show_display_trigger(EHMTXShowDisplayTrigger *t) { this->on_show_display_triggers_.push_back(t); }
+    void add_on_night_mode_trigger(EHMTXNightModeTrigger *t) { this->on_night_mode_triggers_.push_back(t); }
     void update();
 
     uint8_t get_brightness();
@@ -319,6 +328,20 @@ namespace esphome
   public:
     explicit EHMTXNextClockTrigger(EHMTX *parent) { parent->add_on_next_clock_trigger(this); }
     void process();
+  };
+
+  class EHMTXShowDisplayTrigger : public Trigger<bool>
+  {
+  public:
+    explicit EHMTXShowDisplayTrigger(EHMTX *parent) { parent->add_on_show_display_trigger(this); }
+    void process(bool);
+  };
+
+  class EHMTXNightModeTrigger : public Trigger<bool>
+  {
+  public:
+    explicit EHMTXNightModeTrigger(EHMTX *parent) { parent->add_on_night_mode_trigger(this); }
+    void process(bool);
   };
 
   class EHMTX_Icon : public animation::Animation

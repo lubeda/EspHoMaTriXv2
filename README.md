@@ -10,6 +10,12 @@
 [![Build](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml)
 
 ### EspHoMaTriX 2023.9.1
+- Added night mode
+  - `night_mode_on`
+  - `night_mode_off`
+  - New Yaml option `night_mode_screens: [2, 3, 16]` - list of screens to be displayed in night mode.
+  - `on_night_mode` trigger
+- Added `on_show_display` trigger
 - Added the ability to specify a screen ID - `icon_name|screen_id`
 - Added icon and date output screen
   - `icon_date(iconname, lifetime, screen_time, default_font, r, g, b)`
@@ -673,6 +679,8 @@ Example:
 
 **clock_interval** (optional, s): the interval in seconds to force the clock display. By default, the clock screen, if any, will be displayed according to the position in the queue. **If you set the clock_interval close to the screen_time of the clock, you will only see the clock!** (default=0)
 
+**night_mode_screens** (optional, screen array, default [2, 3, 16]): List of screens displayed in [night mode](#night-mode).
+
 **boot_logo** (optional, string , only on ESP32): Display a fullscreen logo defined as rgb565 array.
 
 ```yaml
@@ -725,6 +733,8 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`hide_rindicator`|none|hides the rindicator|
 |`hide_gauge`|none|hides the gauge|
 |`hide_alarm`|none|hides the alarm|
+|`night_mode_on`|none|turn [night mode](#night-mode) on|
+|`night_mode_off`|none|turn [night mode](#night-mode) off|
 |`show_gauge"`|"percent", "r", "g", "b"|set the height of the gauge according to the percentage in the given color|
 |`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper-right corner|
 |`show_rindicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
@@ -762,6 +772,10 @@ Numerous features are accessible with services from home assistant and lambdas t
 - **default_font**: use the default font (true) or the special font (false)
 - **progress**: сan take a value from -100 to 100, the color of the progress bar is calculated automatically, if the progress is in the range `0..100`, then `from red to green`, if in the range `-100..0`, then from `green to red`.
 - **value**: the brightness 0..255 
+
+### Night mode
+
+When night mode is enabled, only the screens specified in `night_mode_screens` are displayed (**default:** 2, 3, 16) the other screens can be added, deleted, and will follow their life cycle but will not be displayed. Screen numbers in the table [mode](#modes).
 
 ### Local lambdas
 
@@ -925,8 +939,20 @@ ehmtxv2:
 
 #### on_next_clock
 
-The trigger ```on_next_clock``` is triggered every time a new clock display circle starts.
+The trigger ```on_next_clock``` is triggered every time a new clock display circle starts. 
 See the examples:
+
+#### on_show_display
+
+The trigger ```on_show_display``` is triggered when the screen is turned on or off. In lambda's you can use one local boolean variable:
+
+**state** (Display state, bool): value to use in lambda
+
+#### on_night_mode
+
+The trigger ```on_night_mode``` is triggered when the night mode is turned on or off. In lambda's you can use one local boolean variable:
+
+**state** (Night mode state, bool): value to use in lambda
 
 ##### Change something for each clock circle
 
