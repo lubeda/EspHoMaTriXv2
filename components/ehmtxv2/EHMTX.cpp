@@ -1,5 +1,7 @@
 #include "esphome.h"
 #include <sstream>
+#include <vector>
+#include <algorithm>
 
 namespace esphome
 {
@@ -772,6 +774,59 @@ namespace esphome
     this->special_font = font;
   }
 
+  void EHMTX::set_replace_time_date_active(bool b)
+  {
+    this->replace_time_date_active = b;
+    if (b)
+    {
+      ESP_LOGI(TAG, "replace_time_date on");
+    }
+    else
+    {
+      ESP_LOGI(TAG, "replace_time_date off");
+    }
+  }
+
+  std::string EHMTX::replace_time_date(std::string time_date)  // Replace Time Date Strings / Trip5
+  {
+    std::string replace_from_string = EHMTXv2_REPLACE_TIME_DATE_FROM;
+    std::string replace_to_string = EHMTXv2_REPLACE_TIME_DATE_TO;
+    std::string replace_from_arr[50]; // AM + PM + 7 Days + 12 Months = 21 but 50 to be super-safe
+    std::string replace_to_arr[50];
+    std::string replace_from;
+    std::string replace_to;
+    uint16_t replace_arr_n;
+    if (replace_from_string != "" && replace_to_string != "")
+    {
+      std::istringstream iss_from(replace_from_string);
+      std::vector<std::string> replace_from_arr;
+      for(std::string s_from;iss_from>>s_from;)
+          replace_from_arr.push_back(s_from);
+      replace_arr_n = replace_from_arr.size();
+      std::istringstream iss_to(replace_to_string);
+      std::vector<std::string> replace_to_arr;
+      for(std::string s_to;iss_to>>s_to;)
+          replace_to_arr.push_back(s_to);
+      if (replace_to_arr.size() < replace_arr_n) { replace_arr_n = replace_to_arr.size(); }
+    uint16_t k = 0;
+    do
+      {
+        std::vector<std::uint8_t> data(time_date.begin(), time_date.end());
+        std::vector<std::uint8_t> pattern(replace_from_arr[k].begin(), replace_from_arr[k].end());
+        std::vector<std::uint8_t> replaceData(replace_to_arr[k].begin(), replace_to_arr[k].end());
+        std::vector<std::uint8_t>::iterator itr;
+        while((itr = std::search(data.begin(), data.end(), pattern.begin(), pattern.end())) != data.end())
+        {
+          data.erase(itr, itr + pattern.size());
+          data.insert(itr, replaceData.begin(), replaceData.end());
+        }
+        time_date = std::string(data.begin(), data.end());
+        k++;
+      } while (k < replace_arr_n);
+    }
+    return time_date;
+  }
+
   void EHMTX::del_screen(std::string icon_name, int mode)
   {
     for (uint8_t i = 0; i < MAXQUEUE; i++)
@@ -1505,7 +1560,6 @@ namespace esphome
     ESP_LOGD(TAG, "add_icon no.: %d name: %s frame_duration: %d ms", this->icon_count, icon->name.c_str(), icon->frame_duration);
     this->icon_count++;
   }
-
 
   void EHMTX::draw_alarm()
   {

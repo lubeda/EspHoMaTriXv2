@@ -1,4 +1,4 @@
-# introduction
+# Introduction
 
 **Skill-level:** low
 
@@ -57,3 +57,8 @@ Abbreviated Day and Date (Tue 08)
 ```yaml
   time_format: "%l:%M%p"
 ```
+## Localized Time and Date
+
+Unfortunately, ESPHome does not seem capable of passing on localized time and date formats so that you can get time formats in your own language easily.
+
+But you can still do it with a special function: [time-date-replace](time-date-replace).

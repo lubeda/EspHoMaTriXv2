@@ -168,6 +168,7 @@ namespace esphome
     #endif
     void set_default_font(display::BaseFont *font);
     void set_special_font(display::BaseFont *font);
+
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void set_text_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
@@ -208,6 +209,9 @@ namespace esphome
     void draw_rindicator();
     void draw_lindicator();
 
+    void set_replace_time_date_active(bool b=false);
+    bool replace_time_date_active;
+    std::string replace_time_date(std::string time_date);
     int GetWeekdayCharCount();
     std::string GetWeekdayChar(int position);
 
