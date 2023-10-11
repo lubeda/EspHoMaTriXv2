@@ -217,9 +217,10 @@ namespace esphome
     void draw_lindicator();
 
     void set_replace_time_date_active(bool b=false);
+    void set_weekday_char_count(uint8_t i);
     bool replace_time_date_active;
     std::string replace_time_date(std::string time_date);
-    int GetWeekdayCharCount();
+    uint8_t weekday_char_count;
     std::string GetWeekdayChar(int position);
 
     int GetTextBounds(esphome::display::BaseFont *font, const char *buffer);

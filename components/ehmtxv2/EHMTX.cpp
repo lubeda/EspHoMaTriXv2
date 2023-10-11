@@ -552,7 +552,7 @@ namespace esphome
       if (this->night_mode)
       {
         bool skip = true;
-        for (auto id : EHMTXv2_CONF_NIGNT_MODE_SCREENS)
+        for (auto id : EHMTXv2_CONF_NIGHT_MODE_SCREENS)
         {
           if (this->queue[i]->mode == id)
           {
@@ -590,7 +590,7 @@ namespace esphome
         if (this->night_mode)
         {
           bool skip = true;
-          for (auto id : EHMTXv2_CONF_NIGNT_MODE_SCREENS)
+          for (auto id : EHMTXv2_CONF_NIGHT_MODE_SCREENS)
           {
             if (this->queue[i]->mode == id)
             {
@@ -1477,38 +1477,9 @@ namespace esphome
     }
   }
 
-  int EHMTX::GetWeekdayCharCount()
+  void EHMTX::set_weekday_char_count(uint8_t i)
   {
-    int count = 0;
-  
-    for (int i = 0; i < strlen(EHMTXv2_WEEKDAYTEXT);) 
-    {
-      if(EHMTXv2_WEEKDAYTEXT[i] & 0x80) 
-      {
-        if(EHMTXv2_WEEKDAYTEXT[i] & 0x20) 
-        {
-          if(EHMTXv2_WEEKDAYTEXT[i] & 0x10) 
-          {
-            i += 4;
-          } 
-          else 
-          {
-            i += 3;
-          }
-        } 
-        else 
-        {
-          i += 2;
-        }
-      }
-      else
-      {
-        i += 1;
-      }
-      count++;
-    }
-
-    return count;
+    this->weekday_char_count = i;
   }
 
   std::string EHMTX::GetWeekdayChar(int position)

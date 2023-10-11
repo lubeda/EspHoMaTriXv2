@@ -466,9 +466,8 @@ namespace esphome
             else // if (this->icon_name.rfind("weekday", 0) == 0)
             {
               uint8_t wd = this->config_->clock->now().day_of_week;
-              uint8_t weekday_count = this->config_->GetWeekdayCharCount();
 
-              if (weekday_count > 7)
+              if (this->config_->weekday_char_count > 7)
               {
                 std::string left = this->config_->GetWeekdayChar((wd - 1) * 2);
                 std::string right = this->config_->GetWeekdayChar((wd - 1) * 2 + 1);
