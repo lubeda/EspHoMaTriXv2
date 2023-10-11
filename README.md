@@ -14,10 +14,13 @@
 - Added icon and date output screen
   - `icon_date(iconname, lifetime, screen_time, default_font, r, g, b)`
 - If pass a screen identifier with the value `[day, weekday]` like `icon_name|day`, and a backing icon to `icon_clock` or `icon_date`, it will display text.
-- New YAML option `weekdays: "SUMOTUWETHFRSA"` and new function to customize the info text over the icon:
+- New YAML option `weekdays: "SUMOTUWETHFRSA"` (**7 or 14** characters) and new function to customize the info text over the icon:
   - `set_infotext_color(200,100,100,100,100,200,false,2);` 
   - `set_infotext_color("left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset");`
   - `weekdays` - the order of the days of the week, from Sunday to Saturday.
+- Example for **weekdays**:
+  - `weekdays: "일월화수목금토"`
+  - `weekdays: "НДПНВТСРЧТПТСБ"`
 
 - Added a screen with the ability to display a progress bar, progress value `(-100..100)`
   - `icon_screen_progress(iconname, text, progress, lifetime, screen_time, default_font, r, g, b)`
