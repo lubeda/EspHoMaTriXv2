@@ -662,6 +662,13 @@ ehmtxv2:
 
 **week_start_monday** (optional, bool): default Monday is first day of week, false => Sunday
 
+**weekdays** (optional, string, default: "SUMOTUWETHFRSA"): Abbreviations of the days of the week, starting from Sunday, from *7 to 14* characters.
+
+Example:
+  - `weekdays: "SUMOTUWETHFRSA"`
+  - `weekdays: "일월화수목금토"`
+  - `weekdays: "НДПНВТСРЧТПТСБ"`
+
 **scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html)
 
 **clock_interval** (optional, s): the interval in seconds to force the clock display. By default, the clock screen, if any, will be displayed according to the position in the queue. **If you set the clock_interval close to the screen_time of the clock, you will only see the clock!** (default=0)
