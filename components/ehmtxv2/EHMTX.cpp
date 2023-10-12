@@ -410,7 +410,7 @@ namespace esphome
     register_service(&EHMTX::icon_date, "icon_date", {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     #ifdef USE_GRAPH
       register_service(&EHMTX::graph_screen, "graph_screen", {"lifetime", "screen_time"});
-      register_service(&EHMTX::icon_graph_screen, "icon_graph_screen", {"licon_name, ifetime", "screen_time"});
+      register_service(&EHMTX::icon_graph_screen, "icon_graph_screen", {"icon_name", "lifetime", "screen_time"});
     #endif
     register_service(&EHMTX::rainbow_icon_screen, "rainbow_icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font"});
 
