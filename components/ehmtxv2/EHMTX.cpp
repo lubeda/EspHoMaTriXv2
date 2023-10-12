@@ -438,6 +438,7 @@ namespace esphome
     #endif
 
     register_service(&EHMTX::icon_screen_progress, "icon_screen_progress", {"icon_name", "text", "progress", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+    register_service(&EHMTX::set_progressbar_color, "set_progressbar_color", {"icon_name", "r", "g", "b", "bg_r", "bg_g", "bg_b"});
 
     ESP_LOGD(TAG, "Setup and running!");
   }
@@ -491,7 +492,7 @@ namespace esphome
     this->info_rcolor = Color((uint8_t)rr, (uint8_t)rg, (uint8_t)rb);
     this->info_font = df;
     this->info_y_offset = y_offset;
-    ESP_LOGD(TAG, "info text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", lr, lg, lb, rr, rg, rb,y_offset);
+    ESP_LOGD(TAG, "info text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", lr, lg, lb, rr, rg, rb, y_offset);
   }
 
   void EHMTX::update() // called from polling component
@@ -1044,6 +1045,17 @@ namespace esphome
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
     ESP_LOGD(TAG, "icon progress screen icon: %d iconname: %s text: %s progress %d lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), progress, lifetime, screen_time);
+    screen->status();
+  }
+
+  void EHMTX::set_progressbar_color(std::string iconname, int r, int g, int b, int bg_r, int bg_g, int bg_b)
+  {
+    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_ICON_PROGRESS, get_screen_id(iconname));
+
+    screen->progressbar_color = (r + g + b == C_BLACK) ? esphome::display::COLOR_OFF : Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
+    screen->progressbar_back_color = (bg_r + bg_g + bg_b == C_BLACK) ? esphome::display::COLOR_OFF : Color((uint8_t)bg_r, (uint8_t)bg_g, (uint8_t)bg_b);
+
+    ESP_LOGD(TAG, "icon progress screen iconname: %s color progressbar: r: %d g: %d b: %d background: r: %d g: %d b: %d", iconname.c_str(), r, g, b, bg_r, bg_g, bg_b);
     screen->status();
   }
 
