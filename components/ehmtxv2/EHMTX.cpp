@@ -1611,7 +1611,7 @@ namespace esphome
     ESP_LOGCONFIG(TAG, "Fade in activated: %d steps", EHMTXv2_BLEND_STEPS);
 #endif
     ESP_LOGCONFIG(TAG, "Weekstart: %s", EHMTXv2_WEEK_START ? F("Monday") : F("Sunday"));
-    ESP_LOGCONFIG(TAG, "Weekdays: %s Count: %d", EHMTXv2_WEEKDAYTEXT, strlen(EHMTXv2_WEEKDAYTEXT));
+    ESP_LOGCONFIG(TAG, "Weekdays: %s Count: %d", EHMTXv2_WEEKDAYTEXT, this->weekday_char_count);
     ESP_LOGCONFIG(TAG, "Display: %s", this->show_display ? F("On") : F("Off"));
     ESP_LOGCONFIG(TAG, "Night mode: %s", this->night_mode ? F("On") : F("Off"));
     ESP_LOGCONFIG(TAG, "Replace Time and Date: %s", this->replace_time_date_active ? F("On") : F("Off"));
