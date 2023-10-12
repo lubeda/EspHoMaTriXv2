@@ -86,7 +86,7 @@ namespace esphome
     switch (this->mode)
     {
     case MODE_EMPTY:
-      ESP_LOGD(TAG, ("empty slot"));
+      ESP_LOGD(TAG, "empty slot");
       break;
     case MODE_BLANK:
       ESP_LOGD(TAG, "queue: blank screen for %d sec", this->screen_time_);
@@ -729,5 +729,3 @@ namespace esphome
   }
   
 }
-
-
