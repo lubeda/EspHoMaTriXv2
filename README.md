@@ -755,6 +755,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`brightness`|"value"|set the display brightness|
 |`alert_screen`|"icon_name", "text", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text, screen forced and lifetime = screen_time|
 |`icon_screen_progress`|"icon_name", "text", "progress", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text and with progress bar on bottom|
+|`set_progressbar_color`|"icon_name", "r", "g", "b", "bg_r", "bg_g", "bg_b"|sets the specified screen with progress bar, the specified color of the progress bar, and the background color of the progress bar. if you set the color to black, the color display will work according to the progress value|
 |`icon_clock`|"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with time, there is support for [displaying text on top of the icon](#icon_text)|
 |`icon_date`|"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with date, there is support for [displaying text on top of the icon](#icon_text)|
 |`graph_screen`|"lifetime", "screen_time"|show graph as defined in the YAML file|
@@ -771,7 +772,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 - **lifetime**: how long does this screen stay in the queue (minutes)
 - **screen_time**: how long is this screen display in the loop (seconds). For short text without scrolling it is shown the defined time, longer text is scrolled at least `scroll_count` times.
 - **default_font**: use the default font (true) or the special font (false)
-- **progress**: сan take a value from -100 to 100, the color of the progress bar is calculated automatically, if the progress is in the range `0..100`, then `from red to green`, if in the range `-100..0`, then from `green to red`.
+- **progress**: сan take a value from -100 to 100, the color of the progress bar is calculated automatically, if no colors are specified in the function `set_progressbar_color`, then if the progress is in the range `0..100`, then `from red to green`, if in the range `-100..0`, then from `green to red`.
 - **value**: the brightness 0..255 
 
 ### Night mode

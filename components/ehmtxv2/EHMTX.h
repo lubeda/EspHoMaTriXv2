@@ -15,6 +15,7 @@ const uint8_t CA_RED = 200; // alarm
 const uint8_t CA_BLUE = 50;
 const uint8_t CA_GREEN = 50;
 const uint8_t CG_GREY = 50;
+const uint8_t C_BLACK = 0;
 
 const uint8_t D_LIFETIME = 5;
 const uint8_t D_SCREEN_TIME = 10;
@@ -202,6 +203,7 @@ namespace esphome
     void blank_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void color_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void icon_screen_progress(std::string icon, std::string text, int progress, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void set_progressbar_color(std::string icon, int r = C_BLACK, int g = C_BLACK, int b = C_BLACK, int bg_r = C_BLACK, int bg_g = C_BLACK, int bg_b = C_BLACK);
 
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void color_gauge(std::string text);
@@ -259,6 +261,8 @@ namespace esphome
     uint8_t icon;
     uint16_t scroll_reset;
     Color text_color;
+    Color progressbar_color;
+    Color progressbar_back_color;
     show_mode mode;
     int8_t progress;
 

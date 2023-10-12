@@ -79,6 +79,8 @@ namespace esphome
     this->text = "";
     this->default_font = true;
     this->progress = 0;
+    this->progressbar_color = esphome::display::COLOR_OFF;
+    this->progressbar_back_color = esphome::display::COLOR_OFF;
   }
 
   void EHMTX_queue::status()
@@ -545,7 +547,15 @@ namespace esphome
 
           if (this->progress != 0)
           {
-            color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100 + (this->progress < 0 ? 120 : 0), 255, 240).to_rgb();
+            if (this->progressbar_color == esphome::display::COLOR_OFF)
+            {
+              color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100 + (this->progress < 0 ? 120 : 0), 255, 240).to_rgb();
+            }
+            else
+            {
+              color_ = this->progressbar_color;
+              this->config_->display->line(9, 7, 31, 7, this->progressbar_back_color);
+            }
             this->config_->display->line(9, 7, 9 + abs(this->progress) * 22 / 100, 7, color_);
           }
         }
