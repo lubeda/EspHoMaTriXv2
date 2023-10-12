@@ -63,7 +63,7 @@ For the old default behavior use this trigger in your YAML:
           id(rgb8x32)->date_screen(10,5);
 ```
 
-The `on_start_runnig`-trigger is called after the device boot once. The `on_empty_queue`-trigger is called when there is nothing in the queue. With the examples you will always have a clock and date displayed. If you don't like or want other colors e.t.c. feel free the change your YAML and have fun.
+The `on_start_running`-trigger is called after the device boot once. The `on_empty_queue`-trigger is called when there is nothing in the queue. With the examples you will always have a clock and date displayed. If you don't like or want other colors e.t.c. feel free the change your YAML and have fun.
 
 If you don't add this trigger you have a blank display until your hosts add screens via service calls.
 

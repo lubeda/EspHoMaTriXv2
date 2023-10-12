@@ -128,9 +128,8 @@ CONF_WEEK_START_MONDAY = "week_start_monday"
 CONF_ICON = "icon_name"
 CONF_TEXT = "text"
 CONF_GRAPH = "display_graph"
-CONF_NIGNT_MODE_SCREENS = "night_mode_screens"
-
-DAFAULT_NIGNT_MODE_SCREENS = [2,3,16]
+CONF_NIGHT_MODE_SCREENS = "night_mode_screens"
+DEFAULT_NIGHT_MODE_SCREENS = [2,3,16]
 
 EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_ID): cv.declare_id(EHMTX_),
@@ -252,7 +251,7 @@ EHMTX_SCHEMA = cv.Schema({
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(NightModeTrigger),
         }
     ),
-    cv.Optional(CONF_NIGNT_MODE_SCREENS, default=DAFAULT_NIGNT_MODE_SCREENS): cv.All(
+    cv.Optional(CONF_NIGHT_MODE_SCREENS, default=DEFAULT_NIGHT_MODE_SCREENS): cv.All(
             cv.ensure_list(cv.one_of(1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19)), cv.Length(min=1, max=5)
         ),
     cv.Required(CONF_ICONS): cv.All(
@@ -462,8 +461,16 @@ async def to_code(config):
         cg.add_define("EHMTXv2_ALWAYS_SHOW_RLINDICATORS")
 
     if config[CONF_WEEKDAYTEXT]:
-        cg.add_define("EHMTXv2_WEEKDAYTEXT",config[CONF_WEEKDAYTEXT])
+        if (len(config[CONF_WEEKDAYTEXT])) == 7:
+            cg.add(var.set_weekday_char_count(7))
 
+        elif (len(config[CONF_WEEKDAYTEXT])) == 14:
+            cg.add(var.set_weekday_char_count(14))
+        else:
+            logging.warning(f"weekdays: must be 7 or 14 characters... your config may have unpredictable results!\n\r")
+            cg.add(var.set_weekday_char_count(len(config[CONF_WEEKDAYTEXT])))
+
+    cg.add_define("EHMTXv2_WEEKDAYTEXT",config[CONF_WEEKDAYTEXT])
     cg.add_define("EHMTXv2_REPLACE_TIME_DATE_TO",config[CONF_REPLACE_TIME_DATE_TO])
     cg.add_define("EHMTXv2_REPLACE_TIME_DATE_FROM",config[CONF_REPLACE_TIME_DATE_FROM])
 
@@ -507,8 +514,8 @@ async def to_code(config):
     if config[CONF_RTL]:
         cg.add_define("EHMTXv2_USE_RTL")    
     
-    if config[CONF_NIGNT_MODE_SCREENS]:
-        cg.add_define("EHMTXv2_CONF_NIGNT_MODE_SCREENS",config[CONF_NIGNT_MODE_SCREENS])
+    if config[CONF_NIGHT_MODE_SCREENS]:
+        cg.add_define("EHMTXv2_CONF_NIGHT_MODE_SCREENS",config[CONF_NIGHT_MODE_SCREENS])
 
     cg.add(var.set_show_day_of_week(config[CONF_SHOWDOW]))  
 
