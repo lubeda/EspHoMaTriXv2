@@ -757,7 +757,8 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`icon_screen_progress`|"icon_name", "text", "progress", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text and with progress bar on bottom|
 |`icon_clock`|"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with time, there is support for [displaying text on top of the icon](#icon_text)|
 |`icon_date`|"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with date, there is support for [displaying text on top of the icon](#icon_text)|
-|`graph_screen`|lifetime", "screen_time"|show graph as defined in the YAML file|
+|`graph_screen`|"lifetime", "screen_time"|show graph as defined in the YAML file|
+|`icon_graph_screen`|"icon_name", "lifetime", "screen_time"|show the specified icon with graph as defined in the YAML file|
 |`set_infotext_color`|"left_r", "left_g", "left_b", "right_r", "right_g", "right_b","default_font","y_offset"|set the special color for left and right char on info text|
 
 #### Parameter description

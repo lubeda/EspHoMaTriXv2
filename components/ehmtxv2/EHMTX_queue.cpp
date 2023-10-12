@@ -270,7 +270,15 @@ namespace esphome
 
 #ifdef USE_GRAPH
       case MODE_GRAPH_SCREEN:
-        this->config_->display->graph(0,0, this->config_->graph);
+        if (this->icon == MAXICONS)
+        {
+          this->config_->display->graph(0, 0, this->config_->graph);
+        }
+        else
+        {
+          this->config_->display->graph(8, 0, this->config_->graph);
+          this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+        }
         break;
 #endif
 

@@ -128,7 +128,8 @@ namespace esphome
     addressable_light::AddressableLightDisplay *display;
     esphome::time::RealTimeClock *clock;
     #ifdef USE_GRAPH
-      void graph_screen(int lifetime = 2 , int screen_time = 20);
+      void graph_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
+      void icon_graph_screen(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
       graph::Graph *graph;
     #endif
 
