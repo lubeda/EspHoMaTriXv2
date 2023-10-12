@@ -395,7 +395,7 @@ namespace esphome
             {
               std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
               time_new = this->config_->replace_time_date(time_new);
-              this->config_->display->printf(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+              this->config_->display->printf(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
             } else {
               this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
                                                this->config_->clock->now());
@@ -407,7 +407,7 @@ namespace esphome
             {
               std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
               time_new = this->config_->replace_time_date(time_new);
-              this->config_->display->printf(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+              this->config_->display->printf(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
             } else {
               this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
                                                this->config_->clock->now());
