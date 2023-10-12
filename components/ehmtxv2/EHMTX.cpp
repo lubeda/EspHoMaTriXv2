@@ -410,6 +410,7 @@ namespace esphome
     register_service(&EHMTX::icon_date, "icon_date", {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     #ifdef USE_GRAPH
       register_service(&EHMTX::graph_screen, "graph_screen", {"lifetime", "screen_time"});
+      register_service(&EHMTX::icon_graph_screen, "icon_graph_screen", {"licon_name, ifetime", "screen_time"});
     #endif
     register_service(&EHMTX::rainbow_icon_screen, "rainbow_icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font"});
 
@@ -1425,11 +1426,50 @@ namespace esphome
 
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->mode = MODE_GRAPH_SCREEN;
+    screen->icon = MAXICONS;
     screen->screen_time_ = screen_time;
+
+    this->graph->set_height(8);
+    this->graph->set_width(32);
+
     for (auto *t : on_add_screen_triggers_)
     {
       t->process("graph", (uint8_t)screen->mode);
     }
+    screen->status();
+  }
+
+  void EHMTX::icon_graph_screen(std::string iconname, int lifetime, int screen_time)
+  {
+    uint8_t icon = this->find_icon(iconname.c_str());
+
+    if (icon >= this->icon_count)
+    {
+      ESP_LOGW(TAG, "graph screen with icon: icon %d not found => default: 0", icon);
+      for (auto *t : on_icon_error_triggers_)
+      {
+        t->process(iconname);
+      }
+      graph_screen(lifetime, screen_time);
+      return;
+    }
+
+    EHMTX_queue *screen = this->find_mode_queue_element(MODE_GRAPH_SCREEN);
+
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    screen->mode = MODE_GRAPH_SCREEN;
+    screen->icon = icon;
+    screen->icon_name = iconname;
+    screen->screen_time_ = screen_time;
+
+    this->graph->set_height(8);
+    this->graph->set_width(24);
+
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process("graph", (uint8_t)screen->mode);
+    }
+    ESP_LOGD(TAG, "graph screen with icon: icon: %d iconname: %s lifetime: %d screen_time:%d ", icon, iconname.c_str(), lifetime, screen_time);
     screen->status();
   }
 
