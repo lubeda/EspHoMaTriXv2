@@ -735,7 +735,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`hide_alarm`|none|hides the alarm|
 |`night_mode_on`|none|turn [night mode](#night-mode) on|
 |`night_mode_off`|none|turn [night mode](#night-mode) off|
-|`show_gauge"`|"percent", "r", "g", "b"|set the height of the gauge according to the percentage in the given color|
+|`show_gauge`|"percent", "r", "g", "b"|set the height of the gauge according to the percentage in the given color|
 |`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper-right corner|
 |`show_rindicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
 |`set_today_color`|"r", "g", "b"|set the special color for today in the day of week line|
