@@ -260,17 +260,16 @@ namespace esphome
     time_t last_time;
     uint8_t icon;
     uint16_t scroll_reset;
-    Color text_color;
-    Color progressbar_color;
-    Color progressbar_back_color;
     show_mode mode;
     int8_t progress;
 
 #ifdef USE_ESP32
+    PROGMEM Color text_color, progressbar_color, progressbar_back_color;
     PROGMEM std::string text;
     PROGMEM std::string icon_name;
 #endif
 #ifdef USE_ESP8266
+    Color text_color, progressbar_color, progressbar_back_color;
     std::string text;
     std::string icon_name;
 #endif
@@ -357,7 +356,12 @@ namespace esphome
 
   public:
     EHMTX_Icon(const uint8_t *data_start, int width, int height, uint32_t animation_frame_count, esphome::image::ImageType type, std::string icon_name, bool revers, uint16_t frame_duration);
+#ifdef USE_ESP32
+    PROGMEM std::string name;
+#endif
+#ifdef USE_ESP8266
     std::string name;
+#endif
     uint16_t frame_duration;
     void next_frame();
     bool reverse;
