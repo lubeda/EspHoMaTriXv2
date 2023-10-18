@@ -1,14 +1,32 @@
 # Introduction
 
+I'm using EspHoMaTriXv2 on a Ulanzi TC001. I want to display the time for 55 seconds and the date for 5 seconds in a loop. I don't understand, how I can configure the display times. I tried clock_interval: 55 but it doesn't seem to help.
+
+What's the correct way?
+
+## new Method with lambda:
+
+add this to your config:
+
+```yaml
+  on_start_running:
+    then:  
+      lambda: |-
+        ESP_LOGD(TAG, "removing date screen and setting a new one with new screen time");
+        id(rgb8x32)->del_screen("*", 3);
+        id(rgb8x32)->date_screen(1440, 5, true, 192, 192, 192);
+        ESP_LOGD(TAG, "removing default clock screen and setting a new one with new screen time");
+        id(rgb8x32)->del_screen("*", 2);
+        id(rgb8x32)->clock_screen(1440, 55, true, 192, 192, 192);
+```
+
+## old Method:
+
 **Skill-level:** easy
 
 Set up a timer helper named *eier_timer*
 
-## step 1: **home assistant automation:**
-
-I'm using EspHoMaTriXv2 on a Ulanzi TC001. I want to display the time for 55 seconds and the date for 5 seconds in a loop. I don't understand, how I can configure the display times. I tried clock_interval: 55 but it doesn't seem to help.
-
-What's the corerct way?
+### step 1: **home assistant automation:**
 
 I think the easiest way is by a home assistant script like this:
 
