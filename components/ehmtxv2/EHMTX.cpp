@@ -267,6 +267,7 @@ namespace esphome
     }
     screen->status();
   }
+
   void EHMTX::rainbow_bitmap_small(std::string icon, std::string text, int lifetime, int screen_time, bool default_font)
   {
     std::string ic = get_icon_name(icon);

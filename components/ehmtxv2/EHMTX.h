@@ -208,8 +208,8 @@ namespace esphome
 
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void color_gauge(std::string text);
-    void bitmap_small(std::string, std::string, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void rainbow_bitmap_small(std::string, std::string, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
+    void bitmap_small(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void rainbow_bitmap_small(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_icon_screen(std::string icon_name, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
