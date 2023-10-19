@@ -49,7 +49,8 @@ enum show_mode : uint8_t
   MODE_ALERT_SCREEN = 16,
   MODE_GRAPH_SCREEN = 17,
   MODE_ICON_DATE = 18,
-  MODE_ICON_PROGRESS = 19
+  MODE_ICON_PROGRESS = 19,
+  MODE_RAINBOW_BITMAP_SMALL = 20
 };
 
 namespace esphome
@@ -207,7 +208,8 @@ namespace esphome
 
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void color_gauge(std::string text);
-    void bitmap_small(std::string, std::string,int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void bitmap_small(std::string, std::string, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void rainbow_bitmap_small(std::string, std::string, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_icon_screen(std::string icon_name, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
