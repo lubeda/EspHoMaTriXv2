@@ -30,7 +30,8 @@
 - Added a screen with the ability to display a progress bar, progress value `(-100..100)`
   - `icon_screen_progress(iconname, text, progress, lifetime, screen_time, default_font, r, g, b)`
 - Added `replace_time_date_to:` and `replace_time_date_from:` which allow replacing the system date & time text (anything!)
-
+- Added `bitmap_small` and `rainbow_bitmap_small` screen.
+  
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
 
@@ -761,6 +762,8 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`graph_screen`|"lifetime", "screen_time"|show graph as defined in the YAML file|
 |`icon_graph_screen`|"icon_name", "lifetime", "screen_time"|show the specified icon with graph as defined in the YAML file|
 |`set_infotext_color`|"left_r", "left_g", "left_b", "right_r", "right_g", "right_b","default_font","y_offset"|set the special color for left and right char on info text|
+|`bitmap_small`|"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show 8x8 image as text, and text|
+|`rainbow_bitmap_small`|"icon", "text", "lifetime", "screen_time", "default_font"|show 8x8 image as text, and text in rainbow colors|
 
 #### Parameter description
 
@@ -1026,6 +1029,7 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_GRAPH_SCREEN | 17|
 |MODE_ICON_DATE | 18|
 |MODE_ICON_PROGRESS | 19|
+|MODE_RAINBOW_BITMAP_SMALL| 20|
 
 **(D)** Service **display_on** / **display_off**
 
