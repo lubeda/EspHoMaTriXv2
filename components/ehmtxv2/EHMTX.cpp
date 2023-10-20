@@ -142,6 +142,40 @@ namespace esphome
     }
   }
 
+  std::string get_icon_name(std::string iconname, char delim = '|')
+  {
+    std::stringstream stream(iconname);
+    std::string icon;
+    std::vector<std::string> tokens;
+      
+    while (std::getline(stream, icon, delim))
+    {
+      if (!icon.empty())
+      {
+        tokens.push_back(icon);
+      }
+    }
+
+    return (tokens.size() > 0) ? tokens[0] : "";
+  }
+
+  std::string get_screen_id(std::string iconname, char delim = '|')
+  {
+    std::stringstream stream(iconname);
+    std::string screen_id;
+    std::vector<std::string> tokens;
+    
+    while (std::getline(stream, screen_id, delim))
+    {
+      if (!screen_id.empty())
+      {
+        tokens.push_back(screen_id);
+      }
+    }
+
+    return (tokens.size() > 1) ? tokens[1] : (tokens.size() > 0) ? get_icon_name(tokens[0], '_') : "";
+  }
+
 #ifndef USE_ESP8266
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
@@ -179,10 +213,17 @@ namespace esphome
 
   void EHMTX::bitmap_small(std::string icon, std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
-    ESP_LOGD(TAG, "small bitmap screen: text: %s lifetime: %d screen_time: %d", text.c_str(), lifetime, screen_time);
+    std::string ic = get_icon_name(icon);
+    std::string id = "";
+
+    if (icon.find("|") != std::string::npos)
+    {
+      id = get_screen_id(icon);
+    } 
+
     const size_t CAPACITY = JSON_ARRAY_SIZE(64);
     StaticJsonDocument<CAPACITY> doc;
-    deserializeJson(doc, icon);
+    deserializeJson(doc, ic);
     JsonArray array = doc.as<JsonArray>();
     // extract the values
     uint16_t i = 0;
@@ -198,17 +239,87 @@ namespace esphome
       this->sbitmap[i++] = c;
     }
 
-    EHMTX_queue *screen = this->find_mode_queue_element(MODE_BITMAP_SMALL);
+    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_BITMAP_SMALL, id);
     
     screen->text = text;
+    screen->icon_name = id;
     screen->text_color = Color(r, g, b);
     screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->mode = MODE_BITMAP_SMALL;
     screen->default_font = default_font;
     screen->calc_scroll_time(text, screen_time);
-    for (auto *t : on_add_screen_triggers_)
+
+    if (id == "")
     {
-      t->process("bitmap small", (uint8_t)screen->mode);
+      for (auto *t : on_add_screen_triggers_)
+      {
+        t->process("bitmap small", (uint8_t)screen->mode);
+      }
+      ESP_LOGD(TAG, "small bitmap screen: text: %s lifetime: %d screen_time: %d", text.c_str(), lifetime, screen_time);
+    }
+    else
+    {
+      for (auto *t : on_add_screen_triggers_)
+      {
+        t->process("bitmap small: " + id, (uint8_t)screen->mode);
+      }
+      ESP_LOGD(TAG, "small bitmap screen: id: %s text: %s lifetime: %d screen_time: %d", id.c_str(), text.c_str(), lifetime, screen_time);
+    }
+    screen->status();
+  }
+
+  void EHMTX::rainbow_bitmap_small(std::string icon, std::string text, int lifetime, int screen_time, bool default_font)
+  {
+    std::string ic = get_icon_name(icon);
+    std::string id = "";
+
+    if (icon.find("|") != std::string::npos)
+    {
+      id = get_screen_id(icon);
+    } 
+
+    const size_t CAPACITY = JSON_ARRAY_SIZE(64);
+    StaticJsonDocument<CAPACITY> doc;
+    deserializeJson(doc, ic);
+    JsonArray array = doc.as<JsonArray>();
+    // extract the values
+    uint16_t i = 0;
+    for (JsonVariant v : array)
+    {
+      uint16_t buf = v.as<int>();
+
+      unsigned char b = (((buf)&0x001F) << 3);
+      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      Color c = Color(r, g, b);
+
+      this->sbitmap[i++] = c;
+    }
+
+    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_RAINBOW_BITMAP_SMALL, id);
+    
+    screen->text = text;
+    screen->icon_name = id;
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    screen->mode = MODE_RAINBOW_BITMAP_SMALL;
+    screen->default_font = default_font;
+    screen->calc_scroll_time(text, screen_time);
+
+    if (id == "")
+    {
+      for (auto *t : on_add_screen_triggers_)
+      {
+        t->process("bitmap small", (uint8_t)screen->mode);
+      }
+      ESP_LOGD(TAG, "small bitmap rainbow screen: text: %s lifetime: %d screen_time: %d", text.c_str(), lifetime, screen_time);
+    }
+    else
+    {
+      for (auto *t : on_add_screen_triggers_)
+      {
+        t->process("bitmap small: " + id, (uint8_t)screen->mode);
+      }
+      ESP_LOGD(TAG, "small bitmap rainbow screen: id: %s text: %s lifetime: %d screen_time: %d", id.c_str(), text.c_str(), lifetime, screen_time);
     }
     screen->status();
   }
@@ -222,41 +333,11 @@ namespace esphome
   {
     ESP_LOGW(TAG, "bitmap_screen is not available on ESP8266");
   }
+  void EHMTX::rainbow_bitmap_small(std::string i, std::string t, int l, int s, bool f)
+  {
+    ESP_LOGW(TAG, "bitmap_screen_rainbow is not available on ESP8266");
+  }
 #endif
-
-  std::string get_icon_name(std::string iconname, char delim = '|')
-  {
-    std::stringstream stream(iconname);
-    std::string icon;
-    std::vector<std::string> tokens;
-      
-    while (std::getline(stream, icon, delim))
-    {
-      if (!icon.empty())
-      {
-        tokens.push_back(icon);
-      }
-    }
-
-    return (tokens.size() > 0) ? tokens[0] : "";
-  }
-
-  std::string get_screen_id(std::string iconname, char delim = '|')
-  {
-    std::stringstream stream(iconname);
-    std::string screen_id;
-    std::vector<std::string> tokens;
-    
-    while (std::getline(stream, screen_id, delim))
-    {
-      if (!screen_id.empty())
-      {
-        tokens.push_back(screen_id);
-      }
-    }
-
-    return (tokens.size() > 1) ? tokens[1] : (tokens.size() > 0) ? get_icon_name(tokens[0], '_') : "";
-  }
 
   uint8_t EHMTX::find_icon(std::string name)
   {
@@ -432,6 +513,7 @@ namespace esphome
     register_service(&EHMTX::color_gauge, "color_gauge", {"colors"});
     register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"icon", "lifetime", "screen_time"});
     register_service(&EHMTX::bitmap_small, "bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+    register_service(&EHMTX::rainbow_bitmap_small, "rainbow_bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font"});
 #endif
 
     #ifdef USE_Fireplugin

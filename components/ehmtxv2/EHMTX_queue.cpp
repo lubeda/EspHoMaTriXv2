@@ -149,6 +149,9 @@ namespace esphome
     case MODE_BITMAP_SMALL:
       ESP_LOGD(TAG, "queue: small bitmap for: %d sec", this->screen_time_);
       break;
+    case MODE_RAINBOW_BITMAP_SMALL:
+      ESP_LOGD(TAG, "queue: rainbow small bitmap for: %d sec", this->screen_time_);
+      break;
 #endif
 
     default:
@@ -166,6 +169,7 @@ namespace esphome
     {
     case MODE_RAINBOW_ICON:
     case MODE_BITMAP_SMALL:
+    case MODE_RAINBOW_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
     case MODE_ICON_CLOCK:
     case MODE_ICON_DATE:
@@ -285,8 +289,9 @@ namespace esphome
 #endif
 
       case MODE_BITMAP_SMALL:
+      case MODE_RAINBOW_BITMAP_SMALL:
 #ifndef USE_ESP8266
-        color_ = this->text_color;
+        color_ = (this->mode == MODE_RAINBOW_BITMAP_SMALL) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
         this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
@@ -720,6 +725,7 @@ namespace esphome
       break;
     case MODE_RAINBOW_ICON:
     case MODE_BITMAP_SMALL:
+    case MODE_RAINBOW_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
     case MODE_ALERT_SCREEN:
     case MODE_ICON_PROGRESS:
