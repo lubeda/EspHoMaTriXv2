@@ -104,7 +104,6 @@ namespace esphome
 #ifdef USE_ESP32
     PROGMEM Color text_color, alarm_color, rindicator_color, lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor;
     PROGMEM Color bitmap[256];
-    PROGMEM Color sbitmap[64];
     PROGMEM Color cgauge[8];
     PROGMEM EHMTX_Icon *icons[MAXICONS];
 #endif
@@ -269,6 +268,7 @@ namespace esphome
     PROGMEM Color text_color, progressbar_color, progressbar_back_color;
     PROGMEM std::string text;
     PROGMEM std::string icon_name;
+    PROGMEM Color sbitmap[64];
 #endif
 #ifdef USE_ESP8266
     Color text_color, progressbar_color, progressbar_back_color;

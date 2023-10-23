@@ -221,6 +221,16 @@ namespace esphome
       id = get_screen_id(icon);
     } 
 
+    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_BITMAP_SMALL, id);
+    
+    screen->text = text;
+    screen->icon_name = id;
+    screen->text_color = Color(r, g, b);
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    screen->mode = MODE_BITMAP_SMALL;
+    screen->default_font = default_font;
+    screen->calc_scroll_time(text, screen_time);
+
     const size_t CAPACITY = JSON_ARRAY_SIZE(64);
     StaticJsonDocument<CAPACITY> doc;
     deserializeJson(doc, ic);
@@ -236,18 +246,8 @@ namespace esphome
       unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
       Color c = Color(r, g, b);
 
-      this->sbitmap[i++] = c;
+      screen->sbitmap[i++] = c;
     }
-
-    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_BITMAP_SMALL, id);
-    
-    screen->text = text;
-    screen->icon_name = id;
-    screen->text_color = Color(r, g, b);
-    screen->endtime = this->clock->now().timestamp + lifetime * 60;
-    screen->mode = MODE_BITMAP_SMALL;
-    screen->default_font = default_font;
-    screen->calc_scroll_time(text, screen_time);
 
     if (id == "")
     {
@@ -278,6 +278,15 @@ namespace esphome
       id = get_screen_id(icon);
     } 
 
+    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_RAINBOW_BITMAP_SMALL, id);
+    
+    screen->text = text;
+    screen->icon_name = id;
+    screen->endtime = this->clock->now().timestamp + lifetime * 60;
+    screen->mode = MODE_RAINBOW_BITMAP_SMALL;
+    screen->default_font = default_font;
+    screen->calc_scroll_time(text, screen_time);
+
     const size_t CAPACITY = JSON_ARRAY_SIZE(64);
     StaticJsonDocument<CAPACITY> doc;
     deserializeJson(doc, ic);
@@ -293,17 +302,8 @@ namespace esphome
       unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
       Color c = Color(r, g, b);
 
-      this->sbitmap[i++] = c;
+      screen->sbitmap[i++] = c;
     }
-
-    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_RAINBOW_BITMAP_SMALL, id);
-    
-    screen->text = text;
-    screen->icon_name = id;
-    screen->endtime = this->clock->now().timestamp + lifetime * 60;
-    screen->mode = MODE_RAINBOW_BITMAP_SMALL;
-    screen->default_font = default_font;
-    screen->calc_scroll_time(text, screen_time);
 
     if (id == "")
     {

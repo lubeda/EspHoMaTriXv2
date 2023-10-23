@@ -306,7 +306,7 @@ namespace esphome
           {
             for (uint8_t y = 0; y < 8; y++)
             {
-              this->config_->display->draw_pixel_at(x + 2, y, this->config_->sbitmap[x + y * 8]);
+              this->config_->display->draw_pixel_at(x + 2, y, this->sbitmap[x + y * 8]);
             }
           }
         }
@@ -317,7 +317,7 @@ namespace esphome
           {
             for (uint8_t y = 0; y < 8; y++)
             {
-              this->config_->display->draw_pixel_at(x, y, this->config_->sbitmap[x + y * 8]);
+              this->config_->display->draw_pixel_at(x, y, this->sbitmap[x + y * 8]);
             }
           }
         }
