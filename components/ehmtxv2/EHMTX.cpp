@@ -341,6 +341,11 @@ namespace esphome
 
   uint8_t EHMTX::find_icon(std::string name)
   {
+    if (name == "blank")
+    {
+      return BLANKICON;
+    }
+
     for (uint8_t i = 0; i < this->icon_count; i++)
     {
       if (strcmp(this->icons[i]->name.c_str(), name.c_str()) == 0)

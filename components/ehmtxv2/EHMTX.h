@@ -20,7 +20,8 @@ const uint8_t C_BLACK = 0;
 const uint8_t D_LIFETIME = 5;
 const uint8_t D_SCREEN_TIME = 10;
 
-const uint8_t MAXICONS = 90;
+const uint8_t BLANKICON = -1;
+const uint8_t MAXICONS = 90; // Max 127 icon due int8_t
 const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
@@ -260,7 +261,7 @@ namespace esphome
     bool default_font;
     time_t endtime;
     time_t last_time;
-    uint8_t icon;
+    int8_t icon;
     uint16_t scroll_reset;
     show_mode mode;
     int8_t progress;
