@@ -31,6 +31,7 @@
   - `icon_screen_progress(iconname, text, progress, lifetime, screen_time, default_font, r, g, b)`
 - Added `replace_time_date_to:` and `replace_time_date_from:` which allow replacing the system date & time text (anything!)
 - Added `bitmap_small` and `rainbow_bitmap_small` screen.
+- Added a pseudo-icon `blank` - empty icon, no display.
   
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file

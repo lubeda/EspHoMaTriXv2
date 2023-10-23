@@ -233,10 +233,13 @@ namespace esphome
       this->config_->last_rainbow_time = millis();
     }
 
-    if (millis() - this->config_->last_anim_time >= this->config_->icons[this->icon]->frame_duration)
+    if (this->icon < this->config_->icon_count)
     {
-      this->config_->icons[this->icon]->next_frame();
-      this->config_->last_anim_time = millis();
+      if (millis() - this->config_->last_anim_time >= this->config_->icons[this->icon]->frame_duration)
+      {
+        this->config_->icons[this->icon]->next_frame();
+        this->config_->last_anim_time = millis();
+      }
     }
   }
 
@@ -283,7 +286,7 @@ namespace esphome
         else
         {
           this->config_->display->graph(8, 0, this->config_->graph);
-          if (this->icon > BLANKICON)
+          if (this->icon != BLANKICON)
           {
             this->config_->display->image(0, 0, this->config_->icons[this->icon]);
           }
@@ -421,7 +424,7 @@ namespace esphome
                                                this->config_->clock->now());
             }
           }
-          if (this->icon > BLANKICON)
+          if (this->icon != BLANKICON)
           {
             this->config_->display->image(0, 0, this->config_->icons[this->icon]);
           }
@@ -554,7 +557,7 @@ namespace esphome
         if (this->mode == MODE_ICON_PROGRESS)
         {
           this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
-          if (this->icon > BLANKICON)
+          if (this->icon != BLANKICON)
           {
             this->config_->display->image(0, 0, this->config_->icons[this->icon]);
           }
@@ -577,7 +580,7 @@ namespace esphome
         {
           if (this->config_->display_gauge)
           {
-            if (this->icon > BLANKICON)
+            if (this->icon != BLANKICON)
             {
               this->config_->display->image(2, 0, this->config_->icons[this->icon]);
             }
@@ -586,7 +589,7 @@ namespace esphome
           else
           {
             this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
-            if (this->icon > BLANKICON)
+            if (this->icon != BLANKICON)
             {
               this->config_->display->image(0, 0, this->config_->icons[this->icon]);
             }
