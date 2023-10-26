@@ -39,18 +39,18 @@ An easy to setup and extensible DIY LED Matrix status display built with a 8x32 
 
 ![sample image](./images/sample.png)
 
-If you like to cuztomize and tinker you can use this custom component as a satellite voice control microphone for home assistant. [Youtube](https://www.youtube.com/watch?v=CsOir14DCbM)
+If you like to customize and tinker you can use this custom component as a satellite voice control microphone for home assistant. [Youtube](https://www.youtube.com/watch?v=CsOir14DCbM)
 
-For additioanl tips and tricks be sure to check out the [WIKI](https://github.com/lubeda/EspHoMaTriXv2/wiki)
+For additional tips and tricks be sure to check out the [WIKI](https://github.com/lubeda/EspHoMaTriXv2/wiki)
 
 ## Background
 
-There are some “RGB-matrices” status displays/clocks out there, the commercial ones from LaMetric and Ulanzi, also some excellent DIY-alternatives.
+There are some “RGB-matrices” status displays/clocks out there, the commercial ones from LaMetric and Ulanzi, and also some excellent DIY alternatives.
 
 - [LaMetric](https://lametric.com/en-US/) commercial ~ €199
 - [Ulanzi TC001](https://www.aliexpress.com/item/1005005008682055.html) commercial ~ €50
 - [AWTRIX](https://awtrixdocs.blueforcer.de/#/) (project has been discontinued after more than 4 years in August 2022)
-- [Pixel It](https://pixelit-project.github.io/) (project is under active development)
+- [Pixel It](https://pixelit-project.github.io/) (the project is under active development)
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of AWTRIX, optimized for the Ulanzi TC001 hardware
 
 All of the various solutions have their pros and cons. I tried some and used AWTRIX for a long time, but I found it lacking in a lot of ways (in my opinion,) so I started work on an esphome.io variant. Targeted for an optimized and extensible Home Assistant integration without paid blueprints, MQTT broker requirement, or the need to upload files to the ESP board.
@@ -61,12 +61,12 @@ Based on a 8x32 RGB matrix, it displays a clock, the date and up to 24 other 'sc
 
 ### State
 
-After the [v1](https://github.com/lubeda/EsphoMaTrix) component became popular and receieved additonal feature requests it became clear that yhe v1 [v1](https://github.com/lubeda/EsphoMaTrix)code was a bit of a mess. I reworked all of the code and restructured it to hopefully be much more extensible. 
+After the [v1](https://github.com/lubeda/EsphoMaTrix) component became popular and received additional feature requests it became clear that yhe v1 [v1](https://github.com/lubeda/EsphoMaTrix)code was a bit of a mess. I reworked all of the code and restructured it to hopefully be much more extensible. 
 **This software is still heavily in development, before updating please check the [Breaking Changes](#breaking-changes)**
 
 ### Advice
 
-It is highly recomended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESO8266 device** so some of the features had to be removed for these boards (Example: bitmap_screen).
+It is highly recommended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESP8266 device** so some of the features had to be removed for these boards (Example: bitmap_screen).
 
 ## How to use
 
@@ -283,7 +283,7 @@ Same as above but in the lower-left corner, this is not visible while icons are 
 
 ##### gauge
 
-The gauge is displayed in the left most column. You can set its color and its value from 0-100, the resolution is limited to 8 pixels, so it is not a precision gauge.
+The gauge is displayed in the leftmost column. You can set its color and its value from 0-100, the resolution is limited to 8 pixels, so it is not a precision gauge.
 
 ###### service
 
@@ -1126,7 +1126,7 @@ sensor:
 
 ### 2023.6.3
 
-**Due to this change these values are fixed, e.g. you can not change the date or timeformat during runtime anymore!!**
+**Due to this change, these values are fixed, e.g. you can not change the date or time format during runtime anymore!!**
 
 - changed *_interval to be set only on compile time
 - change scroll_count to be set only on compile time
@@ -1178,4 +1178,4 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[joncar](https://github.com/joncar)** fixed scroll small text
 - **Everybody** who found bugs/issues and reported them!
 
-## Special thanks to all sponsors
+## Special thanks to all the sponsors
