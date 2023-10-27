@@ -771,7 +771,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 - **r, g, b**: Color components for red, green, and blue 0..255
 - **size**: The size of the rindicator or alarm, 1-3
 - **percent**: values from 0..100
-- **icon_name**: the id of the icon to show, as defined in the YAML file, it is also possible to set the arbitrary [screen identifier](#screen_id), for example `icon_name|screen_id`
+- **icon_name**: the id of the icon to show, as defined in the YAML file (or pseudo-icon `blank` - empty icon), it is also possible to set the arbitrary [screen identifier](#screen_id), for example `icon_name|screen_id`
 - **text**: a text message to display
 - **lifetime**: how long does this screen stay in the queue (minutes)
 - **screen_time**: how long is this screen display in the loop (seconds). For short text without scrolling it is shown the defined time, longer text is scrolled at least `scroll_count` times.
