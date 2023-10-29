@@ -299,25 +299,28 @@ namespace esphome
         this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
 #endif
-        if (this->config_->display_gauge)
+        if (this->sbitmap != NULL)
         {
-          this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
-          for (uint8_t x = 0; x < 8; x++)
+          if (this->config_->display_gauge)
           {
-            for (uint8_t y = 0; y < 8; y++)
+            this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
+            for (uint8_t x = 0; x < 8; x++)
             {
-              this->config_->display->draw_pixel_at(x + 2, y, this->sbitmap[x + y * 8]);
+              for (uint8_t y = 0; y < 8; y++)
+              {
+                this->config_->display->draw_pixel_at(x + 2, y, this->sbitmap[x + y * 8]);
+              }
             }
           }
-        }
-        else
-        {
-          this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
-          for (uint8_t x = 0; x < 8; x++)
+          else
           {
-            for (uint8_t y = 0; y < 8; y++)
+            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
+            for (uint8_t x = 0; x < 8; x++)
             {
-              this->config_->display->draw_pixel_at(x, y, this->sbitmap[x + y * 8]);
+              for (uint8_t y = 0; y < 8; y++)
+              {
+                this->config_->display->draw_pixel_at(x, y, this->sbitmap[x + y * 8]);
+              }
             }
           }
         }

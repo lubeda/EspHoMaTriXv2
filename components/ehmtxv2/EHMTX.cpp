@@ -778,12 +778,12 @@ namespace esphome
               t->process(this->queue[i]->icon_name, infotext);
             }
           }
+          this->queue[i]->mode = MODE_EMPTY;
           if (this->queue[i]->sbitmap != NULL)
           {
             delete [] this->queue[i]->sbitmap;
             this->queue[i]->sbitmap = nullptr;
           }
-          this->queue[i]->mode = MODE_EMPTY;
         }
       }
     }
