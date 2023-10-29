@@ -233,10 +233,13 @@ namespace esphome
       this->config_->last_rainbow_time = millis();
     }
 
-    if (millis() - this->config_->last_anim_time >= this->config_->icons[this->icon]->frame_duration)
+    if (this->icon < this->config_->icon_count)
     {
-      this->config_->icons[this->icon]->next_frame();
-      this->config_->last_anim_time = millis();
+      if (millis() - this->config_->last_anim_time >= this->config_->icons[this->icon]->frame_duration)
+      {
+        this->config_->icons[this->icon]->next_frame();
+        this->config_->last_anim_time = millis();
+      }
     }
   }
 
@@ -283,7 +286,10 @@ namespace esphome
         else
         {
           this->config_->display->graph(8, 0, this->config_->graph);
-          this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          if (this->icon != BLANKICON)
+          {
+            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          }
         }
         break;
 #endif
@@ -418,7 +424,10 @@ namespace esphome
                                                this->config_->clock->now());
             }
           }
-          this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          if (this->icon != BLANKICON)
+          {
+            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          }
           this->config_->draw_day_of_week(true);
 
           if (this->icon_name.find("day") != std::string::npos || this->icon_name.find("weekday") != std::string::npos)
@@ -548,7 +557,10 @@ namespace esphome
         if (this->mode == MODE_ICON_PROGRESS)
         {
           this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
-          this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          if (this->icon != BLANKICON)
+          {
+            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          }
 
           if (this->progress != 0)
           {
@@ -568,13 +580,19 @@ namespace esphome
         {
           if (this->config_->display_gauge)
           {
-            this->config_->display->image(2, 0, this->config_->icons[this->icon]);
+            if (this->icon != BLANKICON)
+            {
+              this->config_->display->image(2, 0, this->config_->icons[this->icon]);
+            }
             this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
           }
           else
           {
             this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
-            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+            if (this->icon != BLANKICON)
+            {
+              this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+            }
           }
         }
         break;

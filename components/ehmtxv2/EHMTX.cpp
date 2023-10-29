@@ -341,6 +341,11 @@ namespace esphome
 
   uint8_t EHMTX::find_icon(std::string name)
   {
+    if (name == "blank")
+    {
+      return BLANKICON;
+    }
+
     for (uint8_t i = 0; i < this->icon_count; i++)
     {
       if (strcmp(this->icons[i]->name.c_str(), name.c_str()) == 0)
@@ -1011,9 +1016,9 @@ namespace esphome
   {
     uint8_t icon = this->find_icon(iconname.c_str());
 
-    if (icon >= this->icon_count)
+    if (icon == MAXICONS)
     {
-      ESP_LOGW(TAG, "icon %d not found => default: 0", icon);
+      ESP_LOGW(TAG, "icon %d/%s not found => default: 0", icon, iconname.c_str());
       icon = 0;
       for (auto *t : on_icon_error_triggers_)
       {
@@ -1049,9 +1054,9 @@ namespace esphome
 
     uint8_t icon = this->find_icon(ic.c_str());
 
-    if (icon >= this->icon_count)
+    if (icon == MAXICONS)
     {
-      ESP_LOGW(TAG, "icon %d not found => default: 0", icon);
+      ESP_LOGW(TAG, "icon %d/%s not found => default: 0", icon, ic.c_str());
       icon = 0;
       for (auto *t : on_icon_error_triggers_)
       {
@@ -1083,9 +1088,9 @@ namespace esphome
 
     uint8_t icon = this->find_icon(ic.c_str());
 
-    if (icon >= this->icon_count)
+    if (icon == MAXICONS)
     {
-      ESP_LOGW(TAG, "icon %d not found => default: 0", icon);
+      ESP_LOGW(TAG, "icon %d/%s not found => default: 0", icon, ic.c_str());
       icon = 0;
       for (auto *t : on_icon_error_triggers_)
       {
@@ -1129,9 +1134,9 @@ namespace esphome
 
     uint8_t icon = this->find_icon(ic.c_str());
 
-    if (icon >= this->icon_count)
+    if (icon == MAXICONS)
     {
-      ESP_LOGW(TAG, "icon %d not found => default: 0", icon);
+      ESP_LOGW(TAG, "icon %d/%s not found => default: 0", icon, ic.c_str());
       icon = 0;
       for (auto *t : on_icon_error_triggers_)
       {
@@ -1162,9 +1167,9 @@ namespace esphome
 
     uint8_t icon = this->find_icon(ic.c_str());
 
-    if (icon >= this->icon_count)
+    if (icon == MAXICONS)
     {
-      ESP_LOGW(TAG, "icon %d not found => default: 0", icon);
+      ESP_LOGW(TAG, "icon %d/%s not found => default: 0", icon, ic.c_str());
       icon = 0;
       for (auto *t : on_icon_error_triggers_)
       {
@@ -1195,9 +1200,9 @@ namespace esphome
 
     uint8_t icon = this->find_icon(ic.c_str());
 
-    if (icon >= this->icon_count)
+    if (icon == MAXICONS)
     {
-      ESP_LOGW(TAG, "icon %d not found => default: 0", icon);
+      ESP_LOGW(TAG, "icon %d/%s not found => default: 0", icon, ic.c_str());
       icon = 0;
       for (auto *t : on_icon_error_triggers_)
       {
@@ -1323,7 +1328,7 @@ namespace esphome
   {
     uint8_t icon = this->find_icon(iconname.c_str());
 
-    if (icon >= this->icon_count)
+    if (icon == MAXICONS)
     {
       ESP_LOGW(TAG, "full screen: icon %d not found => default: 0", icon);
       for (auto *t : on_icon_error_triggers_)
@@ -1503,7 +1508,7 @@ namespace esphome
   {
     uint8_t icon = this->find_icon(iconname.c_str());
 
-    if (icon >= this->icon_count)
+    if (icon == MAXICONS)
     {
       ESP_LOGW(TAG, "graph screen with icon: icon %d not found => default: 0", icon);
       for (auto *t : on_icon_error_triggers_)

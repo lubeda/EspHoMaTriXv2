@@ -21,6 +21,7 @@ const uint8_t D_LIFETIME = 5;
 const uint8_t D_SCREEN_TIME = 10;
 
 const uint8_t MAXICONS = 90;
+const uint8_t BLANKICON = MAXICONS + 1;
 const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
