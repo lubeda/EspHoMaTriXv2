@@ -174,7 +174,7 @@ namespace esphome
       }
     }
 
-    return (tokens.size() > 1) ? tokens[1] : (tokens.size() > 0) ? get_icon_name(tokens[0], '_') : "";
+    return (tokens.size() > 1) ? tokens[1] : (tokens.size() > 0) ? (iconname.find("*") != std::string::npos) ? get_icon_name(tokens[0], '_') : tokens[0] : "";
   }
 
 #ifndef USE_ESP8266
