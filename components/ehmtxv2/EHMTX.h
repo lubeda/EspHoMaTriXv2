@@ -263,12 +263,12 @@ namespace esphome
     uint16_t scroll_reset;
     show_mode mode;
     int8_t progress;
+    Color* sbitmap;
 
 #ifdef USE_ESP32
     PROGMEM Color text_color, progressbar_color, progressbar_back_color;
     PROGMEM std::string text;
     PROGMEM std::string icon_name;
-    PROGMEM Color sbitmap[64];
 #endif
 #ifdef USE_ESP8266
     Color text_color, progressbar_color, progressbar_back_color;

@@ -231,6 +231,11 @@ namespace esphome
     screen->default_font = default_font;
     screen->calc_scroll_time(text, screen_time);
 
+    if (screen->sbitmap == NULL) 
+    {
+      screen->sbitmap = new Color[64];
+    }
+
     const size_t CAPACITY = JSON_ARRAY_SIZE(64);
     StaticJsonDocument<CAPACITY> doc;
     deserializeJson(doc, ic);
@@ -286,6 +291,11 @@ namespace esphome
     screen->mode = MODE_RAINBOW_BITMAP_SMALL;
     screen->default_font = default_font;
     screen->calc_scroll_time(text, screen_time);
+
+    if (screen->sbitmap == NULL) 
+    {
+      screen->sbitmap = new Color[64];
+    }
 
     const size_t CAPACITY = JSON_ARRAY_SIZE(64);
     StaticJsonDocument<CAPACITY> doc;
@@ -752,6 +762,10 @@ namespace esphome
               case MODE_TEXT_SCREEN:
                 infotext = "TEXT";
                 break;
+              case MODE_BITMAP_SMALL:
+              case MODE_RAINBOW_BITMAP_SMALL:
+                infotext = ("BITMAP_SMALL:" + this->queue[i]->icon_name).c_str();
+                break;
               case MODE_BITMAP_SCREEN:
                 infotext = "BITMAP";
                 break;
@@ -763,6 +777,11 @@ namespace esphome
               }
               t->process(this->queue[i]->icon_name, infotext);
             }
+          }
+          if (this->queue[i]->sbitmap != NULL)
+          {
+            delete [] this->queue[i]->sbitmap;
+            this->queue[i]->sbitmap = nullptr;
           }
           this->queue[i]->mode = MODE_EMPTY;
         }
@@ -997,6 +1016,11 @@ namespace esphome
           this->queue[i]->mode = MODE_EMPTY;
           this->queue[i]->endtime = 0;
           this->queue[i]->last_time = this->clock->now().timestamp;
+          if (this->queue[i]->sbitmap != NULL)
+          {
+            delete [] this->queue[i]->sbitmap;
+            this->queue[i]->sbitmap = nullptr;
+          }
           if (i == this->screen_pointer)
           {
             this->next_action_time = this->clock->now().timestamp;
