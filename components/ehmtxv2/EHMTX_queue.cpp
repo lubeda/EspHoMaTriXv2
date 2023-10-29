@@ -138,6 +138,12 @@ namespace esphome
     case MODE_RAINBOW_DATE:
       ESP_LOGD(TAG, "queue: rainbow date for: %d sec", this->screen_time_);
       break;
+    case MODE_ICON_TEXT_SCREEN:
+      ESP_LOGD(TAG, "queue: icon text screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      break;
+    case MODE_RAINBOW_ICON_TEXT_SCREEN:
+      ESP_LOGD(TAG, "queue: rainbow icon text screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      break;
     case MODE_FIRE:
       ESP_LOGD(TAG, "queue: fire for: %d sec", this->screen_time_);
       break;
@@ -179,6 +185,8 @@ namespace esphome
       break;
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
+    case MODE_ICON_TEXT_SCREEN:
+    case MODE_RAINBOW_ICON_TEXT_SCREEN:
       // no correction
       break;
     default:
@@ -597,6 +605,22 @@ namespace esphome
         }
         break;
 
+      case MODE_ICON_TEXT_SCREEN:
+      case MODE_RAINBOW_ICON_TEXT_SCREEN:
+        color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
+#ifdef EHMTXv2_USE_RTL
+        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
+                                      this->text.c_str());
+#else
+        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+                                      this->text.c_str());
+#endif
+        if (this->icon != BLANKICON)
+        {
+          this->config_->display->image(this->xpos() > 8 ? 0 : this->xpos() + xoffset - 9, 0, this->config_->icons[this->icon]);
+        }
+        break;
+
       case MODE_TEXT_SCREEN:
       case MODE_RAINBOW_TEXT:
         color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
@@ -722,8 +746,10 @@ namespace esphome
 
     switch (this->mode)
     {
-    case MODE_RAINBOW_TEXT:
     case MODE_TEXT_SCREEN:
+    case MODE_RAINBOW_TEXT:
+    case MODE_ICON_TEXT_SCREEN:
+    case MODE_RAINBOW_ICON_TEXT_SCREEN:
 #ifdef EHMTXv2_SCROLL_SMALL_TEXT
       max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
       display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
