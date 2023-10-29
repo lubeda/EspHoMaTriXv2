@@ -79,6 +79,7 @@ namespace esphome
     this->text = "";
     this->default_font = true;
     this->progress = 0;
+    this->sbitmap = nullptr;
     this->progressbar_color = esphome::display::COLOR_OFF;
     this->progressbar_back_color = esphome::display::COLOR_OFF;
   }
