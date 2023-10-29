@@ -78,6 +78,7 @@ namespace esphome
   {
     this->show_display = false;
     ESP_LOGD(TAG, "display off");
+    display->clear();
 
     for (auto *t : on_show_display_triggers_)
     {
