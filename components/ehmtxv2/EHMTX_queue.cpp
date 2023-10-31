@@ -139,6 +139,12 @@ namespace esphome
     case MODE_RAINBOW_DATE:
       ESP_LOGD(TAG, "queue: rainbow date for: %d sec", this->screen_time_);
       break;
+    case MODE_ICON_TEXT_SCREEN:
+      ESP_LOGD(TAG, "queue: icon text screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      break;
+    case MODE_RAINBOW_ICON_TEXT_SCREEN:
+      ESP_LOGD(TAG, "queue: rainbow icon text screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      break;
     case MODE_FIRE:
       ESP_LOGD(TAG, "queue: fire for: %d sec", this->screen_time_);
       break;
@@ -181,6 +187,13 @@ namespace esphome
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
       // no correction
+      break;
+    case MODE_ICON_TEXT_SCREEN:
+    case MODE_RAINBOW_ICON_TEXT_SCREEN:
+      if (this->pixels_ < 32)
+      {
+        startx = 8;
+      }
       break;
     default:
       break;
@@ -234,10 +247,13 @@ namespace esphome
       this->config_->last_rainbow_time = millis();
     }
 
-    if (millis() - this->config_->last_anim_time >= this->config_->icons[this->icon]->frame_duration)
+    if (this->icon < this->config_->icon_count)
     {
-      this->config_->icons[this->icon]->next_frame();
-      this->config_->last_anim_time = millis();
+      if (millis() - this->config_->last_anim_time >= this->config_->icons[this->icon]->frame_duration)
+      {
+        this->config_->icons[this->icon]->next_frame();
+        this->config_->last_anim_time = millis();
+      }
     }
   }
 
@@ -284,7 +300,10 @@ namespace esphome
         else
         {
           this->config_->display->graph(8, 0, this->config_->graph);
-          this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          if (this->icon != BLANKICON)
+          {
+            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          }
         }
         break;
 #endif
@@ -422,7 +441,10 @@ namespace esphome
                                                this->config_->clock->now());
             }
           }
-          this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          if (this->icon != BLANKICON)
+          {
+            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          }
           this->config_->draw_day_of_week(true);
 
           if (this->icon_name.find("day") != std::string::npos || this->icon_name.find("weekday") != std::string::npos)
@@ -552,7 +574,10 @@ namespace esphome
         if (this->mode == MODE_ICON_PROGRESS)
         {
           this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
-          this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          if (this->icon != BLANKICON)
+          {
+            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          }
 
           if (this->progress != 0)
           {
@@ -572,14 +597,52 @@ namespace esphome
         {
           if (this->config_->display_gauge)
           {
-            this->config_->display->image(2, 0, this->config_->icons[this->icon]);
+            if (this->icon != BLANKICON)
+            {
+              this->config_->display->image(2, 0, this->config_->icons[this->icon]);
+            }
             this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
           }
           else
           {
             this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
-            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+            if (this->icon != BLANKICON)
+            {
+              this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+            }
           }
+        }
+        break;
+
+      case MODE_ICON_TEXT_SCREEN:
+      case MODE_RAINBOW_ICON_TEXT_SCREEN:
+        color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
+#ifdef EHMTXv2_USE_RTL
+        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
+                                      this->text.c_str());
+#else
+        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+                                      this->text.c_str());
+#endif
+        if (this->icon != BLANKICON)
+        {
+          int x = 0;
+          if (this->pixels_ > 23)
+          {
+            if (this->xpos() > 23)
+            {
+              x = 24 - this->xpos();
+            }
+            else
+            {
+              if (this->xpos() < 9)
+              {
+                x = this->xpos() - 9;
+              }
+            }
+          }
+          this->config_->display->line(x + 8, 0, x + 8, 7, esphome::display::COLOR_OFF);
+          this->config_->display->image(x, 0, this->config_->icons[this->icon]);
         }
         break;
 
@@ -708,8 +771,8 @@ namespace esphome
 
     switch (this->mode)
     {
-    case MODE_RAINBOW_TEXT:
     case MODE_TEXT_SCREEN:
+    case MODE_RAINBOW_TEXT:
 #ifdef EHMTXv2_SCROLL_SMALL_TEXT
       max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
       display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
@@ -734,6 +797,19 @@ namespace esphome
     case MODE_ALERT_SCREEN:
     case MODE_ICON_PROGRESS:
       startx = 8;
+      if (this->pixels_ < 23)
+      {
+        this->screen_time_ = screen_time;
+      }
+      else
+      {
+        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
+        this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+      }
+      break;
+    case MODE_ICON_TEXT_SCREEN:
+    case MODE_RAINBOW_ICON_TEXT_SCREEN:
       if (this->pixels_ < 23)
       {
         this->screen_time_ = screen_time;
