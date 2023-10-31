@@ -185,9 +185,14 @@ namespace esphome
       break;
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
+      // no correction
+      break;
     case MODE_ICON_TEXT_SCREEN:
     case MODE_RAINBOW_ICON_TEXT_SCREEN:
-      // no correction
+      if (this->pixels_ < 32)
+      {
+        startx = 8;
+      }
       break;
     default:
       break;
@@ -617,7 +622,23 @@ namespace esphome
 #endif
         if (this->icon != BLANKICON)
         {
-          this->config_->display->image(this->xpos() > 8 ? 0 : this->xpos() + xoffset - 9, 0, this->config_->icons[this->icon]);
+          int x = 0;
+          if (this->pixels_ > 23)
+          {
+            if (this->xpos() > 23)
+            {
+              x = 24 - this->xpos();
+            }
+            else
+            {
+              if (this->xpos() < 9)
+              {
+                x = this->xpos() - 9;
+              }
+            }
+          }
+          this->config_->display->line(x + 8, 0, x + 8, 7, esphome::display::COLOR_OFF);
+          this->config_->display->image(x, 0, this->config_->icons[this->icon]);
         }
         break;
 
@@ -748,8 +769,6 @@ namespace esphome
     {
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
-    case MODE_ICON_TEXT_SCREEN:
-    case MODE_RAINBOW_ICON_TEXT_SCREEN:
 #ifdef EHMTXv2_SCROLL_SMALL_TEXT
       max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
       display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
@@ -774,6 +793,19 @@ namespace esphome
     case MODE_ALERT_SCREEN:
     case MODE_ICON_PROGRESS:
       startx = 8;
+      if (this->pixels_ < 23)
+      {
+        this->screen_time_ = screen_time;
+      }
+      else
+      {
+        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
+        this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+      }
+      break;
+    case MODE_ICON_TEXT_SCREEN:
+    case MODE_RAINBOW_ICON_TEXT_SCREEN:
       if (this->pixels_ < 23)
       {
         this->screen_time_ = screen_time;
