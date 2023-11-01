@@ -150,6 +150,7 @@ namespace esphome
 
     void remove_expired_queue_element();
     uint8_t find_oldest_queue_element();
+    uint8_t queue_count();
     uint8_t find_icon_in_queue(std::string);
     void force_screen(std::string name, int mode = MODE_ICON_SCREEN);
     void add_icon(EHMTX_Icon *icon);

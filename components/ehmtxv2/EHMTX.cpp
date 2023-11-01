@@ -673,7 +673,7 @@ namespace esphome
     }
     if (hit != MAXQUEUE)
     {
-      ESP_LOGD(TAG, "oldest queue element is: %d",hit);
+      ESP_LOGD(TAG, "oldest queue element is: %d/%d",hit,this->queue_count());
     }
     this->queue[hit]->status();
     return hit;
@@ -788,6 +788,21 @@ namespace esphome
     }
   }
   
+  uint8_t EHMTX::queue_count()
+  {
+    time_t ts = this->clock->now().timestamp;
+    uint8_t c = 0;
+    for (size_t i = 0; i < MAXQUEUE; i++)
+    {
+      if (this->queue[i]->endtime > ts)
+      {
+        c++;
+      }
+    }
+
+    return c;
+  } 
+  
   void EHMTX::tick()
   {
     this->hue_++;
@@ -864,7 +879,7 @@ namespace esphome
       // blend handling
 
 #ifdef EHMTXv2_BLEND_STEPS
-      if ((this->ticks_ <= EHMTXv2_BLEND_STEPS))
+      if ((this->ticks_ <= EHMTXv2_BLEND_STEPS) && (this->queue_count() > 1))
       {
         uint8_t b = this->brightness_;
         float br = lerp((float)this->ticks_ / EHMTXv2_BLEND_STEPS, 0, (float)b / 255);
