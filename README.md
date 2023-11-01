@@ -32,6 +32,7 @@
 - Added `replace_time_date_to:` and `replace_time_date_from:` which allow replacing the system date & time text (anything!)
 - Added `bitmap_small` and `rainbow_bitmap_small` screen.
 - Added a pseudo-icon `blank` - empty icon, no display.
+- Added screen with scroll icon along with long text, `icon_text_screen`, `rainbow_icon_text_screen`.
   
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
@@ -765,6 +766,8 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`set_infotext_color`|"left_r", "left_g", "left_b", "right_r", "right_g", "right_b","default_font","y_offset"|set the special color for left and right char on info text|
 |`bitmap_small`|"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show 8x8 image as text, and text|
 |`rainbow_bitmap_small`|"icon", "text", "lifetime", "screen_time", "default_font"|show 8x8 image as text, and text in rainbow colors|
+|`icon_text_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text and scroll icon along with long text|
+|`rainbow_icon_text_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color and scroll icon along with long text|
 
 #### Parameter description
 
@@ -1031,6 +1034,8 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_ICON_DATE | 18|
 |MODE_ICON_PROGRESS | 19|
 |MODE_RAINBOW_BITMAP_SMALL| 20|
+|MODE_ICON_TEXT_SCREEN| 21|
+|MODE_RAINBOW_ICON_TEXT_SCREEN| 22|
 
 **(D)** Service **display_on** / **display_off**
 
@@ -1404,7 +1409,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[trvrnrth](https://github.com/trvrnrth)** PRs with fixing an error
 - **[andrewjswan](https://github.com/andrewjswan)** Boot animation centered. `alert_screen` and [issue](https://github.com/lubeda/EspHoMaTriXv2/issues/84) and the additions to 2023.9.1
 - **Added by [andrewjswan](https://github.com/andrewjswan)** [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
-- **[malinovsku](https://github.com/malinovsku)** Issues and testing. 
+- **[malinovsku](https://github.com/malinovsku)** Issues and testing.
+- **[chertvl](https://github.com/chertvl)** Issues and testing.
 - **Everybody** who found bugs/issues and reported them!
 
 ## Special thanks to all sponsors

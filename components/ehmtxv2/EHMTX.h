@@ -51,7 +51,9 @@ enum show_mode : uint8_t
   MODE_GRAPH_SCREEN = 17,
   MODE_ICON_DATE = 18,
   MODE_ICON_PROGRESS = 19,
-  MODE_RAINBOW_BITMAP_SMALL = 20
+  MODE_RAINBOW_BITMAP_SMALL = 20,
+  MODE_ICON_TEXT_SCREEN = 21,
+  MODE_RAINBOW_ICON_TEXT_SCREEN = 22
 };
 
 namespace esphome
@@ -206,6 +208,9 @@ namespace esphome
     void color_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void icon_screen_progress(std::string icon, std::string text, int progress, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void set_progressbar_color(std::string icon, int r = C_BLACK, int g = C_BLACK, int b = C_BLACK, int bg_r = C_BLACK, int bg_g = C_BLACK, int bg_b = C_BLACK);
+
+    void icon_text_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void rainbow_icon_text_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
 
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void color_gauge(std::string text);
