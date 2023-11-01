@@ -222,6 +222,21 @@ namespace esphome
       id = get_screen_id(icon);
     } 
 
+    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_BITMAP_SMALL, id);
+    
+    screen->text = text;
+    screen->icon_name = id;
+    screen->text_color = Color(r, g, b);
+    screen->mode = MODE_BITMAP_SMALL;
+    screen->default_font = default_font;
+    screen->calc_scroll_time(text, screen_time);
+    screen->endtime = this->clock->now().timestamp + (lifetime > 0 ? lifetime * 60 : screen->screen_time_);
+    
+    if (screen->sbitmap == NULL) 
+    {
+      screen->sbitmap = new Color[64];
+    }
+
     const size_t CAPACITY = JSON_ARRAY_SIZE(64);
     StaticJsonDocument<CAPACITY> doc;
     deserializeJson(doc, ic);
@@ -237,18 +252,8 @@ namespace esphome
       unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
       Color c = Color(r, g, b);
 
-      this->sbitmap[i++] = c;
+      screen->sbitmap[i++] = c;
     }
-
-    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_BITMAP_SMALL, id);
-    
-    screen->text = text;
-    screen->icon_name = id;
-    screen->text_color = Color(r, g, b);
-    screen->mode = MODE_BITMAP_SMALL;
-    screen->default_font = default_font;
-    screen->calc_scroll_time(text, screen_time);
-    screen->endtime = this->clock->now().timestamp + (lifetime > 0 ? lifetime * 60 : screen->screen_time_);
 
     if (id == "")
     {
@@ -279,6 +284,20 @@ namespace esphome
       id = get_screen_id(icon);
     } 
 
+    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_RAINBOW_BITMAP_SMALL, id);
+    
+    screen->text = text;
+    screen->icon_name = id;
+    screen->mode = MODE_RAINBOW_BITMAP_SMALL;
+    screen->default_font = default_font;
+    screen->calc_scroll_time(text, screen_time);
+    screen->endtime = this->clock->now().timestamp + (lifetime > 0 ? lifetime * 60 : screen->screen_time_);
+
+    if (screen->sbitmap == NULL) 
+    {
+      screen->sbitmap = new Color[64];
+    }
+
     const size_t CAPACITY = JSON_ARRAY_SIZE(64);
     StaticJsonDocument<CAPACITY> doc;
     deserializeJson(doc, ic);
@@ -294,17 +313,8 @@ namespace esphome
       unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
       Color c = Color(r, g, b);
 
-      this->sbitmap[i++] = c;
+      screen->sbitmap[i++] = c;
     }
-
-    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_RAINBOW_BITMAP_SMALL, id);
-    
-    screen->text = text;
-    screen->icon_name = id;
-    screen->mode = MODE_RAINBOW_BITMAP_SMALL;
-    screen->default_font = default_font;
-    screen->calc_scroll_time(text, screen_time);
-    screen->endtime = this->clock->now().timestamp + (lifetime > 0 ? lifetime * 60 : screen->screen_time_);
 
     if (id == "")
     {
@@ -325,6 +335,7 @@ namespace esphome
     screen->status();
   }
 #endif
+
 #ifdef USE_ESP8266
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
@@ -770,6 +781,10 @@ namespace esphome
               case MODE_TEXT_SCREEN:
                 infotext = "TEXT";
                 break;
+              case MODE_BITMAP_SMALL:
+              case MODE_RAINBOW_BITMAP_SMALL:
+                infotext = ("BITMAP_SMALL:" + this->queue[i]->icon_name).c_str();
+                break;
               case MODE_BITMAP_SCREEN:
                 infotext = "BITMAP";
                 break;
@@ -783,6 +798,11 @@ namespace esphome
             }
           }
           this->queue[i]->mode = MODE_EMPTY;
+          if (this->queue[i]->sbitmap != NULL)
+          {
+            delete [] this->queue[i]->sbitmap;
+            this->queue[i]->sbitmap = nullptr;
+          }
         }
       }
     }
@@ -1037,6 +1057,11 @@ namespace esphome
           this->queue[i]->mode = MODE_EMPTY;
           this->queue[i]->endtime = 0;
           this->queue[i]->last_time = this->clock->now().timestamp;
+          if (this->queue[i]->sbitmap != NULL)
+          {
+            delete [] this->queue[i]->sbitmap;
+            this->queue[i]->sbitmap = nullptr;
+          }
           if (i == this->screen_pointer)
           {
             this->next_action_time = this->clock->now().timestamp;
