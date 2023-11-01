@@ -227,11 +227,11 @@ namespace esphome
     screen->text = text;
     screen->icon_name = id;
     screen->text_color = Color(r, g, b);
-    screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->mode = MODE_BITMAP_SMALL;
     screen->default_font = default_font;
     screen->calc_scroll_time(text, screen_time);
-
+    screen->endtime = this->clock->now().timestamp + (lifetime > 0 ? lifetime * 60 : screen->screen_time_);
+    
     if (screen->sbitmap == NULL) 
     {
       screen->sbitmap = new Color[64];
@@ -288,10 +288,10 @@ namespace esphome
     
     screen->text = text;
     screen->icon_name = id;
-    screen->endtime = this->clock->now().timestamp + lifetime * 60;
     screen->mode = MODE_RAINBOW_BITMAP_SMALL;
     screen->default_font = default_font;
     screen->calc_scroll_time(text, screen_time);
+    screen->endtime = this->clock->now().timestamp + (lifetime > 0 ? lifetime * 60 : screen->screen_time_);
 
     if (screen->sbitmap == NULL) 
     {
@@ -335,6 +335,7 @@ namespace esphome
     screen->status();
   }
 #endif
+
 #ifdef USE_ESP8266
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
@@ -683,7 +684,7 @@ namespace esphome
     }
     if (hit != MAXQUEUE)
     {
-      ESP_LOGD(TAG, "oldest queue element is: %d",hit);
+      ESP_LOGD(TAG, "oldest queue element is: %d/%d",hit,this->queue_count());
     }
     this->queue[hit]->status();
     return hit;
@@ -807,6 +808,21 @@ namespace esphome
     }
   }
   
+  uint8_t EHMTX::queue_count()
+  {
+    time_t ts = this->clock->now().timestamp;
+    uint8_t c = 0;
+    for (size_t i = 0; i < MAXQUEUE; i++)
+    {
+      if (this->queue[i]->endtime > ts)
+      {
+        c++;
+      }
+    }
+
+    return c;
+  } 
+  
   void EHMTX::tick()
   {
     this->hue_++;
@@ -883,7 +899,7 @@ namespace esphome
       // blend handling
 
 #ifdef EHMTXv2_BLEND_STEPS
-      if ((this->ticks_ <= EHMTXv2_BLEND_STEPS))
+      if ((this->ticks_ <= EHMTXv2_BLEND_STEPS) && (this->queue_count() > 1))
       {
         uint8_t b = this->brightness_;
         float br = lerp((float)this->ticks_ / EHMTXv2_BLEND_STEPS, 0, (float)b / 255);
@@ -1811,8 +1827,10 @@ namespace esphome
     ESP_LOGCONFIG(TAG, "Display: %s", this->show_display ? F("On") : F("Off"));
     ESP_LOGCONFIG(TAG, "Night mode: %s", this->night_mode ? F("On") : F("Off"));
     ESP_LOGCONFIG(TAG, "Replace Time and Date: %s", this->replace_time_date_active ? F("On") : F("Off"));
-    ESP_LOGCONFIG(TAG, "Replace from: %s", EHMTXv2_REPLACE_TIME_DATE_FROM);
-    ESP_LOGCONFIG(TAG, "Replace to  : %s", EHMTXv2_REPLACE_TIME_DATE_TO);
+    if (this->replace_time_date_active) {
+      ESP_LOGCONFIG(TAG, "Replace from: %s", EHMTXv2_REPLACE_TIME_DATE_FROM);
+      ESP_LOGCONFIG(TAG, "Replace to  : %s", EHMTXv2_REPLACE_TIME_DATE_TO);
+    }
   }
 
   void EHMTX::add_icon(EHMTX_Icon *icon)

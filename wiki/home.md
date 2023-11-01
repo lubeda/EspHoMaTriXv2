@@ -27,6 +27,7 @@
 
 - [Boot loop and Guru mediation error](gurumediationerror)
 
-## Defective / Broken Ulanzi TC-001?
+## Ulanzi TC-001 specials?
 
 - [hint to repair](broken-Ulanzi)
+- [modify ulanzi hardware](ulanzi-hardware-mode)
