@@ -1787,8 +1787,10 @@ namespace esphome
     ESP_LOGCONFIG(TAG, "Display: %s", this->show_display ? F("On") : F("Off"));
     ESP_LOGCONFIG(TAG, "Night mode: %s", this->night_mode ? F("On") : F("Off"));
     ESP_LOGCONFIG(TAG, "Replace Time and Date: %s", this->replace_time_date_active ? F("On") : F("Off"));
-    ESP_LOGCONFIG(TAG, "Replace from: %s", EHMTXv2_REPLACE_TIME_DATE_FROM);
-    ESP_LOGCONFIG(TAG, "Replace to  : %s", EHMTXv2_REPLACE_TIME_DATE_TO);
+    if (this->replace_time_date_active) {
+      ESP_LOGCONFIG(TAG, "Replace from: %s", EHMTXv2_REPLACE_TIME_DATE_FROM);
+      ESP_LOGCONFIG(TAG, "Replace to  : %s", EHMTXv2_REPLACE_TIME_DATE_TO);
+    }
   }
 
   void EHMTX::add_icon(EHMTX_Icon *icon)
