@@ -1306,6 +1306,24 @@ switch:
         id(rgb8x32)->set_display_off();
 ```
 
+#### Night mode switch
+
+```yaml
+switch:
+  - platform: template
+    name: "$devicename Night Mode"
+    icon: "mdi:weather-night"
+    restore_mode: ALWAYS_OFF
+    lambda: |-
+      return id(rgb8x32)->night_mode;
+    turn_on_action:
+      lambda: |-
+        id(rgb8x32)->set_night_mode_on();
+    turn_off_action:
+      lambda: |-
+        id(rgb8x32)->set_night_mode_off();
+```
+
 ### automatic brightness
 
 Awtrix and PixelIt have hard-coded functionality. EHMTX is also capable of building something like that with lambdas. Feel free to expierement as you see fit. See the Ulanzi simple YAML as a guide.
