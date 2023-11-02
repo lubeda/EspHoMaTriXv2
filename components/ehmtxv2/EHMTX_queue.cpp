@@ -743,7 +743,7 @@ namespace esphome
 
   void EHMTX_queue::hold_slot(uint8_t _sec)
   {
-    this->endtime += _sec;
+    this->endtime += _sec * 1000;
     ESP_LOGD(TAG, "hold for %d secs", _sec);
   }
 
@@ -774,8 +774,8 @@ namespace esphome
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
 #ifdef EHMTXv2_SCROLL_SMALL_TEXT
-      max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-      display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
+      max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+      display_duration = max_steps * EHMTXv2_SCROLL_INTERVALL;
       this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
 #else
       if (this->pixels_ < 32)
@@ -784,8 +784,8 @@ namespace esphome
       }
       else
       {
-        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
+        max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = max_steps * EHMTXv2_SCROLL_INTERVALL;
         this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
       }
 #endif
@@ -803,8 +803,8 @@ namespace esphome
       }
       else
       {
-        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
+        max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = max_steps * EHMTXv2_SCROLL_INTERVALL;
         this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
       }
       break;
@@ -816,8 +816,8 @@ namespace esphome
       }
       else
       {
-        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
+        max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = max_steps * EHMTXv2_SCROLL_INTERVALL;
         this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
       }
       break;
