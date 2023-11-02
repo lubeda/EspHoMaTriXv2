@@ -734,7 +734,7 @@ namespace esphome
 
       default:
         ESP_LOGD(TAG, "no screen to draw!");
-        this->config_->next_action_time = 0;
+        this->config_->next_action_time = 0.0;
         break;
       }
       this->update_screen();
@@ -743,7 +743,7 @@ namespace esphome
 
   void EHMTX_queue::hold_slot(uint8_t _sec)
   {
-    this->endtime += _sec * 1000;
+    this->endtime += _sec * 1000.0;
     ESP_LOGD(TAG, "hold for %d secs", _sec);
   }
 

@@ -143,7 +143,7 @@ namespace esphome
     unsigned long last_scroll_time;
     unsigned long last_rainbow_time;
     unsigned long last_anim_time;
-    float next_action_time = 0; // when is the next screen change
+    float next_action_time = 0.0; // when is the next screen change
     uint32_t tick_next_action = 0; // when is the next screen change
     uint32_t ticks_ = 0; // when is the next screen change
 

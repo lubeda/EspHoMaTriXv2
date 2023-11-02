@@ -19,7 +19,7 @@ namespace esphome
     this->rainbow_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->info_lcolor = Color(CG_GREY, CG_GREY, CG_GREY);
     this->info_rcolor = Color(CG_GREY * 2, CG_GREY * 2, CG_GREY * 2);
-    this->next_action_time = 0;
+    this->next_action_time = 0.0;
     this->last_scroll_time = 0;
     this->screen_pointer = MAXQUEUE;
     this->is_running = false;
@@ -652,7 +652,7 @@ namespace esphome
         if (force)
         {
           ESP_LOGD(TAG, "force_screen: found position: %d", i);
-          this->queue[i]->last_time = 0;
+          this->queue[i]->last_time = 0.0;
           this->queue[i]->endtime += this->queue[i]->screen_time_;
           this->next_action_time = get_tick();
           ESP_LOGW(TAG, "force_screen: icon %s in mode %d", icon_name.c_str(), mode);
@@ -683,7 +683,7 @@ namespace esphome
         }
       }
 
-      if ((this->queue[i]->endtime > 0) && (this->queue[i]->last_time < last_time))
+      if ((this->queue[i]->endtime > 0.0) && (this->queue[i]->last_time < last_time))
       {
         hit = i;
         last_time = this->queue[i]->last_time;
@@ -691,7 +691,7 @@ namespace esphome
     }
     if (hit != MAXQUEUE)
     {
-      ESP_LOGD(TAG, "oldest queue element is: %d/%d",hit,this->queue_count());
+      ESP_LOGD(TAG, "oldest queue element is: %d/%d", hit, this->queue_count());
     }
     this->queue[hit]->status();
     return hit;
@@ -747,9 +747,9 @@ namespace esphome
 
       for (size_t i = 0; i < MAXQUEUE; i++)
       {
-        if ((this->queue[i]->endtime > 0) && (this->queue[i]->endtime < ts))
+        if ((this->queue[i]->endtime > 0.0) && (this->queue[i]->endtime < ts))
         {
-          this->queue[i]->endtime = 0;
+          this->queue[i]->endtime = 0.0;
           if (this->queue[i]->mode != MODE_EMPTY)
           {
             ESP_LOGD(TAG, "remove expired queue element: slot %d: mode: %d icon_name: %s text: %s", i, this->queue[i]->mode, this->queue[i]->icon_name.c_str(), this->queue[i]->text.c_str());
@@ -917,7 +917,7 @@ namespace esphome
     }
     else
     {
-      uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim/ 16)) % 32;
+      uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
       uint8_t l = 32 / 2 - w / 2 ;
       this->display->rectangle(l, 2, w, 4, this->rainbow_color); 
       this->boot_anim++;
@@ -1062,7 +1062,7 @@ namespace esphome
         {
           ESP_LOGW(TAG, "del_screen: slot %d deleted", i);
           this->queue[i]->mode = MODE_EMPTY;
-          this->queue[i]->endtime = 0;
+          this->queue[i]->endtime = 0.0;
           this->queue[i]->last_time = get_tick();
           if (this->queue[i]->sbitmap != NULL)
           {
