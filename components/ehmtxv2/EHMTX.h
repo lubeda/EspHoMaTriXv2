@@ -160,6 +160,7 @@ namespace esphome
     bool string_has_ending(std::string const &fullString, std::string const &ending);
     void draw_day_of_week(bool small=false);
     void show_all_icons();
+    float get_tick();
     void tick();
     void draw();
     void get_status();
