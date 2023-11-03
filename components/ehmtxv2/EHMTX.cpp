@@ -823,12 +823,15 @@ namespace esphome
     return c;
   } 
 
+  // tick (current time) in milliseconds
   float EHMTX::get_tick()
   {
     struct timeval tv;
     if (gettimeofday(&tv, NULL) == 0)
     {
-      return tv.tv_sec * 1000.0 + tv.tv_usec;
+      // tv_sec  - seconds
+      // tv_usec - microseconds
+      return tv.tv_sec * 1000.0 + static_cast<float>(tv.tv_usec / 1000);
     }
     return this->clock->now().timestamp * 1000.0;
   }
