@@ -236,7 +236,7 @@ namespace esphome
     screen->text_color = Color(r, g, b);
     screen->mode = MODE_BITMAP_SMALL;
     screen->default_font = default_font;
-    screen->calc_scroll_time(text, screen_time * 1000);
+    screen->calc_scroll_time(text, screen_time);
     screen->endtime = get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     
     if (screen->sbitmap == NULL) 
@@ -297,7 +297,7 @@ namespace esphome
     screen->icon_name = id;
     screen->mode = MODE_RAINBOW_BITMAP_SMALL;
     screen->default_font = default_font;
-    screen->calc_scroll_time(text, screen_time * 1000);
+    screen->calc_scroll_time(text, screen_time);
     screen->endtime = get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
 
     if (screen->sbitmap == NULL) 
@@ -1100,7 +1100,7 @@ namespace esphome
     screen->mode = MODE_ALERT_SCREEN;
     screen->icon_name = iconname;
     screen->icon = icon;
-    screen->calc_scroll_time(text, screen_time * 1000);
+    screen->calc_scroll_time(text, screen_time);
     // time needed for scrolling
     screen->endtime = get_tick() + screen->screen_time_;
     for (auto *t : on_add_screen_triggers_)
@@ -1137,7 +1137,7 @@ namespace esphome
     screen->mode = MODE_ICON_SCREEN;
     screen->icon_name = id;
     screen->icon = icon;
-    screen->calc_scroll_time(text, screen_time * 1000);
+    screen->calc_scroll_time(text, screen_time);
     screen->endtime = get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     for (auto *t : on_add_screen_triggers_)
     {
@@ -1172,7 +1172,7 @@ namespace esphome
     screen->icon_name = id;
     screen->icon = icon;
     screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100 : progress;
-    screen->calc_scroll_time(text, screen_time * 1000);
+    screen->calc_scroll_time(text, screen_time);
     screen->endtime = get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     for (auto *t : on_add_screen_triggers_)
     {
@@ -1283,7 +1283,7 @@ namespace esphome
     screen->mode = MODE_RAINBOW_ICON;
     screen->icon_name = id;
     screen->icon = icon;
-    screen->calc_scroll_time(text, screen_time * 1000);
+    screen->calc_scroll_time(text, screen_time);
     screen->endtime = get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     for (auto *t : on_add_screen_triggers_)
     {
@@ -1359,7 +1359,7 @@ namespace esphome
     screen->default_font = default_font;
     screen->text_color = Color(r, g, b);
     screen->mode = MODE_TEXT_SCREEN;
-    screen->calc_scroll_time(text, screen_time * 1000);
+    screen->calc_scroll_time(text, screen_time);
     screen->endtime = get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     screen->status();
   }
@@ -1370,7 +1370,7 @@ namespace esphome
     screen->text = text;
     screen->default_font = default_font;
     screen->mode = MODE_RAINBOW_TEXT;
-    screen->calc_scroll_time(text, screen_time * 1000);
+    screen->calc_scroll_time(text, screen_time);
     screen->endtime = get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     screen->status();
   }
@@ -1468,7 +1468,7 @@ namespace esphome
     screen->mode = MODE_ICON_TEXT_SCREEN;
     screen->icon_name = id;
     screen->icon = icon;
-    screen->calc_scroll_time(text, screen_time * 1000);
+    screen->calc_scroll_time(text, screen_time);
     screen->endtime = get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     for (auto *t : on_add_screen_triggers_)
     {
@@ -1501,7 +1501,7 @@ namespace esphome
     screen->mode = MODE_RAINBOW_ICON_TEXT_SCREEN;
     screen->icon_name = id;
     screen->icon = icon;
-    screen->calc_scroll_time(text, screen_time * 1000);
+    screen->calc_scroll_time(text, screen_time);
     screen->endtime = get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     for (auto *t : on_add_screen_triggers_)
     {
