@@ -777,7 +777,7 @@ namespace esphome
     case MODE_RAINBOW_TEXT:
 #ifdef EHMTXv2_SCROLL_SMALL_TEXT
       max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-      display_duration = static_cast<double>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+      display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
       this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
 #else
       if (this->pixels_ < 32)
@@ -787,7 +787,7 @@ namespace esphome
       else
       {
         max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = static_cast<double>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
         this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
 #endif
@@ -806,7 +806,7 @@ namespace esphome
       else
       {
         max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = static_cast<double>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
         this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
       break;
@@ -819,7 +819,7 @@ namespace esphome
       else
       {
         max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = static_cast<double>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
         this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
       break;
