@@ -749,10 +749,12 @@ namespace esphome
 
   // TODO void EHMTX_queue::set_mode_icon()
 
+  // Screen Text, Screen time in seconds
   void EHMTX_queue::calc_scroll_time(std::string text, uint16_t screen_time)
   {
     int x, y, w, h;
     float display_duration;
+    float requested_time = screen_time * 1000.0;
 
     uint8_t width = 32;
     uint8_t startx = 0;
@@ -775,18 +777,18 @@ namespace esphome
     case MODE_RAINBOW_TEXT:
 #ifdef EHMTXv2_SCROLL_SMALL_TEXT
       max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-      display_duration = max_steps * EHMTXv2_SCROLL_INTERVALL;
-      this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+      display_duration = (double)max_steps * (double)EHMTXv2_SCROLL_INTERVALL;
+      this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
 #else
       if (this->pixels_ < 32)
       {
-        this->screen_time_ = screen_time;
+        this->screen_time_ = screen_time * 1000.0;
       }
       else
       {
         max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = max_steps * EHMTXv2_SCROLL_INTERVALL;
-        this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+        display_duration = (double)max_steps * (double)EHMTXv2_SCROLL_INTERVALL;
+        this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
 #endif
       break;
@@ -799,26 +801,26 @@ namespace esphome
       startx = 8;
       if (this->pixels_ < 23)
       {
-        this->screen_time_ = screen_time;
+        this->screen_time_ = screen_time * 1000.0;
       }
       else
       {
         max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = max_steps * EHMTXv2_SCROLL_INTERVALL;
-        this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+        display_duration = (double)max_steps * (double)EHMTXv2_SCROLL_INTERVALL;
+        this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
       break;
     case MODE_ICON_TEXT_SCREEN:
     case MODE_RAINBOW_ICON_TEXT_SCREEN:
       if (this->pixels_ < 23)
       {
-        this->screen_time_ = screen_time;
+        this->screen_time_ = screen_time * 1000.0;
       }
       else
       {
         max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = max_steps * EHMTXv2_SCROLL_INTERVALL;
-        this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+        display_duration = (double)max_steps * (double)EHMTXv2_SCROLL_INTERVALL;
+        this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
       break;
     default:
