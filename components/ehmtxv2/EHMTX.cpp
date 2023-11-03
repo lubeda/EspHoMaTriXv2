@@ -826,11 +826,19 @@ namespace esphome
   // tick in milliseconds
   float EHMTX::get_tick()
   {
+#ifdef USE_ESP32
     struct timespec spec;
     clock_gettime(CLOCK_MONOTONIC, &spec);
     // tv_sec  - seconds
     // tv_nsec - nanoseconds
     return static_cast<float>(spec.tv_sec * 1000 + spec.tv_nsec / 1000000);
+#else
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    // tv_sec  - seconds
+    // tv_usec - microseconds
+    return static_cast<float>(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+#endif
   }
  
   void EHMTX::tick()
