@@ -896,10 +896,10 @@ namespace esphome
           }
         }
       }
-      // blend handling
 
+      // blend handling
 #ifdef EHMTXv2_BLEND_STEPS
-      if ((this->ticks_ <= EHMTXv2_BLEND_STEPS) && (this->queue_count() > 1))
+      if ((this->queue_count() > 1) && (this->brightness_ >= 50) && (this->ticks_ <= EHMTXv2_BLEND_STEPS))
       {
         uint8_t b = this->brightness_;
         float br = lerp((float)this->ticks_ / EHMTXv2_BLEND_STEPS, 0, (float)b / 255);
