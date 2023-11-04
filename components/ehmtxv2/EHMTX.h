@@ -75,6 +75,7 @@ namespace esphome
   protected:
     float get_setup_priority() const override { return esphome::setup_priority::LATE; }
     uint8_t brightness_;
+    uint8_t target_brightness_;
     uint32_t boot_anim = 0;
     uint8_t screen_pointer;
     bool show_day_of_week;

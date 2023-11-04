@@ -905,7 +905,16 @@ namespace esphome
         float br = lerp((float)this->ticks_ / EHMTXv2_BLEND_STEPS, 0, (float)b / 255);
         this->display->get_light()->set_correction(br, br, br);
       }
+      else
 #endif
+      {
+        if (this->brightness_ != this->target_brightness_)
+        {
+          this->brightness_ = this->brightness_ + (this->target_brightness_ < this->brightness_ ? -1 : 1);
+          float br = (float)this->brightness_ / (float)255;
+          this->display->get_light()->set_correction(br, br, br);
+        }
+      }
       this->ticks_++;
     }
     else
@@ -1576,10 +1585,9 @@ namespace esphome
   {
     if (value < 256)
     {
-      this->brightness_ = value;
+      this->target_brightness_ = value;
       float br = (float)value / (float)255;
       ESP_LOGI(TAG, "set_brightness %d => %.2f %%", value, 100 * br);
-      this->display->get_light()->set_correction(br, br, br);
     }
   }
 
