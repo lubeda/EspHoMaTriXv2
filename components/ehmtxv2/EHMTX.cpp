@@ -896,14 +896,18 @@ namespace esphome
           }
         }
       }
-      // blend handling
 
+      // blend handling
 #ifdef EHMTXv2_BLEND_STEPS
-      if ((this->ticks_ <= EHMTXv2_BLEND_STEPS) && (this->queue_count() > 1))
+      if ((this->ticks_ <= EHMTXv2_BLEND_STEPS) && (this->brightness_ >= 50) && (this->queue_count() > 1))
       {
         uint8_t b = this->brightness_;
-        float br = lerp((float)this->ticks_ / EHMTXv2_BLEND_STEPS, 0, (float)b / 255);
-        this->display->get_light()->set_correction(br, br, br);
+        uint8_t current_step = ((b - 50) / 205) * (EHMTXv2_BLEND_STEPS - EHMTXv2_BLEND_STEPS / 2) + EHMTXv2_BLEND_STEPS / 2;
+        if (this->ticks_ <= current_step)
+        {
+          float br = lerp((float)this->ticks_ / current_step, 0, (float)b / 255);
+          this->display->get_light()->set_correction(br, br, br);
+        }
       }
       else
 #endif
