@@ -144,7 +144,7 @@ namespace esphome
     unsigned long last_scroll_time;
     unsigned long last_rainbow_time;
     unsigned long last_anim_time;
-    time_t next_action_time = 0; // when is the next screen change
+    float next_action_time = 0.0; // when is the next screen change
     uint32_t tick_next_action = 0; // when is the next screen change
     uint32_t ticks_ = 0; // when is the next screen change
 
@@ -161,6 +161,7 @@ namespace esphome
     bool string_has_ending(std::string const &fullString, std::string const &ending);
     void draw_day_of_week(bool small=false);
     void show_all_icons();
+    float get_tick();
     void tick();
     void draw();
     void get_status();
@@ -263,10 +264,10 @@ namespace esphome
 
   public:
     uint16_t pixels_;
-    uint16_t screen_time_;
+    float screen_time_;
     bool default_font;
-    time_t endtime;
-    time_t last_time;
+    float endtime;
+    float last_time;
     uint8_t icon;
     uint16_t scroll_reset;
     show_mode mode;

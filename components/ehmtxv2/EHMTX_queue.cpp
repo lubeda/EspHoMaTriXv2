@@ -70,9 +70,9 @@ namespace esphome
   EHMTX_queue::EHMTX_queue(EHMTX *config)
   {
     this->config_ = config;
-    this->endtime = 0;
-    this->last_time = 0;
-    this->screen_time_ = 0;
+    this->endtime = 0.0;
+    this->last_time = 0.0;
+    this->screen_time_ = 0.0;
     this->mode = MODE_EMPTY;
     this->icon_name = "";
     this->icon = 0;
@@ -92,72 +92,72 @@ namespace esphome
       ESP_LOGD(TAG, "empty slot");
       break;
     case MODE_BLANK:
-      ESP_LOGD(TAG, "queue: blank screen for %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: blank screen for %.1f sec", this->screen_time_ / 1000.0);
       break;
     case MODE_COLOR:
-      ESP_LOGD(TAG, "queue: color screen for %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: color screen for %.1f sec", this->screen_time_ / 1000.0);
       break;
     case MODE_CLOCK:
-      ESP_LOGD(TAG, "queue: clock for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: clock for: %.1f sec", this->screen_time_ / 1000.0);
       break;
     case MODE_DATE:
-      ESP_LOGD(TAG, "queue: date for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: date for: %.1f sec", this->screen_time_ / 1000.0);
       break;
     case MODE_GRAPH_SCREEN:
-      ESP_LOGD(TAG, "queue: graph for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: graph for: %.1f sec", this->screen_time_ / 1000.0);
       break;
     case MODE_FULL_SCREEN:
-      ESP_LOGD(TAG, "queue: full screen: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: full screen: \"%s\" for: %.1f sec", this->icon_name.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_ICON_SCREEN:
-      ESP_LOGD(TAG, "queue: icon screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon screen: \"%s\" text: %s for: %.1f sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_ICON_PROGRESS:
-      ESP_LOGD(TAG, "queue: icon progress: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon progress: \"%s\" text: %s for: %.1f sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_ICON_CLOCK:
-      ESP_LOGD(TAG, "queue: icon clock: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon clock: \"%s\" for: %.1f sec", this->icon_name.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_ICON_DATE:
-      ESP_LOGD(TAG, "queue: icon date: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon date: \"%s\" for: %.1f sec", this->icon_name.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_ALERT_SCREEN:
-      ESP_LOGD(TAG, "queue: icon: \"%s\" for: %d sec", this->icon_name.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon: \"%s\" for: %.1f sec", this->icon_name.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_TEXT_SCREEN:
-      ESP_LOGD(TAG, "queue: text text: \"%s\" for: %d sec", this->text.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: text text: \"%s\" for: %.1f sec", this->text.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_RAINBOW_ICON:
-      ESP_LOGD(TAG, "queue: rainbow icon: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: rainbow icon: \"%s\" text: %s for: %.1f sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_RAINBOW_TEXT:
-      ESP_LOGD(TAG, "queue: rainbow text: \"%s\" for: %d sec", this->text.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: rainbow text: \"%s\" for: %.1f sec", this->text.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_RAINBOW_CLOCK:
-      ESP_LOGD(TAG, "queue: rainbow clock for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: rainbow clock for: %.1f sec", this->screen_time_ / 1000.0);
       break;
     case MODE_RAINBOW_DATE:
-      ESP_LOGD(TAG, "queue: rainbow date for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: rainbow date for: %.1f sec", this->screen_time_ / 1000.0);
       break;
     case MODE_ICON_TEXT_SCREEN:
-      ESP_LOGD(TAG, "queue: icon text screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: icon text screen: \"%s\" text: %s for: %.1f sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_RAINBOW_ICON_TEXT_SCREEN:
-      ESP_LOGD(TAG, "queue: rainbow icon text screen: \"%s\" text: %s for: %d sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_);
+      ESP_LOGD(TAG, "queue: rainbow icon text screen: \"%s\" text: %s for: %.1f sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_FIRE:
-      ESP_LOGD(TAG, "queue: fire for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: fire for: %.1f sec", this->screen_time_ / 1000.0);
       break;
 
 #ifndef USE_ESP8266
     case MODE_BITMAP_SCREEN:
-      ESP_LOGD(TAG, "queue: bitmap for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: bitmap for: %.1f sec", this->screen_time_ / 1000.0);
       break;
     case MODE_BITMAP_SMALL:
-      ESP_LOGD(TAG, "queue: small bitmap for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: small bitmap for: %.1f sec", this->screen_time_ / 1000.0);
       break;
     case MODE_RAINBOW_BITMAP_SMALL:
-      ESP_LOGD(TAG, "queue: rainbow small bitmap for: %d sec", this->screen_time_);
+      ESP_LOGD(TAG, "queue: rainbow small bitmap for: %.1f sec", this->screen_time_ / 1000.0);
       break;
 #endif
 
@@ -734,7 +734,7 @@ namespace esphome
 
       default:
         ESP_LOGD(TAG, "no screen to draw!");
-        this->config_->next_action_time = 0;
+        this->config_->next_action_time = 0.0;
         break;
       }
       this->update_screen();
@@ -743,16 +743,18 @@ namespace esphome
 
   void EHMTX_queue::hold_slot(uint8_t _sec)
   {
-    this->endtime += _sec;
+    this->endtime += 1000.0 * _sec;
     ESP_LOGD(TAG, "hold for %d secs", _sec);
   }
 
   // TODO void EHMTX_queue::set_mode_icon()
 
+  // Screen Text, Screen time in seconds
   void EHMTX_queue::calc_scroll_time(std::string text, uint16_t screen_time)
   {
     int x, y, w, h;
     float display_duration;
+    float requested_time = 1000.0 * screen_time;
 
     uint8_t width = 32;
     uint8_t startx = 0;
@@ -774,19 +776,19 @@ namespace esphome
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
 #ifdef EHMTXv2_SCROLL_SMALL_TEXT
-      max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-      display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
-      this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+      max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+      display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+      this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
 #else
       if (this->pixels_ < 32)
       {
-        this->screen_time_ = screen_time;
+        this->screen_time_ = requested_time;
       }
       else
       {
-        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
-        this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+        max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+        this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
 #endif
       break;
@@ -799,26 +801,26 @@ namespace esphome
       startx = 8;
       if (this->pixels_ < 23)
       {
-        this->screen_time_ = screen_time;
+        this->screen_time_ = requested_time;
       }
       else
       {
-        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
-        this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+        max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+        this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
       break;
     case MODE_ICON_TEXT_SCREEN:
     case MODE_RAINBOW_ICON_TEXT_SCREEN:
       if (this->pixels_ < 23)
       {
-        this->screen_time_ = screen_time;
+        this->screen_time_ = requested_time;
       }
       else
       {
-        max_steps = (EHMTXv2_SCROLL_COUNT + 1) * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = ceil((max_steps * EHMTXv2_SCROLL_INTERVALL) / 1000);
-        this->screen_time_ = (display_duration > screen_time) ? display_duration : screen_time;
+        max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+        this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
       break;
     default:
@@ -828,7 +830,7 @@ namespace esphome
     this->scroll_reset = (width - startx) + this->pixels_;
     ;
 
-    ESP_LOGD(TAG, "calc_scroll_time: mode: %d text: \"%s\" pixels %d calculated: %d defined: %d max_steps: %d", this->mode, text.c_str(), this->pixels_, this->screen_time_, screen_time, this->scroll_reset);
+    ESP_LOGD(TAG, "calc_scroll_time: mode: %d text: \"%s\" pixels %d calculated: %.1f defined: %d max_steps: %d", this->mode, text.c_str(), this->pixels_, this->screen_time_ / 1000.0, screen_time, this->scroll_reset);
   }
   
 }
