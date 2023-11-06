@@ -53,7 +53,8 @@ enum show_mode : uint8_t
   MODE_ICON_PROGRESS = 19,
   MODE_RAINBOW_BITMAP_SMALL = 20,
   MODE_ICON_TEXT_SCREEN = 21,
-  MODE_RAINBOW_ICON_TEXT_SCREEN = 22
+  MODE_RAINBOW_ICON_TEXT_SCREEN = 22,
+  MODE_BITMAP_STACK_SCREEN = 23
 };
 
 namespace esphome
@@ -213,6 +214,8 @@ namespace esphome
 
     void icon_text_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void rainbow_icon_text_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
+
+    void bitmap_stack(std::string icons, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
 
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void color_gauge(std::string text);
