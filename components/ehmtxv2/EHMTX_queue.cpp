@@ -302,6 +302,7 @@ namespace esphome
           this->config_->display->graph(8, 0, this->config_->graph);
           if (this->icon != BLANKICON)
           {
+            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
             this->config_->display->image(0, 0, this->config_->icons[this->icon]);
           }
         }
