@@ -362,7 +362,7 @@ namespace esphome
         tokens.push_back(icon);
         count++;
       }
-      if count >= 64
+      if (count >= 64)
       {
         break;
       }
