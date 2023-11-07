@@ -237,7 +237,11 @@ namespace esphome
     uint8_t width = 32;
     int result = this->config_->scroll_step + width;
 
-    if (this->icon < 5)
+    if (this->icon > 4)
+    {
+      result = result + item * 8;
+    }
+    else
     {
       float step = static_cast<float>(width - 8 * this->icon) / static_cast<float>(this->icon + 1);
       uint8_t target = round(step * (item + 1) + 8 * item);
