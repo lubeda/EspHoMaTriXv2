@@ -296,7 +296,8 @@ namespace esphome
     bool update_slot(uint8_t _icon);
     void update_screen();
     void hold_slot(uint8_t _sec);
-    void calc_scroll_time(std::string, uint16_t);
+    void calc_scroll_time(std::string text, uint16_t screen_time);
+    void calc_scroll_time(uint8_t icon_count, uint16_t screen_time);
     int xpos();
     int xpos(uint8_t item);
   };
