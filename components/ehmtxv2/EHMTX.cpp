@@ -416,7 +416,7 @@ namespace esphome
     screen->icon_name = ic;
     screen->text = id;
     screen->calc_scroll_time(screen->icon, screen_time);
-    screen->endtime = this->get_tick() + screen->screen_time_;
+    screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);

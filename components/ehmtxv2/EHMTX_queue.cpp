@@ -235,21 +235,21 @@ namespace esphome
   int EHMTX_queue::xpos(uint8_t item)
   {
     uint8_t width = 32;
-    int result = this->config_->scroll_step + width;
+    int result = width - this->config_->scroll_step + item * 9;
 
-    if (this->icon > 4)
+    if (this->icon < 5)
     {
-      result = result + item * 8;
-    }
-    else
-    {
-      float step = static_cast<float>(width - 8 * this->icon) / static_cast<float>(this->icon + 1);
+      float step = (static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1);
       uint8_t target = round(step * (item + 1) + 8 * item);
 
       if (this->sbitmap[item].r > target)
       {
         result = result > target ? result : target;
         this->sbitmap[item].r = result;
+      }
+      else
+      {
+        result = this->sbitmap[item].r;
       }
     }
 
@@ -271,7 +271,18 @@ namespace esphome
       this->config_->last_rainbow_time = millis();
     }
 
-    if (this->icon < this->config_->icon_count)
+    if (this->mode == MODE_BITMAP_STACK_SCREEN && this->sbitmap != NULL)
+    {
+      if (millis() - this->config_->last_anim_time >= this->config_->icons[this->sbitmap[0].b]->frame_duration)
+      {
+        for (uint8_t i = 0; i < this->icon; i++)
+        {
+          this->config_->icons[this->sbitmap[i].b]->next_frame();
+        }
+        this->config_->last_anim_time = millis();
+      }
+    }
+    else if (this->icon < this->config_->icon_count)
     {
       if (millis() - this->config_->last_anim_time >= this->config_->icons[this->icon]->frame_duration)
       {
@@ -879,7 +890,7 @@ namespace esphome
     uint8_t startx = 0;
     uint16_t max_steps = 0;
 
-    this->pixels_ = 8 * icon_count;
+    this->pixels_ = 9 * icon_count;
 
     if (this->pixels_ < 32)
     {
