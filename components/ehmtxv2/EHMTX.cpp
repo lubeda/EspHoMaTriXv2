@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 namespace esphome
 {
@@ -346,6 +347,8 @@ namespace esphome
 
   void EHMTX::bitmap_stack(std::string icons, int lifetime, int screen_time)
   {
+    icons.erase(remove(icons.begin(), icons.end(), ' '), icons.end());  
+
     std::stringstream stream(icons);
     std::string icon;
     std::vector<std::string> tokens;
@@ -391,7 +394,7 @@ namespace esphome
       }
       else
       {
-        screen->sbitmap[screen->icon] = Color(0, 0, icon);
+        screen->sbitmap[screen->icon] = Color(255, 0, icon);
         screen->icon++;
       }
     }

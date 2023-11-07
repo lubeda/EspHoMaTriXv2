@@ -298,6 +298,7 @@ namespace esphome
     void hold_slot(uint8_t _sec);
     void calc_scroll_time(std::string, uint16_t);
     int xpos();
+    int xpos(uint8_t item);
   };
 
   class EHMTXNextScreenTrigger : public Trigger<std::string, std::string>
