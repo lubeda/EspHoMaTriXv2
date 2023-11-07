@@ -349,7 +349,15 @@ namespace esphome
   {
     icons.erase(remove(icons.begin(), icons.end(), ' '), icons.end());  
 
-    std::stringstream stream(icons);
+    std::string ic = get_icon_name(icons);
+    std::string id = "";
+
+    if (icons.find("|") != std::string::npos)
+    {
+      id = get_screen_id(icons);
+    } 
+
+    std::stringstream stream(ic);
     std::string icon;
     std::vector<std::string> tokens;
     uint8_t count = 0;
@@ -369,7 +377,7 @@ namespace esphome
     }
     if (count == 0)
     {
-      ESP_LOGW(TAG, "bitmap stack: icons list %s empty", icons.c_str());
+      ESP_LOGW(TAG, "bitmap stack: icons list [%s] empty", ic.c_str());
       return;
     }
 
@@ -389,7 +397,7 @@ namespace esphome
         ESP_LOGW(TAG, "icon %d/%s not found => skip", icon, tokens[i].c_str());
         for (auto *t : on_icon_error_triggers_)
         {
-          t->process(iconname);
+          t->process(tokens[i]);
         }
       }
       else
@@ -400,19 +408,20 @@ namespace esphome
     }
     if (screen->icon == 0)
     {
-      ESP_LOGW(TAG, "bitmap stack: icons list %s does not contain any known icons.", icons.c_str());
+      ESP_LOGW(TAG, "bitmap stack: icons list [%s] does not contain any known icons.", ic.c_str());
       return;
     }
     
     screen->mode = MODE_BITMAP_STACK_SCREEN;
-    screen->icon_name = icons;
+    screen->icon_name = ic;
+    screen->text = id;
     screen->calc_scroll_time(screen->icon, screen_time);
     screen->endtime = this->get_tick() + screen->screen_time_;
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "bitmap stack: has %d icons from: %s screen_time: %d", screen->icon, icons.c_str(), screen_time);
+    ESP_LOGD(TAG, "bitmap stack: has %d icons from: [%s] screen_time: %d", screen->icon, icons.c_str(), screen_time);
     screen->status();
   }
 #endif
