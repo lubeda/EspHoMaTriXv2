@@ -977,7 +977,14 @@ namespace esphome
         {
           this->queue[this->screen_pointer]->last_time = ts + this->queue[this->screen_pointer]->screen_time_;
           // todo nur bei animationen
-          if (this->queue[this->screen_pointer]->icon < this->icon_count)
+          if (this->queue[this->screen_pointer]->mode == MODE_BITMAP_STACK_SCREEN && this->queue[this->screen_pointer]->sbitmap != NULL)
+          {
+            for (uint8_t i = 0; i < this->icon; i++)
+            {
+              this->icons[this->queue[this->screen_pointer]->sbitmap[i].b]->set_frame(0);
+            }
+          }
+          else if (this->queue[this->screen_pointer]->icon < this->icon_count)
           {
             this->icons[this->queue[this->screen_pointer]->icon]->set_frame(0);
           }
