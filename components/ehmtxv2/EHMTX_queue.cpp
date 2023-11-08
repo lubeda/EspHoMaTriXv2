@@ -276,7 +276,14 @@ namespace esphome
 
     if (this->mode == MODE_BITMAP_STACK_SCREEN && this->sbitmap != NULL)
     {
-      if (millis() - this->config_->last_anim_time >= this->config_->icons[this->sbitmap[0].b]->frame_duration)
+      uint32_t average_frame_duration = 0;
+      for (uint8_t i = 0; i < this->icon; i++)
+      {
+        average_frame_duration += this->config_->icons[this->sbitmap[i].b]->frame_duration;
+      }
+      average_frame_duration = average_frame_duration / this->icon;
+      
+      if (millis() - this->config_->last_anim_time >= average_frame_duration)
       {
         for (uint8_t i = 0; i < this->icon; i++)
         {
