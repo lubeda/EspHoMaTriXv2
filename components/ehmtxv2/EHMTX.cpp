@@ -979,7 +979,7 @@ namespace esphome
           // todo nur bei animationen
           if (this->queue[this->screen_pointer]->mode == MODE_BITMAP_STACK_SCREEN && this->queue[this->screen_pointer]->sbitmap != NULL)
           {
-            for (uint8_t i = 0; i < this->screen_pointer]->icon; i++)
+            for (uint8_t i = 0; i < this->queue[this->screen_pointer]->icon; i++)
             {
               this->icons[this->queue[this->screen_pointer]->sbitmap[i].b]->set_frame(0);
             }
