@@ -242,18 +242,21 @@ namespace esphome
 
     if (this->icon < 5)
     {
-      float step = (static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1);
-      uint8_t target = round(step * (item + 1) + 8 * item);
+      uint8_t target = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) * (item + 1) + 8 * item);
+      uint8_t reverse_steps = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) * this->icon + 8 * (this->icon + 1)) + 8;
 
-      if (this->sbitmap[item].r > target)
+      if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > reverse_steps)
       {
-        result = result > target ? result : target;
-        this->sbitmap[item].r = result;
+        if (this->sbitmap[item].r > target)
+        {
+          this->sbitmap[item].r = result > target ? result : target;
+        }
       }
       else
       {
-        result = this->sbitmap[item].r;
+        this->sbitmap[item].r = this->sbitmap[item].r - 1;
       }
+      result = this->sbitmap[item].r;
     }
 
     return result;
