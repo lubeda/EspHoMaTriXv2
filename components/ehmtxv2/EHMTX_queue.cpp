@@ -256,7 +256,7 @@ namespace esphome
       int16_t item_pos = c8to16(this->sbitmap[item].r, this->sbitmap[item].g);
       
       uint8_t target = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) * (item + 1) + 8 * item);
-      if (!this->default_font && (this->icon == 2 || this->icon == 3))
+      if ((this->progress == 1) && (this->icon == 2 || this->icon == 3))
       {
         uint8_t reverse_steps = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) + 8);
 
@@ -334,10 +334,15 @@ namespace esphome
       return 0;
     }
     
-    if (!this->default_font && (this->icon == 1 || (this->icon == 3 && item == 1)))
+    if ((this->progress == 1) && (this->icon == 1 || (this->icon == 3 && item == 1)))
     {
       if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > 8)
       {
+        if (this->default_font)
+        {
+          return 0;
+        }
+        this->default_font = this->config_->scroll_step > 8 ;
         return this->config_->scroll_step - height;
       }
       return height - ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL);
