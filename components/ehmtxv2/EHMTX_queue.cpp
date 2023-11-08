@@ -298,7 +298,10 @@ namespace esphome
 
         if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > reverse_steps)
         {
-          item_pos = result > target ? result : target;
+          if (item_pos > target)
+          {
+            item_pos = result > target ? result : target;
+          }
         }
         else
         {
