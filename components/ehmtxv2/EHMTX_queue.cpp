@@ -243,18 +243,57 @@ namespace esphome
     if (this->icon < 5)
     {
       uint8_t target = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) * (item + 1) + 8 * item);
-      uint8_t reverse_steps = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) * this->icon + 8 * (this->icon + 1)) + 8;
-
-      if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > reverse_steps)
+      if (!this->default_font && (this->icon == 2 || this->icon == 3))
       {
-        if (this->sbitmap[item].r > target)
+        uint8_t reverse_steps = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) + 8);
+
+        if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > reverse_steps)
         {
-          this->sbitmap[item].r = result > target ? result : target;
+          result = (item + 1 == this->icon) ? width - this->config_->scroll_step : -8 + this->config_->scroll_step;
+          if (item == 0 && (this->sbitmap[item].r == 255 || this->sbitmap[item].r < target))
+          {
+            this->sbitmap[item].r = result < target ? result : target;
+          }
+          else if (item + 1 == this->icon && this->sbitmap[item].r > target)
+          {
+            this->sbitmap[item].r = result > target ? result : target;
+          }
+          else if (this->icon == 3 && item == 1)
+          {
+            this->sbitmap[item].r = target;
+          }
+        }
+        else
+        {
+          if (item == 0)
+          {
+            this->sbitmap[item].r = this->sbitmap[item].r - 1;
+          }
+          else if (item + 1 == this->icon)
+          {
+            this->sbitmap[item].r = this->sbitmap[item].r + 1;
+          }
+          else if (this->icon == 3 && item == 1)
+          {
+            this->sbitmap[item].r = target;
+          }
         }
       }
       else
       {
-        this->sbitmap[item].r = this->sbitmap[item].r - 1;
+        uint8_t reverse_steps = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) * this->icon + 8 * (this->icon + 1)) + 8;
+
+        if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > reverse_steps)
+        {
+          if (this->sbitmap[item].r > target)
+          {
+            this->sbitmap[item].r = result > target ? result : target;
+          }
+        }
+        else
+        {
+          this->sbitmap[item].r = this->sbitmap[item].r - 1;
+        }
       }
       result = this->sbitmap[item].r;
     }
