@@ -159,6 +159,9 @@ namespace esphome
     case MODE_RAINBOW_BITMAP_SMALL:
       ESP_LOGD(TAG, "queue: rainbow small bitmap for: %.1f sec", this->screen_time_ / 1000.0);
       break;
+    case MODE_BITMAP_STACK_SCREEN :
+      ESP_LOGD(TAG, "queue: bitmap stack for: %.1f sec", this->screen_time_ / 1000.0);
+      break;
 #endif
 
     default:
