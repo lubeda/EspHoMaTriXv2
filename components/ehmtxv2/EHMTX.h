@@ -300,6 +300,8 @@ namespace esphome
     void calc_scroll_time(uint8_t icon_count, uint16_t screen_time);
     int xpos();
     int xpos(uint8_t item);
+    int ypos();
+    int ypos(uint8_t item);
   };
 
   class EHMTXNextScreenTrigger : public Trigger<std::string, std::string>
