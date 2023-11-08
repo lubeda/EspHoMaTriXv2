@@ -235,13 +235,26 @@ namespace esphome
     return result;
   }
 
+  void c16to8(int16_t t, uint8_t& r, uint8_t& g)
+  {
+    r = static_cast<uint8_t>((t & 0xFF00) >> 8);
+    g = static_cast<uint8_t>(t & 0x00FF);
+  }
+
+  int16_t c8to16(uint8_t r, uint8_t g)
+  {
+    return (static_cast<uint16_t>(r) << 8) | g;
+  }
+
   int EHMTX_queue::xpos(uint8_t item)
   {
     uint8_t width = 32;
     int result = width - this->config_->scroll_step + item * 9;
-
+    
     if (this->icon < 5)
     {
+      int16_t item_pos = c8to16(this->sbitmap[item].r, this->sbitmap[item].g);
+      
       uint8_t target = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) * (item + 1) + 8 * item);
       if (!this->default_font && (this->icon == 2 || this->icon == 3))
       {
@@ -250,32 +263,32 @@ namespace esphome
         if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > reverse_steps)
         {
           result = (item + 1 == this->icon) ? width - this->config_->scroll_step : -8 + this->config_->scroll_step;
-          if (item == 0 && (this->sbitmap[item].r == 255 || this->sbitmap[item].r < target))
+          if (item == 0 && (item_pos == 32767 || item_pos < target))
           {
-            this->sbitmap[item].r = result < target ? result : target;
+            item_pos = result < target ? result : target;
           }
-          else if (item + 1 == this->icon && this->sbitmap[item].r > target)
+          else if (item + 1 == this->icon && item_pos > target)
           {
-            this->sbitmap[item].r = result > target ? result : target;
+            item_pos = result > target ? result : target;
           }
           else if (this->icon == 3 && item == 1)
           {
-            this->sbitmap[item].r = target;
+            item_pos = target;
           }
         }
         else
         {
           if (item == 0)
           {
-            this->sbitmap[item].r = this->sbitmap[item].r - 1;
+            item_pos -= 1;
           }
           else if (item + 1 == this->icon)
           {
-            this->sbitmap[item].r = this->sbitmap[item].r + 1;
+            item_pos += 1;
           }
           else if (this->icon == 3 && item == 1)
           {
-            this->sbitmap[item].r = target;
+            item_pos = target;
           }
         }
       }
@@ -285,20 +298,49 @@ namespace esphome
 
         if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > reverse_steps)
         {
-          if (this->sbitmap[item].r > target)
-          {
-            this->sbitmap[item].r = result > target ? result : target;
-          }
+          item_pos = result > target ? result : target;
         }
         else
         {
-          this->sbitmap[item].r = this->sbitmap[item].r - 1;
+          item_pos -= 1;
         }
       }
-      result = this->sbitmap[item].r;
+      
+      c16to8(item_pos, this->sbitmap[item].r, this->sbitmap[item].g);
+      result = item_pos;
     }
 
     return result;
+  }
+
+  int EHMTX_queue::ypos()
+  {
+    uint8_t height = 8;
+    if (this->config_->scroll_step > height)
+    {
+      return 0;
+    }
+    return this->config_->scroll_step - height;
+  }
+
+  int EHMTX_queue::ypos(uint8_t item)
+  {
+    uint8_t height = 8;
+    if (this->config_->scroll_step > height)
+    {
+      return 0;
+    }
+    
+    if (!this->default_font && (this->icon == 1 || (this->icon == 3 && item == 1)))
+    {
+      if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > 8)
+      {
+        return this->config_->scroll_step - height;
+      }
+      return height - ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL);
+    }
+    
+    return 0;
   }
 
   void EHMTX_queue::update_screen()
@@ -751,7 +793,7 @@ namespace esphome
         {
           for (uint8_t i = 0; i < this->icon; i++)
           {
-            this->config_->display->image(this->xpos(i), 0, this->config_->icons[this->sbitmap[i].b]);
+            this->config_->display->image(this->xpos(i), this->ypos(i), this->config_->icons[this->sbitmap[i].b]);
           }
         }
 #endif
