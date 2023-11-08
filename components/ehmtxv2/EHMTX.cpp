@@ -415,7 +415,7 @@ namespace esphome
     screen->mode = MODE_BITMAP_STACK_SCREEN;
     screen->icon_name = ic;
     screen->text = id;
-    screen->default_font = true; // true - one side scroll, false - two side if supported
+    screen->default_font = (id == "two"); // true - one side scroll, false - two side if supported
     screen->calc_scroll_time(screen->icon, screen_time);
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     for (auto *t : on_add_screen_triggers_)
