@@ -402,7 +402,7 @@ namespace esphome
       }
       else
       {
-        screen->sbitmap[screen->icon] = Color(255, 0, icon);
+        screen->sbitmap[screen->icon] = Color(127, 255, icon); // int16_t 32767 = uint8_t(127,255)
         screen->icon++;
       }
     }
