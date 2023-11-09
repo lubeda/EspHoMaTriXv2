@@ -302,6 +302,10 @@ namespace esphome
           }
         }
       }
+      else if ((this->progress == 1) && this->icon == 1)
+      {
+        item_pos = target;
+      }
       else
       {
         uint8_t reverse_steps = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) * this->icon + 8 * (this->icon + 1)) + 8;
@@ -339,10 +343,6 @@ namespace esphome
   int EHMTX_queue::ypos(uint8_t item)
   {
     uint8_t height = 8;
-    if (this->config_->scroll_step > height)
-    {
-      return 0;
-    }
     
     if ((this->progress == 1) && (this->icon == 1 || (this->icon == 3 && item == 1)))
     {
