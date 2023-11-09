@@ -387,7 +387,7 @@ namespace esphome
       screen->sbitmap = new Color[64];
     }
     
-    screen->icon = 0;
+    uint8_t real_count = 0;
     for (uint8_t i = 0; i < count; i++)
     {
       uint8_t icon = this->find_icon(tokens[i].c_str());
@@ -402,26 +402,30 @@ namespace esphome
       }
       else
       {
-        screen->sbitmap[screen->icon] = Color(127, 255, icon, 5); // int16_t 32767 = uint8_t(127,255)
-        screen->icon++;
+        screen->sbitmap[real_count] = Color(127, 255, icon, 5); // int16_t 32767 = uint8_t(127,255)
+        real_count++;
       }
     }
-    if (screen->icon == 0)
+    if (real_count == 0)
     {
+      delete [] screen->sbitmap;
+      screen->sbitmap = nullptr;
+
       ESP_LOGW(TAG, "bitmap stack: icons list [%s] does not contain any known icons.", ic.c_str());
       return;
     }
     
+    screen->icon = real_count;
     screen->mode = MODE_BITMAP_STACK_SCREEN;
     screen->icon_name = id;
     screen->text = ic;
-    screen->progress = (id == "two") ? 1 : 0; // 0 - one side scroll, 1 - two side if supported
+    screen->progress = (id == "two") ? 1 : 0; // 0 - one side scroll (right to left), 1 - two side (outside to center) if supported
     screen->default_font = false;
     screen->calc_scroll_time(screen->icon, screen_time);
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     for (auto *t : on_add_screen_triggers_)
     {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
+      t->process(screen->text, (uint8_t)screen->mode);
     }
     ESP_LOGD(TAG, "bitmap stack: has %d icons from: [%s] screen_time: %d", screen->icon, icons.c_str(), screen_time);
     screen->status();
@@ -880,10 +884,13 @@ namespace esphome
                 break;
               case MODE_BITMAP_SMALL:
               case MODE_RAINBOW_BITMAP_SMALL:
-                infotext = ("BITMAP_SMALL:" + this->queue[i]->icon_name).c_str();
+                infotext = ("BITMAP_SMALL: " + this->queue[i]->icon_name).c_str();
                 break;
               case MODE_BITMAP_SCREEN:
                 infotext = "BITMAP";
+                break;
+              case MODE_BITMAP_STACK_SCREEN:
+                infotext = "BITMAP_STACK: " + this->queue[i]->text).c_str();
                 break;
               case MODE_FIRE:
                 infotext = "FIRE";
