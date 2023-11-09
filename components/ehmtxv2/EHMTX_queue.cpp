@@ -246,6 +246,16 @@ namespace esphome
     return (static_cast<uint16_t>(r) << 8) | g;
   }
 
+  uint8_t is_tick(int step, uint8_t& state)
+  {
+    if (step % 2 == state)
+    {
+      return 0;
+    }
+    state = step % 2;
+    return 1;
+  }
+
   int EHMTX_queue::xpos(uint8_t item)
   {
     uint8_t width = 32;
@@ -280,11 +290,11 @@ namespace esphome
         {
           if (item == 0)
           {
-            item_pos -= 1;
+            item_pos -= is_tick(this->config_->scroll_step, this->sbitmap[item].w);
           }
           else if (item + 1 == this->icon)
           {
-            item_pos += 1;
+            item_pos += is_tick(this->config_->scroll_step, this->sbitmap[item].w);
           }
           else if (this->icon == 3 && item == 1)
           {
@@ -305,7 +315,7 @@ namespace esphome
         }
         else
         {
-          item_pos -= 1;
+          item_pos -= is_tick(this->config_->scroll_step, this->sbitmap[item].w);
         }
       }
       
@@ -336,16 +346,16 @@ namespace esphome
     
     if ((this->progress == 1) && (this->icon == 1 || (this->icon == 3 && item == 1)))
     {
-      if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > 8)
+      if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > height)
       {
         if (this->default_font)
         {
           return 0;
         }
-        this->default_font = this->config_->scroll_step > 8 ;
+        this->default_font = this->config_->scroll_step >= height;
         return this->config_->scroll_step - height;
       }
-      return height - ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL);
+      return height - round((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL);
     }
     
     return 0;
