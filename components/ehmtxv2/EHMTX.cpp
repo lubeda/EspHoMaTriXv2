@@ -890,7 +890,7 @@ namespace esphome
                 infotext = "BITMAP";
                 break;
               case MODE_BITMAP_STACK_SCREEN:
-                infotext = "BITMAP_STACK: " + this->queue[i]->text).c_str();
+                infotext = ("BITMAP_STACK: " + this->queue[i]->text).c_str();
                 break;
               case MODE_FIRE:
                 infotext = "FIRE";
