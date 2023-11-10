@@ -811,7 +811,10 @@ namespace esphome
         {
           for (uint8_t i = 0; i < this->icon; i++)
           {
-            this->config_->display->image(this->xpos(i), this->ypos(i), this->config_->icons[this->sbitmap[i].b]);
+            if (this->sbitmap[i].b != BLANKICON)
+            {
+              this->config_->display->image(this->xpos(i), this->ypos(i), this->config_->icons[this->sbitmap[i].b]);
+            }
           }
         }
 #endif
