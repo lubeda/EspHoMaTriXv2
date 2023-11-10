@@ -252,7 +252,7 @@ EHMTX_SCHEMA = cv.Schema({
         }
     ),
     cv.Optional(CONF_NIGHT_MODE_SCREENS, default=DEFAULT_NIGHT_MODE_SCREENS): cv.All(
-            cv.ensure_list(cv.one_of(1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19)), cv.Length(min=1, max=5)
+            cv.ensure_list(cv.one_of(1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23)), cv.Length(min=1, max=5)
         ),
     cv.Required(CONF_ICONS): cv.All(
         cv.ensure_list(

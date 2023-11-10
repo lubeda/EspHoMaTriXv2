@@ -33,6 +33,7 @@
 - Added `bitmap_small` and `rainbow_bitmap_small` screen.
 - Added a pseudo-icon `blank` - empty icon, no display.
 - Added screen with scroll icon along with long text, `icon_text_screen`, `rainbow_icon_text_screen`.
+- Added `bitmap_stack`screen. Screen that allows you to display from 1 to 64 icons described in the configuration.
   
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
@@ -768,6 +769,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`rainbow_bitmap_small`|"icon", "text", "lifetime", "screen_time", "default_font"|show 8x8 image as text, and text in rainbow colors|
 |`icon_text_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text and scroll icon along with long text|
 |`rainbow_icon_text_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color and scroll icon along with long text|
+|`bitmap_stack`|"icons", "lifetime", "screen_time"|show or scroll from 1 to 64 icons described in the configuration|
 
 #### Parameter description
 
@@ -775,6 +777,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 - **size**: The size of the rindicator or alarm, 1-3
 - **percent**: values from 0..100
 - **icon_name**: the id of the icon to show, as defined in the YAML file (or pseudo-icon `blank` - empty icon), it is also possible to set the arbitrary [screen identifier](#screen_id), for example `icon_name|screen_id`
+- **icons**: the list of id of the icon to show, as defined in the YAML file, like: icon1,icon2.
 - **text**: a text message to display
 - **lifetime**: how long does this screen stay in the queue (minutes)
 - **screen_time**: how long is this screen display in the loop (seconds). For short text without scrolling it is shown the defined time, longer text is scrolled at least `scroll_count` times.
@@ -1036,6 +1039,7 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_RAINBOW_BITMAP_SMALL| 20|
 |MODE_ICON_TEXT_SCREEN| 21|
 |MODE_RAINBOW_ICON_TEXT_SCREEN| 22|
+|MODE_BITMAP_STACK_SCREEN| 23|
 
 **(D)** Service **display_on** / **display_off**
 
@@ -1343,6 +1347,31 @@ sensor:
             } else {
                id(rgb8x32)->set_brightness(250);
             }
+```
+
+### bitmap_stack example
+
+```
+ehmtxv2:
+  icons: 
+    - id: skull
+      lameid: 11241
+```
+
+```
+service: esphome.esp_hall_pixel_clock_bitmap_stack
+data:
+  icons: "skull,skull,skull"
+  lifetime: 1
+  screen_time: 10
+```
+
+```
+service: esphome.esp_hall_pixel_clock_bitmap_stack
+data:
+  icons: "skull,skull,skull|two"
+  lifetime: 1
+  screen_time: 10
 ```
 
 ## Breaking changes

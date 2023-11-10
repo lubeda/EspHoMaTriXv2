@@ -53,7 +53,8 @@ enum show_mode : uint8_t
   MODE_ICON_PROGRESS = 19,
   MODE_RAINBOW_BITMAP_SMALL = 20,
   MODE_ICON_TEXT_SCREEN = 21,
-  MODE_RAINBOW_ICON_TEXT_SCREEN = 22
+  MODE_RAINBOW_ICON_TEXT_SCREEN = 22,
+  MODE_BITMAP_STACK_SCREEN = 23
 };
 
 namespace esphome
@@ -214,6 +215,8 @@ namespace esphome
     void icon_text_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void rainbow_icon_text_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
 
+    void bitmap_stack(std::string icons, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
+
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void color_gauge(std::string text);
     void bitmap_small(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
@@ -293,8 +296,12 @@ namespace esphome
     bool update_slot(uint8_t _icon);
     void update_screen();
     void hold_slot(uint8_t _sec);
-    void calc_scroll_time(std::string, uint16_t);
+    void calc_scroll_time(std::string text, uint16_t screen_time);
+    void calc_scroll_time(uint8_t icon_count, uint16_t screen_time);
     int xpos();
+    int xpos(uint8_t item);
+    int ypos();
+    int ypos(uint8_t item);
   };
 
   class EHMTXNextScreenTrigger : public Trigger<std::string, std::string>

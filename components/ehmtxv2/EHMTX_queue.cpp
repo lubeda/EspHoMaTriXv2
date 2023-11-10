@@ -159,6 +159,9 @@ namespace esphome
     case MODE_RAINBOW_BITMAP_SMALL:
       ESP_LOGD(TAG, "queue: rainbow small bitmap for: %.1f sec", this->screen_time_ / 1000.0);
       break;
+    case MODE_BITMAP_STACK_SCREEN :
+      ESP_LOGD(TAG, "queue: bitmap stack for: %.1f sec", this->screen_time_ / 1000.0);
+      break;
 #endif
 
     default:
@@ -232,6 +235,132 @@ namespace esphome
     return result;
   }
 
+  void c16to8(int16_t t, uint8_t& r, uint8_t& g)
+  {
+    r = static_cast<uint8_t>((t & 0xFF00) >> 8);
+    g = static_cast<uint8_t>(t & 0x00FF);
+  }
+
+  int16_t c8to16(uint8_t r, uint8_t g)
+  {
+    return (static_cast<uint16_t>(r) << 8) | g;
+  }
+
+  uint8_t is_tick(int step, uint8_t& state)
+  {
+    if (step % 2 == state)
+    {
+      return 0;
+    }
+    state = step % 2;
+    return 1;
+  }
+
+  int EHMTX_queue::xpos(uint8_t item)
+  {
+    uint8_t width = 32;
+    int result = width - this->config_->scroll_step + item * 9;
+    
+    if (this->icon < 5)
+    {
+      int16_t item_pos = c8to16(this->sbitmap[item].r, this->sbitmap[item].g);
+      
+      uint8_t target = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) * (item + 1) + 8 * item);
+      if ((this->progress == 1) && (this->icon == 2 || this->icon == 3))
+      {
+        uint8_t reverse_steps = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) + 8);
+
+        if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > reverse_steps)
+        {
+          result = (item + 1 == this->icon) ? width - this->config_->scroll_step : -8 + this->config_->scroll_step;
+          if (item == 0 && (item_pos == 32767 || item_pos < target))
+          {
+            item_pos = result < target ? result : target;
+          }
+          else if (item + 1 == this->icon && item_pos > target)
+          {
+            item_pos = result > target ? result : target;
+          }
+          else if (this->icon == 3 && item == 1)
+          {
+            item_pos = target;
+          }
+        }
+        else
+        {
+          if (item == 0)
+          {
+            item_pos -= is_tick(this->config_->scroll_step, this->sbitmap[item].w);
+          }
+          else if (item + 1 == this->icon)
+          {
+            item_pos += is_tick(this->config_->scroll_step, this->sbitmap[item].w);
+          }
+          else if (this->icon == 3 && item == 1)
+          {
+            item_pos = target;
+          }
+        }
+      }
+      else if ((this->progress == 1) && this->icon == 1)
+      {
+        item_pos = target;
+      }
+      else
+      {
+        uint8_t reverse_steps = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) * this->icon + 8 * (this->icon + 1)) + 8;
+
+        if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > reverse_steps)
+        {
+          if (item_pos > target)
+          {
+            item_pos = result > target ? result : target;
+          }
+        }
+        else
+        {
+          item_pos -= is_tick(this->config_->scroll_step, this->sbitmap[item].w);
+        }
+      }
+      
+      c16to8(item_pos, this->sbitmap[item].r, this->sbitmap[item].g);
+      result = item_pos;
+    }
+
+    return result;
+  }
+
+  int EHMTX_queue::ypos()
+  {
+    uint8_t height = 8;
+    if (this->config_->scroll_step > height)
+    {
+      return 0;
+    }
+    return this->config_->scroll_step - height;
+  }
+
+  int EHMTX_queue::ypos(uint8_t item)
+  {
+    uint8_t height = 8;
+    
+    if ((this->progress == 1) && (this->icon == 1 || (this->icon == 3 && item == 1)))
+    {
+      if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > height)
+      {
+        if (this->default_font)
+        {
+          return 0;
+        }
+        this->default_font = this->config_->scroll_step >= height;
+        return this->config_->scroll_step - height;
+      }
+      return height - round((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL);
+    }
+    
+    return 0;
+  }
+
   void EHMTX_queue::update_screen()
   {
     if (millis() - this->config_->last_rainbow_time >= EHMTXv2_RAINBOW_INTERVALL)
@@ -247,7 +376,25 @@ namespace esphome
       this->config_->last_rainbow_time = millis();
     }
 
-    if (this->icon < this->config_->icon_count)
+    if (this->mode == MODE_BITMAP_STACK_SCREEN && this->sbitmap != NULL)
+    {
+      uint32_t average_frame_duration = 0;
+      for (uint8_t i = 0; i < this->icon; i++)
+      {
+        average_frame_duration += this->config_->icons[this->sbitmap[i].b]->frame_duration;
+      }
+      average_frame_duration = average_frame_duration / this->icon;
+      
+      if (millis() - this->config_->last_anim_time >= average_frame_duration)
+      {
+        for (uint8_t i = 0; i < this->icon; i++)
+        {
+          this->config_->icons[this->sbitmap[i].b]->next_frame();
+        }
+        this->config_->last_anim_time = millis();
+      }
+    }
+    else if (this->icon < this->config_->icon_count)
     {
       if (millis() - this->config_->last_anim_time >= this->config_->icons[this->icon]->frame_duration)
       {
@@ -659,6 +806,21 @@ namespace esphome
 #endif
         break;
 
+      case MODE_BITMAP_STACK_SCREEN:
+#ifndef USE_ESP8266
+        if (this->sbitmap != NULL)
+        {
+          for (uint8_t i = 0; i < this->icon; i++)
+          {
+            if (this->sbitmap[i].b != BLANKICON)
+            {
+              this->config_->display->image(this->xpos(i), this->ypos(i), this->config_->icons[this->sbitmap[i].b]);
+            }
+          }
+        }
+#endif
+        break;
+
 #ifdef USE_Fireplugin
       case MODE_FIRE:
       {
@@ -833,5 +995,33 @@ namespace esphome
 
     ESP_LOGD(TAG, "calc_scroll_time: mode: %d text: \"%s\" pixels %d calculated: %.1f defined: %d max_steps: %d", this->mode, text.c_str(), this->pixels_, this->screen_time_ / 1000.0, screen_time, this->scroll_reset);
   }
-  
+
+  // Icons count, Screen time in seconds
+  void EHMTX_queue::calc_scroll_time(uint8_t icon_count, uint16_t screen_time)
+  {
+    float display_duration;
+    float requested_time = 1000.0 * screen_time;
+
+    uint8_t width = 32;
+    uint8_t startx = 0;
+    uint16_t max_steps = 0;
+
+    this->pixels_ = 9 * icon_count;
+
+    if (this->pixels_ < 32)
+    {
+      this->screen_time_ = requested_time;
+    }
+    else
+    {
+      max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+      display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+      this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
+    }
+
+    this->scroll_reset = (width - startx) + this->pixels_;
+
+    ESP_LOGD(TAG, "calc_scroll_time: mode: %d icons count: %d pixels %d calculated: %.1f defined: %d max_steps: %d", this->mode, icon_count, this->pixels_, this->screen_time_ / 1000.0, screen_time, this->scroll_reset);
+  }
+
 }
