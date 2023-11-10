@@ -721,22 +721,22 @@ namespace esphome
 #endif
         if (this->mode == MODE_ICON_PROGRESS)
         {
-          this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
           if (this->icon != BLANKICON)
           {
+            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
             this->config_->display->image(0, 0, this->config_->icons[this->icon]);
           }
 
+          this->config_->display->line(9, 7, 31, 7, this->progressbar_back_color);
           if (this->progress != 0)
           {
             if (this->progressbar_color == esphome::display::COLOR_OFF)
             {
-              color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100 + (this->progress < 0 ? 120 : 0), 255, 240).to_rgb();
+              color_ = esphome::light::ESPHSVColor(this->progress * 96 / 100 + (this->progress < 0 ? 96 : 0), 255, 240).to_rgb();
             }
             else
             {
               color_ = this->progressbar_color;
-              this->config_->display->line(9, 7, 31, 7, this->progressbar_back_color);
             }
             this->config_->display->line(9, 7, 9 + abs(this->progress) * 22 / 100, 7, color_);
           }
