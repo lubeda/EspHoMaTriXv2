@@ -769,7 +769,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`rainbow_bitmap_small`|"icon", "text", "lifetime", "screen_time", "default_font"|show 8x8 image as text, and text in rainbow colors|
 |`icon_text_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text and scroll icon along with long text|
 |`rainbow_icon_text_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color and scroll icon along with long text|
-|`bitmap_stack`|"icons", "lifetime", "screen_time"|show or scroll from 1 to 64 icons described in the configuration|
+|`bitmap_stack`|"icons", "lifetime", "screen_time"|show or scroll from 1 to 64 icons described in the configuration. [See examples](#bitmap_stack-example)|
 
 #### Parameter description
 
@@ -1351,6 +1351,8 @@ sensor:
 
 ### bitmap_stack example
 
+In the icons list (**icons**), you can pass a modifier (currently supported only **two**, works only for 1, 2, 3 icons in the list), which will change the method of displaying icons.
+
 ```
 ehmtxv2:
   icons: 
@@ -1358,6 +1360,7 @@ ehmtxv2:
       lameid: 11241
 ```
 
+Default icon display mode:
 ```
 service: esphome.esp_hall_pixel_clock_bitmap_stack
 data:
@@ -1366,6 +1369,7 @@ data:
   screen_time: 10
 ```
 
+Mode of displaying icons with **two** modifier:
 ```
 service: esphome.esp_hall_pixel_clock_bitmap_stack
 data:
@@ -1373,6 +1377,8 @@ data:
   lifetime: 1
   screen_time: 10
 ```
+
+It's easier to see what it looks like than to describe it, try both options, choose the one that suits you best.
 
 ## Breaking changes
 
