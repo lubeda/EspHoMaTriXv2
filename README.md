@@ -33,7 +33,7 @@
 - Added `bitmap_small` and `rainbow_bitmap_small` screen.
 - Added a pseudo-icon `blank` - empty icon, no display.
 - Added screen with scroll icon along with long text, `icon_text_screen`, `rainbow_icon_text_screen`.
-- Added `bitmap_stack`screen.
+- Added `bitmap_stack`screen. Screen that allows you to display from 1 to 64 icons described in the configuration.
   
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
@@ -769,7 +769,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`rainbow_bitmap_small`|"icon", "text", "lifetime", "screen_time", "default_font"|show 8x8 image as text, and text in rainbow colors|
 |`icon_text_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text and scroll icon along with long text|
 |`rainbow_icon_text_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color and scroll icon along with long text|
-|`bitmap_stack`|"icons", "lifetime", "screen_time"|show or scroll the specified icons|
+|`bitmap_stack`|"icons", "lifetime", "screen_time"|show or scroll from 1 to 64 icons described in the configuration|
 
 #### Parameter description
 
