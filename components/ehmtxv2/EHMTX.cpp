@@ -641,8 +641,9 @@ namespace esphome
       register_service(&EHMTX::fire_screen, "fire_screen", {"lifetime", "screen_time"});
     #endif
 
+    register_service(&EHMTX::text_screen_progress, "text_screen_progress", {"text", "value", "progress", "lifetime", "screen_time", "default_font", "value_color_as_progress", "r", "g", "b"});
     register_service(&EHMTX::icon_screen_progress, "icon_screen_progress", {"icon_name", "text", "progress", "lifetime", "screen_time", "default_font", "r", "g", "b"});
-    register_service(&EHMTX::set_progressbar_color, "set_progressbar_color", {"icon_name", "r", "g", "b", "bg_r", "bg_g", "bg_b"});
+    register_service(&EHMTX::set_progressbar_color, "set_progressbar_color", {"icon_name", "mode", "r", "g", "b", "bg_r", "bg_g", "bg_b"});
 
     ESP_LOGD(TAG, "Setup and running!");
   }
@@ -735,7 +736,8 @@ namespace esphome
             (mode == MODE_RAINBOW_ICON) || 
             (mode == MODE_ICON_PROGRESS) ||
             (mode == MODE_ICON_TEXT_SCREEN) ||
-            (mode == MODE_RAINBOW_ICON_TEXT_SCREEN))
+            (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
+            (mode == MODE_TEXT_PROGRESS))
         {
           if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
           {
@@ -876,6 +878,7 @@ namespace esphome
               case MODE_ICON_PROGRESS:
               case MODE_ICON_TEXT_SCREEN:
               case MODE_RAINBOW_ICON_TEXT_SCREEN:
+              case MODE_TEXT_PROGRESS:
                 infotext = this->queue[i]->icon_name.c_str();
                 break;
               case MODE_RAINBOW_TEXT:
@@ -1179,7 +1182,8 @@ namespace esphome
             (mode == MODE_RAINBOW_ICON) || 
             (mode == MODE_ICON_PROGRESS) ||
             (mode == MODE_ICON_TEXT_SCREEN) ||
-            (mode == MODE_RAINBOW_ICON_TEXT_SCREEN))
+            (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
+            (mode == MODE_TEXT_PROGRESS))
         {
           if (this->string_has_ending(icon_name, "*"))
           {
@@ -1284,6 +1288,27 @@ namespace esphome
     screen->status();
   }
 
+  void EHMTX::text_screen_progress(std::string text, std::string value, int progress, int lifetime, int screen_time, bool default_font, bool value_color_as_progress, int r, int g, int b)
+  {
+    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_TEXT_PROGRESS, text);
+
+    screen->icon_name = text;
+    screen->text = value;
+    screen->text_color = Color(r, g, b);
+    screen->default_font = default_font;
+    screen->mode = MODE_TEXT_PROGRESS;
+    screen->icon = value_color_as_progress;
+    screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100 : progress;
+    screen->screen_time_ = screen_time * 1000.0;
+    screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process(screen->icon_name, (uint8_t)screen->mode);
+    }
+    ESP_LOGD(TAG, "text progress screen text: %s value: %s progress %d lifetime: %d screen_time: %d", text.c_str(), value.c_str(), progress, lifetime, screen_time);
+    screen->status();
+  }
+
   void EHMTX::icon_screen_progress(std::string iconname, std::string text, int progress, int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
     std::string ic = get_icon_name(iconname);
@@ -1319,14 +1344,14 @@ namespace esphome
     screen->status();
   }
 
-  void EHMTX::set_progressbar_color(std::string iconname, int r, int g, int b, int bg_r, int bg_g, int bg_b)
+  void EHMTX::set_progressbar_color(std::string iconname, int mode, int r, int g, int b, int bg_r, int bg_g, int bg_b)
   {
-    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_ICON_PROGRESS, get_screen_id(iconname));
+    EHMTX_queue *screen = this->find_mode_icon_queue_element(mode, get_screen_id(iconname));
 
     screen->progressbar_color = (r + g + b == C_BLACK) ? esphome::display::COLOR_OFF : Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
     screen->progressbar_back_color = (bg_r + bg_g + bg_b == C_BLACK) ? esphome::display::COLOR_OFF : Color((uint8_t)bg_r, (uint8_t)bg_g, (uint8_t)bg_b);
 
-    ESP_LOGD(TAG, "icon progress screen iconname: %s color progressbar: r: %d g: %d b: %d background: r: %d g: %d b: %d", iconname.c_str(), r, g, b, bg_r, bg_g, bg_b);
+    ESP_LOGD(TAG, "progress screen mode: %d iconname: %s color progressbar: r: %d g: %d b: %d background: r: %d g: %d b: %d", mode, iconname.c_str(), r, g, b, bg_r, bg_g, bg_b);
     screen->status();
   }
 
@@ -2048,7 +2073,8 @@ namespace esphome
       }
       if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN &&
           this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN &&
-          this->queue[this->screen_pointer]->mode != MODE_ICON_PROGRESS)
+          this->queue[this->screen_pointer]->mode != MODE_ICON_PROGRESS &&
+          this->queue[this->screen_pointer]->mode != MODE_TEXT_PROGRESS)
       {
         this->draw_gauge();
       }
