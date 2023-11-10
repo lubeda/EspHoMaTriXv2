@@ -580,6 +580,7 @@ namespace esphome
             this->config_->display->image(0, 0, this->config_->icons[this->icon]);
           }
 
+          this->config_->display->line(9, 7, 31, 7, this->progressbar_back_color);
           if (this->progress != 0)
           {
             if (this->progressbar_color == esphome::display::COLOR_OFF)
@@ -589,7 +590,6 @@ namespace esphome
             else
             {
               color_ = this->progressbar_color;
-              this->config_->display->line(9, 7, 31, 7, this->progressbar_back_color);
             }
             this->config_->display->line(9, 7, 9 + abs(this->progress) * 22 / 100, 7, color_);
           }
