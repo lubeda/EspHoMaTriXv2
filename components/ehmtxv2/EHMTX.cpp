@@ -777,7 +777,7 @@ namespace esphome
         }
       }
 
-      if ((this->queue[i]->endtime > 0.0) && (this->queue[i]->last_time < last_time))
+      if ((this->queue[i]->endtime > this->get_tick()) && (this->queue[i]->last_time < last_time))
       {
         hit = i;
         last_time = this->queue[i]->last_time;
