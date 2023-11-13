@@ -34,7 +34,9 @@
 - Added a pseudo-icon `blank` - empty icon, no display.
 - Added screen with scroll icon along with long text, `icon_text_screen`, `rainbow_icon_text_screen`.
 - Added `bitmap_stack`screen. Screen that allows you to display from 1 to 64 icons described in the configuration.
-  
+- Added a screen with the ability to display a progress bar, text, progress value `(-100..100)`
+  - `text_screen_progress(text, value, progress, lifetime, screen_time, default_font, value_color_as_progress, r, g, b)`
+
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
 
@@ -759,7 +761,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`brightness`|"value"|set the display brightness|
 |`alert_screen`|"icon_name", "text", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text, screen forced and lifetime = screen_time|
 |`icon_screen_progress`|"icon_name", "text", "progress", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text and with progress bar on bottom|
-|`set_progressbar_color`|"icon_name", "r", "g", "b", "bg_r", "bg_g", "bg_b"|sets the specified screen with progress bar, the specified color of the progress bar, and the background color of the progress bar. if you set the color to black, the color display will work according to the progress value|
+|`set_progressbar_color`|"icon_name", "mode", "r", "g", "b", "bg_r", "bg_g", "bg_b"|sets the specified by name and [mode](#modes) screen with progress bar, the specified color of the progress bar, and the background color of the progress bar. if you set the color to black, the color display will work according to the progress value|
 |`icon_clock`|"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with time, there is support for [displaying text on top of the icon](#icon_text)|
 |`icon_date`|"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with date, there is support for [displaying text on top of the icon](#icon_text)|
 |`graph_screen`|"lifetime", "screen_time"|show graph as defined in the YAML file|
@@ -769,7 +771,8 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`rainbow_bitmap_small`|"icon", "text", "lifetime", "screen_time", "default_font"|show 8x8 image as text, and text in rainbow colors|
 |`icon_text_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text and scroll icon along with long text|
 |`rainbow_icon_text_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color and scroll icon along with long text|
-|`bitmap_stack`|"icons", "lifetime", "screen_time"|show or scroll from 1 to 64 icons described in the configuration. [See examples](#bitmap_stack-example)|
+|`bitmap_stack`|"icons", "lifetime", "screen_time"|show or scroll from 1 to 64 icons described in the configuration|
+|`text_screen_progress`|"text", "value", "progress", "lifetime", "screen_time", "default_font", "value_color_as_progress", "r", "g", "b"|show the specified short text with value and with progress bar on bottom|
 
 #### Parameter description
 
@@ -783,6 +786,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 - **screen_time**: how long is this screen display in the loop (seconds). For short text without scrolling it is shown the defined time, longer text is scrolled at least `scroll_count` times.
 - **default_font**: use the default font (true) or the special font (false)
 - **progress**: сan take a value from -100 to 100, the color of the progress bar is calculated automatically, if no colors are specified in the function `set_progressbar_color`, then if the progress is in the range `0..100`, then `from red to green`, if in the range `-100..0`, then from `green to red`.
+- **value_color_as_progress**: display the value with the color of the current color on the progress bar
 - **value**: the brightness 0..255 
 
 ### Night mode
@@ -1040,6 +1044,7 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_ICON_TEXT_SCREEN| 21|
 |MODE_RAINBOW_ICON_TEXT_SCREEN| 22|
 |MODE_BITMAP_STACK_SCREEN| 23|
+|MODE_TEXT_PROGRESS| 24|
 
 **(D)** Service **display_on** / **display_off**
 

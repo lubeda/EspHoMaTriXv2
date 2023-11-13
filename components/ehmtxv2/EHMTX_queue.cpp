@@ -115,6 +115,9 @@ namespace esphome
     case MODE_ICON_PROGRESS:
       ESP_LOGD(TAG, "queue: icon progress: \"%s\" text: %s for: %.1f sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_ / 1000.0);
       break;
+    case MODE_TEXT_PROGRESS:
+      ESP_LOGD(TAG, "queue: text progress: \"%s\" text: %s for: %.1f sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_ / 1000.0);
+      break;
     case MODE_ICON_CLOCK:
       ESP_LOGD(TAG, "queue: icon clock: \"%s\" for: %.1f sec", this->icon_name.c_str(), this->screen_time_ / 1000.0);
       break;
@@ -760,6 +763,32 @@ namespace esphome
             }
           }
         }
+        break;
+
+      case MODE_TEXT_PROGRESS:
+        color_ = this->text_color;
+
+        this->config_->display->print(0, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT, this->icon_name.c_str());
+
+        this->config_->display->line(0, 7, 31, 7, this->progressbar_back_color);
+        if (this->progress != 0)
+        {
+          if (this->progressbar_color == esphome::display::COLOR_OFF)
+          {
+            color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100 + (this->progress < 0 ? 120 : 0), 255, 240).to_rgb();
+          }
+          else
+          {
+            color_ = this->progressbar_color;
+          }
+          this->config_->display->line(0, 7, abs(this->progress) * 31 / 100, 7, color_);
+        }
+
+        if (this->icon == 0)
+        {
+          color_ = this->text_color;
+        }
+        this->config_->display->print(32, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT, this->text.c_str());
         break;
 
       case MODE_ICON_TEXT_SCREEN:
