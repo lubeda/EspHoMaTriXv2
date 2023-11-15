@@ -158,6 +158,7 @@ namespace esphome
     void add_icon(EHMTX_Icon *icon);
     bool show_display = false;
     bool night_mode = false;
+    bool weekday_accent = false;
     uint8_t find_icon(std::string name);
     uint8_t find_last_clock();
     bool string_has_ending(std::string const &fullString, std::string const &ending);
@@ -179,6 +180,8 @@ namespace esphome
     void set_display_off();
     void set_night_mode_off();
     void set_night_mode_on();
+    void set_weekday_accent_off();
+    void set_weekday_accent_on();
     void set_clock(esphome::time::RealTimeClock *clock);
     #ifdef USE_GRAPH
       void set_graph(esphome::graph::Graph *graph);

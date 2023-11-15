@@ -36,6 +36,7 @@
 - Added `bitmap_stack`screen. Screen that allows you to display from 1 to 64 icons described in the configuration.
 - Added a screen with the ability to display a progress bar, text, progress value `(-100..100)`
   - `text_screen_progress(text, value, progress, lifetime, screen_time, default_font, value_color_as_progress, r, g, b)`
+- Added `set_weekday_accent_on` and `set_weekday_accent_off` Turn on / off small days (accent) of the week when brightness is insufficient.
 
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
@@ -747,6 +748,8 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`set_today_color`|"r", "g", "b"|set the special color for today in the day of week line|
 |`set_weekday_color`|"r", "g", "b"|set the default color in the day of week line|
 |`set_clock_color`|"r", "g", "b"|set the default color of clock and date display|
+|`set_weekday_accent_on`|none|turns on the display of small days (accent) of the week when brightness is insufficient|
+|`set_weekday_accent_off`|none|turns off the display of small days (accent) of the week when brightness is insufficient|
 |`del_screen`|"icon_name", “mode”|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
 |`force_screen`|"icon_name", “mode”|displays the selected the specified icon screen from the queue, the [mode](#modes) is a filter|
 |`full_screen`|"icon_name", "lifetime", "screen_time"|show the specified 8x32 icon as full screen|
