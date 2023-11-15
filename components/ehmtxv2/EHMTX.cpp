@@ -27,6 +27,7 @@ namespace esphome
     this->set_today_color();
     this->set_weekday_color();
     this->night_mode = false;
+    this->weekday_accent = false;
 
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
@@ -118,6 +119,18 @@ namespace esphome
     {
       t->process(this->night_mode);
     }
+  }
+
+  void EHMTX::set_weekday_accent_off()
+  {
+    this->weekday_accent = false;
+    ESP_LOGD(TAG, "weekday accent off");
+  }
+
+  void EHMTX::set_weekday_accent_on()
+  {
+    this->weekday_accent = true;
+    ESP_LOGD(TAG, "weekday accent on");
   }
 
   void EHMTX::set_today_color(int r, int g, int b)
@@ -597,6 +610,9 @@ namespace esphome
 
     register_service(&EHMTX::set_night_mode_on, "night_mode_on");
     register_service(&EHMTX::set_night_mode_off, "night_mode_off");
+
+    register_service(&EHMTX::set_weekday_accent_on, "weekday_accent_on");
+    register_service(&EHMTX::set_weekday_accent_off, "weekday_accent_off");
 
     register_service(&EHMTX::del_screen, "del_screen", {"icon_name", "mode"});
     register_service(&EHMTX::force_screen, "force_screen", {"icon_name", "mode"});
@@ -1092,6 +1108,7 @@ namespace esphome
     ESP_LOGI(TAG, "status date format: %s", EHMTXv2_DATE_FORMAT);
     ESP_LOGI(TAG, "status display %s", this->show_display ? F("on") : F("off"));
     ESP_LOGI(TAG, "status night mode %s", this->night_mode ? F("on") : F("off"));
+    ESP_LOGI(TAG, "status weekday accent %s", this->weekday_accent ? F("on") : F("off"));
     ESP_LOGI(TAG, "status replace time and date %s", this->replace_time_date_active ? F("on") : F("off"));
 
     this->queue_status();
@@ -1766,6 +1783,7 @@ namespace esphome
     this->display = disp;
     this->show_display = true;
     this->night_mode = false;
+    this->weekday_accent = false;
     ESP_LOGD(TAG, "set_display");
   }
 
@@ -1856,7 +1874,7 @@ namespace esphome
           else
           {
             this->display->line(2 + i * 4, 7, i * 4 + 4, 7, this->weekday_color);
-            if (this->brightness_ < 50)
+            if (this->weekday_accent && this->brightness_ < 50)
             {
               this->display->line(i * 4 + 3, 7, i * 4 + 3, 7, this->today_color);
             }
@@ -1873,7 +1891,7 @@ namespace esphome
           else
           {          
             this->display->line(10 + i * 3, 7, 11 + i * 3 , 7, this->weekday_color);
-            if (this->brightness_ < 50)
+            if (this->weekday_accent && this->brightness_ < 50)
             {
               this->display->line( (i < dow ? 11 : 10) + i * 3, 7, (i < dow ? 11 : 10) + i * 3 , 7, this->today_color);
             }
@@ -2002,6 +2020,7 @@ namespace esphome
     ESP_LOGCONFIG(TAG, "Weekdays: %s Count: %d", EHMTXv2_WEEKDAYTEXT, this->weekday_char_count);
     ESP_LOGCONFIG(TAG, "Display: %s", this->show_display ? F("On") : F("Off"));
     ESP_LOGCONFIG(TAG, "Night mode: %s", this->night_mode ? F("On") : F("Off"));
+    ESP_LOGCONFIG(TAG, "Weekday accent: %s", this->weekday_accent ? F("On") : F("Off"));
     ESP_LOGCONFIG(TAG, "Replace Time and Date: %s", this->replace_time_date_active ? F("On") : F("Off"));
     if (this->replace_time_date_active) {
       ESP_LOGCONFIG(TAG, "Replace from: %s", EHMTXv2_REPLACE_TIME_DATE_FROM);
