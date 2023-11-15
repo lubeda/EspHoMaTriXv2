@@ -1856,6 +1856,10 @@ namespace esphome
           else
           {
             this->display->line(2 + i * 4, 7, i * 4 + 4, 7, this->weekday_color);
+            if (this->brightness_ < 50)
+            {
+              this->display->line(i * 4 + 3, 7, i * 4 + 3, 7, this->today_color);
+            }
           }
         }
       } else {
@@ -1869,6 +1873,10 @@ namespace esphome
           else
           {          
             this->display->line(10 + i * 3, 7, 11 + i * 3 , 7, this->weekday_color);
+            if (this->brightness_ < 50)
+            {
+              this->display->line( (i < dow ? 11 : 10) + i * 3, 7, (i < dow ? 11 : 10) + i * 3 , 7, this->today_color);
+            }
           }
         }
       }
