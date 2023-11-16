@@ -801,11 +801,23 @@ namespace esphome
         last_time = this->queue[i]->last_time;
       }
     }
+
+    uint8_t queue_count = this->queue_count();
     if (hit != MAXQUEUE)
     {
-      ESP_LOGD(TAG, "oldest queue element is: %d/%d", hit, this->queue_count());
+      ESP_LOGD(TAG, "oldest queue element is: %d/%d", hit, queue_count);
+    }
+    else if (queue_count > 0)
+    {
+      hit = 0;
+      ESP_LOGD(TAG, "oldest queue element is first: %d/%d", hit, queue_count);
+    }
+    else
+    {
+      ESP_LOGD(TAG, "oldest queue element not found");
     }
     this->queue[hit]->status();
+
     return hit;
   }
 
