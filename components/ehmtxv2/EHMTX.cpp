@@ -1003,7 +1003,7 @@ namespace esphome
 
         if (this->screen_pointer != MAXQUEUE)
         {
-          this->queue[this->screen_pointer]->last_time = ts + this->queue[this->screen_pointer]->screen_time_;
+          this->queue[this->screen_pointer]->last_time = ts;
           // todo nur bei animationen
           if (this->queue[this->screen_pointer]->mode == MODE_BITMAP_STACK_SCREEN && this->queue[this->screen_pointer]->sbitmap != NULL)
           {
@@ -1018,7 +1018,7 @@ namespace esphome
           {
             this->icons[this->queue[this->screen_pointer]->icon]->set_frame(0);
           }
-          this->next_action_time = this->queue[this->screen_pointer]->last_time;
+          this->next_action_time = this->queue[this->screen_pointer]->last_time + this->queue[this->screen_pointer]->screen_time_;
           // Todo switch for Triggers
           if (this->queue[this->screen_pointer]->mode == MODE_CLOCK)
           {
@@ -1221,7 +1221,7 @@ namespace esphome
           ESP_LOGW(TAG, "del_screen: slot %d deleted", i);
           this->queue[i]->mode = MODE_EMPTY;
           this->queue[i]->endtime = 0.0;
-          this->queue[i]->last_time = this->get_tick();
+          this->queue[i]->last_time = 0.0;
           if (this->queue[i]->sbitmap != NULL)
           {
             delete [] this->queue[i]->sbitmap;
