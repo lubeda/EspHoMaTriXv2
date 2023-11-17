@@ -764,9 +764,12 @@ namespace esphome
         if (force)
         {
           ESP_LOGD(TAG, "force_screen: found position: %d", i);
-          this->queue[i]->last_time = 0.0;
-          this->queue[i]->endtime += this->queue[i]->screen_time_;
           this->next_action_time = this->get_tick();
+          this->queue[i]->last_time = 0.0;
+          if (this->queue[i]->endtime < this->next_action_time + this->queue[i]->screen_time_)
+          {
+            this->queue[i]->endtime = this->next_action_time + this->queue[i]->screen_time_;
+          }
           ESP_LOGW(TAG, "force_screen: icon %s in mode %d", icon_name.c_str(), mode);
         }
       }
@@ -867,7 +870,7 @@ namespace esphome
     if (this->clock->now().is_valid())
     {
       std::string infotext;
-      float ts = this->get_tick();
+      float ts = this->get_tick() + static_cast<float>(EHMTXv2_SCROLL_INTERVALL); // Force remove expired queue element
 
       for (size_t i = 0; i < MAXQUEUE; i++)
       {
