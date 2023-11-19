@@ -339,18 +339,22 @@ namespace esphome
 
   int EHMTX_queue::ypos()
   {
-    uint8_t height = 8;
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      uint8_t height = 8;
 
-    if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > height)
-    {
-      if (this->config_->vertical_scroll)
-    {
+      if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > height)
+      {
+        if (this->config_->vertical_scroll)
+        {
+          return 0;
+        }
+        this->config_->vertical_scroll = this->config_->scroll_step >= height;
+        return this->config_->scroll_step - height;
+      }
+      return height - round((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL);
+    #else
       return 0;
-    }
-      this->config_->vertical_scroll = this->config_->scroll_step >= height;
-    return this->config_->scroll_step - height;
-  }
-    return height - round((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL);
+    #endif
   }
 
   int EHMTX_queue::ypos(uint8_t item)

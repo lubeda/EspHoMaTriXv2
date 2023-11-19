@@ -28,7 +28,9 @@ namespace esphome
     this->set_weekday_color();
     this->night_mode = false;
     this->weekday_accent = false;
-    this->vertical_scroll = false;
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->vertical_scroll = false;
+    #endif
 
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
@@ -1024,7 +1026,9 @@ namespace esphome
 
         if (this->screen_pointer != MAXQUEUE)
         {
-          this->vertical_scroll = false;
+          #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+            this->vertical_scroll = false;
+          #endif
           this->queue[this->screen_pointer]->last_time = ts;
           // todo nur bei animationen
           if (this->queue[this->screen_pointer]->mode == MODE_BITMAP_STACK_SCREEN && this->queue[this->screen_pointer]->sbitmap != NULL)
@@ -1992,9 +1996,10 @@ namespace esphome
             if (accent_color != esphome::display::COLOR_OFF)
             {
               this->display->line(i * 4 + 3, ypos + 7, i * 4 + 3, ypos + 7, accent_color);
+            }
           }
         }
-      } 
+      }
       else 
       {
         for (uint8_t i = 0; i <= 6; i++)

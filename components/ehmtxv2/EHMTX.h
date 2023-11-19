@@ -150,7 +150,9 @@ namespace esphome
     float next_action_time = 0.0; // when is the next screen change
     uint32_t tick_next_action = 0; // when is the next screen change
     uint32_t ticks_ = 0; // when is the next screen change
-    bool vertical_scroll = false;
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      bool vertical_scroll = false;
+    #endif
 
     void remove_expired_queue_element();
     uint8_t find_oldest_queue_element();

@@ -38,6 +38,7 @@
   - `text_screen_progress(text, value, progress, lifetime, screen_time, default_font, value_color_as_progress, r, g, b)`
 - Added `set_weekday_accent_on` and `set_weekday_accent_off` Turn on / off small days (accent) of the week when brightness is insufficient.
 - Added `icon_prognosis_screen` and `icon_prognosis_screen_rgb` Displays an icon, text, and a prognosis bar consisting of 24 dots of specified colors. https://github.com/lubeda/EspHoMaTriXv2/issues/149
+- Added `vertical_scroll` to ehmtxv2 config.
 
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
@@ -632,6 +633,7 @@ ehmtxv2:
   time_format: "%H:%M"
   date_format: "%d.%m."
   rtl: false # write vom left to right
+  vertical_scroll: false
   week_start_monday: true # false equals sunday
   scroll_count: 2 # scroll long text at least two times
   scroll_interval: 80 # milliseconds
@@ -661,6 +663,8 @@ ehmtxv2:
 **scroll_small_text** (optional, bool): normally small text is centered on the display if possible, with this set to `true` even small text is scrolled in `text_screen` and `rainbow_text_screen` (default: false)
 
 **rtl** (optional, boolean): if `true` write text (but only the scroll direction, the words and numbers aren't changed!) from right to left (Arabic, Hebrew etc.). Default is `false`
+
+**vertical_scroll** (optional, boolean): If true, the screen change is vertical scrolling. Default is `false`
 
 **matrix_component** (required, ID): ID of the addressable display
 
