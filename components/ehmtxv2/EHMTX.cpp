@@ -1872,11 +1872,21 @@ namespace esphome
     ESP_LOGD(TAG, "set_clock");
   }
 
+  #define max3(x,y,z) ( (x) > (y) ? ((x) > (z) ? (x) : (z)) : ((y) > (z) ? (y) : (z)) )
+
   void EHMTX::draw_day_of_week(bool small)
   {
     if (this->show_day_of_week)
     {
       auto dow = this->clock->now().day_of_week - 1; // SUN = 0
+
+      Color accent_color = esphome::display::COLOR_OFF;
+      if (this->weekday_accent && this->brightness_ < 50)
+      {
+        uint8_t max_diff = max3(this->today_color.r, this->today_color.g, this->today_color.b) - max3(this->weekday_color.r, this->weekday_color.g, this->weekday_color.b);
+        accent_color = this->weekday_color + max_diff;
+      }
+
       if (! small)
       {
         for (uint8_t i = 0; i <= 6; i++)
@@ -1889,13 +1899,15 @@ namespace esphome
           else
           {
             this->display->line(2 + i * 4, 7, i * 4 + 4, 7, this->weekday_color);
-            if (this->weekday_accent && this->brightness_ < 50)
+            if (accent_color != esphome::display::COLOR_OFF)
             {
-              this->display->line(i * 4 + 3, 7, i * 4 + 3, 7, this->today_color);
+              this->display->line(i * 4 + 3, 7, i * 4 + 3, 7, accent_color);
             }
           }
         }
-      } else {
+      } 
+      else 
+      {
         for (uint8_t i = 0; i <= 6; i++)
         {
           if (((!EHMTXv2_WEEK_START) && (dow == i)) ||
@@ -1906,9 +1918,9 @@ namespace esphome
           else
           {          
             this->display->line(10 + i * 3, 7, 11 + i * 3 , 7, this->weekday_color);
-            if (this->weekday_accent && this->brightness_ < 50)
+            if (accent_color != esphome::display::COLOR_OFF)
             {
-              this->display->line( (i < dow ? 11 : 10) + i * 3, 7, (i < dow ? 11 : 10) + i * 3 , 7, this->today_color);
+              this->display->line( (i < dow ? 11 : 10) + i * 3, 7, (i < dow ? 11 : 10) + i * 3 , 7, accent_color);
             }
           }
         }
