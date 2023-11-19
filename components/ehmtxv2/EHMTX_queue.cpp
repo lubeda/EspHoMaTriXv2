@@ -340,6 +340,11 @@ namespace esphome
   int EHMTX_queue::ypos()
   {
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      if (this->config_->queue_count() <= 1)
+      {
+        return 0;
+      }
+
       uint8_t height = 8;
 
       if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > height)
