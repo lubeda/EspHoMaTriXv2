@@ -661,6 +661,9 @@ namespace esphome
     register_service(&EHMTX::icon_screen_progress, "icon_screen_progress", {"icon_name", "text", "progress", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::set_progressbar_color, "set_progressbar_color", {"icon_name", "mode", "r", "g", "b", "bg_r", "bg_g", "bg_b"});
 
+    register_service(&EHMTX::icon_prognosis_screen, "icon_prognosis_screen", {"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font"});
+    register_service(&EHMTX::icon_prognosis_screen_rgb, "icon_prognosis_screen_rgb", {"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+
     ESP_LOGD(TAG, "Setup and running!");
   }
 
@@ -745,15 +748,16 @@ namespace esphome
       if (this->queue[i]->mode == mode)
       {
         bool force = true;
-        if ((mode == MODE_ICON_SCREEN) || 
-            (mode == MODE_ICON_CLOCK) || 
-            (mode == MODE_ICON_DATE) || 
-            (mode == MODE_FULL_SCREEN) || 
-            (mode == MODE_RAINBOW_ICON) || 
-            (mode == MODE_ICON_PROGRESS) ||
-            (mode == MODE_ICON_TEXT_SCREEN) ||
-            (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
-            (mode == MODE_TEXT_PROGRESS))
+        if ( (mode == MODE_ICON_SCREEN) || 
+             (mode == MODE_ICON_CLOCK) || 
+             (mode == MODE_ICON_DATE) || 
+             (mode == MODE_FULL_SCREEN) || 
+             (mode == MODE_RAINBOW_ICON) || 
+             (mode == MODE_ICON_PROGRESS) ||
+             (mode == MODE_ICON_TEXT_SCREEN) ||
+             (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
+             (mode == MODE_TEXT_PROGRESS) ||
+             (mode == MODE_PROGNOSIS_SCREEN) )
         {
           if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
           {
@@ -910,6 +914,7 @@ namespace esphome
               case MODE_ICON_TEXT_SCREEN:
               case MODE_RAINBOW_ICON_TEXT_SCREEN:
               case MODE_TEXT_PROGRESS:
+              case MODE_PROGNOSIS_SCREEN:
                 infotext = this->queue[i]->icon_name.c_str();
                 break;
               case MODE_RAINBOW_TEXT:
@@ -1207,15 +1212,16 @@ namespace esphome
       {
         bool force = true;
         ESP_LOGD(TAG, "del_screen: icon %s in position: %s mode %d", icon_name.c_str(), this->queue[i]->icon_name.c_str(), mode);
-        if ((mode == MODE_ICON_SCREEN) || 
-            (mode == MODE_ICON_CLOCK) || 
-            (mode == MODE_ICON_DATE) || 
-            (mode == MODE_FULL_SCREEN) || 
-            (mode == MODE_RAINBOW_ICON) || 
-            (mode == MODE_ICON_PROGRESS) ||
-            (mode == MODE_ICON_TEXT_SCREEN) ||
-            (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
-            (mode == MODE_TEXT_PROGRESS))
+        if ( (mode == MODE_ICON_SCREEN) || 
+             (mode == MODE_ICON_CLOCK) || 
+             (mode == MODE_ICON_DATE) || 
+             (mode == MODE_FULL_SCREEN) || 
+             (mode == MODE_RAINBOW_ICON) || 
+             (mode == MODE_ICON_PROGRESS) ||
+             (mode == MODE_ICON_TEXT_SCREEN) ||
+             (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
+             (mode == MODE_TEXT_PROGRESS) ||
+             (mode == MODE_PROGNOSIS_SCREEN) )
         {
           if (this->string_has_ending(icon_name, "*"))
           {
@@ -1705,13 +1711,95 @@ namespace esphome
     screen->status();
   }
 
+  void EHMTX::icon_prognosis_screen(std::string iconname, std::string text, std::string prognosis, int lifetime, int screen_time, bool default_font)
+  {
+    this->icon_prognosis_screen_rgb(iconname, text, prognosis, lifetime, screen_time, default_font, C_BLACK, C_BLACK, C_BLACK);
+  }
+
+  void EHMTX::icon_prognosis_screen_rgb(std::string iconname, std::string text, std::string prognosis, int lifetime, int screen_time, bool default_font, int r, int g, int b)
+  {
+    std::string ic = get_icon_name(iconname);
+    std::string id = get_screen_id(iconname);
+
+    uint8_t icon = this->find_icon(ic.c_str());
+
+    if (icon == MAXICONS)
+    {
+      ESP_LOGW(TAG, "icon %d/%s not found => default: 0", icon, ic.c_str());
+      icon = 0;
+      for (auto *t : on_icon_error_triggers_)
+      {
+        t->process(ic);
+      }
+    }
+
+    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_PROGNOSIS_SCREEN, id);
+
+    screen->text = text;
+    screen->text_color = Color(r, g, b);
+    screen->default_font = default_font;
+    screen->mode = MODE_PROGNOSIS_SCREEN;
+    screen->icon_name = id;
+    screen->icon = icon;
+    screen->calc_scroll_time(text, screen_time);
+    screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+
+    if (screen->sbitmap == NULL) 
+    {
+      screen->sbitmap = new Color[64];
+    }
+
+    const size_t CAPACITY = JSON_ARRAY_SIZE(72);
+    StaticJsonDocument<CAPACITY> doc;
+    deserializeJson(doc, prognosis);
+    JsonArray array = doc.as<JsonArray>();
+    // extract the 24 color values
+    uint8_t red = 0;
+    uint8_t gre = 0;
+    uint8_t blu = 0;
+
+    uint16_t i = 0;
+    for (JsonVariant v : array)
+    {
+      if (i % 3 == 0)
+      {
+        red = v.as<int>();
+      }
+      if (i % 3 == 1)
+      {
+        gre = v.as<int>();
+      }
+      if (i % 3 == 2)
+      {
+        blu = v.as<int>();
+
+        screen->sbitmap[static_cast<uint8_t>(i / 3)] = Color(red, gre, blu);
+      }
+
+      i++;
+    }
+
+    if (r + g + b == C_BLACK)
+    {
+      screen->text_color = screen->sbitmap[0];
+    }
+
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process(screen->icon_name, (uint8_t)screen->mode);
+    }
+    ESP_LOGD(TAG, "icon prognosis screen prognosis: %s", prognosis.c_str());
+    ESP_LOGD(TAG, "icon prognosis screen icon: %d iconname: %s text: %s prognosis: %d lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), static_cast<uint8_t>(i / 3), lifetime, screen_time);
+    screen->status();
+  }
+
   EHMTX_queue *EHMTX::find_icon_queue_element(uint8_t icon)
   {
     for (size_t i = 0; i < MAXQUEUE; i++)
     {
-      if ( ((this->queue[i]->mode == MODE_ICON_SCREEN) ||
-            (this->queue[i]->mode == MODE_RAINBOW_ICON) ||
-            (this->queue[i]->mode == MODE_ICON_PROGRESS)) &&
+      if ( ( (this->queue[i]->mode == MODE_ICON_SCREEN) ||
+             (this->queue[i]->mode == MODE_RAINBOW_ICON) ||
+             (this->queue[i]->mode == MODE_ICON_PROGRESS) ) &&
           (this->queue[i]->icon == icon) )
       {
         ESP_LOGD(TAG, "icon_screen: found by icon");
@@ -2144,6 +2232,7 @@ namespace esphome
 #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         if (this->queue[this->screen_pointer]->mode != MODE_ICON_SCREEN &&
             this->queue[this->screen_pointer]->mode != MODE_RAINBOW_ICON &&
+            this->queue[this->screen_pointer]->mode != MODE_PROGNOSIS_SCREEN &&
             !this->display_gauge)
         {
 #endif
