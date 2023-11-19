@@ -150,6 +150,7 @@ namespace esphome
     float next_action_time = 0.0; // when is the next screen change
     uint32_t tick_next_action = 0; // when is the next screen change
     uint32_t ticks_ = 0; // when is the next screen change
+    bool vertical_scroll = false;
 
     void remove_expired_queue_element();
     uint8_t find_oldest_queue_element();
@@ -163,7 +164,7 @@ namespace esphome
     uint8_t find_icon(std::string name);
     uint8_t find_last_clock();
     bool string_has_ending(std::string const &fullString, std::string const &ending);
-    void draw_day_of_week(bool small=false);
+    void draw_day_of_week(int ypos = 0, bool small=false);
     void show_all_icons();
     float get_tick();
     void tick();

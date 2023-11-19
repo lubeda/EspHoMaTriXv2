@@ -340,11 +340,17 @@ namespace esphome
   int EHMTX_queue::ypos()
   {
     uint8_t height = 8;
-    if (this->config_->scroll_step > height)
+
+    if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > height)
+    {
+      if (this->config_->vertical_scroll)
     {
       return 0;
     }
+      this->config_->vertical_scroll = this->config_->scroll_step >= height;
     return this->config_->scroll_step - height;
+  }
+    return height - round((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL);
   }
 
   int EHMTX_queue::ypos(uint8_t item)
@@ -439,7 +445,7 @@ namespace esphome
         {
           for (uint8_t y = 0; y < 8; y++)
           {
-            this->config_->display->draw_pixel_at(x, y, this->config_->bitmap[x + y * 32]);
+            this->config_->display->draw_pixel_at(x, this->ypos() + y, this->config_->bitmap[x + y * 32]);
           }
         }
 #endif
@@ -449,15 +455,15 @@ namespace esphome
       case MODE_GRAPH_SCREEN:
         if (this->icon == MAXICONS)
         {
-          this->config_->display->graph(0, 0, this->config_->graph);
+          this->config_->display->graph(0, this->ypos(), this->config_->graph);
         }
         else
         {
-          this->config_->display->graph(8, 0, this->config_->graph);
+          this->config_->display->graph(8, this->ypos(), this->config_->graph);
           if (this->icon != BLANKICON)
           {
-            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
-            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+            this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
+            this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
           }
         }
         break;
@@ -468,33 +474,33 @@ namespace esphome
 #ifndef USE_ESP8266
         color_ = (this->mode == MODE_RAINBOW_BITMAP_SMALL) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
-        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
+        this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
 #else
-        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+        this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
 #endif
         if (this->sbitmap != NULL)
         {
           if (this->config_->display_gauge)
           {
-            this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
+            this->config_->display->line(10, this->ypos(), 10, this->ypos() + 7, esphome::display::COLOR_OFF);
             for (uint8_t x = 0; x < 8; x++)
             {
               for (uint8_t y = 0; y < 8; y++)
               {
-                this->config_->display->draw_pixel_at(x + 2, y, this->sbitmap[x + y * 8]);
+                this->config_->display->draw_pixel_at(x + 2, this->ypos() + y, this->sbitmap[x + y * 8]);
               }
             }
           }
           else
           {
-            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
+            this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
             for (uint8_t x = 0; x < 8; x++)
             {
               for (uint8_t y = 0; y < 8; y++)
               {
-                this->config_->display->draw_pixel_at(x, y, this->sbitmap[x + y * 8]);
+                this->config_->display->draw_pixel_at(x, this->ypos() + y, this->sbitmap[x + y * 8]);
               }
             }
           }
@@ -512,9 +518,9 @@ namespace esphome
           {
             std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
             time_new = this->config_->replace_time_date(time_new);
-            this->config_->display->printf(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+            this->config_->display->printf(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
           } else {
-            this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
+            this->config_->display->strftime(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
                                              this->config_->clock->now());                    
           }
           if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
@@ -523,7 +529,7 @@ namespace esphome
           }
           if (this->mode != MODE_RAINBOW_CLOCK)
           {
-            this->config_->draw_day_of_week();
+            this->config_->draw_day_of_week(this->ypos());
           }
         }
         else
@@ -542,9 +548,9 @@ namespace esphome
           {
             std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
             time_new = this->config_->replace_time_date(time_new);
-            this->config_->display->printf(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+            this->config_->display->printf(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
           } else {
-            this->config_->display->strftime(xoffset + 15, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
+            this->config_->display->strftime(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
                                              this->config_->clock->now());                    
           }
           if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
@@ -553,7 +559,7 @@ namespace esphome
           }
           if (this->mode != MODE_RAINBOW_DATE)
           {
-            this->config_->draw_day_of_week();
+            this->config_->draw_day_of_week(this->ypos());
           }
         }
         else
@@ -563,7 +569,7 @@ namespace esphome
         break;
 
       case MODE_FULL_SCREEN:
-        this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+        this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
         break;
 
       case MODE_ICON_CLOCK:
@@ -578,9 +584,9 @@ namespace esphome
             {
               std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
               time_new = this->config_->replace_time_date(time_new);
-              this->config_->display->printf(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+              this->config_->display->printf(xoffset + 19, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
             } else {
-              this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
+              this->config_->display->strftime(xoffset + 19, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
                                                this->config_->clock->now());
             }
           }
@@ -590,17 +596,17 @@ namespace esphome
             {
               std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
               time_new = this->config_->replace_time_date(time_new);
-              this->config_->display->printf(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+              this->config_->display->printf(xoffset + 19, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
             } else {
-              this->config_->display->strftime(xoffset + 19, yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
+              this->config_->display->strftime(xoffset + 19, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
                                                this->config_->clock->now());
             }
           }
           if (this->icon != BLANKICON)
           {
-            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+            this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
           }
-          this->config_->draw_day_of_week(true);
+          this->config_->draw_day_of_week(this->ypos(), true);
 
           if (this->icon_name.find("day") != std::string::npos || this->icon_name.find("weekday") != std::string::npos)
           {
@@ -651,12 +657,12 @@ namespace esphome
               if (mode == 5 && (d < 10))
               {
                 x_right = 4 - (r_width - 1) / 2;
-                this->config_->display->printf(x_right, yoffset + this->config_->info_y_offset, info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
+                this->config_->display->printf(x_right, this->ypos() + yoffset + this->config_->info_y_offset, info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
               }
               else
               {
-                this->config_->display->printf(x_left, yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
-                this->config_->display->printf(x_right, yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
+                this->config_->display->printf(x_left, this->ypos() + yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(x_right, this->ypos() + yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
               }
             }
             else // if (this->icon_name.rfind("weekday", 0) == 0)
@@ -693,8 +699,8 @@ namespace esphome
                   x_right = x_right - r_width;
                   break;
                 }
-                this->config_->display->printf(x_left, yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%s", left.c_str());
-                this->config_->display->printf(x_right, yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%s", right.c_str());
+                this->config_->display->printf(x_left, this->ypos() + yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%s", left.c_str());
+                this->config_->display->printf(x_right, this->ypos() + yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%s", right.c_str());
               }
               else
               {
@@ -703,7 +709,7 @@ namespace esphome
                 // The symbol consists of a visible part, and an empty area to the right with a width of one point.
                 uint8_t c_width = this->config_->GetTextWidth(info_font, "%s", weekday.c_str());
                 x_left = 4 - (c_width - 1) / 2;
-                this->config_->display->printf(x_left, yoffset + this->config_->info_y_offset, info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%s", weekday.c_str());
+                this->config_->display->printf(x_left, this->ypos() + yoffset + this->config_->info_y_offset, info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%s", weekday.c_str());
               }
             }
           }
@@ -721,21 +727,21 @@ namespace esphome
       case MODE_PROGNOSIS_SCREEN:
         color_ = (this->mode == MODE_RAINBOW_ICON) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
-        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
+        this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
 #else
-        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+        this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
 #endif
         if (this->mode == MODE_ICON_PROGRESS)
         {
           if (this->icon != BLANKICON)
           {
-            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
-            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+            this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
+            this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
           }
 
-          this->config_->display->line(9, 7, 31, 7, this->progressbar_back_color);
+          this->config_->display->line(9, this->ypos() + 7, 31, this->ypos() + 7, this->progressbar_back_color);
           if (this->progress != 0)
           {
             if (this->progressbar_color == esphome::display::COLOR_OFF)
@@ -746,22 +752,22 @@ namespace esphome
             {
               color_ = this->progressbar_color;
             }
-            this->config_->display->line(9, 7, 9 + abs(this->progress) * 22 / 100, 7, color_);
+            this->config_->display->line(9, this->ypos() + 7, 9 + abs(this->progress) * 22 / 100, this->ypos() + 7, color_);
           }
         }
         else if (this->mode == MODE_PROGNOSIS_SCREEN)
         {
           if (this->icon != BLANKICON)
           {
-            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
-            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+            this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
+            this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
           }
 
           if (this->sbitmap != NULL)
           {
             for (uint8_t x = 0; x < 24; x++)
             {
-              this->config_->display->draw_pixel_at(8 + x, 7, this->sbitmap[x]);
+              this->config_->display->draw_pixel_at(8 + x, this->ypos() + 7, this->sbitmap[x]);
             }
           }
         }
@@ -771,16 +777,16 @@ namespace esphome
           {
             if (this->icon != BLANKICON)
             {
-              this->config_->display->image(2, 0, this->config_->icons[this->icon]);
+              this->config_->display->image(2, this->ypos(), this->config_->icons[this->icon]);
             }
-            this->config_->display->line(10, 0, 10, 7, esphome::display::COLOR_OFF);
+            this->config_->display->line(10, this->ypos(), 10, this->ypos() + 7, esphome::display::COLOR_OFF);
           }
           else
           {
-            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
+            this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
             if (this->icon != BLANKICON)
             {
-              this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
             }
           }
         }
@@ -789,9 +795,9 @@ namespace esphome
       case MODE_TEXT_PROGRESS:
         color_ = this->text_color;
 
-        this->config_->display->print(0, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT, this->icon_name.c_str());
+        this->config_->display->print(0, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT, this->icon_name.c_str());
 
-        this->config_->display->line(0, 7, 31, 7, this->progressbar_back_color);
+        this->config_->display->line(0, this->ypos() + 7, 31, this->ypos() + 7, this->progressbar_back_color);
         if (this->progress != 0)
         {
           if (this->progressbar_color == esphome::display::COLOR_OFF)
@@ -809,17 +815,17 @@ namespace esphome
         {
           color_ = this->text_color;
         }
-        this->config_->display->print(32, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT, this->text.c_str());
+        this->config_->display->print(32, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT, this->text.c_str());
         break;
 
       case MODE_ICON_TEXT_SCREEN:
       case MODE_RAINBOW_ICON_TEXT_SCREEN:
         color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
-        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
+        this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
 #else
-        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+        this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
 #endif
         if (this->icon != BLANKICON)
@@ -839,8 +845,8 @@ namespace esphome
               }
             }
           }
-          this->config_->display->line(x + 8, 0, x + 8, 7, esphome::display::COLOR_OFF);
-          this->config_->display->image(x, 0, this->config_->icons[this->icon]);
+          this->config_->display->line(x + 8, this->ypos(), x + 8, this->ypos() + 7, esphome::display::COLOR_OFF);
+          this->config_->display->image(x, this->ypos(), this->config_->icons[this->icon]);
         }
         break;
 
@@ -848,10 +854,10 @@ namespace esphome
       case MODE_RAINBOW_TEXT:
         color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
-        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
+        this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
 #else
-        this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+        this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
 #endif
         break;
@@ -864,7 +870,7 @@ namespace esphome
           {
             if (this->sbitmap[i].b != BLANKICON)
             {
-              this->config_->display->image(this->xpos(i), this->ypos(i), this->config_->icons[this->sbitmap[i].b]);
+              this->config_->display->image(this->xpos(i), this->ypos() + this->ypos(i), this->config_->icons[this->sbitmap[i].b]);
             }
           }
         }
@@ -938,7 +944,7 @@ namespace esphome
           /* Step 4) Map from heat cells to LED colors */
           for (y = 0; y < 8; ++y)
           {
-            this->config_->display->draw_pixel_at(x, y, heatColor(m_heat[x + y * 32]));
+            this->config_->display->draw_pixel_at(x, this->ypos() + y, heatColor(m_heat[x + y * 32]));
           }
         }
       }
