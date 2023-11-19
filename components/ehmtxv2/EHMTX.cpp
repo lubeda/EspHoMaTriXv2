@@ -1018,6 +1018,9 @@ namespace esphome
         this->screen_pointer = this->find_last_clock();
         this->scroll_step = 0;
         this->ticks_ = 0;
+        #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+          this->vertical_scroll = false;
+        #endif
 
         if (this->screen_pointer == MAXQUEUE)
         {
@@ -1026,9 +1029,6 @@ namespace esphome
 
         if (this->screen_pointer != MAXQUEUE)
         {
-          #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-            this->vertical_scroll = false;
-          #endif
           this->queue[this->screen_pointer]->last_time = ts;
           // todo nur bei animationen
           if (this->queue[this->screen_pointer]->mode == MODE_BITMAP_STACK_SCREEN && this->queue[this->screen_pointer]->sbitmap != NULL)
