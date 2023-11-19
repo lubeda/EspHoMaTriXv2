@@ -874,7 +874,7 @@ namespace esphome
           {
             if (this->sbitmap[i].b != BLANKICON)
             {
-              this->config_->display->image(this->xpos(i), this->ypos() + this->ypos(i), this->config_->icons[this->sbitmap[i].b]);
+              this->config_->display->image(this->xpos(i), this->ypos(i), this->config_->icons[this->sbitmap[i].b]);
             }
           }
         }
