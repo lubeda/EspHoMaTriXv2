@@ -13,6 +13,8 @@
 - [Set parameter on startup](startup-settings)
 - [Special clock and date display duration](special-clock-and-date-display-duration)
 - [Ulanzi upside-down](rotate-ULANZI-display-180-degrees)
+- [Problem with own services in the yaml](problem-with-text-as-variable-name)
+- [Display RTL text](rtl-text)
 
 ## Intermediate & Advanced Configuration
 
