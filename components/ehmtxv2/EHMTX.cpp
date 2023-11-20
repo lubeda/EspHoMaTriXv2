@@ -28,6 +28,9 @@ namespace esphome
     this->set_weekday_color();
     this->night_mode = false;
     this->weekday_accent = false;
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->vertical_scroll = false;
+    #endif
 
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
@@ -219,6 +222,10 @@ namespace esphome
     screen->mode = MODE_BITMAP_SCREEN;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process("bitmap", (uint8_t)screen->mode);
@@ -1015,6 +1022,9 @@ namespace esphome
         this->screen_pointer = this->find_last_clock();
         this->scroll_step = 0;
         this->ticks_ = 0;
+        #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+          this->vertical_scroll = false;
+        #endif
 
         if (this->screen_pointer == MAXQUEUE)
         {
@@ -1339,6 +1349,10 @@ namespace esphome
     screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100 : progress;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
@@ -1418,6 +1432,10 @@ namespace esphome
     screen->icon = icon;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
@@ -1451,6 +1469,10 @@ namespace esphome
     screen->icon = icon;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
@@ -1508,6 +1530,10 @@ namespace esphome
     {
       screen->screen_time_ = EHMTXv2_CLOCK_INTERVALL * 1000.0 - 2000.0;
     }
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     screen->status();
   }
@@ -1521,6 +1547,10 @@ namespace esphome
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     screen->status();
   }
 
@@ -1582,6 +1612,10 @@ namespace esphome
     screen->icon = 0;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process("Fire", (uint8_t)screen->mode);
@@ -1610,6 +1644,10 @@ namespace esphome
     screen->icon_name = iconname;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
@@ -1627,6 +1665,10 @@ namespace esphome
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     screen->status();
   }
 
@@ -1641,6 +1683,10 @@ namespace esphome
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     screen->status();
   }
 
@@ -1907,6 +1953,10 @@ namespace esphome
     screen->icon = MAXICONS;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
 
     this->graph->set_height(8);
     this->graph->set_width(32);
@@ -1940,6 +1990,10 @@ namespace esphome
     screen->icon_name = iconname;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
 
     this->graph->set_height(8);
     this->graph->set_width(24);
@@ -1962,7 +2016,7 @@ namespace esphome
 
   #define max3(x,y,z) ( (x) > (y) ? ((x) > (z) ? (x) : (z)) : ((y) > (z) ? (y) : (z)) )
 
-  void EHMTX::draw_day_of_week(bool small)
+  void EHMTX::draw_day_of_week(int ypos, bool small)
   {
     if (this->show_day_of_week)
     {
@@ -1982,18 +2036,18 @@ namespace esphome
           if (((!EHMTXv2_WEEK_START) && (dow == i)) ||
               ((EHMTXv2_WEEK_START) && ((dow == (i + 1)) || ((dow == 0 && i == 6)))))
           {
-            this->display->line(2 + i * 4, 7, i * 4 + 4, 7, this->today_color);
+            this->display->line(2 + i * 4, ypos + 7, i * 4 + 4, ypos + 7, this->today_color);
           }
           else
           {
-            this->display->line(2 + i * 4, 7, i * 4 + 4, 7, this->weekday_color);
+            this->display->line(2 + i * 4, ypos + 7, i * 4 + 4, ypos + 7, this->weekday_color);
             if (accent_color != esphome::display::COLOR_OFF)
             {
-              this->display->line(i * 4 + 3, 7, i * 4 + 3, 7, accent_color);
+              this->display->line(i * 4 + 3, ypos + 7, i * 4 + 3, ypos + 7, accent_color);
             }
           }
         }
-      } 
+      }
       else 
       {
         for (uint8_t i = 0; i <= 6; i++)
@@ -2001,14 +2055,14 @@ namespace esphome
           if (((!EHMTXv2_WEEK_START) && (dow == i)) ||
               ((EHMTXv2_WEEK_START) && ((dow == (i + 1)) || ((dow == 0 && i == 6)))))
           {
-            this->display->line(10 + i * 3, 7, 11 + i * 3 , 7, this->today_color);
+            this->display->line(10 + i * 3, ypos + 7, 11 + i * 3, ypos + 7, this->today_color);
           }
           else
           {          
-            this->display->line(10 + i * 3, 7, 11 + i * 3 , 7, this->weekday_color);
+            this->display->line(10 + i * 3, ypos + 7, 11 + i * 3, ypos + 7, this->weekday_color);
             if (accent_color != esphome::display::COLOR_OFF)
             {
-              this->display->line( (i < dow ? 11 : 10) + i * 3, 7, (i < dow ? 11 : 10) + i * 3 , 7, accent_color);
+              this->display->line( (i < dow ? 11 : 10) + i * 3, ypos + 7, (i < dow ? 11 : 10) + i * 3, ypos + 7, accent_color);
             }
           }
         }
