@@ -223,7 +223,7 @@ namespace esphome
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->pixels_ = 0;
+      screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
     for (auto *t : on_add_screen_triggers_)
@@ -1350,7 +1350,7 @@ namespace esphome
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->pixels_ = 0;
+      screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
     for (auto *t : on_add_screen_triggers_)
@@ -1433,7 +1433,7 @@ namespace esphome
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->pixels_ = 0;
+      screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
     for (auto *t : on_add_screen_triggers_)
@@ -1470,7 +1470,7 @@ namespace esphome
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->pixels_ = 0;
+      screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
     for (auto *t : on_add_screen_triggers_)
@@ -1531,7 +1531,7 @@ namespace esphome
       screen->screen_time_ = EHMTXv2_CLOCK_INTERVALL * 1000.0 - 2000.0;
     }
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->pixels_ = 0;
+      screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -1548,7 +1548,7 @@ namespace esphome
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->pixels_ = 0;
+      screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
     screen->status();
@@ -1613,7 +1613,7 @@ namespace esphome
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->pixels_ = 0;
+      screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
     for (auto *t : on_add_screen_triggers_)
@@ -1645,7 +1645,7 @@ namespace esphome
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->pixels_ = 0;
+      screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
     for (auto *t : on_add_screen_triggers_)
@@ -1666,7 +1666,7 @@ namespace esphome
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->pixels_ = 0;
+      screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
     screen->status();
@@ -1684,7 +1684,7 @@ namespace esphome
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->pixels_ = 0;
+      screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
     screen->status();
@@ -1954,7 +1954,7 @@ namespace esphome
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->pixels_ = 0;
+      screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
 
@@ -1991,7 +1991,7 @@ namespace esphome
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->pixels_ = 0;
+      screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
 
