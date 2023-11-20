@@ -222,6 +222,10 @@ namespace esphome
     screen->mode = MODE_BITMAP_SCREEN;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process("bitmap", (uint8_t)screen->mode);
@@ -1345,6 +1349,10 @@ namespace esphome
     screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100 : progress;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
@@ -1424,6 +1432,10 @@ namespace esphome
     screen->icon = icon;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
@@ -1457,6 +1469,10 @@ namespace esphome
     screen->icon = icon;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
@@ -1514,6 +1530,10 @@ namespace esphome
     {
       screen->screen_time_ = EHMTXv2_CLOCK_INTERVALL * 1000.0 - 2000.0;
     }
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     screen->status();
   }
@@ -1527,6 +1547,10 @@ namespace esphome
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     screen->status();
   }
 
@@ -1588,6 +1612,10 @@ namespace esphome
     screen->icon = 0;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process("Fire", (uint8_t)screen->mode);
@@ -1616,6 +1644,10 @@ namespace esphome
     screen->icon_name = iconname;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
@@ -1633,6 +1665,10 @@ namespace esphome
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     screen->status();
   }
 
@@ -1647,6 +1683,10 @@ namespace esphome
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
     screen->status();
   }
 
@@ -1913,6 +1953,10 @@ namespace esphome
     screen->icon = MAXICONS;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
 
     this->graph->set_height(8);
     this->graph->set_width(32);
@@ -1946,6 +1990,10 @@ namespace esphome
     screen->icon_name = iconname;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      this->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
 
     this->graph->set_height(8);
     this->graph->set_width(24);
