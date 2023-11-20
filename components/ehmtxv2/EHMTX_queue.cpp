@@ -115,6 +115,9 @@ namespace esphome
     case MODE_ICON_PROGRESS:
       ESP_LOGD(TAG, "queue: icon progress: \"%s\" text: %s for: %.1f sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_ / 1000.0);
       break;
+    case MODE_PROGNOSIS_SCREEN:
+      ESP_LOGD(TAG, "queue: icon prognosis screen: \"%s\" text: %s for: %.1f sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_ / 1000.0);
+      break;
     case MODE_TEXT_PROGRESS:
       ESP_LOGD(TAG, "queue: text progress: \"%s\" text: %s for: %.1f sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_ / 1000.0);
       break;
@@ -188,6 +191,7 @@ namespace esphome
     case MODE_ICON_DATE:
     case MODE_ALERT_SCREEN:
     case MODE_ICON_PROGRESS:
+    case MODE_PROGNOSIS_SCREEN:
       startx = 8;
       break;
     case MODE_TEXT_SCREEN:
@@ -714,6 +718,7 @@ namespace esphome
       case MODE_ALERT_SCREEN:
       case MODE_RAINBOW_ICON:
       case MODE_ICON_PROGRESS:
+      case MODE_PROGNOSIS_SCREEN:
         color_ = (this->mode == MODE_RAINBOW_ICON) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
         this->config_->display->print(this->xpos() + xoffset, yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
@@ -742,6 +747,22 @@ namespace esphome
               color_ = this->progressbar_color;
             }
             this->config_->display->line(9, 7, 9 + abs(this->progress) * 22 / 100, 7, color_);
+          }
+        }
+        else if (this->mode == MODE_PROGNOSIS_SCREEN)
+        {
+          if (this->icon != BLANKICON)
+          {
+            this->config_->display->line(8, 0, 8, 7, esphome::display::COLOR_OFF);
+            this->config_->display->image(0, 0, this->config_->icons[this->icon]);
+          }
+
+          if (this->sbitmap != NULL)
+          {
+            for (uint8_t x = 0; x < 24; x++)
+            {
+              this->config_->display->draw_pixel_at(8 + x, 7, this->sbitmap[x]);
+            }
           }
         }
         else
@@ -990,6 +1011,7 @@ namespace esphome
     case MODE_ICON_SCREEN:
     case MODE_ALERT_SCREEN:
     case MODE_ICON_PROGRESS:
+    case MODE_PROGNOSIS_SCREEN:
       startx = 8;
       if (this->pixels_ < 23)
       {
