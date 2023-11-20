@@ -1052,6 +1052,7 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_RAINBOW_ICON_TEXT_SCREEN| 22|
 |MODE_BITMAP_STACK_SCREEN| 23|
 |MODE_TEXT_PROGRESS| 24|
+|MODE_PROGNOSIS_SCREEN| 25|
 
 **(D)** Service **display_on** / **display_off**
 
