@@ -670,6 +670,10 @@ namespace esphome
       register_service(&EHMTX::fire_screen, "fire_screen", {"lifetime", "screen_time"});
     #endif
 
+    #ifdef EHMTXv2_ADV_CLOCK
+      register_service(&EHMTX::set_adv_clock_color, "set_adv_clock_color", {"hr", "hg", "hb", "mr", "mg", "mb"});
+    #endif
+
     register_service(&EHMTX::text_screen_progress, "text_screen_progress", {"text", "value", "progress", "lifetime", "screen_time", "default_font", "value_color_as_progress", "r", "g", "b"});
     register_service(&EHMTX::icon_screen_progress, "icon_screen_progress", {"icon_name", "text", "progress", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::set_progressbar_color, "set_progressbar_color", {"icon_name", "mode", "r", "g", "b", "bg_r", "bg_g", "bg_b"});
