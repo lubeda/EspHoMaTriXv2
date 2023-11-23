@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <regex>
 
 namespace esphome
 {
@@ -30,6 +31,11 @@ namespace esphome
     this->weekday_accent = false;
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
       this->vertical_scroll = false;
+    #endif
+
+    #ifdef EHMTXv2_ADV_CLOCK
+      this->set_clock_color();
+      this->set_adv_clock_color();
     #endif
 
     for (uint8_t i = 0; i < MAXQUEUE; i++)
@@ -2069,6 +2075,79 @@ namespace esphome
       }
     }
   }
+
+#ifdef EHMTXv2_ADV_CLOCK
+  void EHMTX::set_adv_clock_color(int hr, int hg, int hb, int mr, int mg, int mb)
+  {
+    this->hour_color = Color((uint8_t)hr, (uint8_t)hg, (uint8_t)hb);
+    this->minutes_color = Color((uint8_t)mr, (uint8_t)mg, (uint8_t)mb);
+    ESP_LOGD(TAG, "advanced clock color hour: r: %d g: %d b: %d minutes: r: %d g: %d b: %d", hr, hg, hb, mr, mg, mb);
+  }
+
+  bool EHMTX::draw_clock(esphome::display::BaseFont *font, Color color, int xpos, int ypos)
+  {
+    std::regex rgx {"^(%[HI])(.)(%M)(.)?(%S|%p)?$"};
+    std::cmatch match;
+    if (!std::regex_search(EHMTXv2_TIME_FORMAT, match, rgx))
+      return false;
+
+    std::vector<std::string> parts;
+    std::vector<uint8_t> len;
+    std::string sep = "";
+
+    uint8_t full_length = 0;
+
+    for (int i = 1; i < match.length(); i++)
+    {
+      std::string output = match[i].str();
+
+      if (output.length() > 0)
+      {
+        if (output.find("%") != std::string::npos)
+        {
+          if (output == "%p" && this->replace_time_date_active) // check for replace active
+          {
+            output = this->clock->now().strftime(output);
+            output = this->replace_time_date(output);
+          }
+          else
+          {
+            output = this->clock->now().strftime(output);
+          }
+        }
+        else if (sep == "")
+        {
+          sep = output;
+        }
+
+        parts.push_back(output);
+        len.push_back(output.length() > 0 ? this->GetTextWidth(font, "%s", output.c_str()) : 0);
+        full_length += len.back();
+      }
+    }
+
+    uint8_t x = xpos - full_length / 2;
+    for (int i = 0; i < parts.size(); i++)
+    {
+      if (parts.at(i).length() > 0)
+      {
+        if (!(this->show_seconds && parts.at(i) == sep && (this->clock->now().second % 2 == 1)))
+        {
+          Color c_ = i == 0 ? this->hour_color : i == 2 ? this->minutes_color : color;
+          if (c_.r + c_.g + c_.b == C_BLACK) 
+          {
+            c_ = color;
+          }
+
+          this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%s", parts.at(i).c_str());
+        }
+        x += len.at(i);
+      }
+    }
+
+    return true;
+  }
+#endif
 
   void EHMTX::set_weekday_char_count(uint8_t i)
   {

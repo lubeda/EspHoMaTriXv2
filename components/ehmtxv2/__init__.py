@@ -93,6 +93,7 @@ CONF_ICONS = "icons"
 CONF_SHOWDOW = "show_dow"
 CONF_RTL = "rtl"
 CONF_VERTICAL = "vertical_scroll"
+CONF_CLOCK = "advanced_clock"
 CONF_FRAMEDURATION = "frame_duration"
 CONF_SCROLLCOUNT = "scroll_count"
 CONF_MATRIXCOMPONENT = "matrix_component"
@@ -150,6 +151,9 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.boolean,
      cv.Optional(
         CONF_VERTICAL, default=False
+    ): cv.boolean,
+     cv.Optional(
+        CONF_CLOCK, default=False
     ): cv.boolean,
     cv.Optional(
         CONF_SHOW_SECONDS, default=False
@@ -521,6 +525,9 @@ async def to_code(config):
     if config[CONF_VERTICAL]:
         cg.add_define("EHMTXv2_USE_VERTICAL_SCROLL")    
     
+    if config[CONF_CLOCK]:
+        cg.add_define("EHMTXv2_ADV_CLOCK")    
+
     if config[CONF_NIGHT_MODE_SCREENS]:
         cg.add_define("EHMTXv2_CONF_NIGHT_MODE_SCREENS",config[CONF_NIGHT_MODE_SCREENS])
 
