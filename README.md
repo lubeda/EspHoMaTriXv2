@@ -39,7 +39,7 @@
 - Added `set_weekday_accent_on` and `set_weekday_accent_off` Turn on / off small days (accent) of the week when brightness is insufficient.
 - Added `icon_prognosis_screen` and `icon_prognosis_screen_rgb` Displays an icon, text, and a prognosis bar consisting of 24 dots of specified colors. https://github.com/lubeda/EspHoMaTriXv2/issues/149
 - Added `vertical_scroll` to ehmtxv2 config.
-- Added Advanced clock mode, [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
+- Added Advanced clock mode `advanced_clock`, [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
 
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
