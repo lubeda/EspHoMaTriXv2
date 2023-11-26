@@ -111,6 +111,7 @@ CONF_SPECIAL_FONT_XOFFSET = "special_font_xoffset"
 CONF_SPECIAL_FONT_YOFFSET = "special_font_yoffset"
 CONF_PINGPONG = "pingpong"
 CONF_TIME_FORMAT = "time_format"
+CONF_TIME_FORMAT_BIG = "time_format_big"
 CONF_DATE_FORMAT = "date_format"
 CONF_ON_START_RUNNING = "on_start_running"
 CONF_ON_EMPTY_QUEUE = "on_empty_queue"
@@ -169,6 +170,9 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.boolean,
     cv.Optional(
         CONF_TIME_FORMAT, default="%H:%M"
+    ): cv.string,
+    cv.Optional(
+        CONF_TIME_FORMAT_BIG, default="%H:%M:%S"
     ): cv.string,
     cv.Optional(
         CONF_WEEKDAYTEXT, default="SOMODIMIDOFRSA"
@@ -260,7 +264,7 @@ EHMTX_SCHEMA = cv.Schema({
         }
     ),
     cv.Optional(CONF_NIGHT_MODE_SCREENS, default=DEFAULT_NIGHT_MODE_SCREENS): cv.All(
-            cv.ensure_list(cv.one_of(1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25)), cv.Length(min=1, max=5)
+            cv.ensure_list(cv.one_of(1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25)), cv.Length(min=1, max=5)
         ),
     cv.Required(CONF_ICONS): cv.All(
         cv.ensure_list(
@@ -510,8 +514,9 @@ async def to_code(config):
     cg.add_define("EHMTXv2_DEFAULT_FONT_OFFSET_Y",config[CONF_DEFAULT_FONT_YOFFSET])
     cg.add_define("EHMTXv2_SPECIAL_FONT_OFFSET_X",config[CONF_SPECIAL_FONT_XOFFSET])
     cg.add_define("EHMTXv2_SPECIAL_FONT_OFFSET_Y",config[CONF_SPECIAL_FONT_YOFFSET])
-    cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])    
-    cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])    
+    cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])
+    cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])
+    cg.add_define("EHMTXv2_TIME_FORMAT_BIG",config[CONF_TIME_FORMAT_BIG])
     
     if config[CONF_SCROLL_SMALL_TEXT]:
         cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT")

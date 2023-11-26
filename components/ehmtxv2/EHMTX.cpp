@@ -34,6 +34,9 @@ namespace esphome
     #endif
 
     #ifdef EHMTXv2_ADV_CLOCK
+      this->info_clock_lcolor = Color(CG_GREY, CG_GREY, CG_GREY);
+      this->info_clock_rcolor = Color(CG_GREY * 2, CG_GREY * 2, CG_GREY * 2);
+
       this->set_clock_color();
       this->set_adv_clock_color();
     #endif
@@ -671,7 +674,8 @@ namespace esphome
     #endif
 
     #ifdef EHMTXv2_ADV_CLOCK
-      register_service(&EHMTX::set_adv_clock_color, "set_adv_clock_color", {"hr", "hg", "hb", "mr", "mg", "mb"});
+      register_service(&EHMTX::set_clock_infotext_color, "set_clock_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset"});
+      register_service(&EHMTX::set_adv_clock_color, "set_adv_clock_color", {"hr", "hg", "hb", "mr", "mg", "mb", "sr", "sg", "sb"});
     #endif
 
     register_service(&EHMTX::text_screen_progress, "text_screen_progress", {"text", "value", "progress", "lifetime", "screen_time", "default_font", "value_color_as_progress", "r", "g", "b"});
@@ -2081,18 +2085,28 @@ namespace esphome
   }
 
 #ifdef EHMTXv2_ADV_CLOCK
-  void EHMTX::set_adv_clock_color(int hr, int hg, int hb, int mr, int mg, int mb)
+  void EHMTX::set_clock_infotext_color(int lr, int lg, int lb, int rr, int rg, int rb, bool df, int y_offset)
+  {
+    this->info_clock_lcolor = Color((uint8_t)lr, (uint8_t)lg, (uint8_t)lb);
+    this->info_clock_rcolor = Color((uint8_t)rr, (uint8_t)rg, (uint8_t)rb);
+    this->info_clock_font = df;
+    this->info_clock_y_offset = y_offset;
+    ESP_LOGD(TAG, "info clock text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", lr, lg, lb, rr, rg, rb, y_offset);
+  }
+
+  void EHMTX::set_adv_clock_color(int hr, int hg, int hb, int mr, int mg, int mb, int sr, int sg, int sb)
   {
     this->hour_color = Color((uint8_t)hr, (uint8_t)hg, (uint8_t)hb);
     this->minutes_color = Color((uint8_t)mr, (uint8_t)mg, (uint8_t)mb);
-    ESP_LOGD(TAG, "advanced clock color hour: r: %d g: %d b: %d minutes: r: %d g: %d b: %d", hr, hg, hb, mr, mg, mb);
+    this->spacer_color = Color((uint8_t)sr, (uint8_t)sg, (uint8_t)sb);
+    ESP_LOGD(TAG, "advanced clock color hour: r: %d g: %d b: %d minutes: r: %d g: %d b: %d spacer: r: %d g: %d b: %d", hr, hg, hb, mr, mg, mb, sr, sg, sb);
   }
 
-  bool EHMTX::draw_clock(esphome::display::BaseFont *font, Color color, int xpos, int ypos)
+  bool EHMTX::draw_clock(std::string format, esphome::display::BaseFont *font, Color color, int xpos, int ypos)
   {
     std::regex rgx {"^(%[HI])(.)(%M)(.)?(%S|%p)?$"};
-    std::cmatch match;
-    if (!std::regex_search(EHMTXv2_TIME_FORMAT, match, rgx))
+    std::smatch match;
+    if (!std::regex_search(format, match, rgx))
       return false;
 
     std::vector<std::string> parts;
@@ -2137,7 +2151,7 @@ namespace esphome
       {
         if (!(this->show_seconds && parts.at(i) == sep && (this->clock->now().second % 2 == 1)))
         {
-          Color c_ = i == 0 ? this->hour_color : i == 2 ? this->minutes_color : color;
+          Color c_ = i == 0 ? this->hour_color : i == 2 ? this->minutes_color : parts.at(i) == sep ? this->spacer_color : color;
           if (c_.r + c_.g + c_.b == C_BLACK) 
           {
             c_ = color;
