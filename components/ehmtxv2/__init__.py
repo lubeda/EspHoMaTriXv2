@@ -133,6 +133,8 @@ CONF_TEXT = "text"
 CONF_GRAPH = "display_graph"
 CONF_NIGHT_MODE_SCREENS = "night_mode_screens"
 DEFAULT_NIGHT_MODE_SCREENS = [2,3,16]
+CONF_ICON_INDICATOR_SCREENS = "icon_indicator_screens"
+DEFAULT_ICON_INDICATOR_SCREENS = [15,18]
 
 EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_ID): cv.declare_id(EHMTX_),
@@ -264,6 +266,9 @@ EHMTX_SCHEMA = cv.Schema({
         }
     ),
     cv.Optional(CONF_NIGHT_MODE_SCREENS, default=DEFAULT_NIGHT_MODE_SCREENS): cv.All(
+            cv.ensure_list(cv.one_of(1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25)), cv.Length(min=1, max=5)
+        ),
+    cv.Optional(CONF_ICON_INDICATOR_SCREENS, default=DEFAULT_ICON_INDICATOR_SCREENS): cv.All(
             cv.ensure_list(cv.one_of(1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25)), cv.Length(min=1, max=5)
         ),
     cv.Required(CONF_ICONS): cv.All(
@@ -535,6 +540,9 @@ async def to_code(config):
 
     if config[CONF_NIGHT_MODE_SCREENS]:
         cg.add_define("EHMTXv2_CONF_NIGHT_MODE_SCREENS",config[CONF_NIGHT_MODE_SCREENS])
+
+    if config[CONF_ICON_INDICATOR_SCREENS]:
+        cg.add_define("EHMTXv2_CONF_ICON_INDICATOR_SCREENS",config[CONF_ICON_INDICATOR_SCREENS])
 
     cg.add(var.set_show_day_of_week(config[CONF_SHOWDOW]))  
 

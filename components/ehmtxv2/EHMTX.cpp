@@ -14,6 +14,8 @@ namespace esphome
     this->display_gauge = false;
     this->display_rindicator = 0;
     this->display_lindicator = 0;
+    this->display_icon_indicator = 0;
+    this->icon_indicator_y_pos = 7;
     this->display_alarm = 0;
     this->clock_time = 10;
     this->icon_count = 0;
@@ -52,7 +54,7 @@ namespace esphome
   {
     if (size > 0)
     {
-      this->rindicator_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
+      this->rindicator_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b);
       this->display_rindicator = size & 3;
       ESP_LOGD(TAG, "show rindicator size: %d r: %d g: %d b: %d", size, r, g, b);
     }
@@ -66,13 +68,28 @@ namespace esphome
   {
     if (size > 0)
     {
-      this->lindicator_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
+      this->lindicator_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b);
       this->display_lindicator = size & 3;
       ESP_LOGD(TAG, "show lindicator size: %d r: %d g: %d b: %d", size, r, g, b);
     }
     else
     {
       this->hide_lindicator();
+    }
+  }
+
+  void EHMTX::show_icon_indicator(int r, int g, int b, int size, int pos)
+  {
+    if (size > 0)
+    {
+      this->icon_indicator_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b);
+      this->display_icon_indicator = size;
+      this->icon_indicator_y_pos = pos;
+      ESP_LOGD(TAG, "show icon_indicator size: %d r: %d g: %d b: %d pos:", size, r, g, b, pos);
+    }
+    else
+    {
+      this->hide_icon_indicator();
     }
   }
 
@@ -86,6 +103,12 @@ namespace esphome
   {
     this->display_lindicator = 0;
     ESP_LOGD(TAG, "hide lindicator");
+  }
+
+  void EHMTX::hide_icon_indicator()
+  {
+    this->display_icon_indicator = 0;
+    ESP_LOGD(TAG, "hide icon indicator");
   }
 
   void EHMTX::set_display_off()
@@ -668,6 +691,9 @@ namespace esphome
     register_service(&EHMTX::rainbow_bitmap_small, "rainbow_bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font"});
     register_service(&EHMTX::bitmap_stack, "bitmap_stack", {"icons", "lifetime", "screen_time"});
 #endif
+
+    register_service(&EHMTX::show_icon_indicator, "show_icon_indicator", {"r", "g", "b", "size", "pos"});
+    register_service(&EHMTX::hide_icon_indicator, "hide_icon_indicator");
 
     #ifdef USE_Fireplugin
       register_service(&EHMTX::fire_screen, "fire_screen", {"lifetime", "screen_time"});
@@ -2356,6 +2382,23 @@ namespace esphome
     }
   }
 
+  void EHMTX::draw_icon_indicator()
+  {
+    if (this->display_icon_indicator > 0)
+    {
+      for (auto id : EHMTXv2_CONF_ICON_INDICATOR_SCREENS)
+      {
+        if (this->queue[this->screen_pointer]->mode == id)
+        {
+          this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                              3 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                              this->icon_indicator_color);
+          break;
+        }
+      }
+    }
+  }
+
   void HOT EHMTX::draw()
   {
     if ((this->is_running) && (this->show_display) )
@@ -2392,6 +2435,8 @@ namespace esphome
         }
       }
 #endif
+
+      this->draw_icon_indicator();
       this->draw_alarm();
     }
   }

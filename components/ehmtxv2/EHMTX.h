@@ -108,12 +108,13 @@ namespace esphome
     void dump_config();
     bool info_font = true;
     int8_t info_y_offset = 0;
+    int8_t icon_indicator_y_pos = 7;
   #ifdef EHMTXv2_ADV_CLOCK
     bool info_clock_font = true;
     int8_t info_clock_y_offset = 0;
   #endif
 #ifdef USE_ESP32
-    PROGMEM Color text_color, alarm_color, rindicator_color, lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor;
+    PROGMEM Color text_color, alarm_color, rindicator_color, lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor, icon_indicator_color;
     PROGMEM Color bitmap[256];
     PROGMEM Color cgauge[8];
     PROGMEM EHMTX_Icon *icons[MAXICONS];
@@ -123,7 +124,7 @@ namespace esphome
 #endif
 
 #ifdef USE_ESP8266
-    Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor;
+    Color text_color, alarm_color, gauge_color, gauge_bgcolor, rindicator_color, lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor, icon_indicator_color;
     EHMTX_Icon *icons[MAXICONS];
     uint8_t gauge_value;
   #ifdef EHMTXv2_ADV_CLOCK
@@ -134,6 +135,7 @@ namespace esphome
     display::BaseFont *special_font;
     int display_rindicator;
     int display_lindicator;
+    int display_icon_indicator;
     int display_alarm;
     uint8_t ticks_per_second=62;
     bool display_gauge;
@@ -205,6 +207,7 @@ namespace esphome
 
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
+    void show_icon_indicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 6, int pos = 7);
     void set_text_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void set_today_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void set_weekday_color(int r = CD_RED, int g = CD_GREEN, int b = CD_BLUE);
@@ -221,6 +224,7 @@ namespace esphome
     void hide_gauge();
     void hide_rindicator();
     void hide_lindicator();
+    void hide_icon_indicator();
     void hide_alarm();
     void full_screen(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void icon_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
@@ -258,6 +262,7 @@ namespace esphome
     void draw_alarm();
     void draw_rindicator();
     void draw_lindicator();
+    void draw_icon_indicator();
 
     void set_replace_time_date_active(bool b=false);
     void set_weekday_char_count(uint8_t i);
