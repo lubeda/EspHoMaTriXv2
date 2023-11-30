@@ -600,7 +600,7 @@ namespace esphome
           if (this->mode == MODE_ICON_CLOCK)
           {
             #ifdef EHMTXv2_ADV_CLOCK
-            if (!this->config_->draw_clock(EHMTXv2_TIME_FORMAT, font, color_, xoffset + 19, this->ypos() + yoffset))
+            if (!this->config_->draw_clock(EHMTXv2_TIME_FORMAT, font, color_, xoffset + 20, this->ypos() + yoffset))
             {
             #endif
               if (this->config_->replace_time_date_active) // check for replace active
