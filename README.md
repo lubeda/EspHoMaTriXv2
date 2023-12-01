@@ -39,6 +39,7 @@
 - Added `set_weekday_accent_on` and `set_weekday_accent_off` Turn on / off small days (accent) of the week when brightness is insufficient. [Example](https://github.com/lubeda/EspHoMaTriXv2/pull/151#issuecomment-1813089680)
 - Added `icon_prognosis_screen` and `icon_prognosis_screen_rgb` Displays an icon, text, and a prognosis bar consisting of 24 dots of specified colors. [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/149)
 - Added `vertical_scroll` to ehmtxv2 config.
+- Added Advanced clock mode `advanced_clock`, [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
 
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
@@ -622,6 +623,7 @@ This component is highly customizable.
 ehmtxv2:
   id: rgb8x32
   show_seconds: true
+  advanced_clock: false
   matrix_component: ehmtx_display
   time_component: ehmtx_time
   icons2html: true
@@ -651,6 +653,10 @@ ehmtxv2:
 **show_seconds** (optional, boolean): toggle/blink an indicator-pixel each seconds while the clock is displayed (default: false)
 
 **time_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M"` (use `"%I:%M%p"` for the US)
+
+**time_format_big** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M:%S"`, work only in **advanced_clock** mode and sets the time format for a screen with a clock without an icon
+
+**advanced_clock** (optional, boolean): Enables or disables advanced clock mode. (default: false) [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
 
 **default_font_yoffset** (optional, pixel): yoffset the text is aligned BASELINE_LEFT, the baseline defaults to `6`
 
@@ -783,6 +789,8 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`text_screen_progress`|"text", "value", "progress", "lifetime", "screen_time", "default_font", "value_color_as_progress", "r", "g", "b"|show the specified short text with value and with progress bar on bottom|
 |`icon_prognosis_screen`|"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font"|show an icon, text, and a prognosis bar consisting of 24 dots of specified colors|
 |`icon_prognosis_screen_rgb`|"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font", "r", "g", "b"|show an icon, text, and a prognosis bar consisting of 24 dots of specified colors|
+|`set_adv_clock_color`|"hr", "hg", "hb", "mr", "mg", "mb", "sr", "sg", "sb"|available only in **advanced clock mode** `advanced_clock: true`, allows you to set the color for the Hours (hr, hg, hb), Minutes (mr, mg, mb) and Spacer (sr, sg, sb), color is set by analogy with `r,g,b`. If the color is set as `black`, the standard color is used (see `set_clock_color`).|
+|`set_clock_infotext_color`|"left_r", "left_g", "left_b", "right_r", "right_g", "right_b","default_font","y_offset"|set the special color for left and right char on info text on `icon clock` screen, work only in **advanced clock mode**|
 
 #### Parameter description
 

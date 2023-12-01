@@ -108,17 +108,27 @@ namespace esphome
     void dump_config();
     bool info_font = true;
     int8_t info_y_offset = 0;
+  #ifdef EHMTXv2_ADV_CLOCK
+    bool info_clock_font = true;
+    int8_t info_clock_y_offset = 0;
+  #endif
 #ifdef USE_ESP32
     PROGMEM Color text_color, alarm_color, rindicator_color, lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor;
     PROGMEM Color bitmap[256];
     PROGMEM Color cgauge[8];
     PROGMEM EHMTX_Icon *icons[MAXICONS];
+  #ifdef EHMTXv2_ADV_CLOCK
+    PROGMEM Color hour_color, minutes_color, spacer_color, info_clock_lcolor, info_clock_rcolor;
+  #endif
 #endif
 
 #ifdef USE_ESP8266
     Color text_color, alarm_color, gauge_color, gauge_bgcolor,rindicator_color,lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor;
     EHMTX_Icon *icons[MAXICONS];
     uint8_t gauge_value;
+  #ifdef EHMTXv2_ADV_CLOCK
+    Color hour_color, minutes_color, spacer_color, info_clock_lcolor, info_clock_rcolor;
+  #endif
 #endif
     display::BaseFont *default_font;
     display::BaseFont *special_font;
@@ -166,7 +176,7 @@ namespace esphome
     uint8_t find_icon(std::string name);
     uint8_t find_last_clock();
     bool string_has_ending(std::string const &fullString, std::string const &ending);
-    void draw_day_of_week(int ypos = 0, bool small=false);
+    void draw_day_of_week(int ypos = 0, bool small = false);
     void show_all_icons();
     float get_tick();
     void tick();
@@ -200,6 +210,11 @@ namespace esphome
     void set_weekday_color(int r = CD_RED, int g = CD_GREEN, int b = CD_BLUE);
     void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void set_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY, bool info_font = true, int y_offset = 0);
+    #ifdef EHMTXv2_ADV_CLOCK
+      void set_clock_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY, bool info_font = true, int y_offset = 0);
+      void set_adv_clock_color(int hr = C_BLACK, int hg = C_BLACK, int hb = C_BLACK, int mr = C_BLACK, int mg = C_BLACK, int mb = C_BLACK, int sr = C_BLACK, int sg = C_BLACK, int sb = C_BLACK);
+      bool draw_clock(std::string format, esphome::display::BaseFont *font, Color color, int xpos = 0, int ypos = 0);
+    #endif
 
     void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
     void show_gauge(int v, int r = C_RED, int g = C_GREEN, int b = C_BLUE,int bgr = CG_GREY, int bgg = CG_GREY, int bgb = CG_GREY); // int because of register_service

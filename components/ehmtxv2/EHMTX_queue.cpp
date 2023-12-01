@@ -523,19 +523,28 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_CLOCK) ? this->config_->rainbow_color : this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
-          if (this->config_->replace_time_date_active) // check for replace active
+          #ifdef EHMTXv2_ADV_CLOCK
+          if (!this->config_->draw_clock(EHMTXv2_TIME_FORMAT_BIG, font, color_, xoffset + 15, this->ypos() + yoffset))
           {
-            std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
-            time_new = this->config_->replace_time_date(time_new);
-            this->config_->display->printf(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
-          } else {
-            this->config_->display->strftime(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
-                                             this->config_->clock->now());                    
+          #endif
+            if (this->config_->replace_time_date_active) // check for replace active
+            {
+              std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
+              time_new = this->config_->replace_time_date(time_new);
+              this->config_->display->printf(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+            } 
+            else 
+            {
+              this->config_->display->strftime(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
+                                               this->config_->clock->now());                    
+            }
+            if (this->config_->show_seconds && (this->config_->clock->now().second % 2 == 0))
+            {
+              this->config_->display->draw_pixel_at(0, 0, color_);
+            }
+          #ifdef EHMTXv2_ADV_CLOCK
           }
-          if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
-          {
-            this->config_->display->draw_pixel_at(0, 0, color_);
-          }
+          #endif
           if (this->mode != MODE_RAINBOW_CLOCK)
           {
             this->config_->draw_day_of_week(this->ypos());
@@ -587,17 +596,27 @@ namespace esphome
         {
           color_ = this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
+
           if (this->mode == MODE_ICON_CLOCK)
           {
-            if (this->config_->replace_time_date_active) // check for replace active
+            #ifdef EHMTXv2_ADV_CLOCK
+            if (!this->config_->draw_clock(EHMTXv2_TIME_FORMAT, font, color_, xoffset + 20, this->ypos() + yoffset))
             {
-              std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
-              time_new = this->config_->replace_time_date(time_new);
-              this->config_->display->printf(xoffset + 19, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
-            } else {
-              this->config_->display->strftime(xoffset + 19, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
-                                               this->config_->clock->now());
+            #endif
+              if (this->config_->replace_time_date_active) // check for replace active
+              {
+                std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
+                time_new = this->config_->replace_time_date(time_new);
+                this->config_->display->printf(xoffset + 20, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+              } 
+              else 
+              {
+                this->config_->display->strftime(xoffset + 20, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
+                                                 this->config_->clock->now());
+              }
+            #ifdef EHMTXv2_ADV_CLOCK
             }
+            #endif
           }
           else
           {
@@ -605,9 +624,11 @@ namespace esphome
             {
               std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
               time_new = this->config_->replace_time_date(time_new);
-              this->config_->display->printf(xoffset + 19, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
-            } else {
-              this->config_->display->strftime(xoffset + 19, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
+              this->config_->display->printf(xoffset + 20, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+            } 
+            else 
+            {
+              this->config_->display->strftime(xoffset + 20, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
                                                this->config_->clock->now());
             }
           }
@@ -619,6 +640,20 @@ namespace esphome
 
           if (this->icon_name.find("day") != std::string::npos || this->icon_name.find("weekday") != std::string::npos)
           {
+            int8_t i_y_offset = this->config_->info_y_offset;
+            Color i_lcolor = this->config_->info_rcolor;
+            Color i_rcolor = this->config_->info_rcolor;
+
+            #ifdef EHMTXv2_ADV_CLOCK
+            if (this->mode == MODE_ICON_CLOCK)
+            {
+              i_y_offset = this->config_->info_clock_y_offset;
+              i_lcolor = this->config_->info_clock_rcolor;
+              i_rcolor = this->config_->info_clock_rcolor;
+              info_font = this->config_->info_clock_font ? this->config_->default_font : this->config_->special_font;
+            }
+            #endif
+
             int mode = 0;
             std::size_t pos = icon_name.find("#");
             if (pos != std::string::npos)
@@ -666,12 +701,12 @@ namespace esphome
               if (mode == 5 && (d < 10))
               {
                 x_right = 4 - (r_width - 1) / 2;
-                this->config_->display->printf(x_right, this->ypos() + yoffset + this->config_->info_y_offset, info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
+                this->config_->display->printf(x_right, this->ypos() + yoffset + i_y_offset, info_font, i_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
               }
               else
               {
-                this->config_->display->printf(x_left, this->ypos() + yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
-                this->config_->display->printf(x_right, this->ypos() + yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
+                this->config_->display->printf(x_left, this->ypos() + yoffset + i_y_offset - (mode != 3 ? 0 : 1), info_font, i_lcolor, display::TextAlign::BASELINE_LEFT, "%d", d / 10 % 10);
+                this->config_->display->printf(x_right, this->ypos() + yoffset + i_y_offset - (mode != 4 ? 0 : 1), info_font, i_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
               }
             }
             else // if (this->icon_name.rfind("weekday", 0) == 0)
@@ -708,8 +743,8 @@ namespace esphome
                   x_right = x_right - r_width;
                   break;
                 }
-                this->config_->display->printf(x_left, this->ypos() + yoffset + this->config_->info_y_offset - (mode != 3 ? 0 : 1), info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%s", left.c_str());
-                this->config_->display->printf(x_right, this->ypos() + yoffset + this->config_->info_y_offset - (mode != 4 ? 0 : 1), info_font, this->config_->info_rcolor, display::TextAlign::BASELINE_LEFT, "%s", right.c_str());
+                this->config_->display->printf(x_left, this->ypos() + yoffset + i_y_offset - (mode != 3 ? 0 : 1), info_font, i_lcolor, display::TextAlign::BASELINE_LEFT, "%s", left.c_str());
+                this->config_->display->printf(x_right, this->ypos() + yoffset + i_y_offset - (mode != 4 ? 0 : 1), info_font, i_rcolor, display::TextAlign::BASELINE_LEFT, "%s", right.c_str());
               }
               else
               {
@@ -718,7 +753,7 @@ namespace esphome
                 // The symbol consists of a visible part, and an empty area to the right with a width of one point.
                 uint8_t c_width = this->config_->GetTextWidth(info_font, "%s", weekday.c_str());
                 x_left = 4 - (c_width - 1) / 2;
-                this->config_->display->printf(x_left, this->ypos() + yoffset + this->config_->info_y_offset, info_font, this->config_->info_lcolor, display::TextAlign::BASELINE_LEFT, "%s", weekday.c_str());
+                this->config_->display->printf(x_left, this->ypos() + yoffset + i_y_offset, info_font, i_lcolor, display::TextAlign::BASELINE_LEFT, "%s", weekday.c_str());
               }
             }
           }
