@@ -3,6 +3,7 @@ import logging
 import io
 import json
 import requests
+import os
 
 from esphome import core, automation
 from esphome.components import display, font, time, graph
@@ -12,6 +13,8 @@ import esphome.codegen as cg
 from esphome.const import CONF_BLUE, CONF_GREEN, CONF_RED, CONF_RESIZE, CONF_FILE, CONF_ID, CONF_BRIGHTNESS, CONF_RAW_DATA_ID,  CONF_TIME, CONF_TRIGGER_ID
 from esphome.core import CORE, HexInt
 from esphome.cpp_generator import RawExpression
+
+from urllib.parse import urlparse
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -98,6 +101,7 @@ CONF_FRAMEDURATION = "frame_duration"
 CONF_SCROLLCOUNT = "scroll_count"
 CONF_MATRIXCOMPONENT = "matrix_component"
 CONF_HTML = "icons2html"
+CONF_CACHE = "iconscache"
 CONF_SCROLLINTERVAL = "scroll_interval"
 CONF_BLENDSTEPS = "blend_steps"
 CONF_RAINBOWINTERVAL = "rainbow_interval"
@@ -146,6 +150,9 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.templatable(cv.positive_int),
     cv.Optional(
         CONF_HTML, default=False
+    ): cv.boolean,
+     cv.Optional(
+        CONF_CACHE, default=False
     ): cv.boolean,
      cv.Optional(
         CONF_RTL, default=False
@@ -330,15 +337,46 @@ async def to_code(config):
             except Exception as e:
                 raise core.EsphomeError(f" ICONS: Could not load image file {path}: {e}")
         elif CONF_LAMEID in conf:
-            r = requests.get("https://developer.lametric.com/content/apps/icon_thumbs/" + conf[CONF_LAMEID], timeout=4.0)
-            if r.status_code != requests.codes.ok:
-                raise core.EsphomeError(f" ICONS: Could not download image file {conf[CONF_LAMEID]}: {conf[CONF_ID]}")
-            image = Image.open(io.BytesIO(r.content))
+            path = CORE.relative_config_path(".cache/icons/lameid/" + conf[CONF_LAMEID])
+            if config[CONF_CACHE] and os.path.isfile(path):
+                try:
+                    image = openImageFile(path)
+                    logging.info(f" ICONS: Load {conf[CONF_LAMEID]} from cache.")
+                except Exception as e:
+                    raise core.EsphomeError(f" ICONS: Could not load image file {path}: {e}")
+            else:
+                r = requests.get("https://developer.lametric.com/content/apps/icon_thumbs/" + conf[CONF_LAMEID], timeout=4.0)
+                if r.status_code != requests.codes.ok:
+                    raise core.EsphomeError(f" ICONS: Could not download image file {conf[CONF_LAMEID]}: {conf[CONF_ID]}")
+                image = Image.open(io.BytesIO(r.content))
+
+                if config[CONF_CACHE]:
+                    os.makedirs(os.path.dirname(path), exist_ok=True)
+                    f = open(path,"wb")
+                    f.write(r.content) 
+                    f.close()
+                    logging.info(f" ICONS: Save {conf[CONF_LAMEID]} to cache.")
         elif CONF_URL in conf:
-            r = requests.get(conf[CONF_URL], timeout=4.0)
-            if r.status_code != requests.codes.ok:
-                raise core.EsphomeError(f" ICONS: Could not download image file {conf[CONF_URL]}: {conf[CONF_ID]}")
-            image = Image.open(io.BytesIO(r.content))
+            a = urlparse(conf[CONF_URL])
+            path = CORE.relative_config_path(".cache/icons/url/" + os.path.basename(a.path))
+            if config[CONF_CACHE] and os.path.isfile(path):
+                try:
+                    image = openImageFile(path)
+                    logging.info(f" ICONS: Load {conf[CONF_URL]} from cache.")
+                except Exception as e:
+                    raise core.EsphomeError(f" ICONS: Could not load image file {path}: {e}")
+            else:
+                r = requests.get(conf[CONF_URL], timeout=4.0)
+                if r.status_code != requests.codes.ok:
+                    raise core.EsphomeError(f" ICONS: Could not download image file {conf[CONF_URL]}: {conf[CONF_ID]}")
+                image = Image.open(io.BytesIO(r.content))
+
+                if config[CONF_CACHE]:
+                    os.makedirs(os.path.dirname(path), exist_ok=True)
+                    f = open(path,"wb")
+                    f.write(r.content) 
+                    f.close()
+                    logging.info(f" ICONS: Save {conf[CONF_URL]} to cache.")
         elif CONF_RGB565ARRAY in conf:
             r = list(json.loads(conf[CONF_RGB565ARRAY]))
             if len(r) == 64:
