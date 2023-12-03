@@ -40,6 +40,7 @@
 - Added `icon_prognosis_screen` and `icon_prognosis_screen_rgb` Displays an icon, text, and a prognosis bar consisting of 24 dots of specified colors. [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/149)
 - Added `vertical_scroll` to ehmtxv2 config.
 - Added Advanced clock mode `advanced_clock`, [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
+- Added `icon_indicator`, Shows the indicator in the Icons area on the specified screens, in the specified color and at the specified vertical position.
 
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
@@ -699,6 +700,8 @@ Example:
 
 **night_mode_screens** (optional, screen array, default [2, 3, 16]): List of screens displayed in [night mode](#night-mode).
 
+**icon_indicator_screens** (optional, screen array, default [15, 18]): List of screens on which the [icon indicator](#icon-indicator) will be displayed.
+
 **boot_logo** (optional, string , only on ESP32): Display a fullscreen logo defined as rgb565 array.
 
 ```yaml
@@ -793,6 +796,8 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`icon_prognosis_screen_rgb`|"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font", "r", "g", "b"|show an icon, text, and a prognosis bar consisting of 24 dots of specified colors|
 |`set_adv_clock_color`|"hr", "hg", "hb", "mr", "mg", "mb", "sr", "sg", "sb"|available only in **advanced clock mode** `advanced_clock: true`, allows you to set the color for the Hours (hr, hg, hb), Minutes (mr, mg, mb) and Spacer (sr, sg, sb), color is set by analogy with `r,g,b`. If the color is set as `black`, the standard color is used (see `set_clock_color`).|
 |`set_clock_infotext_color`|"left_r", "left_g", "left_b", "right_r", "right_g", "right_b","default_font","y_offset"|set the special color for left and right char on info text on `icon clock` screen, work only in **advanced clock mode**|
+|`show_icon_indicator`|"r", "g", "b", "size", "pos"|shows the line indicator in the Icons area on the specified screens, in the specified color and at the specified vertical position|
+|`hide_icon_indicator`|none|hides the icon indicator|
 
 #### Parameter description
 
@@ -813,6 +818,29 @@ Numerous features are accessible with services from home assistant and lambdas t
 ### Night mode
 
 When night mode is enabled, only the screens specified in `night_mode_screens` are displayed (**default:** 2, 3, 16) the other screens can be added, deleted, and will follow their life cycle but will not be displayed. Screen numbers in the table [mode](#modes).
+
+### Icon Iindicator
+
+Shows the line indicator in the Icons area on the specified screens, in the specified color and at the specified vertical position.
+
+```yaml
+ehmtxv2:
+...
+  icon_indicator_screens:
+    - 15
+```
+
+Home assistant service call:
+
+```yaml
+service: esphome.ulanzi_show_icon_indicator
+data:
+  r: 240
+  g: 240
+  b: 240
+  size: 6
+  pos: 7
+```
 
 ### Local lambdas
 
