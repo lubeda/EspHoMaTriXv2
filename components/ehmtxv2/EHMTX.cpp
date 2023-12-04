@@ -945,13 +945,15 @@ namespace esphome
                 infotext = "color";
                 break;
               case MODE_CLOCK:
+              case MODE_RAINBOW_CLOCK:
                 infotext = "clock";
                 break;
               case MODE_DATE:
-                infotext = "clock";
+              case MODE_RAINBOW_DATE:
+                infotext = "date";
                 break;
               case MODE_FULL_SCREEN:
-                infotext = "full screen " + this->queue[i]->icon_name;
+                infotext = "full screen: " + this->queue[i]->icon_name;
                 break;
               case MODE_ICON_SCREEN:
               case MODE_RAINBOW_ICON:
@@ -964,22 +966,28 @@ namespace esphome
               case MODE_PROGNOSIS_SCREEN:
                 infotext = this->queue[i]->icon_name.c_str();
                 break;
+              case MODE_ALERT_SCREEN:
+                infotext = ("alert: " + this->queue[i]->icon_name).c_str();
+                break;
+              case MODE_GRAPH_SCREEN:
+                infotext = ("graph: " + this->queue[i]->icon_name).c_str();
+                break;
               case MODE_RAINBOW_TEXT:
               case MODE_TEXT_SCREEN:
-                infotext = "TEXT";
+                infotext = "text";
                 break;
               case MODE_BITMAP_SMALL:
               case MODE_RAINBOW_BITMAP_SMALL:
-                infotext = ("BITMAP_SMALL: " + this->queue[i]->icon_name).c_str();
+                infotext = ("bitmap small: " + this->queue[i]->icon_name).c_str();
                 break;
               case MODE_BITMAP_SCREEN:
-                infotext = "BITMAP";
+                infotext = "bitmap";
                 break;
               case MODE_BITMAP_STACK_SCREEN:
-                infotext = ("BITMAP_STACK: " + this->queue[i]->text).c_str();
+                infotext = ("bitmap stack: " + this->queue[i]->text).c_str();
                 break;
               case MODE_FIRE:
-                infotext = "FIRE";
+                infotext = "fire";
                 break;
               default:
                 break;
@@ -1102,7 +1110,67 @@ namespace esphome
             for (auto *t : on_next_screen_triggers_)
             {
               ESP_LOGD(TAG, "on_next_screen trigger");
-              t->process(this->queue[this->screen_pointer]->icon_name, this->queue[this->screen_pointer]->text);
+              std::string infotext = "";
+              switch (this->queue[this->screen_pointer]->mode)
+              {
+              case MODE_EMPTY:
+                infotext = "empty";
+                break;
+              case MODE_BLANK:
+                infotext = "blank";
+                break;
+              case MODE_COLOR:
+                infotext = "color";
+                break;
+              case MODE_CLOCK:
+              case MODE_RAINBOW_CLOCK:
+                infotext = "clock";
+                break;
+              case MODE_DATE:
+              case MODE_RAINBOW_DATE:
+                infotext = "date";
+                break;
+              case MODE_FULL_SCREEN:
+                infotext = "full screen " + this->queue[this->screen_pointer]->icon_name;
+                break;
+              case MODE_ICON_SCREEN:
+              case MODE_RAINBOW_ICON:
+              case MODE_ICON_CLOCK:
+              case MODE_ICON_DATE:
+              case MODE_ICON_PROGRESS:
+              case MODE_ICON_TEXT_SCREEN:
+              case MODE_RAINBOW_ICON_TEXT_SCREEN:
+              case MODE_TEXT_PROGRESS:
+              case MODE_PROGNOSIS_SCREEN:
+                infotext = this->queue[this->screen_pointer]->icon_name.c_str();
+                break;
+              case MODE_ALERT_SCREEN:
+                infotext = ("alert: " + this->queue[this->screen_pointer]->icon_name).c_str();
+                break;
+              case MODE_GRAPH_SCREEN:
+                infotext = ("graph: " + this->queue[this->screen_pointer]->icon_name).c_str();
+                break;
+              case MODE_RAINBOW_TEXT:
+              case MODE_TEXT_SCREEN:
+                infotext = "text";
+                break;
+              case MODE_BITMAP_SMALL:
+              case MODE_RAINBOW_BITMAP_SMALL:
+                infotext = ("bitmap small: " + this->queue[this->screen_pointer]->icon_name).c_str();
+                break;
+              case MODE_BITMAP_SCREEN:
+                infotext = "bitmap";
+                break;
+              case MODE_BITMAP_STACK_SCREEN:
+                infotext = ("bitmap stack: " + this->queue[this->screen_pointer]->text).c_str();
+                break;
+              case MODE_FIRE:
+                infotext = "fire";
+                break;
+              default:
+                break;
+              }
+              t->process(infotext, this->queue[this->screen_pointer]->text);
             }
           }
         }
