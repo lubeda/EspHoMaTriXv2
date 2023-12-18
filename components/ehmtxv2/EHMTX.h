@@ -57,7 +57,8 @@ enum show_mode : uint8_t
   MODE_BITMAP_STACK_SCREEN = 23,
   MODE_TEXT_PROGRESS = 24,
   MODE_PROGNOSIS_SCREEN = 25,
-  MODE_BITMAP_TEXTSCREEN = 27
+  MODE_RAINBOW_ALERT_SCREEN = 26,
+  MODE_BITMAP_TEXT_SCREEN = 27
 };
 
 namespace esphome
@@ -232,6 +233,7 @@ namespace esphome
     void full_screen(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
     void icon_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void alert_screen(std::string icon, std::string text, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE);
+    void rainbow_alert_screen(std::string icon, std::string text, int screen_time = D_SCREEN_TIME, bool default_font = true);
     void icon_clock(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void icon_date(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);

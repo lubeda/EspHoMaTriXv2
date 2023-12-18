@@ -166,7 +166,7 @@ EHMTX_SCHEMA = cv.Schema({
      cv.Optional(
         CONF_CLOCK, default=False
     ): cv.boolean,
-     cv.Optional(
+    cv.Optional(
         CONF_BITMAP, default=False
     ): cv.boolean,
     cv.Optional(

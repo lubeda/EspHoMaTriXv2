@@ -226,7 +226,7 @@ namespace esphome
     return (tokens.size() > 1) ? tokens[1] : (tokens.size() > 0) ? (iconname.find("*") != std::string::npos) ? get_icon_name(tokens[0], '_') : tokens[0] : "";
   }
 
-  #ifndef USE_ESP8266
+#ifndef USE_ESP8266
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
     ESP_LOGD(TAG, "bitmap screen: lifetime: %d screen_time: %d", lifetime, screen_time);
@@ -289,7 +289,6 @@ namespace esphome
       screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
-
     for (auto *t : on_add_screen_triggers_)
     {
       t->process("bitmap", (uint8_t)screen->mode);
@@ -751,6 +750,7 @@ namespace esphome
     register_service(&EHMTX::full_screen, "full_screen", {"icon_name", "lifetime", "screen_time"});
     register_service(&EHMTX::icon_screen, "icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::alert_screen, "alert_screen", {"icon_name","text", "screen_time", "default_font", "r", "g", "b"});
+    register_service(&EHMTX::rainbow_alert_screen, "rainbow_alert_screen", {"icon_name","text", "screen_time", "default_font"});
     register_service(&EHMTX::icon_clock, "icon_clock", {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::icon_date, "icon_date", {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     #ifdef USE_GRAPH
@@ -1062,6 +1062,7 @@ namespace esphome
                 infotext = this->queue[i]->icon_name.c_str();
                 break;
               case MODE_ALERT_SCREEN:
+              case MODE_RAINBOW_ALERT_SCREEN:
                 infotext = ("alert: " + this->queue[i]->icon_name).c_str();
                 break;
               case MODE_GRAPH_SCREEN:
@@ -1245,6 +1246,7 @@ namespace esphome
                 infotext = this->queue[this->screen_pointer]->icon_name.c_str();
                 break;
               case MODE_ALERT_SCREEN:
+              case MODE_RAINBOW_ALERT_SCREEN:
                 infotext = ("alert: " + this->queue[this->screen_pointer]->icon_name).c_str();
                 break;
               case MODE_GRAPH_SCREEN:
@@ -1520,6 +1522,40 @@ namespace esphome
     screen->status();
 
     force_screen(iconname, MODE_ALERT_SCREEN);
+  }
+
+  void EHMTX::rainbow_alert_screen(std::string iconname, std::string text, int screen_time, bool default_font)
+  {
+    uint8_t icon = this->find_icon(iconname.c_str());
+
+    if (icon == MAXICONS)
+    {
+      ESP_LOGW(TAG, "icon %d/%s not found => default: 0", icon, iconname.c_str());
+      icon = 0;
+      for (auto *t : on_icon_error_triggers_)
+      {
+        t->process(iconname);
+      }
+    }
+    EHMTX_queue *screen = this->find_mode_queue_element(MODE_RAINBOW_ALERT_SCREEN);
+
+    screen->text = text;
+    
+    screen->default_font = default_font;
+    screen->mode = MODE_RAINBOW_ALERT_SCREEN;
+    screen->icon_name = iconname;
+    screen->icon = icon;
+    screen->calc_scroll_time(text, screen_time);
+    // time needed for scrolling
+    screen->endtime = this->get_tick() + screen->screen_time_;
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process(screen->icon_name, (uint8_t)screen->mode);
+    }
+    ESP_LOGD(TAG, "alert screen rainbow icon: %d iconname: %s text: %s screen_time: %d", icon, iconname.c_str(), text.c_str(), screen_time);
+    screen->status();
+
+    force_screen(iconname, MODE_RAINBOW_ALERT_SCREEN);
   }
 
   void EHMTX::icon_screen(std::string iconname, std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
