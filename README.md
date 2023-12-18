@@ -41,6 +41,7 @@
 - Added `vertical_scroll` to ehmtxv2 config.
 - Added Advanced clock mode `advanced_clock`, [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
 - Added `icon_indicator`, Shows the indicator in the Icons area on the specified screens, in the specified color and at the specified vertical position. [Example](https://github.com/lubeda/EspHoMaTriXv2/pull/170#issuecomment-1836539171)
+- Added `rainbow_alert_screen`, show the specified icon with text in rainbow color, screen forced and lifetime = screen_time
 
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
@@ -257,7 +258,7 @@ void rainbow_icon_screen(std::string icon, std::string text, int lifetime=D_LIFE
 void alert_screen(std::string icon_name, std::string text, int screen_time, bool default_font, int r, int g, int b)
 ```
 
-`icon_screen` and `rainbow_icon_screen` are in the queue for `lifetime` minutes. `alert_screen` is displayed once, imidiatly for at least `screentime` seconds for long text the dcreentime is calculated automagically.
+`icon_screen` and `rainbow_icon_screen` are in the queue for `lifetime` minutes. `alert_screen` and `rainbow_alert_screen` is displayed once, imidiatly for at least `screentime` seconds for long text the dcreentime is calculated automagically.
 
 ##### full_screen
 
@@ -779,6 +780,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`date_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the date|
 |`brightness`|"value"|set the display brightness|
 |`alert_screen`|"icon_name", "text", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text, screen forced and lifetime = screen_time|
+|`rainbow_alert_screen`|"icon_name", "text", "screen_time", "default_font"|show the specified icon with text in rainbow color, screen forced and lifetime = screen_time|
 |`icon_screen_progress`|"icon_name", "text", "progress", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with text and with progress bar on bottom|
 |`set_progressbar_color`|"icon_name", "mode", "r", "g", "b", "bg_r", "bg_g", "bg_b"|sets the specified by name and [mode](#modes) screen with progress bar, the specified color of the progress bar, and the background color of the progress bar. if you set the color to black, the color display will work according to the progress value|
 |`icon_clock`|"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified icon with time, there is support for [displaying text on top of the icon](#icon_text)|
@@ -1095,6 +1097,7 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 |MODE_BITMAP_STACK_SCREEN| 23|
 |MODE_TEXT_PROGRESS| 24|
 |MODE_PROGNOSIS_SCREEN| 25|
+|MODE_RAINBOW_ALERT_SCREEN| 26|
 
 **(D)** Service **display_on** / **display_off**
 
@@ -1515,7 +1518,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[N3rdix](https://github.com/N3rdix)** PRs
 - **[lukasleitsch](https://github.com/lukasleitsch)** PRs
 - **[trvrnrth](https://github.com/trvrnrth)** PRs with fixing an error
-- **[andrewjswan](https://github.com/andrewjswan)** Boot animation centered. `alert_screen` and [issue](https://github.com/lubeda/EspHoMaTriXv2/issues/84) and the additions to 2023.9.1
+- **[andrewjswan](https://github.com/andrewjswan)** Boot animation centered. `alert_screen` and [issue](https://github.com/lubeda/EspHoMaTriXv2/issues?q=is%3Aissue+author%3Aandrewjswan) and the [additions](https://github.com/lubeda/EspHoMaTriXv2/pulls?q=is%3Apr+author%3Aandrewjswan) to 2023.9.1
 - **Added by [andrewjswan](https://github.com/andrewjswan)** [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 - **[malinovsku](https://github.com/malinovsku)** Issues and testing.
 - **[chertvl](https://github.com/chertvl)** Issues and testing.
