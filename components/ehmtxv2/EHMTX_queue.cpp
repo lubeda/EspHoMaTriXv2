@@ -128,7 +128,10 @@ namespace esphome
       ESP_LOGD(TAG, "queue: icon date: \"%s\" for: %.1f sec", this->icon_name.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_ALERT_SCREEN:
-      ESP_LOGD(TAG, "queue: icon: \"%s\" for: %.1f sec", this->icon_name.c_str(), this->screen_time_ / 1000.0);
+      ESP_LOGD(TAG, "queue: alert icon: \"%s\" for: %.1f sec", this->icon_name.c_str(), this->screen_time_ / 1000.0);
+      break;
+    case MODE_RAINBOW_ALERT_SCREEN:
+      ESP_LOGD(TAG, "queue: rainbow alert icon: \"%s\" for: %.1f sec", this->icon_name.c_str(), this->screen_time_ / 1000.0);
       break;
     case MODE_TEXT_SCREEN:
       ESP_LOGD(TAG, "queue: text text: \"%s\" for: %.1f sec", this->text.c_str(), this->screen_time_ / 1000.0);
@@ -190,6 +193,7 @@ namespace esphome
     case MODE_ICON_CLOCK:
     case MODE_ICON_DATE:
     case MODE_ALERT_SCREEN:
+    case MODE_RAINBOW_ALERT_SCREEN:
     case MODE_ICON_PROGRESS:
     case MODE_PROGNOSIS_SCREEN:
       startx = 8;
@@ -766,10 +770,11 @@ namespace esphome
 
       case MODE_ICON_SCREEN:
       case MODE_ALERT_SCREEN:
+      case MODE_RAINBOW_ALERT_SCREEN:
       case MODE_RAINBOW_ICON:
       case MODE_ICON_PROGRESS:
       case MODE_PROGNOSIS_SCREEN:
-        color_ = (this->mode == MODE_RAINBOW_ICON) ? this->config_->rainbow_color : this->text_color;
+        color_ = (this->mode == MODE_RAINBOW_ICON || this->mode == MODE_RAINBOW_ALERT_SCREEN) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
@@ -1060,6 +1065,7 @@ namespace esphome
     case MODE_RAINBOW_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
     case MODE_ALERT_SCREEN:
+    case MODE_RAINBOW_ALERT_SCREEN:
     case MODE_ICON_PROGRESS:
     case MODE_PROGNOSIS_SCREEN:
       startx = 8;
