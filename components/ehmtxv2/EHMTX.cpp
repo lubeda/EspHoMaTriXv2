@@ -1430,7 +1430,6 @@ namespace esphome
 
     screen->text = text;
     
-    screen->text_color = Color(r, g, b);
     screen->default_font = default_font;
     screen->mode = MODE_RAINBOW_ALERT_SCREEN;
     screen->icon_name = iconname;
