@@ -159,6 +159,11 @@ namespace esphome
     case MODE_BITMAP_SCREEN:
       ESP_LOGD(TAG, "queue: bitmap for: %.1f sec", this->screen_time_ / 1000.0);
       break;
+    #ifdef EHMTXv2_ADV_BITMAP
+    case MODE_BITMAP_TEXT_SCREEN:
+      ESP_LOGD(TAG, "queue: bitmap text for: %.1f sec", this->screen_time_ / 1000.0);
+      break;
+    #endif
     case MODE_BITMAP_SMALL:
       ESP_LOGD(TAG, "queue: small bitmap for: %.1f sec", this->screen_time_ / 1000.0);
       break;
@@ -450,13 +455,54 @@ namespace esphome
 
       case MODE_BITMAP_SCREEN:
 #ifndef USE_ESP8266
-        for (uint8_t x = 0; x < 32; x++)
+        #ifdef EHMTXv2_ADV_BITMAP
+        if (this->bitmap != NULL)
         {
-          for (uint8_t y = 0; y < 8; y++)
+        #endif
+          for (uint8_t x = 0; x < 32; x++)
           {
-            this->config_->display->draw_pixel_at(x, this->ypos() + y, this->config_->bitmap[x + y * 32]);
+            for (uint8_t y = 0; y < 8; y++)
+            {
+              #ifdef EHMTXv2_ADV_BITMAP
+              this->config_->display->draw_pixel_at(x, this->ypos() + y, this->bitmap[x + y * 32]);
+              #else
+              this->config_->display->draw_pixel_at(x, this->ypos() + y, this->config_->bitmap[x + y * 32]);
+              #endif
+            }
+          }
+        #ifdef EHMTXv2_ADV_BITMAP
+        }
+        #endif
+#endif
+        break;
+      case MODE_BITMAP_TEXT_SCREEN:
+#ifndef USE_ESP8266
+        #ifdef EHMTXv2_ADV_BITMAP
+        if (this->config_->get_tick() - this->last_time < screen_time_ / 2.0);
+        {
+          if (this->bitmap != NULL)
+          {
+            for (uint8_t x = 0; x < 32; x++)
+            {
+              for (uint8_t y = 0; y < 8; y++)
+              {
+                this->config_->display->draw_pixel_at(x, this->ypos() + y, this->bitmap[x + y * 32]);
+              }
+            }
           }
         }
+        else
+        {
+          color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
+          #ifdef EHMTXv2_USE_RTL
+          this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
+                                        this->text.c_str());
+          #else
+          this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
+                                        this->text.c_str());
+          #endif
+        }
+        #endif
 #endif
         break;
 
@@ -1038,6 +1084,7 @@ namespace esphome
     {
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
+    case MODE_BITMAP_TEXTSCREEN:
 #ifdef EHMTXv2_SCROLL_SMALL_TEXT
       max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
       display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
@@ -1053,6 +1100,13 @@ namespace esphome
         display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
         this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
+      #ifdef EHMTXv2_ADV_BITMAP
+      if (this->mode == MODE_BITMAP_TEXTSCREEN)
+      {
+        display_duration = display_duration * 2.0;
+        this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
+      }
+      #endif
 #endif
       break;
     case MODE_RAINBOW_ICON:

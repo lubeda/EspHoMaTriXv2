@@ -56,7 +56,8 @@ enum show_mode : uint8_t
   MODE_RAINBOW_ICON_TEXT_SCREEN = 22,
   MODE_BITMAP_STACK_SCREEN = 23,
   MODE_TEXT_PROGRESS = 24,
-  MODE_PROGNOSIS_SCREEN = 25
+  MODE_PROGNOSIS_SCREEN = 25,
+  MODE_BITMAP_TEXTSCREEN = 27
 };
 
 namespace esphome
@@ -115,7 +116,9 @@ namespace esphome
   #endif
 #ifdef USE_ESP32
     PROGMEM Color text_color, alarm_color, rindicator_color, lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor, icon_indicator_color;
+  #ifndef EHMTXv2_ADV_BITMAP
     PROGMEM Color bitmap[256];
+  #endif
     PROGMEM Color cgauge[8];
     PROGMEM EHMTX_Icon *icons[MAXICONS];
   #ifdef EHMTXv2_ADV_CLOCK
@@ -249,6 +252,9 @@ namespace esphome
     void icon_prognosis_screen_rgb(std::string icon, std::string text, std::string prognosis, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
 
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
+    #ifdef EHMTXv2_ADV_BITMAP
+    void bitmap_text_screen(std::string bitmap, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    #endif
     void color_gauge(std::string text);
     void bitmap_small(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void rainbow_bitmap_small(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
@@ -308,6 +314,9 @@ namespace esphome
     show_mode mode;
     int8_t progress;
     Color* sbitmap;
+  #ifdef EHMTXv2_ADV_BITMAP
+    Color* bitmap;
+  #endif
 
 #ifdef USE_ESP32
     PROGMEM Color text_color, progressbar_color, progressbar_back_color;

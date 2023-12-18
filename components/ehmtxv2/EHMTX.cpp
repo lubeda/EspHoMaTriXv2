@@ -226,13 +226,39 @@ namespace esphome
     return (tokens.size() > 1) ? tokens[1] : (tokens.size() > 0) ? (iconname.find("*") != std::string::npos) ? get_icon_name(tokens[0], '_') : tokens[0] : "";
   }
 
-#ifndef USE_ESP8266
+  #ifndef USE_ESP8266
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
     ESP_LOGD(TAG, "bitmap screen: lifetime: %d screen_time: %d", lifetime, screen_time);
+
+    #ifdef EHMTXv2_ADV_BITMAP
+    std::string ic = get_icon_name(text);
+    std::string id = "";
+
+    if (text.find("|") != std::string::npos)
+    {
+      id = get_screen_id(text);
+    } 
+
+    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_BITMAP_SCREEN, id);
+    #else
+    EHMTX_queue *screen = this->find_mode_queue_element(MODE_BITMAP_SCREEN);
+    #endif
+
+    #ifdef EHMTXv2_ADV_BITMAP
+    if (screen->bitmap == NULL) 
+    {
+      screen->bitmap = new Color[256];
+    }
+    #endif
+
     const size_t CAPACITY = JSON_ARRAY_SIZE(256);
     StaticJsonDocument<CAPACITY> doc;
+    #ifdef EHMTXv2_ADV_BITMAP
+    deserializeJson(doc, ic);
+    #else
     deserializeJson(doc, text);
+    #endif
     JsonArray array = doc.as<JsonArray>();
     // extract the values
     uint16_t i = 0;
@@ -245,11 +271,16 @@ namespace esphome
       unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
       Color c = Color(r, g, b);
 
+      #ifdef EHMTXv2_ADV_BITMAP
+      screen->bitmap[i++] = c;
+      #else
       this->bitmap[i++] = c;
+      #endif
     }
 
-    EHMTX_queue *screen = this->find_mode_queue_element(MODE_BITMAP_SCREEN);
-
+    #ifdef EHMTXv2_ADV_BITMAP
+    screen->icon_name = id;
+    #endif
     screen->text = "";
     screen->mode = MODE_BITMAP_SCREEN;
     screen->screen_time_ = screen_time * 1000.0;
@@ -258,12 +289,67 @@ namespace esphome
       screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
+
     for (auto *t : on_add_screen_triggers_)
     {
       t->process("bitmap", (uint8_t)screen->mode);
     }
     screen->status();
   }
+
+  #ifdef EHMTXv2_ADV_BITMAP
+  void EHMTX::bitmap_text_screen(std::string bitmap, std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
+  {
+    std::string ic = get_icon_name(bitmap);
+    std::string id = "";
+
+    if (bitmap.find("|") != std::string::npos)
+    {
+      id = get_screen_id(bitmap);
+    } 
+
+    EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_BITMAP_TEXT_SCREEN, id);
+
+    if (screen->bitmap == NULL) 
+    {
+      screen->bitmap = new Color[256];
+    }
+
+    const size_t CAPACITY = JSON_ARRAY_SIZE(256);
+    StaticJsonDocument<CAPACITY> doc;
+    deserializeJson(doc, bitmap);
+    JsonArray array = doc.as<JsonArray>();
+    // extract the values
+    uint16_t i = 0;
+    for (JsonVariant v : array)
+    {
+      uint16_t buf = v.as<int>();
+
+      unsigned char b = (((buf)&0x001F) << 3);
+      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      Color c = Color(r, g, b);
+
+      screen->bitmap[i++] = c;
+    }
+
+    screen->icon_name = id;
+    screen->text = text;
+    screen->mode = MODE_BITMAP_TEXT_SCREEN;
+    screen->calc_scroll_time(text, screen_time);
+    screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
+      screen->pixels_ = 0;
+      screen->scroll_reset = 32;
+    #endif
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process("bitmap text", (uint8_t)screen->mode);
+    }
+    ESP_LOGD(TAG, "bitmap text screen: lifetime: %d screen_time: %d", lifetime, screen_time);
+    screen->status();
+  }
+  #endif
 
   void EHMTX::bitmap_small(std::string icon, std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
   {
@@ -489,13 +575,19 @@ namespace esphome
   {
     ESP_LOGW(TAG, "bitmap_screen is not available on ESP8266");
   }
+  #ifdef EHMTXv2_ADV_BITMAP
+  void EHMTX::bitmap_text_screen(std::string bitmap, std::string text, int lifetime, int screen_time, bool default_font, int r, int g, int b)
+  {
+    ESP_LOGW(TAG, "bitmap_text_screen is not available on ESP8266");
+  }
+  #endif
   void EHMTX::bitmap_small(std::string i, std::string t, int l, int s, bool f, int r, int g, int b)
   {
-    ESP_LOGW(TAG, "bitmap_screen is not available on ESP8266");
+    ESP_LOGW(TAG, "bitmap_small is not available on ESP8266");
   }
   void EHMTX::rainbow_bitmap_small(std::string i, std::string t, int l, int s, bool f)
   {
-    ESP_LOGW(TAG, "bitmap_screen_rainbow is not available on ESP8266");
+    ESP_LOGW(TAG, "bitmap_small_rainbow is not available on ESP8266");
   }
   void EHMTX::bitmap_stack(std::string i, int l, int s)
   {
@@ -687,6 +779,9 @@ namespace esphome
 #ifndef USE_ESP8266
     register_service(&EHMTX::color_gauge, "color_gauge", {"colors"});
     register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"icon", "lifetime", "screen_time"});
+    #ifdef EHMTXv2_ADV_BITMAP
+    register_service(&EHMTX::bitmap_text_screen, "bitmap_text_screen", {"bitmap", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+    #endif
     register_service(&EHMTX::bitmap_small, "bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::rainbow_bitmap_small, "rainbow_bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font"});
     register_service(&EHMTX::bitmap_stack, "bitmap_stack", {"icons", "lifetime", "screen_time"});
@@ -983,6 +1078,11 @@ namespace esphome
               case MODE_BITMAP_SCREEN:
                 infotext = "bitmap";
                 break;
+              #ifdef EHMTXv2_ADV_BITMAP
+              case MODE_BITMAP_TEXT_SCREEN:
+                infotext = "bitmap text";
+                break;
+              #endif
               case MODE_BITMAP_STACK_SCREEN:
                 infotext = ("bitmap stack: " + this->queue[i]->text).c_str();
                 break;
@@ -1161,6 +1261,11 @@ namespace esphome
               case MODE_BITMAP_SCREEN:
                 infotext = "bitmap";
                 break;
+              #ifdef EHMTXv2_ADV_BITMAP
+              case MODE_BITMAP_TEXT_SCREEN:
+                infotext = "bitmap text";
+                break;
+              #endif
               case MODE_BITMAP_STACK_SCREEN:
                 infotext = ("bitmap stack: " + this->queue[this->screen_pointer]->text).c_str();
                 break;
@@ -1366,6 +1471,13 @@ namespace esphome
             delete [] this->queue[i]->sbitmap;
             this->queue[i]->sbitmap = nullptr;
           }
+          #ifdef EHMTXv2_ADV_BITMAP
+          if (this->queue[i]->bitmap != NULL)
+          {
+            delete [] this->queue[i]->bitmap;
+            this->queue[i]->bitmap = nullptr;
+          }
+          #endif
           if (i == this->screen_pointer)
           {
             this->next_action_time = this->get_tick();
@@ -2477,6 +2589,9 @@ namespace esphome
       }
       if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN &&
           this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN &&
+          #ifdef EHMTXv2_ADV_BITMAP
+          this->queue[this->screen_pointer]->mode != MODE_BITMAP_TEXT_SCREEN &&
+          #endif
           this->queue[this->screen_pointer]->mode != MODE_ICON_PROGRESS &&
           this->queue[this->screen_pointer]->mode != MODE_TEXT_PROGRESS)
       {
@@ -2486,6 +2601,9 @@ namespace esphome
       if (this->queue[this->screen_pointer]->mode != MODE_CLOCK &&
           this->queue[this->screen_pointer]->mode != MODE_DATE &&
           this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN &&
+          #ifdef EHMTXv2_ADV_BITMAP
+          this->queue[this->screen_pointer]->mode != MODE_BITMAP_TEXT_SCREEN &&
+          #endif
           this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
       {
 #endif
