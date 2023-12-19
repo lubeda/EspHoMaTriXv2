@@ -35,6 +35,11 @@ namespace esphome
       this->vertical_scroll = false;
     #endif
 
+    for (uint8_t i = 0; i < MAXQUEUE; i++)
+    {
+      this->queue[i] = new EHMTX_queue(this);
+    }
+
     #ifdef EHMTXv2_ADV_CLOCK
       this->info_clock_lcolor = Color(CG_GREY, CG_GREY, CG_GREY);
       this->info_clock_rcolor = Color(CG_GREY * 2, CG_GREY * 2, CG_GREY * 2);
@@ -43,10 +48,6 @@ namespace esphome
       this->set_adv_clock_color();
     #endif
 
-    for (uint8_t i = 0; i < MAXQUEUE; i++)
-    {
-      this->queue[i] = new EHMTX_queue(this);
-    }
     ESP_LOGD(TAG, "Constructor finish");
   }
 
