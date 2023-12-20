@@ -800,6 +800,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`set_clock_infotext_color`|"left_r", "left_g", "left_b", "right_r", "right_g", "right_b","default_font","y_offset"|set the special color for left and right char on info text on `icon clock` screen, work only in **advanced clock mode**|
 |`show_icon_indicator`|"r", "g", "b", "size", "pos"|shows the line indicator in the Icons area on the specified screens, in the specified color and at the specified vertical position|
 |`hide_icon_indicator`|none|hides the icon indicator|
+|`expand_icon_to_9`|"mode"|Extends the icon display on the clock screen and date screen by one line (9 pixels wide). Mode 0 (default) - do not expand. Mode 1 - expand only on the clock screen. Mode 2 - expand only on the date screen. Mode 3 - expand on the screen with clock and on the screen with date.|
 
 #### Parameter description
 

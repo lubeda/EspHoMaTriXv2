@@ -638,6 +638,12 @@ namespace esphome
           }
           if (this->icon != BLANKICON)
           {
+            if ((this->mode == MODE_ICON_CLOCK && this->config_->icon_to_9 == 1) ||
+                (this->mode == MODE_ICON_DATE  && this->config_->icon_to_9 == 2) ||
+                (this->config_->icon_to_9 == 3))
+            {
+              this->config_->display->image(1, this->ypos(), this->config_->icons[this->icon]);
+            }
             this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
           }
           this->config_->draw_day_of_week(this->ypos(), true);
