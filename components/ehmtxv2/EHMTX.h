@@ -57,8 +57,7 @@ enum show_mode : uint8_t
   MODE_BITMAP_STACK_SCREEN = 23,
   MODE_TEXT_PROGRESS = 24,
   MODE_PROGNOSIS_SCREEN = 25,
-  MODE_RAINBOW_ALERT_SCREEN = 26,
-  MODE_BITMAP_TEXT_SCREEN = 27
+  MODE_RAINBOW_ALERT_SCREEN = 26
 };
 
 namespace esphome
@@ -254,9 +253,6 @@ namespace esphome
     void icon_prognosis_screen_rgb(std::string icon, std::string text, std::string prognosis, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
 
     void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
-    #ifdef EHMTXv2_ADV_BITMAP
-    void bitmap_text_screen(std::string bitmap, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    #endif
     void color_gauge(std::string text);
     void bitmap_small(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void rainbow_bitmap_small(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
