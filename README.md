@@ -41,6 +41,7 @@
 - Added `vertical_scroll` to ehmtxv2 config.
 - Added Advanced clock mode `advanced_clock`, [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
 - Added `icon_indicator`, Shows the indicator in the Icons area on the specified screens, in the specified color and at the specified vertical position. [Example](https://github.com/lubeda/EspHoMaTriXv2/pull/170#issuecomment-1836539171)
+- Added Advanced Bitmap mode `advanced_bitmap`, [More info](#advanced-bitmap-mode)
 
 ### EspHoMaTriX 2023.9.0
 - Added the ability to display graph as defined in the YAML file
@@ -658,6 +659,8 @@ ehmtxv2:
 **time_format_big** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M:%S"`, work only in **advanced_clock** mode and sets the time format for a screen with a clock without an icon
 
 **advanced_clock** (optional, boolean): Enables or disables advanced clock mode. (default: false) [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
+
+**advanced_bitmap**  (optional, boolean): Enables or disables advanced clock mode. (default: false) [More info](#advanced-bitmap-mode)
 
 **default_font_yoffset** (optional, pixel): yoffset the text is aligned BASELINE_LEFT, the baseline defaults to `6`
 
@@ -1434,6 +1437,16 @@ data:
 ```
 
 It's easier to see what it looks like than to describe it, try both options, choose the one that suits you best.
+
+### Advanced Bitmap mode
+
+Enables advanced mode of Bitmap screen (MODE_BITMAP_SCREEN), allows the use of [screen identifiers](#screen_id), which in turn makes it possible to display more than one Bitmap screen on the clock. But it can also increase RAM consumption, each screen + 256 bytes.
+
+```
+ehmtxv2:
+  advanced_bitmap: true
+```
+
 
 ## Breaking changes
 
