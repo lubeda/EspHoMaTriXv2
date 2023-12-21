@@ -2504,9 +2504,20 @@ namespace esphome
       {
         if (this->queue[this->screen_pointer]->mode == id)
         {
-          this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
-                              3 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
-                              this->icon_indicator_color);
+          if ((this->queue[this->screen_pointer]->mode == MODE_ICON_CLOCK && this->icon_to_9 == 1) ||
+              (this->queue[this->screen_pointer]->mode == MODE_ICON_DATE  && this->icon_to_9 == 2) ||
+              (this->icon_to_9 == 3))
+          {
+            this->display->line(5 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                4 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                this->icon_indicator_color);
+          }
+          else
+          {
+            this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                3 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                this->icon_indicator_color);
+          }
           break;
         }
       }
