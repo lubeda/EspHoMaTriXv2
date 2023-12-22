@@ -2204,19 +2204,21 @@ namespace esphome
       }
       else 
       {
+        uint8_t off_l = (this->icon_to_9 == 3) ? 11 : 10;
+        uint8_t off_r = (this->icon_to_9 == 3) ? 12 : 11;
         for (uint8_t i = 0; i <= 6; i++)
         {
           if (((!EHMTXv2_WEEK_START) && (dow == i)) ||
               ((EHMTXv2_WEEK_START) && ((dow == (i + 1)) || ((dow == 0 && i == 6)))))
           {
-            this->display->line(10 + i * 3, ypos + 7, 11 + i * 3, ypos + 7, this->today_color);
+            this->display->line(off_l + i * 3, ypos + 7, off_r + i * 3, ypos + 7, this->today_color);
           }
           else
           {          
-            this->display->line(10 + i * 3, ypos + 7, 11 + i * 3, ypos + 7, this->weekday_color);
+            this->display->line(off_l + i * 3, ypos + 7, off_r + i * 3, ypos + 7, this->weekday_color);
             if (accent_color != esphome::display::COLOR_OFF)
             {
-              this->display->line( (i < dow ? 11 : 10) + i * 3, ypos + 7, (i < dow ? 11 : 10) + i * 3, ypos + 7, accent_color);
+              this->display->line( (i < dow ? off_r : off_l) + i * 3, ypos + 7, (i < dow ? off_r : off_l) + i * 3, ypos + 7, accent_color);
             }
           }
         }
