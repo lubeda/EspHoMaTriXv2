@@ -798,7 +798,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`icon_prognosis_screen_rgb`|"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font", "r", "g", "b"|show an icon, text, and a prognosis bar consisting of 24 dots of specified colors|
 |`set_adv_clock_color`|"hr", "hg", "hb", "mr", "mg", "mb", "sr", "sg", "sb"|available only in **advanced clock mode** `advanced_clock: true`, allows you to set the color for the Hours (hr, hg, hb), Minutes (mr, mg, mb) and Spacer (sr, sg, sb), color is set by analogy with `r,g,b`. If the color is set as `black`, the standard color is used (see `set_clock_color`).|
 |`set_clock_infotext_color`|"left_r", "left_g", "left_b", "right_r", "right_g", "right_b","default_font","y_offset"|set the special color for left and right char on info text on `icon clock` screen, work only in **advanced clock mode**|
-|`show_icon_indicator`|"r", "g", "b", "size", "height", "pos"|shows the line indicator in the Icons area on the specified screens, in the specified color and at the specified vertical position|
+|`show_icon_indicator`|"r", "g", "b", "size", "pos", "height"|shows the line indicator in the Icons area on the specified screens, in the specified color and at the specified vertical position|
 |`hide_icon_indicator`|none|hides the icon indicator|
 |`expand_icon_to_9`|"mode"|Extends the icon display on the clock screen and date screen by one line (9 pixels wide). Mode 0 (default) - do not expand. Mode 1 - expand only on the clock screen. Mode 2 - expand only on the date screen. Mode 3 - expand on the screen with clock and on the screen with date. [More info](https://github.com/lubeda/EspHoMaTriXv2/pull/179)|
 
@@ -842,8 +842,8 @@ data:
   g: 240
   b: 240
   size: 6
-  height: 1
   pos: 7
+  height: 1
 ```
 
 ### Local lambdas
