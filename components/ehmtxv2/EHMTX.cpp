@@ -16,6 +16,7 @@ namespace esphome
     this->display_lindicator = 0;
     this->display_icon_indicator = 0;
     this->icon_indicator_y_pos = 7;
+    this->icon_to_9 = 0;
     this->display_alarm = 0;
     this->clock_time = 10;
     this->icon_count = 0;
@@ -179,6 +180,12 @@ namespace esphome
   {
     this->weekday_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
     ESP_LOGD(TAG, "default weekday color: %d g: %d b: %d", r, g, b);
+  }
+
+  void EHMTX::expand_icon_to_9(int mode)
+  {
+    this->icon_to_9 = mode;
+    ESP_LOGD(TAG, "icon expanded to 9 mode: %d", mode);
   }
 
   bool EHMTX::string_has_ending(std::string const &fullString, std::string const &ending)
@@ -647,6 +654,7 @@ namespace esphome
     register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
     register_service(&EHMTX::set_text_color, "set_text_color", {"r", "g", "b"});
     register_service(&EHMTX::set_infotext_color, "set_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset"});
+    register_service(&EHMTX::expand_icon_to_9, "expand_icon_to_9", {"mode"});
 
     register_service(&EHMTX::set_night_mode_on, "night_mode_on");
     register_service(&EHMTX::set_night_mode_off, "night_mode_off");
@@ -2196,19 +2204,21 @@ namespace esphome
       }
       else 
       {
+        uint8_t off_l = (this->icon_to_9 == 3) ? 11 : 10;
+        uint8_t off_r = (this->icon_to_9 == 3) ? 12 : 11;
         for (uint8_t i = 0; i <= 6; i++)
         {
           if (((!EHMTXv2_WEEK_START) && (dow == i)) ||
               ((EHMTXv2_WEEK_START) && ((dow == (i + 1)) || ((dow == 0 && i == 6)))))
           {
-            this->display->line(10 + i * 3, ypos + 7, 11 + i * 3, ypos + 7, this->today_color);
+            this->display->line(off_l + i * 3, ypos + 7, off_r + i * 3, ypos + 7, this->today_color);
           }
           else
           {          
-            this->display->line(10 + i * 3, ypos + 7, 11 + i * 3, ypos + 7, this->weekday_color);
+            this->display->line(off_l + i * 3, ypos + 7, off_r + i * 3, ypos + 7, this->weekday_color);
             if (accent_color != esphome::display::COLOR_OFF)
             {
-              this->display->line( (i < dow ? 11 : 10) + i * 3, ypos + 7, (i < dow ? 11 : 10) + i * 3, ypos + 7, accent_color);
+              this->display->line( (i < dow ? off_r : off_l) + i * 3, ypos + 7, (i < dow ? off_r : off_l) + i * 3, ypos + 7, accent_color);
             }
           }
         }
@@ -2496,9 +2506,20 @@ namespace esphome
       {
         if (this->queue[this->screen_pointer]->mode == id)
         {
-          this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
-                              3 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
-                              this->icon_indicator_color);
+          if ((this->queue[this->screen_pointer]->mode == MODE_ICON_CLOCK && this->icon_to_9 == 1) ||
+              (this->queue[this->screen_pointer]->mode == MODE_ICON_DATE  && this->icon_to_9 == 2) ||
+              (this->icon_to_9 == 3))
+          {
+            this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                4 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                this->icon_indicator_color);
+          }
+          else
+          {
+            this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                3 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                this->icon_indicator_color);
+          }
           break;
         }
       }

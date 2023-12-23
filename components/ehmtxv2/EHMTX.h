@@ -110,6 +110,7 @@ namespace esphome
     bool info_font = true;
     int8_t info_y_offset = 0;
     int8_t icon_indicator_y_pos = 7;
+    uint8_t icon_to_9 = 0;
   #ifdef EHMTXv2_ADV_CLOCK
     bool info_clock_font = true;
     int8_t info_clock_y_offset = 0;
@@ -199,6 +200,7 @@ namespace esphome
     void set_night_mode_on();
     void set_weekday_accent_off();
     void set_weekday_accent_on();
+    void expand_icon_to_9(int mode=0);
     void set_clock(esphome::time::RealTimeClock *clock);
     #ifdef USE_GRAPH
       void set_graph(esphome::graph::Graph *graph);
