@@ -80,6 +80,9 @@ namespace esphome
     this->default_font = true;
     this->progress = 0;
     this->sbitmap = nullptr;
+    #ifdef EHMTXv2_ADV_BITMAP
+    this->bitmap = nullptr;
+    #endif
     this->progressbar_color = esphome::display::COLOR_OFF;
     this->progressbar_back_color = esphome::display::COLOR_OFF;
   }
@@ -454,13 +457,24 @@ namespace esphome
 
       case MODE_BITMAP_SCREEN:
 #ifndef USE_ESP8266
+        #ifdef EHMTXv2_ADV_BITMAP
+        if (this->bitmap != NULL)
+        {
+        #endif
         for (uint8_t x = 0; x < 32; x++)
         {
           for (uint8_t y = 0; y < 8; y++)
           {
-            this->config_->display->draw_pixel_at(x, this->ypos() + y, this->config_->bitmap[x + y * 32]);
+            #ifdef EHMTXv2_ADV_BITMAP
+              this->config_->display->draw_pixel_at(x, this->ypos() + y, this->bitmap[x + y * 32]);
+            #else
+              this->config_->display->draw_pixel_at(x, this->ypos() + y, this->config_->bitmap[x + y * 32]);
+            #endif
+            }
           }
+        #ifdef EHMTXv2_ADV_BITMAP
         }
+        #endif
 #endif
         break;
 

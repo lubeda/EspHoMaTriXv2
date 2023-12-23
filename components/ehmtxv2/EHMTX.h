@@ -118,7 +118,9 @@ namespace esphome
   #endif
 #ifdef USE_ESP32
     PROGMEM Color text_color, alarm_color, rindicator_color, lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor, icon_indicator_color, solid_color;
+  #ifndef EHMTXv2_ADV_BITMAP
     PROGMEM Color bitmap[256];
+  #endif
     PROGMEM Color cgauge[8];
     PROGMEM EHMTX_Icon *icons[MAXICONS];
   #ifdef EHMTXv2_ADV_CLOCK
@@ -314,6 +316,9 @@ namespace esphome
     show_mode mode;
     int8_t progress;
     Color* sbitmap;
+  #ifdef EHMTXv2_ADV_BITMAP
+    Color* bitmap;
+  #endif
 
 #ifdef USE_ESP32
     PROGMEM Color text_color, progressbar_color, progressbar_back_color;
