@@ -81,7 +81,7 @@ namespace esphome
     }
   }
 
-  void EHMTX::show_icon_indicator(int r, int g, int b, int size, int height, int pos)
+  void EHMTX::show_icon_indicator(int r, int g, int b, int size, int pos, int height)
   {
     if (size > 0)
     {
@@ -704,7 +704,7 @@ namespace esphome
     register_service(&EHMTX::bitmap_stack, "bitmap_stack", {"icons", "lifetime", "screen_time"});
 #endif
 
-    register_service(&EHMTX::show_icon_indicator, "show_icon_indicator", {"r", "g", "b", "size", "height", "pos"});
+    register_service(&EHMTX::show_icon_indicator, "show_icon_indicator", {"r", "g", "b", "size", "pos", "height"});
     register_service(&EHMTX::hide_icon_indicator, "hide_icon_indicator");
 
     #ifdef USE_Fireplugin

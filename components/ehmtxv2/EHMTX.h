@@ -211,7 +211,7 @@ namespace esphome
 
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
-    void show_icon_indicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 8, int h = 1, int pos = 7);
+    void show_icon_indicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 8, int pos = 7, int h = 1);
     void set_text_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void set_today_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
     void set_weekday_color(int r = CD_RED, int g = CD_GREEN, int b = CD_BLUE);
