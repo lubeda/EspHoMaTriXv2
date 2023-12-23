@@ -614,6 +614,7 @@ namespace esphome
         {
           color_ = this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
+          uint8_t offset = (this->config_->icon_to_9 == 3) ? 21 : 20;
 
           if (this->mode == MODE_ICON_CLOCK)
           {
@@ -625,11 +626,11 @@ namespace esphome
               {
                 std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
                 time_new = this->config_->replace_time_date(time_new);
-                this->config_->display->printf(xoffset + 20, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+                this->config_->display->printf(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
               } 
               else 
               {
-                this->config_->display->strftime(xoffset + 20, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
+                this->config_->display->strftime(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
                                                  this->config_->clock->now());
               }
             #ifdef EHMTXv2_ADV_CLOCK
@@ -642,16 +643,22 @@ namespace esphome
             {
               std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
               time_new = this->config_->replace_time_date(time_new);
-              this->config_->display->printf(xoffset + 20, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+              this->config_->display->printf(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
             } 
             else 
             {
-              this->config_->display->strftime(xoffset + 20, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
+              this->config_->display->strftime(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
                                                this->config_->clock->now());
             }
           }
           if (this->icon != BLANKICON)
           {
+            if ((this->mode == MODE_ICON_CLOCK && this->config_->icon_to_9 == 1) ||
+                (this->mode == MODE_ICON_DATE  && this->config_->icon_to_9 == 2) ||
+                (this->config_->icon_to_9 == 3))
+            {
+              this->config_->display->image(1, this->ypos(), this->config_->icons[this->icon]);
+            }
             this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
           }
           this->config_->draw_day_of_week(this->ypos(), true);
