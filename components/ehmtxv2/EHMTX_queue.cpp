@@ -476,7 +476,14 @@ namespace esphome
           if (this->icon != BLANKICON)
           {
             this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
-            this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+            if (this->icon == SOLIDICON)
+            {
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
+            }
+            else
+            {
+              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+            }
           }
         }
         break;
@@ -639,13 +646,29 @@ namespace esphome
           }
           if (this->icon != BLANKICON)
           {
-            if ((this->mode == MODE_ICON_CLOCK && this->config_->icon_to_9 == 1) ||
-                (this->mode == MODE_ICON_DATE  && this->config_->icon_to_9 == 2) ||
-                (this->config_->icon_to_9 == 3))
+            if (this->icon == SOLIDICON)
             {
-              this->config_->display->image(1, this->ypos(), this->config_->icons[this->icon]);
+              if ((this->mode == MODE_ICON_CLOCK && this->config_->icon_to_9 == 1) ||
+                  (this->mode == MODE_ICON_DATE  && this->config_->icon_to_9 == 2) ||
+                  (this->config_->icon_to_9 == 3))
+              {
+                this->config_->display->filled_rectangle(0, this->ypos(), 9, 8, this->config_->solid_color); 
+              }
+              else
+              {
+                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
+              }
             }
-            this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+            else
+            {
+              if ((this->mode == MODE_ICON_CLOCK && this->config_->icon_to_9 == 1) ||
+                  (this->mode == MODE_ICON_DATE  && this->config_->icon_to_9 == 2) ||
+                  (this->config_->icon_to_9 == 3))
+              {
+                this->config_->display->image(1, this->ypos(), this->config_->icons[this->icon]);
+              }
+              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+            }
           }
           this->config_->draw_day_of_week(this->ypos(), true);
 
@@ -794,7 +817,14 @@ namespace esphome
           if (this->icon != BLANKICON)
           {
             this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
-            this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+            if (this->icon == SOLIDICON)
+            {
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
+            }
+            else
+            {
+              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+            }
           }
 
           this->config_->display->line(9, this->ypos() + 7, 31, this->ypos() + 7, this->progressbar_back_color);
@@ -816,7 +846,14 @@ namespace esphome
           if (this->icon != BLANKICON)
           {
             this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
-            this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+            if (this->icon == SOLIDICON)
+            {
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
+            }
+            else
+            {
+              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+            }
           }
 
           if (this->sbitmap != NULL)
@@ -833,7 +870,14 @@ namespace esphome
           {
             if (this->icon != BLANKICON)
             {
-              this->config_->display->image(2, this->ypos(), this->config_->icons[this->icon]);
+              if (this->icon == SOLIDICON)
+              {
+                this->config_->display->filled_rectangle(2, this->ypos(), 8, 8, this->config_->solid_color); 
+              }
+              else
+              {
+                this->config_->display->image(2, this->ypos(), this->config_->icons[this->icon]);
+              }
             }
             this->config_->display->line(10, this->ypos(), 10, this->ypos() + 7, esphome::display::COLOR_OFF);
           }
@@ -842,7 +886,14 @@ namespace esphome
             this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
             if (this->icon != BLANKICON)
             {
-              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+              if (this->icon == SOLIDICON)
+              {
+                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
+              }
+              else
+              {
+                this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+              }
             }
           }
         }
@@ -902,7 +953,14 @@ namespace esphome
             }
           }
           this->config_->display->line(x + 8, this->ypos(), x + 8, this->ypos() + 7, esphome::display::COLOR_OFF);
-          this->config_->display->image(x, this->ypos(), this->config_->icons[this->icon]);
+          if (this->icon == SOLIDICON)
+          {
+            this->config_->display->filled_rectangle(x, this->ypos(), 8, 8, this->config_->solid_color); 
+          }
+          else
+          {
+            this->config_->display->image(x, this->ypos(), this->config_->icons[this->icon]);
+          }
         }
         break;
 
@@ -926,7 +984,14 @@ namespace esphome
           {
             if (this->sbitmap[i].b != BLANKICON)
             {
-              this->config_->display->image(this->xpos(i), this->ypos(i), this->config_->icons[this->sbitmap[i].b]);
+              if (this->icon == SOLIDICON)
+              {
+                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(i), 8, 8, this->config_->solid_color); 
+              }
+              else
+              {
+                this->config_->display->image(this->xpos(i), this->ypos(i), this->config_->icons[this->sbitmap[i].b]);
+              }
             }
           }
         }

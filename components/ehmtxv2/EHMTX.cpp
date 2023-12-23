@@ -24,6 +24,7 @@ namespace esphome
     this->rainbow_color = Color(CA_RED, CA_GREEN, CA_BLUE);
     this->info_lcolor = Color(CG_GREY, CG_GREY, CG_GREY);
     this->info_rcolor = Color(CG_GREY * 2, CG_GREY * 2, CG_GREY * 2);
+    this->solid_color = Color(C_RED, C_GREEN, C_BLUE);
     this->next_action_time = 0.0;
     this->last_scroll_time = 0;
     this->screen_pointer = MAXQUEUE;
@@ -518,6 +519,11 @@ namespace esphome
       return BLANKICON;
     }
 
+    if (name == "solid")
+    {
+      return SOLIDICON;
+    }
+
     for (uint8_t i = 0; i < this->icon_count; i++)
     {
       if (strcmp(this->icons[i]->name.c_str(), name.c_str()) == 0)
@@ -656,6 +662,8 @@ namespace esphome
     register_service(&EHMTX::set_infotext_color, "set_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset"});
     register_service(&EHMTX::expand_icon_to_9, "expand_icon_to_9", {"mode"});
 
+    register_service(&EHMTX::set_solid_color, "set_solid_color", {"r", "g", "b"});
+
     register_service(&EHMTX::set_night_mode_on, "night_mode_on");
     register_service(&EHMTX::set_night_mode_off, "night_mode_off");
 
@@ -774,6 +782,12 @@ namespace esphome
     this->info_font = df;
     this->info_y_offset = y_offset;
     ESP_LOGD(TAG, "info text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", lr, lg, lb, rr, rg, rb, y_offset);
+  }
+
+  void EHMTX::set_solid_color(int r, int g, int b)
+  {
+    this->solid_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
+    ESP_LOGD(TAG, "solid icon color r: %d g: %d b: %d", r, g, b);
   }
 
   void EHMTX::update() // called from polling component
