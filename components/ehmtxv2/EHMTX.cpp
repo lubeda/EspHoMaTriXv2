@@ -289,9 +289,19 @@ namespace esphome
       screen->pixels_ = 0;
       screen->scroll_reset = 32;
     #endif
-    for (auto *t : on_add_screen_triggers_)
+    if (id == "")
     {
-      t->process("bitmap", (uint8_t)screen->mode);
+      for (auto *t : on_add_screen_triggers_)
+      {
+        t->process("bitmap", (uint8_t)screen->mode);
+      }
+    }
+    else
+    {
+      for (auto *t : on_add_screen_triggers_)
+      {
+        t->process("bitmap: " + id, (uint8_t)screen->mode);
+      }
     }
     ESP_LOGD(TAG, "bitmap screen: lifetime: %d screen_time: %d", lifetime, screen_time);
     screen->status();
@@ -1016,7 +1026,7 @@ namespace esphome
                 infotext = ("bitmap small: " + this->queue[i]->icon_name).c_str();
                 break;
               case MODE_BITMAP_SCREEN:
-                infotext = "bitmap";
+                infotext = ("bitmap: " + this->queue[i]->icon_name).c_str();
                 break;
               case MODE_BITMAP_STACK_SCREEN:
                 infotext = ("bitmap stack: " + this->queue[i]->text).c_str();
@@ -1195,7 +1205,7 @@ namespace esphome
                 infotext = ("bitmap small: " + this->queue[this->screen_pointer]->icon_name).c_str();
                 break;
               case MODE_BITMAP_SCREEN:
-                infotext = "bitmap";
+                infotext = ("bitmap: " + this->queue[this->screen_pointer]->icon_name).c_str();
                 break;
               case MODE_BITMAP_STACK_SCREEN:
                 infotext = ("bitmap stack: " + this->queue[this->screen_pointer]->text).c_str();
