@@ -25,6 +25,7 @@ namespace esphome
     this->info_lcolor = Color(CG_GREY, CG_GREY, CG_GREY);
     this->info_rcolor = Color(CG_GREY * 2, CG_GREY * 2, CG_GREY * 2);
     this->solid_color = Color(C_RED, C_GREEN, C_BLUE);
+    this->calendar_color = Color(C_RED, C_BLACK, C_BLACK);
     this->next_action_time = 0.0;
     this->last_scroll_time = 0;
     this->screen_pointer = MAXQUEUE;
@@ -548,6 +549,11 @@ namespace esphome
       return SOLIDICON;
     }
 
+    if (name == "calendar")
+    {
+      return CALENDARICON;
+    }
+
     for (uint8_t i = 0; i < this->icon_count; i++)
     {
       if (strcmp(this->icons[i]->name.c_str(), name.c_str()) == 0)
@@ -687,6 +693,7 @@ namespace esphome
     register_service(&EHMTX::expand_icon_to_9, "expand_icon_to_9", {"mode"});
 
     register_service(&EHMTX::set_solid_color, "set_solid_color", {"r", "g", "b"});
+    register_service(&EHMTX::set_calendar_color, "set_calendar_color", {"r", "g", "b"});
 
     register_service(&EHMTX::set_night_mode_on, "night_mode_on");
     register_service(&EHMTX::set_night_mode_off, "night_mode_off");
@@ -812,6 +819,12 @@ namespace esphome
   {
     this->solid_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
     ESP_LOGD(TAG, "solid icon color r: %d g: %d b: %d", r, g, b);
+  }
+
+  void EHMTX::set_calendar_color(int r, int g, int b)
+  {
+    this->calendar_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
+    ESP_LOGD(TAG, "calendar icon color r: %d g: %d b: %d", r, g, b);
   }
 
   void EHMTX::update() // called from polling component

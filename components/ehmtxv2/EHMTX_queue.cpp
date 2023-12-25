@@ -494,6 +494,11 @@ namespace esphome
             {
               this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
             }
+            else if (this->icon == CALENDARICON)
+            {
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color); 
+            }
             else
             {
               this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
@@ -673,6 +678,21 @@ namespace esphome
                 this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
               }
             }
+            else if (this->icon == CALENDARICON)
+            {
+              if ((this->mode == MODE_ICON_CLOCK && this->config_->icon_to_9 == 1) ||
+                  (this->mode == MODE_ICON_DATE  && this->config_->icon_to_9 == 2) ||
+                  (this->config_->icon_to_9 == 3))
+              {
+                this->config_->display->filled_rectangle(0, this->ypos(), 9, 8, Color(C_RED, C_GREEN, C_BLUE)); 
+                this->config_->display->filled_rectangle(0, this->ypos(), 9, 2, this->config_->calendar_color); 
+              }
+              else
+              {
+                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
+                this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color); 
+              }
+            }
             else
             {
               if ((this->mode == MODE_ICON_CLOCK && this->config_->icon_to_9 == 1) ||
@@ -835,6 +855,11 @@ namespace esphome
             {
               this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
             }
+            else if (this->icon == CALENDARICON)
+            {
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color); 
+            }
             else
             {
               this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
@@ -864,6 +889,11 @@ namespace esphome
             {
               this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
             }
+            else if (this->icon == CALENDARICON)
+            {
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color); 
+            }
             else
             {
               this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
@@ -888,6 +918,11 @@ namespace esphome
               {
                 this->config_->display->filled_rectangle(2, this->ypos(), 8, 8, this->config_->solid_color); 
               }
+              else if (this->icon == CALENDARICON)
+              {
+                this->config_->display->filled_rectangle(2, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
+                this->config_->display->filled_rectangle(2, this->ypos(), 8, 2, this->config_->calendar_color); 
+              }
               else
               {
                 this->config_->display->image(2, this->ypos(), this->config_->icons[this->icon]);
@@ -903,6 +938,11 @@ namespace esphome
               if (this->icon == SOLIDICON)
               {
                 this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
+              }
+              else if (this->icon == CALENDARICON)
+              {
+                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
+                this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color); 
               }
               else
               {
@@ -971,6 +1011,11 @@ namespace esphome
           {
             this->config_->display->filled_rectangle(x, this->ypos(), 8, 8, this->config_->solid_color); 
           }
+          else if (this->icon == CALENDARICON)
+          {
+            this->config_->display->filled_rectangle(x, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
+            this->config_->display->filled_rectangle(x, this->ypos(), 8, 2, this->config_->calendar_color); 
+          }
           else
           {
             this->config_->display->image(x, this->ypos(), this->config_->icons[this->icon]);
@@ -1001,6 +1046,11 @@ namespace esphome
               if (this->icon == SOLIDICON)
               {
                 this->config_->display->filled_rectangle(this->xpos(i), this->ypos(i), 8, 8, this->config_->solid_color); 
+              }
+              else if (this->icon == CALENDARICON)
+              {
+                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
+                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(), 8, 2, this->config_->calendar_color); 
               }
               else
               {
