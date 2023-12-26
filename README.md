@@ -42,6 +42,8 @@
 - Added Advanced clock mode `advanced_clock`, [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
 - Added `icon_indicator`, Shows the indicator in the Icons area on the specified screens, in the specified color and at the specified vertical position. [Example](https://github.com/lubeda/EspHoMaTriXv2/pull/170#issuecomment-1836539171)
 - Added `rainbow_alert_screen`, show the specified icon with text in rainbow color, screen forced and lifetime = screen_time
+- Added a pseudo-icon `solid` - icon as square filled with solid color, see `set_solid_color`.
+- Added a pseudo-icon `calendar` - calendar icon with default whitecolor, and header as color from `set_calendar_color`.
 - Added Advanced Bitmap mode `advanced_bitmap`, [More info](#advanced-bitmap-mode)
 
 ### EspHoMaTriX 2023.9.0
@@ -768,6 +770,8 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`set_today_color`|"r", "g", "b"|set the special color for today in the day of week line|
 |`set_weekday_color`|"r", "g", "b"|set the default color in the day of week line|
 |`set_clock_color`|"r", "g", "b"|set the default color of clock and date display|
+|`set_solid_color`|"r", "g", "b"|set the color for solid pseudo icon|
+|`set_calendar_color`|"r", "g", "b"|set the header color for calendar pseudo icon|
 |`set_weekday_accent_on`|none|turns on the display of small days (accent) of the week when brightness is insufficient|
 |`set_weekday_accent_off`|none|turns off the display of small days (accent) of the week when brightness is insufficient|
 |`del_screen`|"icon_name", “mode”|deletes the specified icon screen from the queue, the [mode](#modes) is a filter|
@@ -810,7 +814,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 - **r, g, b**: Color components for red, green, and blue 0..255
 - **size**: The size of the rindicator or alarm, 1-3
 - **percent**: values from 0..100
-- **icon_name**: the id of the icon to show, as defined in the YAML file (or pseudo-icon `blank` - empty icon), it is also possible to set the arbitrary [screen identifier](#screen_id), for example `icon_name|screen_id`
+- **icon_name**: the id of the icon to show, as defined in the YAML file (or pseudo-icon `blank` - empty icon, `solid` - solid icon, `calendar` - calendar icon), it is also possible to set the arbitrary [screen identifier](#screen_id), for example `icon_name|screen_id`
 - **icons**: the list of id of the icon to show, as defined in the YAML file, like: icon1,icon2.
 - **text**: a text message to display
 - **lifetime**: how long does this screen stay in the queue (minutes)
