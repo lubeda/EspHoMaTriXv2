@@ -619,7 +619,7 @@ namespace esphome
           if (this->mode == MODE_ICON_CLOCK)
           {
             #ifdef EHMTXv2_ADV_CLOCK
-            if (!this->config_->draw_clock(EHMTXv2_TIME_FORMAT, font, color_, xoffset + 20, this->ypos() + yoffset))
+            if (!this->config_->draw_clock(EHMTXv2_TIME_FORMAT, font, color_, xoffset + offset, this->ypos() + yoffset))
             {
             #endif
               if (this->config_->replace_time_date_active) // check for replace active
@@ -725,7 +725,14 @@ namespace esphome
               }
               if (mode == 5 && (d < 10))
               {
-                x_right = 4 - (r_width - 1) / 2;
+                if (this->config_->icon_to_9 == 3)
+                {
+                  x_right = 5 - (r_width - 1) / 2;
+                }
+                else
+                {
+                  x_right = 4 - (r_width - 1) / 2;
+                }
                 this->config_->display->printf(x_right, this->ypos() + yoffset + i_y_offset, info_font, i_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
               }
               else
@@ -777,7 +784,14 @@ namespace esphome
 
                 // The symbol consists of a visible part, and an empty area to the right with a width of one point.
                 uint8_t c_width = this->config_->GetTextWidth(info_font, "%s", weekday.c_str());
-                x_left = 4 - (c_width - 1) / 2;
+                if (this->config_->icon_to_9 == 3)
+                {
+                  x_left = 5 - (c_width - 1) / 2;
+                }
+                else
+                {
+                  x_left = 4 - (c_width - 1) / 2;
+                }
                 this->config_->display->printf(x_left, this->ypos() + yoffset + i_y_offset, info_font, i_lcolor, display::TextAlign::BASELINE_LEFT, "%s", weekday.c_str());
               }
             }
