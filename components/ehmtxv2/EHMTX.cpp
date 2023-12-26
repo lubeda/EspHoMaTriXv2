@@ -2580,7 +2580,7 @@ namespace esphome
               (this->queue[this->screen_pointer]->mode == MODE_ICON_DATE  && this->icon_to_9 == 2) ||
               (this->icon_to_9 == 3))
           {
-            if (this->display_icon_indicator = 1)
+            if (this->icon_indicator_height = 1)
             {
               this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
                                   4 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
@@ -2595,7 +2595,7 @@ namespace esphome
           }
           else
           {
-            if (this->display_icon_indicator = 1)
+            if (this->icon_indicator_height = 1)
             {
               this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
                                   3 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
