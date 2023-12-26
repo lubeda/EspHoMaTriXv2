@@ -16,6 +16,7 @@ namespace esphome
     this->display_lindicator = 0;
     this->display_icon_indicator = 0;
     this->icon_indicator_y_pos = 7;
+    this->icon_indicator_height = 1;
     this->icon_to_9 = 0;
     this->display_alarm = 0;
     this->clock_time = 10;
@@ -82,14 +83,15 @@ namespace esphome
     }
   }
 
-  void EHMTX::show_icon_indicator(int r, int g, int b, int size, int pos)
+  void EHMTX::show_icon_indicator(int r, int g, int b, int size, int pos, int height)
   {
     if (size > 0)
     {
       this->icon_indicator_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b);
       this->display_icon_indicator = size;
+      this->icon_indicator_height = height;
       this->icon_indicator_y_pos = pos;
-      ESP_LOGD(TAG, "show icon_indicator size: %d r: %d g: %d b: %d pos:", size, r, g, b, pos);
+      ESP_LOGD(TAG, "show icon_indicator size: %d height: %d r: %d g: %d b: %d pos:", size, height, r, g, b, pos);
     }
     else
     {
@@ -741,7 +743,7 @@ namespace esphome
     register_service(&EHMTX::bitmap_stack, "bitmap_stack", {"icons", "lifetime", "screen_time"});
 #endif
 
-    register_service(&EHMTX::show_icon_indicator, "show_icon_indicator", {"r", "g", "b", "size", "pos"});
+    register_service(&EHMTX::show_icon_indicator, "show_icon_indicator", {"r", "g", "b", "size", "pos", "height"});
     register_service(&EHMTX::hide_icon_indicator, "hide_icon_indicator");
 
     #ifdef USE_Fireplugin
@@ -2568,15 +2570,33 @@ namespace esphome
               (this->queue[this->screen_pointer]->mode == MODE_ICON_DATE  && this->icon_to_9 == 2) ||
               (this->icon_to_9 == 3))
           {
-            this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
-                                4 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
-                                this->icon_indicator_color);
+            if (this->display_icon_indicator = 1)
+            {
+              this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                  4 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                  this->icon_indicator_color);
+            }
+            else
+            {
+              this->display->filled_rectangle(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                              this->display_icon_indicator, this->icon_indicator_height, 
+                                              this->icon_indicator_color);
+            }
           }
           else
           {
-            this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
-                                3 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
-                                this->icon_indicator_color);
+            if (this->display_icon_indicator = 1)
+            {
+              this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                  3 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                  this->icon_indicator_color);
+            }
+            else
+            {
+              this->display->filled_rectangle(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
+                                              this->display_icon_indicator, this->icon_indicator_height, 
+                                              this->icon_indicator_color);
+            }
           }
           break;
         }
