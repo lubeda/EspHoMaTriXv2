@@ -877,6 +877,9 @@ namespace esphome
              (mode == MODE_ICON_TEXT_SCREEN) ||
              (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
              (mode == MODE_TEXT_PROGRESS) ||
+        #ifdef EHMTXv2_ADV_BITMAP
+             (mode == MODE_BITMAP_SCREEN) ||
+        #endif
              (mode == MODE_PROGNOSIS_SCREEN) )
         {
           if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
@@ -1414,6 +1417,9 @@ namespace esphome
              (mode == MODE_ICON_TEXT_SCREEN) ||
              (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
              (mode == MODE_TEXT_PROGRESS) ||
+        #ifdef EHMTXv2_ADV_BITMAP
+             (mode == MODE_BITMAP_SCREEN) ||
+        #endif
              (mode == MODE_PROGNOSIS_SCREEN) )
         {
           if (this->string_has_ending(icon_name, "*"))
