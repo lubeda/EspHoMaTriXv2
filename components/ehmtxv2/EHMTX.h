@@ -111,8 +111,8 @@ namespace esphome
     void dump_config();
     bool info_font = true;
     int8_t info_y_offset = 0;
-    int8_t icon_indicator_height = 1;
     int8_t icon_indicator_y_pos = 7;
+    uint8_t icon_indicator_height = 1;
     uint8_t icon_to_9 = 0;
   #ifdef EHMTXv2_ADV_CLOCK
     bool info_clock_font = true;
