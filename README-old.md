@@ -9,26 +9,6 @@
 [![Publish wiki](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/wiki.yaml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/wiki.yaml)
 [![Build](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml)
 
-## Introduction
-
-**EspHoMaTriXv2** is a flexible, highly customizable DIY LED Matrix display, built with a 8x32 RGB LED panel and implemented with [esphome.io](https://esphome.io)
-
-![sample image](./images/sample.png)
-
-You can controll it with home assistant using service calls or by using lambda with esphome.
-
-## How to install
-
-For starters whe assume you use a Ulanzi TC001 pixel clock. For tinkeres and people that want more read the [detailed documentation](#details).
-
-Copy the file ulanzi-easy.yaml and MatrixClock-Chunky6.bdf [creator of the font](https://github.com/trip5/Matrix-Fonts)to your esphome folder, adapt your wifi settings in the yaml, install it via USB and you have got a working pixel-clock.
-
-## How to use it
-
-
-
-# Details
-
 
 Some updates of esphome will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
 
@@ -65,6 +45,15 @@ Also there might be [breaking changes](#breaking-changes) due to a redesign of E
 
 If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!
 
+## Introduction
+
+An easy to setup and extensible DIY LED Matrix status display built with a 8x32 RGB LED panel, (Example: ULANZI TC001) all implemented with [esphome.io](https://esphome.io)
+
+![sample image](./images/sample.png)
+
+If you like to cuztomize and tinker you can use this custom component as a satellite voice control microphone for home assistant. [Youtube](https://www.youtube.com/watch?v=CsOir14DCbM)
+
+For additioanl tips and tricks be sure to check out the [WIKI](https://github.com/lubeda/EspHoMaTriXv2/wiki)
 
 ## Background
 

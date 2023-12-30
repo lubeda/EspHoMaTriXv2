@@ -1,6 +1,6 @@
 substitutions:
   devicename: ulanzi
-  friendly_name: LED Matrix
+  friendly_name: EspHoMaTriXv2
   board: esp32dev
   # Pin definition from https://github.com/aptonline/PixelIt_Ulanzi 
   battery_pin: GPIO34 
@@ -78,24 +78,10 @@ esp32:
   board: esp32dev
 
 font:
-  # Font included in this folder
-  # - file: mateine.ttf
-  #   size: 16
-  #   id: default_font
-  #   glyphs:  |
-  #     !?"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnÖÄÜöäüopqrstuvwxyz@<>ß§€/
-  # Matrix Clock Fonts
-  # Grab these from https://github.com/trip5/Matrix-Fonts
-  # See https://github.com/lubeda/EspHoMaTriXv2#font
-  # Store in a "fonts" subfolder of your ESPHome config folder or change paths below
-  - file: fonts/MatrixClock-Light8.bdf
-    id: default_font
+  - file: MatrixClock-Chunky6.bdf
+    id: px6_font
     glyphs:  |
       ! "#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz°
-  - file: fonts/MatrixClock-Chunky6.bdf
-    id: special_font
-    glyphs:  |
-      ! "#$%&'()*+,-./0123456789:APMTapmt
   
 binary_sensor:
   - platform: status
@@ -245,14 +231,10 @@ ehmtxv2:
   time_format: "%H:%M"
   date_format: "%d.%m."
   show_seconds: false
-  # Uncomment below if using the mateine font
-  # default_font_id: default_font
-  # special_font_id: default_font
-  # Comment out below if using mateine font
-  default_font_id: default_font
+  default_font_id: id: px6_font
   default_font_yoffset: 8
-  special_font_id: special_font
-  special_font_yoffset: 6
+  special_font_id: id: px6_font
+  special_font_yoffset: 8
   # until here
   icons: 
     - id: error
@@ -263,17 +245,59 @@ ehmtxv2:
       lameid: 2056
     - id: lightbulb
       lameid: 1762
-    - id: music
-      lameid: 45625
-    - id: phone
-      lameid: 1232
-    - id: car
-      lameid: 2819
-    - id: sleep8x32
-      url: https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif 
-  on_next_screen:
-    - homeassistant.event:
-        event: esphome.new_screen
-        data_template:
-          iconname: !lambda "return icon.c_str();"
-          text: !lambda "return text.c_str();"
+    - id: speaker
+      lameid: 9136
+    - id: print3d
+      lameid: 55700
+    - id: internet
+      lameid: 51061
+    - lameid: 20275
+      id: temp
+    - lameid: 29129
+      id: garage
+    - lameid: 24087
+      id: door
+    - lameid: 22148
+      id: wind
+    - lameid: 6427
+      id: rain
+    - lameid: 1232
+      id: phone
+    - lameid: 9272
+      id: fire
+    - lameid: 9754
+      id: tv
+    - lameid: 23726
+      id: nature
+    - lameid: 25808
+      id: work
+    - lameid: 22841
+      id: bike
+    - lameid: 32930
+      id: power
+    - lameid: 27283
+      id: solar
+    - lameid: 26034
+      id: energy
+    - lameid: 5807
+      id: sun
+    - lameid: 34801
+      id: shopping
+    - lameid: 37533
+      id: thunder
+    - lameid: 5313
+      id: mic
+    - lameid: 102
+      id: birthday
+    - lameid: 1782
+      id: xmastree
+    - id: lock
+      lameid: 7775
+
+animation:
+  - file: https://github.com/lubeda/EspHoMaTriXv2/blob/2024.1.0-prerelease/copy2esphome/1pixel.gif
+    id: animation_1p
+
+image:
+  - file: https://github.com/lubeda/EspHoMaTriXv2/blob/2024.1.0-prerelease/copy2esphome/1pixel.gif
+    id: image_1p
