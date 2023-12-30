@@ -29,7 +29,7 @@ Copy all three files (ulanzi-easy.yaml, 1pixel.gif , MatrixChunky6.ttf) from the
 
 The base file is configured to show a clock with the day of month over a calender icon. 
 
-![sample](images/color-clock.png)
+![sample](images/icon_clock.png)
 
 There are some preinstalled icons in the yaml, so you can easily start showing informations on your display with home assistant service calls.
 
@@ -126,7 +126,7 @@ Same with rainbow-colored text `esphome.ulanzi_rainbow_text_screen`
 
 ### combining some icons
 
-Try this and enjoy the cool animation ![sample](icons/bitmap_stack.png)
+Try this and enjoy the cool animation ![sample](images/bitmap_stack.png)
 
 ```yaml
 service: esphome.ulanzi_bitmap_stack
@@ -147,7 +147,205 @@ data:
   screen_time: 120
 ```
 
+These were only static examples, in your automations you can customize a lot more. See the upcomming chapter for more possibilities
+
 ## For expirienced users
+
+### Icons and Animations
+
+Download and install all needed icons (.jpg/.png) and animations (.GIF) under the `ehmtxv2:` key. All icons have to be 8x8 or 8x32 pixels in size. If necessary, you can scale them with the option `resize: 8x8` or `resize: 32x8`. Pro user should use gimp.
+
+You can also specify a URL to directly download the image file. The URLs will only be downloaded once at compile time, so there is no additional traffic on the hosting website.
+
+All other solutions provide ready-made icons, especially Lametric has a big database of [icons](https://developer.lametric.com/icons). If you find an icon you can use it with its id. e.g. `lameid: 1234` Please check the copyright of the icons you use. The maximum number of icons is limited to 90 in the code and also by the flash space and the RAM of your board.
+
+***Sample***
+
+```yaml
+emhtx:
+  icons: 
+    - id: boot 
+      file: icons/rocket.GIF
+      duration: 75     
+    - id: temp 
+      lameid: 1234
+    - id: yoga
+      file: icons/yoga-bridge.GIF
+      pingpong: true
+    - id: jackshome
+      url: https://awtrix.blueforcer.de/animations/JackHomePage
+      resize: 32x8
+    - id: garage
+      lameid: 1234
+      duration: 100
+    - id: homeassistant
+      url: https://github.com/home-assistant/assets/raw/master/logo/logo-special.png      
+```
+
+The ID of the icons is used later to configure the screens to display. So, you should name them wisely. If you like to group icons, you should prefix them, e.g., with “weather_”.
+
+The first defined icon will be used as a fallback icon, in case of an error, e.g., if you use a non-existing icon ID.
+
+### Fonts
+
+In the easy configuration is one TTF-font from [Trip5](https://github.com/trip5/Matrix-Fonts) included. 
+
+You can configure two fonts if you like.
+
+The font needs to be readable on a matrix display. I use a font with 6 pixels height and one with 8 Pixel height. The 6px font is my default on all screens with a progress bar or the day of week lower line.
+
+Some people use an "normal" font from Trip5 and another for cyrillic, korean or hebrew letters.
+
+dbuezas has also contributed tow optimized fonts with umlauts for this kind of display `mateine.ttf` and `mateineThin.ttf` see [here](https://github.com/lubeda/EspHoMaTriXv2/issues/63).
+
+```yaml
+font:
+  - file: mateine.ttf
+    id: default_font
+    size: 16
+    glyphs:  |
+      !"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz€@
+```
+
+### configuration options
+
+#### Configuration
+
+##### ehmtxv2 component
+
+This component is highly customizable.
+
+***Example***
+
+```yaml
+ehmtxv2:
+  id: rgb8x32
+  show_seconds: true
+  advanced_clock: false
+  matrix_component: ehmtx_display
+  time_component: ehmtx_time
+  icons2html: true
+  iconcache: true
+  default_font_id: default_font
+  default_font_yoffset: 6
+  special_font_id: special_font
+  special_font_yoffset: 7
+  brightness: 80 # percent
+  time_format: "%H:%M"
+  date_format: "%d.%m."
+  rtl: false # write vom left to right
+  vertical_scroll: false
+  week_start_monday: true # false equals sunday
+  scroll_count: 2 # scroll long text at least two times
+  scroll_interval: 80 # milliseconds
+  rainbow_interval: 32 # milliseconds
+  icons: 
+  .....
+```
+
+***Parameters***
+
+**id** (required, ID): Manually specify the ID used for code generation and in service definitions.
+
+**date_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%d.%m."` (use `"%m.%d."` for the US)
+
+**show_seconds** (optional, boolean): toggle/blink an indicator-pixel each seconds while the clock is displayed (default: false)
+
+**time_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M"` (use `"%I:%M%p"` for the US)
+
+**default_font_yoffset** (optional, pixel): yoffset the text is aligned BASELINE_LEFT, the baseline defaults to `6`
+
+**default_font_xoffset** (optional, pixel): xoffset the text is aligned BASELINE_LEFT, the left defaults to `1`
+
+**special_font_yoffset** (optional, pixel): yoffset the text is aligned BASELINE_LEFT, the baseline defaults to `6`
+
+**special_font_xoffset** (optional, pixel): xoffset the text is aligned BASELINE_LEFT, the left defaults to `1`
+
+**scroll_small_text** (optional, bool): normally small text is centered on the display if possible, with this set to `true` even small text is scrolled in `text_screen` and `rainbow_text_screen` (default: false)
+
+**matrix_component** (required, ID): ID of the addressable display
+
+**show_dow** (optional, bool): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g., if you want larger fonts, defaults to true.
+
+**time_component** (required, ID): ID of the time component. The display shows `!t!` until the time source is valid.
+
+**default_font** (required, ID): ID of the default font
+
+**special_font** (required, ID): ID of the special font, you can reuse your default font, but occasionally, it's nice to have a special font to minimize scrolling
+
+**week_start_monday** (optional, bool): default Monday is first day of week, false => Sunday
+
+**weekdays** (optional, string, default: "SUMOTUWETHFRSA"): Abbreviations of the days of the week, starting from Sunday, from *7 to 14* characters.
+
+Example:
+  - `weekdays: "SUMOTUWETHFRSA"`
+  - `weekdays: "일월화수목금토"`
+  - `weekdays: "НДПНВТСРЧТПТСБ"`
+
+**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html)
+
+**icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons. (default = `false`)
+
+**iconscache** (optional, boolean): If true, it caches icons in the `.cache\icons` folder and if it finds the specified icons in the cache, it uses them instead of trying to download them again from the Internet. (default = `false`)
+
+### special functions
+
+#### modes
+
+For the special functions you need to know the different modes possible.
+
+|mode|value|
+|----|----|
+|MODE_BLANK|1|
+|MODE_CLOCK | 2|
+|MODE_DATE | 3|
+|MODE_FULL_SCREEN| 4|
+|MODE_ICON_SCREEN| 5|
+|MODE_TEXT_SCREEN| 6|
+|MODE_RAINBOW_ICON| 7|
+|MODE_RAINBOW_TEXT|8|
+|MODE_RAINBOW_CLOCK| 9|
+|MODE_RAINBOW_DATE| 10|
+|MODE_BITMAP_SCREEN| 11|
+|MODE_BITMAP_SMALL| 12|
+|MODE_COLOR| 13|
+|MODE_FIRE| 14|
+|MODE_ICON_CLOCK| 15|
+|MODE_ALERT_SCREEN| 16|
+|MODE_GRAPH_SCREEN | 17|
+|MODE_ICON_DATE | 18|
+|MODE_ICON_PROGRESS | 19|
+|MODE_RAINBOW_BITMAP_SMALL| 20|
+|MODE_ICON_TEXT_SCREEN| 21|
+|MODE_RAINBOW_ICON_TEXT_SCREEN| 22|
+|MODE_BITMAP_STACK_SCREEN| 23|
+|MODE_TEXT_PROGRESS| 24|
+|MODE_PROGNOSIS_SCREEN| 25|
+|MODE_RAINBOW_ALERT_SCREEN| 26|
+
+#### remove a screen from the queue
+
+e.q. you want to remove a screen generated with the service: `esphome.ulanzi_blank_screen`
+
+you can do this via:
+
+```yaml
+service: esphome.ulanzi_del_screen
+data:
+  icon_name: "*"
+  mode: 1
+```
+
+Since a blank screen has no icon you have to use "*" as `icon_name`. To remove a `icon_screen` you must choose the correct icon_name and mode in this case **5**.
+
+To put emphasis on a special screen use:
+
+```yaml
+service: esphome.ulanzi_force_screen
+data:
+  icon_name: "solar"
+  mode: 5
+```
 
 ## For curious users
 
@@ -614,69 +812,8 @@ light:
 
 Since it is a clock, you need a time component, e.g., [home assistant](https://esphome.io/components/time/homeassistant.html). It is referenced by its ID under `time_component:` The display shows `!t!` until the time source is synchronized and valid.
 
-#### Font
 
-In the easy configuration is a TTF-font included, it is based on this [font](https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=13768). Or you can search for a font you like more.
 
-Not all fonts are suitable for this minimalistic display. There are public domain fonts which work well on the display, e.g., [DMDSmall](https://www.pentacom.jp/pentacom/bitfontmaker2/gallery/?id=5993), details on alternative fonts are [here](https://blakadder.com/esphome-pixel-clock/#fonts).
-
-You can configure two fonts if you like.
-
-Trip5 is also providing special fonts for 8x32 matrices in his [repo](https://github.com/trip5/Matrix-Fonts)
-
-dbuezas has also contributed tow optimized fonts with umlauts for this kind of display `mateine.ttf` and `mateineThin.ttf`. They are included in the copy2esphome folder
-
-```yaml
-font:
-  - file: mateine.ttf
-    id: default_font
-    size: 16
-    glyphs:  |
-      !"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz€@
-```
-
-#### Icons and Animations
-
-Download and install all needed icons (.jpg/.png) and animations (.GIF) under the `ehmtxv2:` key. All icons have to be 8x8 or 8x32 pixels in size. If necessary, scale them with gimp, check “as animation” for GIFs.
-
-You can also specify a URL to directly download the image file. The URLs will only be downloaded once at compile time, so there is no additional traffic on the hosting website.
-
-The [icons](https://awtrix.blueforcer.de/icons) and [animations](https://awtrix.blueforcer.de/animations) from the AWTRIX and AWTRIX-light could be used, but have to be scaled down to 8x32 or 8x8 pixels. Check the license before using them!
-
-There are maximum 90 icons possible.
-
-***Sample***
-
-```yaml
-emhtx:
-  icons: 
-    - id: boot 
-      file: icons/rocket.GIF
-      duration: 75     
-    - id: temp 
-      file: temperature.png
-    - id: yoga
-      file: icons/yoga-bridge.GIF
-      pingpong: true
-    - id: jackshome
-      url: https://awtrix.blueforcer.de/animations/JackHomePage
-      resize: 32x8
-    - id: garage
-      lameid: 1234
-      duration: 100
-    - id: homeassistant
-      url: https://github.com/home-assistant/assets/raw/master/logo/logo-special.png      
-```
-
-The ID of the icons is used later to configure the screens to display. So, you should name them wisely. If you like to group icons, you should prefix them, e.g., with “weather_” (see Service **del_screen**)
-
-The first defined icon will be used as a fallback icon, in case of an error, e.g., if you use a non-existing icon ID.
-
-GIFs are limited to 110 frames to limit the used amount of flash space.
-
-All other solutions provide ready-made icons, especially Lametric has a big database of [icons](https://developer.lametric.com/icons). Please check the copyright of the icons you use. The maximum number of icons is limited to 90 in the code and also by the flash space and the RAM of your board.
-
-See also [icon parameter](#icons)
 
 #### Configuration
 
@@ -1139,36 +1276,6 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 - ```icon_name```: Icon `id` defined in the YAML (see installation)
 - ```mode```: The mode is a filter to select different screen types e. g. use `5`for icon_screen
 
-##### modes
-
-|mode|value|
-|----|----|
-|MODE_BLANK|1|
-|MODE_CLOCK | 2|
-|MODE_DATE | 3|
-|MODE_FULL_SCREEN| 4|
-|MODE_ICON_SCREEN| 5|
-|MODE_TEXT_SCREEN| 6|
-|MODE_RAINBOW_ICON| 7|
-|MODE_RAINBOW_TEXT|8|
-|MODE_RAINBOW_CLOCK| 9|
-|MODE_RAINBOW_DATE| 10|
-|MODE_BITMAP_SCREEN| 11|
-|MODE_BITMAP_SMALL| 12|
-|MODE_COLOR| 13|
-|MODE_FIRE| 14|
-|MODE_ICON_CLOCK| 15|
-|MODE_ALERT_SCREEN| 16|
-|MODE_GRAPH_SCREEN | 17|
-|MODE_ICON_DATE | 18|
-|MODE_ICON_PROGRESS | 19|
-|MODE_RAINBOW_BITMAP_SMALL| 20|
-|MODE_ICON_TEXT_SCREEN| 21|
-|MODE_RAINBOW_ICON_TEXT_SCREEN| 22|
-|MODE_BITMAP_STACK_SCREEN| 23|
-|MODE_TEXT_PROGRESS| 24|
-|MODE_PROGNOSIS_SCREEN| 25|
-|MODE_RAINBOW_ALERT_SCREEN| 26|
 
 **(D)** Service **display_on** / **display_off**
 
