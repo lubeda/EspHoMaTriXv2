@@ -17,14 +17,24 @@
 
 You can controll it with home assistant using service calls or by using lambda with esphome.
 
-## How to install
+## For Beginners
+
+### How to install
 
 For starters whe assume you use a Ulanzi TC001 pixel clock. For tinkeres and people that want more read the [detailed documentation](#details).
 
-Copy the file ulanzi-easy.yaml and MatrixClock-Chunky6.bdf [creator of the font](https://github.com/trip5/Matrix-Fonts)to your esphome folder, adapt your wifi settings in the yaml, install it via USB and you have got a working pixel-clock.
+Copy all three files (ulanzi-easy.yaml, 1pixel.gif , MatrixChunky6.ttf) from the install folder to your esphome folder, adapt your wifi settings in the yaml, install it via USB and you have got a working pixel-clock.
 
-## How to use it
+### How to use it
 
+The base file is configured to show a clock with the day of month over a calender icon. 
+
+![sample](images/color-clock.png)
+
+
+## For expirienced users
+
+## For curious users
 
 
 # Details

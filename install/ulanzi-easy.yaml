@@ -78,8 +78,9 @@ esp32:
   board: esp32dev
 
 font:
-  - file: MatrixClock-Chunky6.bdf
+  - file: MatrixChunky6.ttf
     id: px6_font
+    size: 6
     glyphs:  |
       ! "#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz°
   
@@ -231,10 +232,10 @@ ehmtxv2:
   time_format: "%H:%M"
   date_format: "%d.%m."
   show_seconds: false
-  default_font_id: id: px6_font
-  default_font_yoffset: 8
-  special_font_id: id: px6_font
-  special_font_yoffset: 8
+  default_font_id: px6_font
+  default_font_yoffset: 7
+  special_font_id: px6_font
+  special_font_yoffset: 7
   # until here
   icons: 
     - id: error
@@ -293,11 +294,16 @@ ehmtxv2:
       id: xmastree
     - id: lock
       lameid: 7775
+  on_empty_queue:
+    then:
+      - lambda: |-
+          id(rgb8x32).set_infotext_color(20,20,20,20,20,20,false,1);
+          id(rgb8x32).icon_clock("emptycal|day#0",1440,10,false);
 
 animation:
-  - file: https://github.com/lubeda/EspHoMaTriXv2/blob/2024.1.0-prerelease/copy2esphome/1pixel.gif
+  - file: "1pixel.gif"
     id: animation_1p
 
 image:
-  - file: https://github.com/lubeda/EspHoMaTriXv2/blob/2024.1.0-prerelease/copy2esphome/1pixel.gif
+  - file: "1pixel.gif"
     id: image_1p
