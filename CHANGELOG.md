@@ -12,7 +12,7 @@ cleaned up docu
   - `on_night_mode` trigger
 - Added `on_show_display` trigger
 - Added the ability to specify a screen ID - `icon_name|screen_id`
-- Added icon and date output screen
+- Added icon and date output screen ![icon_clock](images/icon_clock.png)
   - `icon_date(iconname, lifetime, screen_time, default_font, r, g, b)`
 - If pass a screen identifier with the value `[day, weekday]` like `icon_name|day`, and a backing icon to `icon_clock` or `icon_date`, it will display text. [Example](https://github.com/lubeda/EspHoMaTriXv2/issues/92#issuecomment-1750870290)
 - New YAML option `weekdays: "SUMOTUWETHFRSA"` (**7 or 14** characters) and new function to customize the info text over the icon:
@@ -28,14 +28,14 @@ cleaned up docu
 - Added `bitmap_small` and `rainbow_bitmap_small` screen.
 - Added a pseudo-icon `blank` - empty icon, no display.
 - Added screen with scroll icon along with long text, `icon_text_screen`, `rainbow_icon_text_screen`. [Example](https://github.com/lubeda/EspHoMaTriXv2/issues/123#issuecomment-1784137055)
-- Added `bitmap_stack`screen. Screen that allows you to display from 1 to 64 icons described in the configuration. [Example](https://github.com/lubeda/EspHoMaTriXv2/issues/139#issuecomment-1803606627)
+- Added `bitmap_stack`screen. Screen ![bitmap_stack](images/bitmap_stack.png)  that allows you to display from 1 to 64 icons described in the configuration. [Example](https://github.com/lubeda/EspHoMaTriXv2/issues/139#issuecomment-1803606627)
 - Added a screen with the ability to display a progress bar, text, progress value `(-100..100)` [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/143)
   - `text_screen_progress(text, value, progress, lifetime, screen_time, default_font, value_color_as_progress, r, g, b)`
 - Added `set_weekday_accent_on` and `set_weekday_accent_off` Turn on / off small days (accent) of the week when brightness is insufficient. [Example](https://github.com/lubeda/EspHoMaTriXv2/pull/151#issuecomment-1813089680)
 - Added `icon_prognosis_screen` and `icon_prognosis_screen_rgb` Displays an icon, text, and a prognosis bar consisting of 24 dots of specified colors. [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/149)
 - Added `vertical_scroll` to ehmtxv2 config.
 - Added Advanced clock mode `advanced_clock`, [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
-- Added `icon_indicator`, Shows the indicator in the Icons area on the specified screens, in the specified color and at the specified vertical position. [Example](https://github.com/lubeda/EspHoMaTriXv2/pull/170#issuecomment-1836539171)
+- Added `icon_indicator`, Shows the indicator ![indicator](images/icon_indicator.png) in the Icons area on the specified screens, in the specified color and at the specified vertical position. [Example](https://github.com/lubeda/EspHoMaTriXv2/pull/170#issuecomment-1836539171)
 - Added `rainbow_alert_screen`, show the specified icon with text in rainbow color, screen forced and lifetime = screen_time
 - Added a pseudo-icon `solid` - icon as square filled with solid color, see `set_solid_color`.
 - Added a pseudo-icon `calendar` - calendar icon with default whitecolor, and header as color from `set_calendar_color`.
