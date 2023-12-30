@@ -18,7 +18,7 @@ to display text thas is scrolled around the display even if it is short and norm
 To display time you can use this automation:
 
 ```yaml
-service: esphome.m5mic_rainbow_text_screen
+service: esphome.ulanzi_rainbow_text_screen
 data:
   default_font: false
   screen_time: 15
@@ -30,7 +30,7 @@ data:
 or date
 
 ```yaml
-service: esphome.m5mic_rainbow_text_screen
+service: esphome.ulanzi_rainbow_text_screen
 data:
   default_font: false
   screen_time: 15
@@ -42,14 +42,14 @@ data:
 to remove the normal date and time display
 
 ```yaml
-service: esphome.m5mic_del_screen
+service: esphome.ulanzi_del_screen
 data:
   icon_name: "*"
   mode: 3
 ```
 
 ```yaml
-service: esphome.m5mic_del_screen
+service: esphome.ulanzi_del_screen
 data:
   icon_name: "*"
   mode: 2

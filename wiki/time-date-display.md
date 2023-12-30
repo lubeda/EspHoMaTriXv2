@@ -9,14 +9,14 @@ EspHoMaTriXv2 is a pixel clock. Without any configuration it displays only the t
 During runtime, you can remove them from the queue with:
 
 ```yaml
-service: esphome.m5mic_del_screen
+service: esphome.ulanzi_del_screen
 data:
   icon_name: "*"
   mode: 3
 ```
 
 ```yaml
-service: esphome.m5mic_del_screen
+service: esphome.ulanzi_del_screen
 data:
   icon_name: "*"
   mode: 2
@@ -25,7 +25,7 @@ data:
 and add them with:
 
 ```yaml
-service: esphome.m5mic_clock_screen
+service: esphome.ulanzi_clock_screen
 data:
   default_font: true
   lifetime: 1440
@@ -37,7 +37,7 @@ data:
 
 and
 ```yaml
-service: esphome.m5mic_date_screen
+service: esphome.ulanzi_date_screen
 data:
   default_font: true
   lifetime: 1440

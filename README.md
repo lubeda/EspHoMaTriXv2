@@ -31,6 +31,121 @@ The base file is configured to show a clock with the day of month over a calende
 
 ![sample](images/color-clock.png)
 
+There are some preinstalled icons in the yaml, so you can easily start showing informations on your display with home assistant service calls.
+
+#### Normal icon screen
+
+This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disapears from the queue. The text color (`r`,`g`,`b`) is specified with rgb values. The display decides when to display this screen depending on the queue.
+
+![sample](images/icon_screen.png)
+
+```yaml
+service: esphome.ulanzi_icon_screen
+data:
+  default_font: true
+  icon_name: solar
+  text: sun is shining
+  lifetime: 2
+  screen_time: 10
+  r: 200
+  g: 200
+  b: 200
+```
+
+#### rainbow icon screen
+
+This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disapears from the queue. The text color is changing automatically. The display decides when to display this screen depending on the queue.
+
+```yaml
+service: esphome.ulanzi_rainbow_icon_screen
+data:
+  default_font: true
+  icon_name: solar
+  text: sun is shining
+  lifetime: 2
+  screen_time: 10
+```
+
+#### alert icon screen
+
+Sometimes you have to display informations emidiatly, this is done with alerts, the parameter coresspoind [to](#normal-icon-screen)
+
+```yaml
+service: esphome.ulanzi_alert_screen
+data:
+  default_font: true
+  icon_name: home_assistant
+  text: What a great software!
+  screen_time: 10
+  r: 20
+  g: 180
+  b: 240
+```
+
+For funny colors there is also a service: esphome.xxxc_rainbow_alert_screen
+
+#### show progress
+
+To visualize e.g. a print progress you can use:
+
+![sampe](images/icon_progress.png)
+
+```yaml
+service: esphome.ulanzi_icon_screen_progress
+data:
+  default_font: true
+  icon_name: print3d
+  text: 67% done
+  progress: 67
+  lifetime: 2
+  screen_time: 9
+  r: 200
+  g: 200
+  b: 200
+```
+
+A positive progress value i getting greener on its way to 100 a negative value is going to red.
+
+#### long text without an icon
+
+![sample](images/text_screen.png)
+
+```yaml
+service: esphome.ulanzi_text_screen
+data:
+  default_font: true
+  text: What a long text
+  lifetime: 2
+  screen_time: 10
+  r: 200
+  g: 200
+  b: 200
+```
+
+Same with rainbow-colored text `esphome.ulanzi_rainbow_text_screen`
+
+### combining some icons
+
+Try this and enjoy the cool animation ![sample](icons/bitmap_stack.png)
+
+```yaml
+service: esphome.ulanzi_bitmap_stack
+data:
+  icons: solar,power,temp,error
+  lifetime: 2
+  screen_time: 10
+```
+
+### show a blank screen
+
+Try this:
+
+```yaml
+service: esphome.ulanzi_blank_screen
+data:
+  lifetime: 2
+  screen_time: 120
+```
 
 ## For expirienced users
 
