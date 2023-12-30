@@ -1497,6 +1497,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **Added by [andrewjswan](https://github.com/andrewjswan)** [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 - **[malinovsku](https://github.com/malinovsku)** Issues and testing.
 - **[chertvl](https://github.com/chertvl)** Issues and testing.
+- **Everybody** who has fun by using this software
 - **Everybody** who found bugs/issues and reported them!
 
 ## Special thanks to all sponsors
+
