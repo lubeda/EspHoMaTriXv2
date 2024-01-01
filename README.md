@@ -138,7 +138,9 @@ Same with rainbow-colored text `esphome.ulanzi_rainbow_text_screen`
 
 ### combining some icons
 
-Try this and enjoy the cool animations. ![sample](images/bitmap_stack.png)
+Try this and enjoy the cool animations. 
+
+![sample](images/bitmap_stack.png)
 
 ```yaml
 service: esphome.ulanzi_bitmap_stack
@@ -423,7 +425,8 @@ It is highly recomended to use an **ESP32 device**. There are conditions where t
 
 There are a lot of services and parameter to use, some are only available on ESP32-platform due to resource limitations.
 
-You can call this from, e.g., the [developer tools service](https://my.home-assistant.io/redirect/developer_services/)
+You can call this from, e.g., the developer tools service. [![Open your Home Assistant instance with the developer tools service.](https://my.home-assistant.io/badges/developer_services.svg)](https://my.home-assistant.io/redirect/developer_services/)
+
 
 ```c
   get_status
@@ -1695,7 +1698,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[blakadder](https://github.com/blakadder)** for his contribution (cleanup README.md, fixed sample)
 - **[dbuezas](https://github.com/dbuezas)** for his fonts [infos](https://github.com/lubeda/EspHoMaTriXv2/issues/63)
 - **[jfurtner](https://github.com/jfurtner)** for his the on_start_running trigger and a new parameter
-- **[andrew-codechimp](https://github.com/andrew-codechimp)** for his contribution (display on/off & del_screen "*" & show_clock with 0) and improved blueprint slelection
+- **[andrew-codechimp](https://github.com/andrew-codechimp)** for his contribution (display on/off & del_screen "*" & show_clock with 0) and improved blueprint selection
 - **[jd1](https://github.com/jd1)** for his contributions
 - **[aptonline](https://github.com/aptonline)** for his work on the Ulanzi hardware
 - **[wsbtak](https://github.com/wsbtak)** for the work on the Ulanzi hardware
