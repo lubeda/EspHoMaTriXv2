@@ -216,9 +216,11 @@ namespace esphome
     void set_default_font(display::BaseFont *font);
     void set_special_font(display::BaseFont *font);
 
+  #ifdef USE_ESP32
     #ifdef EHMTXv2_ADV_BOOT
-    void set_boot_logo(std::string logo = "");
+      void set_boot_logo(std::string logo = "");
     #endif
+  #endif
 
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
