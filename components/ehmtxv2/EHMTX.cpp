@@ -1323,10 +1323,25 @@ namespace esphome
     }
     else
     {
-      uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
-      uint8_t l = 32 / 2 - w / 2 ;
-      this->display->rectangle(l, 2, w, 4, this->rainbow_color); 
-      this->boot_anim++;
+      #ifdef EHMTXv2_ADV_BOOT
+      if (this->boot_logo != NULL) 
+      {
+        for (uint8_t x = 0; x < 32; x++)
+        {
+          for (uint8_t y = 0; y < 8; y++)
+          {
+            this->display->draw_pixel_at(x, y, this->rainbow_color);
+          }
+        }        
+      }
+      else
+      #endif
+      {
+        uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
+        uint8_t l = 32 / 2 - w / 2 ;
+        this->display->rectangle(l, 2, w, 4, this->rainbow_color); 
+        this->boot_anim++;
+      }
     }
   }
 
