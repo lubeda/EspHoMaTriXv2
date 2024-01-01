@@ -25,7 +25,7 @@ You can control it with home assistant using service calls or by using lambda wi
 
 ### How to install
 
-For starters, I assume you use an Ulanzi TC001 pixel clock. For inkerers and people that want more, read the [documentation](#details).
+For starters, I assume you use an Ulanzi TC001 pixel clock. For tinkerers and people that want more, read the [For expirienced usersmentation](#for-expirienced-users) part.
 
 Copy all three files (ulanzi-easy.yaml, 1pixel.gif , MatrixChunky6.ttf) from the install folder to your esphome folder, adapt your Wi-Fi settings in the yaml, install it via USB and the device should boot
 
@@ -39,13 +39,15 @@ The base file is configured to show a clock with the day of the month over a cal
 
 ![sample](images/icon_clock.png)
 
-There are some preinstalled [icons](wiki/default-icons.html) in the yaml, so you can easily start showing information on your display with home assistant service calls.
+There are some preinstalled [icons](https://raw.githubusercontent.com/lubeda/EspHoMaTriXv2/2024.1.0/wiki/default-icons.html) in the yaml, so you can easily start showing information on your display with home assistant service calls.
 
 #### Normal icon screen
 
 This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disappears from the queue. The text color (`r`,`g`,`b`) is specified with RGB values. The display decides when to display this screen depending on the queue.
 
 ![sample](images/icon_screen.png)
+
+example home assistant service call:
 
 ```yaml
 service: esphome.ulanzi_icon_screen
@@ -63,6 +65,8 @@ data:
 #### rainbow icon screen
 
 This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disappears from the queue. The text color changes automatically. The display decides when to display this screen depending on the queue.
+
+example home assistant service call:
 
 ```yaml
 service: esphome.ulanzi_rainbow_icon_screen
@@ -206,6 +210,9 @@ Some people use a "normal" font from Trip5 and another for Cyrillic, Korean or H
 
 @dbuezas has also contributed tow optimized fonts with umlauts for this kind of display `mateine.ttf` and `mateineThin.ttf` see [here](https://github.com/lubeda/EspHoMaTriXv2/issues/63).
 
+You find my first [attempt](./resources/EHMTXv2.ttf) to adapt a font also in the resources-folder. 
+
+
 ```yaml
 font:
   - file: mateine.ttf
@@ -300,7 +307,34 @@ Example:
 
 #### modes
 
-see table [here](#modes)
+|mode|value|
+|----|----|
+|MODE_BLANK|1|
+|MODE_CLOCK | 2|
+|MODE_DATE | 3|
+|MODE_FULL_SCREEN| 4|
+|MODE_ICON_SCREEN| 5|
+|MODE_TEXT_SCREEN| 6|
+|MODE_RAINBOW_ICON| 7|
+|MODE_RAINBOW_TEXT|8|
+|MODE_RAINBOW_CLOCK| 9|
+|MODE_RAINBOW_DATE| 10|
+|MODE_BITMAP_SCREEN| 11|
+|MODE_BITMAP_SMALL| 12|
+|MODE_COLOR| 13|
+|MODE_FIRE| 14|
+|MODE_ICON_CLOCK| 15|
+|MODE_ALERT_SCREEN| 16|
+|MODE_GRAPH_SCREEN | 17|
+|MODE_ICON_DATE | 18|
+|MODE_ICON_PROGRESS | 19|
+|MODE_RAINBOW_BITMAP_SMALL| 20|
+|MODE_ICON_TEXT_SCREEN| 21|
+|MODE_RAINBOW_ICON_TEXT_SCREEN| 22|
+|MODE_BITMAP_STACK_SCREEN| 23|
+|MODE_TEXT_PROGRESS| 24|
+|MODE_PROGNOSIS_SCREEN| 25|
+|MODE_RAINBOW_ALERT_SCREEN| 26|
 
 #### remove a screen from the queue
 
@@ -345,10 +379,6 @@ All of the various solutions have their pros and cons. I tried some and used AWT
 
 Some updates of [esphome](https://esphome.io) will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
 
-### Advice
-
-It is highly recomended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESO8266 device** so some of the features had to be removed for these boards (Example: bitmap_screen).
-
 ### Compile errors `animation.h` is missing
 
 ```cpp
@@ -384,6 +414,10 @@ You can add screens to a queue and all these screens are displayed one after ano
 ![timing](./images/timingv2.png)
 Each screen can display different information or animation or text, even in rainbow color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the date and time screens are displayed. Some screens can show additional features like an alarm or rindicator see [elements](#display-elements).
 You can add screens from home assistant with service-calls or from esphome via lambdas in your YAML.
+
+### Advice
+
+It is highly recomended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESO8266 device** so some of the features had to be removed for these boards (Example: bitmap_screen).
 
 ### Service via home assistanat API
 
@@ -549,7 +583,7 @@ void icon_clock(std::string iconname, int lifetime, int screen_time, bool defaul
 
 **This feature is only available on ESP32 platform!!!!!**
 
-For 8x32 images as text. You can generate these images with, e.g., [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator) or just open bitmap-convert.html in your browser and select images you want. For good results the images should have a ratio of 4x1 or 1x1 to look good on your display. For better results you could add black borders as needed to your image.
+For 8x32 images as text. You can generate these images with, e.g., [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator) or just open [bitmap-convert.html](./resources/bitmap-convert.html) (in the resources-folder) in your browser and select images you want. For good results the images should have a ratio of 4x1 or 1x1 to look good on your display. For better results you could add black borders as needed to your image.
 
 #### service via API
 
@@ -1627,7 +1661,7 @@ select:
 
 ## Breaking changes
 
-Please take a look at the [changeslog](CHANGELOG.md) also.
+Please take a look at the [changelog](CHANGELOG.md) also.
 
 ### 2024.1.0
 
