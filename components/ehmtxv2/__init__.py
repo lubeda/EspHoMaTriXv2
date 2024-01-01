@@ -98,6 +98,8 @@ CONF_RTL = "rtl"
 CONF_VERTICAL = "vertical_scroll"
 CONF_CLOCK = "advanced_clock"
 CONF_BITMAP = "advanced_bitmap"
+CONF_BOOT = "advanced_boot"
+CONF_BOOTLOGO = "boot_logo"
 CONF_FRAMEDURATION = "frame_duration"
 CONF_SCROLLCOUNT = "scroll_count"
 CONF_MATRIXCOMPONENT = "matrix_component"
@@ -169,6 +171,10 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(
         CONF_BITMAP, default=False
     ): cv.boolean,
+    cv.Optional(
+        CONF_BOOT, default=False
+    ): cv.boolean,
+    cv.Optional(CONF_BOOTLOGO): cv.string,
     cv.Optional(
         CONF_SHOW_SECONDS, default=False
     ): cv.boolean,
@@ -572,16 +578,20 @@ async def to_code(config):
         cg.add_define("EHMTXv2_BLEND_STEPS",config[CONF_BLENDSTEPS])
 
     if config[CONF_RTL]:
-        cg.add_define("EHMTXv2_USE_RTL")    
+        cg.add_define("EHMTXv2_USE_RTL")
     
     if config[CONF_VERTICAL]:
-        cg.add_define("EHMTXv2_USE_VERTICAL_SCROLL")    
+        cg.add_define("EHMTXv2_USE_VERTICAL_SCROLL")
     
     if config[CONF_CLOCK]:
-        cg.add_define("EHMTXv2_ADV_CLOCK")    
+        cg.add_define("EHMTXv2_ADV_CLOCK")
 
     if config[CONF_BITMAP]:
-        cg.add_define("EHMTXv2_ADV_BITMAP")    
+        cg.add_define("EHMTXv2_ADV_BITMAP")
+
+    if config[CONF_BOOT] and config.get(CONF_BOOTLOGO):
+        cg.add_define("EHMTXv2_ADV_BOOT")
+        cg.add(var.set_boot_logo(config[CONF_BOOTLOGO]))
 
     if config[CONF_NIGHT_MODE_SCREENS]:
         cg.add_define("EHMTXv2_CONF_NIGHT_MODE_SCREENS",config[CONF_NIGHT_MODE_SCREENS])
