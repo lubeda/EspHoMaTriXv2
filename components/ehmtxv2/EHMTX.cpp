@@ -241,7 +241,7 @@ namespace esphome
 #ifndef USE_ESP8266
 
   #ifdef EHMTXv2_ADV_BOOT
-  void set_boot_logo(std::string logo = "")
+  void EHMTX::set_boot_logo(std::string logo)
   {
     if (logo == "")
     {
@@ -1324,15 +1324,21 @@ namespace esphome
     else
     {
       #ifdef EHMTXv2_ADV_BOOT
-      if (this->boot_logo != NULL) 
+      if (this->boot_logo != NULL)
       {
-        for (uint8_t x = 0; x < 32; x++)
+        if (this->boot_anim % 10 == 0)
         {
-          for (uint8_t y = 0; y < 8; y++)
+          for (uint8_t x = 0; x < 32; x++)
           {
-            this->display->draw_pixel_at(x, y, this->rainbow_color);
+            for (uint8_t y = 0; y < 8; y++)
+            {
+              if (this->boot_logo[x + y * 32] == 1)
+              {
+                this->display->draw_pixel_at(x, y, this->rainbow_color);
+              }
+            }
           }
-        }        
+        }
       }
       else
       #endif
@@ -1340,8 +1346,8 @@ namespace esphome
         uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
         uint8_t l = 32 / 2 - w / 2 ;
         this->display->rectangle(l, 2, w, 4, this->rainbow_color); 
-        this->boot_anim++;
       }
+      this->boot_anim++;
     }
   }
 
