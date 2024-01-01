@@ -128,6 +128,9 @@ namespace esphome
   #ifdef EHMTXv2_ADV_CLOCK
     PROGMEM Color hour_color, minutes_color, spacer_color, info_clock_lcolor, info_clock_rcolor;
   #endif
+  #ifdef EHMTXv2_ADV_BOOT
+    uint8_t* boot_logo;
+  #endif
 #endif
 
 #ifdef USE_ESP8266
@@ -212,6 +215,10 @@ namespace esphome
     #endif
     void set_default_font(display::BaseFont *font);
     void set_special_font(display::BaseFont *font);
+
+    #ifdef EHMTXv2_ADV_BOOT
+    void set_boot_logo(std::string logo = "");
+    #endif
 
     void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
     void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
