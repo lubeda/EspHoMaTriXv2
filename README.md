@@ -11,31 +11,39 @@
 
 ## Introduction
 
+### Important information
+
+If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!
+
 **EspHoMaTriXv2** is a flexible, highly customizable DIY LED Matrix display, built with a 8x32 RGB LED panel and implemented with [esphome.io](https://esphome.io)
 
 ![sample image](./images/sample.png)
 
-You can controll it with home assistant using service calls or by using lambda with esphome.
+You can control it with home assistant using service calls or by using lambda with esphome.
 
 ## For Beginners
 
 ### How to install
 
-For starters whe assume you use a Ulanzi TC001 pixel clock. For tinkeres and people that want more read the [detailed documentation](#details).
+For starters, I assume you use an Ulanzi TC001 pixel clock. For inkerers and people that want more, read the [documentation](#details).
 
-Copy all three files (ulanzi-easy.yaml, 1pixel.gif , MatrixChunky6.ttf) from the install folder to your esphome folder, adapt your wifi settings in the yaml, install it via USB and you have got a working pixel-clock.
+Copy all three files (ulanzi-easy.yaml, 1pixel.gif , MatrixChunky6.ttf) from the install folder to your esphome folder, adapt your Wi-Fi settings in the yaml, install it via USB and the device should boot
+
+![boot](images/booting.png)
+
+and after a while (~30 seconds) it should display the correct time.
 
 ### How to use it
 
-The base file is configured to show a clock with the day of month over a calender icon. 
+The base file is configured to show a clock with the day of the month over a calendar icon.
 
 ![sample](images/icon_clock.png)
 
-There are some preinstalled icons in the yaml, so you can easily start showing informations on your display with home assistant service calls.
+There are some preinstalled icons in the yaml, so you can easily start showing information on your display with home assistant service calls.
 
 #### Normal icon screen
 
-This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disapears from the queue. The text color (`r`,`g`,`b`) is specified with rgb values. The display decides when to display this screen depending on the queue.
+This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disappears from the queue. The text color (`r`,`g`,`b`) is specified with RGB values. The display decides when to display this screen depending on the queue.
 
 ![sample](images/icon_screen.png)
 
@@ -54,7 +62,7 @@ data:
 
 #### rainbow icon screen
 
-This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disapears from the queue. The text color is changing automatically. The display decides when to display this screen depending on the queue.
+This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disappears from the queue. The text color changes automatically. The display decides when to display this screen depending on the queue.
 
 ```yaml
 service: esphome.ulanzi_rainbow_icon_screen
@@ -68,7 +76,7 @@ data:
 
 #### alert icon screen
 
-Sometimes you have to display informations emidiatly, this is done with alerts, the parameter coresspoind [to](#normal-icon-screen)
+Sometimes you have to display information immediately, this is done with alerts, the parameter coresspond [to](#normal-icon-screen)
 
 ```yaml
 service: esphome.ulanzi_alert_screen
@@ -82,13 +90,13 @@ data:
   b: 240
 ```
 
-For funny colors there is also a service: esphome.xxxc_rainbow_alert_screen
+For funny colors, there is also a service: `esphome.ulanzi_rainbow_alert_screen`
 
 #### show progress
 
 To visualize e.g. a print progress you can use:
 
-![sampe](images/icon_progress.png)
+![sample](images/icon_progress.png)
 
 ```yaml
 service: esphome.ulanzi_icon_screen_progress
@@ -104,7 +112,7 @@ data:
   b: 200
 ```
 
-A positive progress value i getting greener on its way to 100 a negative value is going to red.
+A positive progress value is getting greener on its way to 100 a negative value is going to red.
 
 #### long text without an icon
 
@@ -126,7 +134,7 @@ Same with rainbow-colored text `esphome.ulanzi_rainbow_text_screen`
 
 ### combining some icons
 
-Try this and enjoy the cool animation ![sample](images/bitmap_stack.png)
+Try this and enjoy the cool animations. ![sample](images/bitmap_stack.png)
 
 ```yaml
 service: esphome.ulanzi_bitmap_stack
@@ -147,7 +155,7 @@ data:
   screen_time: 120
 ```
 
-These were only static examples, in your automations you can customize a lot more. See the upcomming chapter for more possibilities
+These were only static examples, in your automations you can customize a lot more. See the upcoming chapter for more possibilities.
 
 ## For expirienced users
 
@@ -157,7 +165,7 @@ Download and install all needed icons (.jpg/.png) and animations (.GIF) under th
 
 You can also specify a URL to directly download the image file. The URLs will only be downloaded once at compile time, so there is no additional traffic on the hosting website.
 
-All other solutions provide ready-made icons, especially Lametric has a big database of [icons](https://developer.lametric.com/icons). If you find an icon you can use it with its id. e.g. `lameid: 1234` Please check the copyright of the icons you use. The maximum number of icons is limited to 90 in the code and also by the flash space and the RAM of your board.
+All other solutions provide ready-made icons, especially Lametric has a big database of [icons](https://developer.lametric.com/icons). If you find an icon, you can use it with its id. e.g. `lameid: 1234` Please, check the copyright of the icons you use. The maximum number of icons is limited to 90 in the code and also by the flash space and the RAM of your board.
 
 ***Sample***
 
@@ -192,11 +200,11 @@ In the easy configuration is one TTF-font from [Trip5](https://github.com/trip5/
 
 You can configure two fonts if you like.
 
-The font needs to be readable on a matrix display. I use a font with 6 pixels height and one with 8 Pixel height. The 6px font is my default on all screens with a progress bar or the day of week lower line.
+The font needs to be readable on a matrix display. I use a font with 6 pixels height and one with 8 Pixel height. The 6px font is my default on all screens, with a progress bar or the day of week lower line.
 
-Some people use an "normal" font from Trip5 and another for cyrillic, korean or hebrew letters.
+Some people use a "normal" font from Trip5 and another for Cyrillic, Korean or Hebrew letters.
 
-dbuezas has also contributed tow optimized fonts with umlauts for this kind of display `mateine.ttf` and `mateineThin.ttf` see [here](https://github.com/lubeda/EspHoMaTriXv2/issues/63).
+@dbuezas has also contributed tow optimized fonts with umlauts for this kind of display `mateine.ttf` and `mateineThin.ttf` see [here](https://github.com/lubeda/EspHoMaTriXv2/issues/63).
 
 ```yaml
 font:
@@ -282,7 +290,7 @@ Example:
   - `weekdays: "일월화수목금토"`
   - `weekdays: "НДПНВТСРЧТПТСБ"`
 
-**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html)
+**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` from [display](https://esphome.io/components/display/addressable_light.html)
 
 **icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons. (default = `false`)
 
@@ -292,36 +300,7 @@ Example:
 
 #### modes
 
-For the special functions you need to know the different modes possible.
-
-|mode|value|
-|----|----|
-|MODE_BLANK|1|
-|MODE_CLOCK | 2|
-|MODE_DATE | 3|
-|MODE_FULL_SCREEN| 4|
-|MODE_ICON_SCREEN| 5|
-|MODE_TEXT_SCREEN| 6|
-|MODE_RAINBOW_ICON| 7|
-|MODE_RAINBOW_TEXT|8|
-|MODE_RAINBOW_CLOCK| 9|
-|MODE_RAINBOW_DATE| 10|
-|MODE_BITMAP_SCREEN| 11|
-|MODE_BITMAP_SMALL| 12|
-|MODE_COLOR| 13|
-|MODE_FIRE| 14|
-|MODE_ICON_CLOCK| 15|
-|MODE_ALERT_SCREEN| 16|
-|MODE_GRAPH_SCREEN | 17|
-|MODE_ICON_DATE | 18|
-|MODE_ICON_PROGRESS | 19|
-|MODE_RAINBOW_BITMAP_SMALL| 20|
-|MODE_ICON_TEXT_SCREEN| 21|
-|MODE_RAINBOW_ICON_TEXT_SCREEN| 22|
-|MODE_BITMAP_STACK_SCREEN| 23|
-|MODE_TEXT_PROGRESS| 24|
-|MODE_PROGNOSIS_SCREEN| 25|
-|MODE_RAINBOW_ALERT_SCREEN| 26|
+see table [here](#modes)
 
 #### remove a screen from the queue
 
@@ -336,9 +315,9 @@ data:
   mode: 1
 ```
 
-Since a blank screen has no icon you have to use "*" as `icon_name`. To remove a `icon_screen` you must choose the correct icon_name and mode in this case **5**.
+Since a blank screen has no icon, you have to use "*" as `icon_name`. To remove a `icon_screen` you must choose the correct icon_name and mode, in this case **5**.
 
-To put emphasis on a special screen use:
+To emphasize a special screen use:
 
 ```yaml
 service: esphome.ulanzi_force_screen
@@ -347,49 +326,9 @@ data:
   mode: 5
 ```
 
-## For curious users
+## More details, for curious users
 
-
-# Details
-
-
-Some updates of esphome will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
-
-#### Compile errors `animation.h` is missing
-
-```cpp
-Error:
-In file included from src/esphome.h:25,
-                 from src/esphome/components/ehmtx/EHMTX.cpp:1:
-src/esphome/components/ehmtx/EHMTX.h:6:10: fatal error: esphome/components/animation/animation.h: No such file or directory
- #include "esphome/components/animation/animation.h"
-          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-... 
-```
-
-You have to add this to your YAML
-
-```yaml
-image:
-   - file: 1pixel.gif
-     id: breaking20237
-
-animation:
-  - file: 1pixel.gif
-    id: breaking202371
-```
-
-You have also to copy the file 1pixel.gif from the copy2esphome folder to the directory with your yaml.
-
-Also there might be [breaking changes](#breaking-changes) due to a redesign of EspHoMaTriXv2.
-
-## Important information
-
-If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!
-
-
-## Background
+### Background
 
 There are some “RGB-matrices” status displays/clocks out there, the commercial ones from LaMetric and Ulanzi, also some excellent DIY-alternatives.
 
@@ -402,58 +341,47 @@ There are some “RGB-matrices” status displays/clocks out there, the commerci
 
 All of the various solutions have their pros and cons. I tried some and used AWTRIX for a long time, but I found it lacking in a lot of ways (in my opinion,) so I started work on an esphome.io variant. Targeted for an optimized and extensible Home Assistant integration without paid blueprints, MQTT broker requirement, or the need to upload files to the ESP board.
 
-### Features
+### word of warning
 
-Based on a 8x32 RGB matrix, it displays a clock, the date and up to 24 other 'screens' provided by Home Assistant. Each screen (value/text) can be associated with a 8x8 bit RGB icon or GIF animation (see [installation](#installation-of-esphomatrixv2-custom-component)). The values/text can be updated or deleted from the display queue. Each screen has a lifetime, if not refreshed in its lifetime, it will disappear. Even 8x32 GIF animations are possible. You can control nearly everything of the component.
-
-### State
-
-After the [v1](https://github.com/lubeda/EsphoMaTrix) component became popular and receieved additonal feature requests it became clear that yhe v1 [v1](https://github.com/lubeda/EsphoMaTrix)code was a bit of a mess. I reworked all of the code and restructured it to hopefully be much more extensible. 
-**This software is still heavily in development, before updating please check the [Breaking Changes](#breaking-changes)**
+Some updates of [esphome](https://esphome.io) will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
 
 ### Advice
 
 It is highly recomended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESO8266 device** so some of the features had to be removed for these boards (Example: bitmap_screen).
 
+### Compile errors `animation.h` is missing
+
+```cpp
+Error:
+In file included from src/esphome.h:25,
+                 from src/esphome/components/ehmtx/EHMTX.cpp:1:
+src/esphome/components/ehmtx/EHMTX.h:6:10: fatal error: esphome/components/animation/animation.h: No such file or directory
+ #include "esphome/components/animation/animation.h"
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+... 
+```
+
+You have to add this to your YAML ()
+
+```yaml
+image:
+   - file: 1pixel.gif
+     id: breaking20237
+
+animation:
+  - file: 1pixel.gif
+    id: breaking202371
+```
+
+You have also to copy the file 1pixel.gif from the install folder to the esphome directory with your yaml.
+
+Also there might be [breaking changes](#breaking-changes) due to a redesign of EspHoMaTriXv2.
+
 ## How to use
-
-### The easy way
-
-There is a little hype around the Ulanzi TC001 pixel clock. The easy way works with the Ulanzi TC001 hardware. For more customization and other hardware, look [here](#the-advanced-way).
-
-In easy mode you'll have a clock with auto brightness control and after step 3 you can send states to the display and toggle on or off additional screen elements.
-
-#### Step 1
-
-Copy these files from the source folder `copy2esphome`:
-
-- ulanzi-simple.yaml
-- mateine.ttf
-- Optional: `1pixel.gif` See: [Attention](#attention)
-
-to your esphome directory (usually `/config/esphome`).
-
-Grab the font files, that are used in `ulanzi-simple.yaml` from https://github.com/trip5/Matrix-Fonts and save them in `/config/esphome/fonts`.
-
-In your esphome dashboard, you will find a new device named `ulanzi-easy`.
-
-#### Step 2
-
-Connect your Ulanzi device to your host with USB-C and flash the firmware.
-
-#### Step 3
-
-Copy the blueprints `EHMTX_easy_*.yaml` to your blueprint path (usually /config/blueprints/automation/) in a subfolder named `ehmtxv2`.
-
-Reload your automations and have fun after configuring some automations with this blueprint.
 
 ### Result
 
-The device should boot
-
-![boot](images/booting.png)
-
-and after a while (~30 seconds) it should display the correct time.
 
 ![clock screen](images/clock_screen.png).
 
