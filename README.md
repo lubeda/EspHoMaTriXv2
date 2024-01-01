@@ -39,7 +39,7 @@ The base file is configured to show a clock with the day of the month over a cal
 
 ![sample](images/icon_clock.png)
 
-There are some preinstalled icons in the yaml, so you can easily start showing information on your display with home assistant service calls.
+There are some preinstalled [icons](wiki/default-icons.html) in the yaml, so you can easily start showing information on your display with home assistant service calls.
 
 #### Normal icon screen
 
@@ -378,48 +378,108 @@ You have also to copy the file 1pixel.gif from the install folder to the esphome
 
 Also there might be [breaking changes](#breaking-changes) due to a redesign of EspHoMaTriXv2.
 
-## How to use
-
-### Result
-
-
-![clock screen](images/clock_screen.png).
-
-If not, check the esphome logs for further investigations.
-
-### The advanced way
-
-This is for the more advanced users. If you understand the concept of esphome, you can display nearly everything with this component. You can also create your own customized esphome based display with multiple sensors, or even use it as a microphone for the new [voice assist](https://esphome.io/components/voice_assistant.html) feature from home assistant.
-
-#### Concept
+### Concept
 
 You can add screens to a queue and all these screens are displayed one after another.
 ![timing](./images/timingv2.png)
 Each screen can display different information or animation or text, even in rainbow color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the date and time screens are displayed. Some screens can show additional features like an alarm or rindicator see [elements](#display-elements).
 You can add screens from home assistant with service-calls or from esphome via lambdas in your YAML.
 
-#### Screen types a.k.a. what is possible
+### Service via home assistanat API
 
-##### Date/Time screen
-
-![clock screen](./images/clock_screen.png)
-
-###### Service via API
+There are a lot of services and parameter to use, some are only available on ESP32-platform due to resource limitations.
 
 You can call this from, e.g., the [developer tools service](https://my.home-assistant.io/redirect/developer_services/)
 
 ```c
-clock_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
-rainbow_clock_screen => {"lifetime", "screen_time", "default_font"}
-date_screen => {"lifetime", "screen_time", "default_font", "r", "g", "b"}
-rainbow_date_screen => {"lifetime", "screen_time", "default_font"}
+  get_status
+  set_display_on
+  set_display_off
+  hold_screen
+  hide_rindicator
+  hide_lindicator
+  hide_gauge
+  hide_alarm
+  night_mode_on
+  night_mode_off
+  set_weekday_accent_on
+  set_weekday_accent_off
+  hide_icon_indicator
+  show_gauge {"percent", "r", "g", "b", "bg_r", "bg_g", "bg_b"});
+  show_alarm {"r", "g", "b", "size"}
+  show_rindicator {"r", "g", "b", "size"}
+  show_lindicator {"r", "g", "b", "size"}
+
+  set_today_color {"r", "g", "b"}
+  set_weekday_color {"r", "g", "b"}
+  set_clock_color {"r", "g", "b"}
+  set_text_color {"r", "g", "b"}
+  set_infotext_color {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset"}
+  expand_icon_to_9 {"mode"}
+
+  set_solid_color {"r", "g", "b"}
+  set_calendar_color {"r", "g", "b"}
+    
+  del_screen {"icon_name", "mode"}
+  force_screen {"icon_name", "mode"}
+
+  full_screen {"icon_name", "lifetime", "screen_time"}
+  icon_screen {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
+  alert_screen {"icon_name","text", "screen_time", "default_font", "r", "g", "b"}
+  rainbow_alert_screen {"icon_name","text", "screen_time", "default_font"}
+  icon_clock {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"}
+  icon_date {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"}
+  
+  graph_screen {"lifetime", "screen_time"}
+  icon_graph_screen {"icon_name", "lifetime", "screen_time"}
+  
+  rainbow_icon_screen {"icon_name", "text", "lifetime", "screen_time", "default_font"}
+
+  icon_text_screen {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
+  rainbow_icon_text_screen {"icon_name", "text", "lifetime", "screen_time", "default_font"}
+
+  text_screen {"text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
+  rainbow_text_screen {"text", "lifetime", "screen_time", "default_font"}
+
+  clock_screen {"lifetime", "screen_time", "default_font", "r", "g", "b"}
+
+  rainbow_clock_screen {"lifetime", "screen_time", "default_font"}
+
+  date_screen {"lifetime", "screen_time", "default_font", "r", "g", "b"}
+  rainbow_date_screen {"lifetime", "screen_time", "default_font"}
+
+  blank_screen {"lifetime", "screen_time"}
+  color_screen {"lifetime", "screen_time", "r", "g", "b"}
+
+  brightness {"value"}
+
+  color_gauge {"colors"}
+  bitmap_screen {"icon", "lifetime", "screen_time"}
+  bitmap_small {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
+  rainbow_bitmap_small {"icon", "text", "lifetime", "screen_time", "default_font"}
+  bitmap_stack {"icons", "lifetime", "screen_time"}
+
+  show_icon_indicator {"r", "g", "b", "size", "pos", "height"}
+  
+  fire_screen {"lifetime", "screen_time"}
+
+  set_clock_infotext_color {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset"}
+  set_adv_clock_color {"hr", "hg", "hb", "mr", "mg", "mb", "sr", "sg", "sb"}
+
+  text_screen_progress {"text", "value", "progress", "lifetime", "screen_time", "default_font", "value_color_as_progress", "r", "g", "b"}
+  icon_screen_progress {"icon_name", "text", "progress", "lifetime", "screen_time", "default_font", "r", "g", "b"}
+  set_progressbar_color {"icon_name", "mode", "r", "g", "b", "bg_r", "bg_g", "bg_b"}
+
+  icon_prognosis_screen {"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font"}
+  icon_prognosis_screen_rgb {"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font", "r", "g", "b"}
 ```
 
-The rainbow_* variants don't display the day of week bar.
+>[hint]
+>The rainbow_* variants don't display the day of week bar.
 
-###### Lambda
+### Lambda
 
-You can use these in [lambdas](https://esphome.io/guides/automations.html?highlight=lambda#lambda-action) in your esphome YAML.
+You can use the above functions also in [lambdas](https://esphome.io/guides/automations.html?highlight=lambda#lambda-action) in your esphome YAML.
 
 all parameters have a default value.
 
@@ -429,11 +489,11 @@ void rainbow_clock_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME
 void date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true, int r=C_RED, int g=C_GREEN, int b=C_BLUE);     
 ```
 
-##### icon screen
+#### icon screen
 
 ![icon screen](./images/icon_screen.png)
 
-###### Service via API
+#### Service via API
 
 ```c
 icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
@@ -441,7 +501,7 @@ rainbow_icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default
 alert_screen => {"icon_name","text", "screen_time", "default_font", "r", "g", "b"}
 ```
 
-###### Lambda
+#### Lambda
 
 ```c
 void icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
@@ -451,53 +511,53 @@ void alert_screen(std::string icon_name, std::string text, int screen_time, bool
 
 `icon_screen` and `rainbow_icon_screen` are in the queue for `lifetime` minutes. `alert_screen` and `rainbow_alert_screen` is displayed once, imidiatly for at least `screentime` seconds for long text the dcreentime is calculated automagically.
 
-##### full_screen
+#### full_screen
 
 For 8x32 icons or animations
 
 ![full_screen](./images/fullscreen.png)
 
-###### service via API
+#### service via API
 
 ```c
 full_screen => {"icon_name", "lifetime", "screen_time"}
 ```
 
-###### Lambda
+#### Lambda
 
 ```c
 void full_screen(string iconname, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
 ```
 
-##### icon clock
+#### icon clock
 
 display the clock with an icon. the time format an the show_dow are the same as the normal clock. take care of the font size, the time should not need more then 23 pixels width.
 
-###### service via API
+#### service via API
 
 ```c
 icon_clock => {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
 ```
 
-###### Lambda
+#### Lambda
 
 ```c
 void icon_clock(std::string iconname, int lifetime, int screen_time, bool default_font, int r, int g, int b)
 ```
 
-##### bitmap screen
+#### bitmap screen
 
 **This feature is only available on ESP32 platform!!!!!**
 
 For 8x32 images as text. You can generate these images with, e.g., [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator) or just open bitmap-convert.html in your browser and select images you want. For good results the images should have a ratio of 4x1 or 1x1 to look good on your display. For better results you could add black borders as needed to your image.
 
-###### service via API
+#### service via API
 
 ```c
 bitmap_screen => {"[0,4523,0,2342,0,..... (256 values 16bit values rgb565)]", "lifetime", "screen_time"}
 ```
 
-###### Lambda
+#### Lambda
 
 ```c
 void bitmap_screen(string text, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
@@ -505,13 +565,17 @@ void bitmap_screen(string text, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
 
 #### Display Elements
 
-![elements](./images/elements.png)
+![elements](./images/alarm-indicator.png)
 
-##### alarm
+The `alarm` is in the upper right corner (red)
+The `rindicator` is in the lower right corner (yellow)
+The `lindicator` is in the lower left corner (yellow)
+
+#### alarm
 
 The alarm is displayed in the upper-right corner on all screen types! You can set its color and its size.
 
-###### service
+#### service
 
 ```c
 show_alarm => { "r", "g", "b","size"}
@@ -524,7 +588,7 @@ void EHMTX::show_alarm(int r, int g, int b, int size=2);
 ```
 
 r, g, b: 0-255 color components
-size: 0-3 (zero turns it off)
+size: **0-3** (zero turns it off)
 
 To remove it, call:
 
@@ -557,7 +621,7 @@ void show_rindicator(int r, int g, int ,int size=3);
 ```
 
 r, g, b: 0-255 color components
-size: 0-3 (zero turns it off)
+size: **0-3** (zero turns it off)
 
 To remove it, call:
 
@@ -637,6 +701,8 @@ external_components:
       url: https://github.com/lubeda/EspHoMaTriXv2
       ref: stable # optional select a special branch or tag
 ```
+>[tipp]
+>Use the `ref` parameter to stay on the feature set you know. Using the `main` or other version will cause problems with breakting changes. But in case of esphome is breaking something i will always only fix the latest version.!
 
 #### Addressable_light component
 
@@ -740,14 +806,9 @@ light:
 
 Since it is a clock, you need a time component, e.g., [home assistant](https://esphome.io/components/time/homeassistant.html). It is referenced by its ID under `time_component:` The display shows `!t!` until the time source is synchronized and valid.
 
-
-
-
-#### Configuration
-
 ##### ehmtxv2 component
 
-This component is highly customizable.
+Here are also the more advenced parameters listed
 
 ***Example***
 
@@ -760,19 +821,6 @@ ehmtxv2:
   time_component: ehmtx_time
   icons2html: true
   default_font_id: default_font
-  default_font_yoffset: 6
-  special_font_id: special_font
-  special_font_yoffset: 7
-  brightness: 80 # percent
-  time_format: "%H:%M"
-  date_format: "%d.%m."
-  rtl: false # write vom left to right
-  vertical_scroll: false
-  week_start_monday: true # false equals sunday
-  scroll_count: 2 # scroll long text at least two times
-  scroll_interval: 80 # milliseconds
-  rainbow_interval: 32 # milliseconds
-  icons: 
   .....
 ```
 
@@ -834,14 +882,6 @@ Example:
 **night_mode_screens** (optional, screen array, default [2, 3, 16]): List of screens displayed in [night mode](#night-mode).
 
 **icon_indicator_screens** (optional, screen array, default [15, 18]): List of screens on which the [icon indicator](#icon-indicator) will be displayed.
-
-**boot_logo** (optional, string , only on ESP32): Display a fullscreen logo defined as rgb565 array.
-
-```yaml
-  boot_logo: "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]" 
-```
-
-If defined you can use the services `display_boot_logo` and `display_version` to display the defined logo or the version of ehmtx.
 
 **icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons. (default = `false`)
 
@@ -1586,40 +1626,9 @@ select:
 ```
 ## Breaking changes
 
-### 2023.8.0
+### 2024.1.0
 
-- removed a lot of the default settings to configure the display with your lambdas e.g. on_empty_queue:
-- removed boot_logo and replaced it within the samples yamls
-- removed show_date
-- removed allow_empty_screens, use `no_defaults: true` and
-
-  ```yaml
-    on_start_running:
-      then:
-        lambda: |-  
-          id(rgb8x32)->clock_screen(10,10);
-          id(rgb8x32)->date_screen(10,5);
-  ```
-
-  instead
-
-### 2023.7.0
-
-- removed automatic boot logo display
-- removed set_clock_color since clock_screen and date_screen will set color anyway
-
-### 2023.6.3
-
-**Due to this change these values are fixed, e.g. you can not change the date or timeformat during runtime anymore!!**
-
-- changed *_interval to be set only on compile time
-- change scroll_count to be set only on compile time
-- change font_offsets to be set only on compile time
-- change date/time_format to be set only on compile time
-
-### 2023.5.0
-
-- renamed `indicator` to `rindicator` because there is now also a `lindicator`
+- new and "clean" release
 
 ## EspHoMaTriX in the media
 
@@ -1671,5 +1680,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **Everybody** who has fun by using this software
 - **Everybody** who found bugs/issues and reported them!
 
+  **Contact me if I missed to mention your contribution**
+
 ## Special thanks to all sponsors
 
+As of the 1.1.2024 there were only four of them. 😿
