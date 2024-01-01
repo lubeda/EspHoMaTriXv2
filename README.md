@@ -1624,7 +1624,10 @@ select:
               id(rgb8x32)->expand_icon_to_9(3);
             }
 ```
+
 ## Breaking changes
+
+Please take a look at the [changeslog](CHANGELOG.md) also.
 
 ### 2024.1.0
 
