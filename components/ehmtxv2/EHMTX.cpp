@@ -203,7 +203,7 @@ namespace esphome
       return false;
     }
   }
-
+  
   std::string get_icon_name(std::string iconname, char delim = '|')
   {
     std::stringstream stream(iconname);
@@ -239,6 +239,40 @@ namespace esphome
   }
 
 #ifndef USE_ESP8266
+
+  #ifdef EHMTXv2_ADV_BOOT
+  void set_boot_logo(std::string logo = "")
+  {
+    if (logo == "")
+    {
+      delete [] this->boot_logo;
+      this->boot_logo = nullptr;      
+      return;
+    }
+    
+    if (this->boot_logo == NULL) 
+    {
+      this->boot_logo = new uint8_t[256];
+    }
+
+    const size_t CAPACITY = JSON_ARRAY_SIZE(256);
+    StaticJsonDocument<CAPACITY> doc;
+    deserializeJson(doc, logo);
+    JsonArray array = doc.as<JsonArray>();
+    // extract the values
+    uint16_t i = 0;
+    for (JsonVariant v : array)
+    {
+      uint16_t buf = v.as<int>();
+
+      unsigned char b = (((buf)&0x001F) << 3);
+      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      this->boot_logo[i++] = (r + g + b == C_BLACK) ? 0 : 1;
+    }
+  }
+  #endif
+
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
     std::string ic = get_icon_name(text);
