@@ -200,6 +200,8 @@ The ID of the icons is used later to configure the screens to display. So, you s
 
 The first defined icon will be used as a fallback icon, in case of an error, e.g., if you use a non-existing icon ID.
 
+There are some more advanced [parameters](#advanced-icon-parameter)
+
 ### Fonts
 
 In the easy configuration is one TTF-font from [Trip5](https://github.com/trip5/Matrix-Fonts) included. 
@@ -929,7 +931,7 @@ Example:
 ***Example output:***
 ![icon preview](./images/icons_preview.png)
 
-### icons
+### advanced icon parameter
 
 ***Parameters***
 See [icon details](#icons-and-animations)
@@ -1027,13 +1029,13 @@ Numerous features are accessible with services from home assistant and lambdas t
 - **progress**: сan take a value from -100 to 100, the color of the progress bar is calculated automatically, if no colors are specified in the function `set_progressbar_color`, then if the progress is in the range `0..100`, then `from red to green`, if in the range `-100..0`, then from `green to red`.
 - **value_color_as_progress**: display the value with the color of the current color on the progress bar
 - **value**: the brightness 0..255 
-- **prognosis**: 24 triplets of digits (72 in total), each triplet, one point on the prognosis bar in the specified color in the triplet color. Like: [200,200,200, ..., 100,100,100]
+- **prognosis**: 24 triplets of digits (72 in total), each triplet, one point on the prognosis bar in the specified color in the triplet color. Like: [200,200,200, ..., 100,100,100] see [details](https://github.com/lubeda/EspHoMaTriXv2/issues/149)
 
 ### Night mode
 
 When night mode is enabled, only the screens specified in `night_mode_screens` are displayed (**default:** 2, 3, 16) the other screens can be added, deleted, and will follow their life cycle but will not be displayed. Screen numbers in the table [mode](#modes).
 
-### Icon Iindicator
+### Icon Indicator
 
 Shows the line indicator in the Icons area on the specified screens, in the specified color and at the specified vertical position.
 
