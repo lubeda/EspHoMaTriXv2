@@ -25,7 +25,7 @@ You can control it with home assistant using service calls or by using lambda wi
 
 ### How to install
 
-For starters, I assume you use an Ulanzi TC001 pixel clock. For tinkerers and people that want more, read the [For expirienced usersmentation](#for-expirienced-users) part.
+For starters, I assume you use an Ulanzi TC001 pixel clock. For tinkerers and people that want more, read the [For experienced user](#for-experienced-users) part.
 
 Copy all three files (ulanzi-easy.yaml, 1pixel.gif , MatrixChunky6.ttf) from the install folder to your esphome folder, adapt your Wi-Fi settings in the yaml, install it via USB and the device should boot
 
@@ -39,7 +39,7 @@ The base file is configured to show a clock with the day of the month over a cal
 
 ![sample](images/icon_clock.png)
 
-There are some preinstalled [icons](https://raw.githubusercontent.com/lubeda/EspHoMaTriXv2/2024.1.0/wiki/default-icons.html) in the yaml, so you can easily start showing information on your display with home assistant service calls.
+There are some preinstalled [icons](https://raw.githubusercontent.com/lubeda/EspHoMaTriXv2/2024.1.0/resources/default_icons.html) in the yaml, so you can easily start showing information on your display with home assistant service calls.
 
 #### Normal icon screen
 
@@ -163,7 +163,7 @@ data:
 
 These were only static examples, in your automations you can customize a lot more. See the upcoming chapter for more possibilities.
 
-## For expirienced users
+## For experienced users
 
 ### Icons and Animations
 
@@ -1695,8 +1695,12 @@ Or in German:
 
 THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 
-## Thanks
+## Special Thanks
 
+- **[andrewjswan](https://github.com/andrewjswan)** Boot animation centered. `alert_screen` and [issue](https://github.com/lubeda/EspHoMaTriXv2/issues?q=is%3Aissue+author%3Aandrewjswan) and the [additions](https://github.com/lubeda/EspHoMaTriXv2/pulls?q=is%3Apr+author%3Aandrewjswan) to 2023.9.1
+- **[trip5](https://github.com/trip5/Matrix-Fonts)** for his work on optimized fonts and user support and work on the wiki
+
+## Thanks
 - **[blakadder](https://github.com/blakadder)** for his contribution (cleanup README.md, fixed sample)
 - **[dbuezas](https://github.com/dbuezas)** for his fonts [infos](https://github.com/lubeda/EspHoMaTriXv2/issues/63)
 - **[jfurtner](https://github.com/jfurtner)** for his the on_start_running trigger and a new parameter
@@ -1705,7 +1709,6 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[aptonline](https://github.com/aptonline)** for his work on the Ulanzi hardware
 - **[wsbtak](https://github.com/wsbtak)** for the work on the Ulanzi hardware
 - **[ofirsnb](https://github.com/ofirsnb)** for his contributions
-- **[trip5](https://github.com/trip5/Matrix-Fonts)** for his work on optimized fonts and user support and work on the wiki
 - **[pplucky](https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.GIF)** for his 8x32 GIF animation
 - **[dennisse](https://github.com/dennisse)** Auto brightness for the Ulanzi
 - **[hco](https://github.com/hco)** fixing documentation
@@ -1715,8 +1718,6 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[N3rdix](https://github.com/N3rdix)** PRs
 - **[lukasleitsch](https://github.com/lukasleitsch)** PRs
 - **[trvrnrth](https://github.com/trvrnrth)** PRs with fixing an error
-- **[andrewjswan](https://github.com/andrewjswan)** Boot animation centered. `alert_screen` and [issue](https://github.com/lubeda/EspHoMaTriXv2/issues?q=is%3Aissue+author%3Aandrewjswan) and the [additions](https://github.com/lubeda/EspHoMaTriXv2/pulls?q=is%3Apr+author%3Aandrewjswan) to 2023.9.1
-- **Added by [andrewjswan](https://github.com/andrewjswan)** [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 - **[malinovsku](https://github.com/malinovsku)** Issues and testing.
 - **[chertvl](https://github.com/chertvl)** Issues and testing.
 - **Everybody** who has fun by using this software
