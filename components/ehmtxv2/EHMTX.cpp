@@ -1349,9 +1349,9 @@ namespace esphome
           }
         }
         */
-        if (this->boot_anim % 16 == 0)
+        if (this->boot_anim % 8 == 0)
         {
-          uint8_t w = 2 + ((uint8_t)(32 / 16) * (i / 16)) % 32;
+          uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim * 2 / 16)) % 32;
           uint8_t l = 16 - w / 2 ;
           uint8_t r = 15 + w / 2 ;
           for (uint8_t y = 0; y < 8; y++)
