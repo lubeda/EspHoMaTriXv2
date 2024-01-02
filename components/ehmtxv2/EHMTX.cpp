@@ -1338,20 +1338,17 @@ namespace esphome
       if (this->boot_logo != NULL)
       {
         #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_2
-        if (this->boot_anim % EHMTXv2_RAINBOW_INTERVALL == 0)
+        for (uint8_t x = 0; x < 32; x++)
         {
-          for (uint8_t x = 0; x < 32; x++)
+          for (uint8_t y = 0; y < 8; y++)
           {
-            for (uint8_t y = 0; y < 8; y++)
+            if (this->boot_logo[x + y * 32] == 1)
             {
-              if (this->boot_logo[x + y * 32] == 1)
-              {
-                #ifdef EHMTXv2_ADV_BOOT_MODE_0
-                this->display->draw_pixel_at(x, y, Color(C_RED, C_GREEN, C_BLUE));
-                #else
-                this->display->draw_pixel_at(x, y, this->rainbow_color);
-                #endif
-              }
+              #ifdef EHMTXv2_ADV_BOOT_MODE_0
+              this->display->draw_pixel_at(x, y, Color(C_RED, C_GREEN, C_BLUE));
+              #else
+              this->display->draw_pixel_at(x, y, this->rainbow_color);
+              #endif
             }
           }
         }
