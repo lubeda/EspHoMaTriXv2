@@ -25,6 +25,7 @@
 - [Small clock with icon](icon-clock)
 - [Showing graphs on the display](using-graphs)
 - [Replacing text in date and time](time-date-replace)
+- [Solution for RTL text](https://github.com/idodov/bidi)
 
 ## Problems
 

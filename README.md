@@ -210,7 +210,7 @@ You can configure two fonts if you like.
 
 The font needs to be readable on a matrix display. I use a font with 6 pixels height and one with 8 Pixel height. The 6px font is my default on all screens, with a progress bar or the day of week lower line.
 
-Some people use a "normal" font from Trip5 and another for Cyrillic, Korean or Hebrew letters.
+Some people use a "normal" font from Trip5 and another for Cyrillic, Korean or Hebrew letters. For the RTL based users take a look at [bidi](https://github.com/idodov/bidi) from @iodov to enhance the readability.
 
 @dbuezas has also contributed tow optimized fonts with umlauts for this kind of display `mateine.ttf` and `mateineThin.ttf` see [here](https://github.com/lubeda/EspHoMaTriXv2/issues/63).
 
