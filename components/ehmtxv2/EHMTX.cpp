@@ -1330,6 +1330,7 @@ namespace esphome
     }
     else
     {
+      #ifdef USE_ESP32
       #ifdef EHMTXv2_ADV_BOOT
       if (this->boot_logo != NULL)
       {
@@ -1367,6 +1368,7 @@ namespace esphome
         }
       }
       else
+      #endif
       #endif
       {
         uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
