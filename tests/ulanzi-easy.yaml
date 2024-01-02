@@ -76,7 +76,7 @@ esp32:
   board: esp32dev
 
 font:
-  - file: mateine.ttf
+  - file: ehmtx.ttf
     size: 16
     id: default_font
     glyphs:  |
