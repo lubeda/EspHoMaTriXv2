@@ -245,8 +245,7 @@ namespace esphome
     return (tokens.size() > 1) ? tokens[1] : (tokens.size() > 0) ? (iconname.find("*") != std::string::npos) ? get_icon_name(tokens[0], '_') : tokens[0] : "";
   }
 
-#ifndef USE_ESP8266
-
+#ifdef USE_ESP32
   #ifdef EHMTXv2_ADV_BOOT
   void EHMTX::set_boot_logo(std::string logo)
   {
@@ -279,6 +278,9 @@ namespace esphome
     }
   }
   #endif
+#endif
+
+#ifndef USE_ESP8266
 
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
@@ -1332,9 +1334,10 @@ namespace esphome
     {
       #ifdef USE_ESP32
       #ifdef EHMTXv2_ADV_BOOT
+
       if (this->boot_logo != NULL)
       {
-        /*
+        #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_2
         if (this->boot_anim % EHMTXv2_RAINBOW_INTERVALL == 0)
         {
           for (uint8_t x = 0; x < 32; x++)
@@ -1343,12 +1346,17 @@ namespace esphome
             {
               if (this->boot_logo[x + y * 32] == 1)
               {
+                #ifdef EHMTXv2_ADV_BOOT_MODE_0
+                this->display->draw_pixel_at(x, y, Color(C_RED, C_GREEN, C_BLUE));
+                #else
                 this->display->draw_pixel_at(x, y, this->rainbow_color);
+                #endif
               }
             }
           }
         }
-        */
+        #endif
+        #if defined EHMTXv2_ADV_BOOT_MODE_1 || defined EHMTXv2_ADV_BOOT_MODE_3
         if (this->boot_anim % 8 == 0)
         {
           uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim * 2 / 16)) % 32;
@@ -1358,14 +1366,23 @@ namespace esphome
           {
             if (this->boot_logo[l + y * 32] == 1)
             {
+              #ifdef EHMTXv2_ADV_BOOT_MODE_1
+              this->display->draw_pixel_at(l, y, Color(C_RED, C_GREEN, C_BLUE));
+              #else
               this->display->draw_pixel_at(l, y, this->rainbow_color);
+              #endif
             }
             if (this->boot_logo[r + y * 32] == 1)
             {
+              #ifdef EHMTXv2_ADV_BOOT_MODE_1
+              this->display->draw_pixel_at(r, y, Color(C_RED, C_GREEN, C_BLUE));
+              #else
               this->display->draw_pixel_at(r, y, this->rainbow_color);
+              #endif
             }
           }
         }
+        #endif
       }
       else
       #endif
