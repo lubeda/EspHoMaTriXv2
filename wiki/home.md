@@ -15,7 +15,7 @@
 - [Ulanzi upside-down](rotate-ULANZI-display-180-degrees)
 - [Problem with own services in the yaml](problem-with-text-as-variable-name)
 - [Display RTL text](rtl-text)
-- [overview of default icons](default-icons.html)
+- [overview of default icons](default_icons.html)
 
 ## Intermediate & Advanced Configuration
 
