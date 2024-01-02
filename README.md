@@ -214,8 +214,6 @@ Some people use a "normal" font from Trip5 and another for Cyrillic, Korean or H
 
 @dbuezas has also contributed tow optimized fonts with umlauts for this kind of display `mateine.ttf` and `mateineThin.ttf` see [here](https://github.com/lubeda/EspHoMaTriXv2/issues/63).
 
-You find my first [attempt](./resources/EHMTXv2.ttf) to adapt a font also in the resources-folder. 
-
 
 ```yaml
 font:
@@ -225,6 +223,8 @@ font:
     glyphs:  |
       !"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz€@
 ```
+
+You find my first [attempt](./resources/EHMTXv2.ttf) to adapt a font also in the resources-folder. 
 
 ### configuration options
 

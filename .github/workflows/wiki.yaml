@@ -2,10 +2,8 @@ name: Publish wiki
 on:
   push:
     branches: 
-      - main
-      - 2023.8.0
-      - 2023.9.0
       - 2023.9.1
+      - 2024.1.0-prerelease
     paths:
       - wiki/**
       - .github/workflows/wiki.yaml
@@ -19,4 +17,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: Andrew-Chen-Wang/github-wiki-action@v4
+      - uses: Andrew-Chen-Wang/github-wiki-action@v4.4.0
