@@ -35,10 +35,17 @@ namespace esphome
     this->set_weekday_color();
     this->night_mode = false;
     this->weekday_accent = false;
+
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
       this->vertical_scroll = false;
     #endif
 
+    #ifdef USE_ESP32
+    #ifdef EHMTXv2_ADV_BOOT
+      this->boot_logo = nullptr;
+    #endif
+    #endif
+    
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
       this->queue[i] = new EHMTX_queue(this);
@@ -1326,7 +1333,7 @@ namespace esphome
       #ifdef EHMTXv2_ADV_BOOT
       if (this->boot_logo != NULL)
       {
-        if (this->boot_anim % 10 == 0)
+        if (this->boot_anim % EHMTXv2_RAINBOW_INTERVALL == 0)
         {
           for (uint8_t x = 0; x < 32; x++)
           {
