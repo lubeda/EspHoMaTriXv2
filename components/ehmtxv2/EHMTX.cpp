@@ -1333,6 +1333,7 @@ namespace esphome
       #ifdef EHMTXv2_ADV_BOOT
       if (this->boot_logo != NULL)
       {
+        /*
         if (this->boot_anim % EHMTXv2_RAINBOW_INTERVALL == 0)
         {
           for (uint8_t x = 0; x < 32; x++)
@@ -1343,6 +1344,24 @@ namespace esphome
               {
                 this->display->draw_pixel_at(x, y, this->rainbow_color);
               }
+            }
+          }
+        }
+        */
+        if (this->boot_anim % 16 == 0)
+        {
+          uint8_t w = 2 + ((uint8_t)(32 / 16) * (i / 16)) % 32;
+          uint8_t l = 16 - w / 2 ;
+          uint8_t r = 15 + w / 2 ;
+          for (uint8_t y = 0; y < 8; y++)
+          {
+            if (this->boot_logo[l + y * 32] == 1)
+            {
+              this->display->draw_pixel_at(l, y, this->rainbow_color);
+            }
+            if (this->boot_logo[r + y * 32] == 1)
+            {
+              this->display->draw_pixel_at(r, y, this->rainbow_color);
             }
           }
         }
