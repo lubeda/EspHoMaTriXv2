@@ -25,22 +25,3 @@ jobs:
         with:
           yaml_file: ${{ matrix.firmware.file }}
           version: latest
-  build-develop:
-    name: Build develop ${{ matrix.firmware.name }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        firmware:
-          - file: tests/ulanzi-test.yaml
-            name: Ulanzi-Test
-            manifest_filename: ulanzi-easy-manifest.json
-      fail-fast: false
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v3.3.0
-      - name: Build firmware
-        uses: esphome/build-action@v1.8.0
-        id: esphome-build
-        with:
-          yaml_file: ${{ matrix.firmware.file }}
-          version: beta
