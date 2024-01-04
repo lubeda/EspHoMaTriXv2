@@ -30,7 +30,7 @@ jobs:
     strategy:
       matrix:
         firmware:
-          - file: tests/ulanzi-text.yaml
+          - file: tests/ulanzi-test.yaml
             name: Ulanzi-Test
             manifest_filename: ulanzi-easy-manifest.json
       fail-fast: false
