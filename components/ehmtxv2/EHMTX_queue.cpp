@@ -492,12 +492,12 @@ namespace esphome
             this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
             if (this->icon == SOLIDICON)
             {
-              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color);
             }
             else if (this->icon == CALENDARICON)
             {
-              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
-              this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color); 
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color);
             }
             else
             {

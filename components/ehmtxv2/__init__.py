@@ -98,6 +98,9 @@ CONF_RTL = "rtl"
 CONF_VERTICAL = "vertical_scroll"
 CONF_CLOCK = "advanced_clock"
 CONF_BITMAP = "advanced_bitmap"
+CONF_BOOT = "advanced_boot"
+CONF_BOOTLOGO = "boot_logo"
+CONF_BOOTMODE = "boot_mode"
 CONF_FRAMEDURATION = "frame_duration"
 CONF_SCROLLCOUNT = "scroll_count"
 CONF_MATRIXCOMPONENT = "matrix_component"
@@ -169,6 +172,13 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(
         CONF_BITMAP, default=False
     ): cv.boolean,
+    cv.Optional(
+        CONF_BOOT, default=False
+    ): cv.boolean,
+    cv.Optional(CONF_BOOTLOGO): cv.string,
+    cv.Optional(
+        CONF_BOOTMODE, default="2"
+    ): cv.templatable(cv.int_range(min=0, max=3)),
     cv.Optional(
         CONF_SHOW_SECONDS, default=False
     ): cv.boolean,
@@ -277,10 +287,10 @@ EHMTX_SCHEMA = cv.Schema({
         }
     ),
     cv.Optional(CONF_NIGHT_MODE_SCREENS, default=DEFAULT_NIGHT_MODE_SCREENS): cv.All(
-            cv.ensure_list(cv.one_of(1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25)), cv.Length(min=1, max=5)
+            cv.ensure_list(cv.one_of(1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)), cv.Length(min=1, max=5)
         ),
     cv.Optional(CONF_ICON_INDICATOR_SCREENS, default=DEFAULT_ICON_INDICATOR_SCREENS): cv.All(
-            cv.ensure_list(cv.one_of(1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25)), cv.Length(min=1, max=5)
+            cv.ensure_list(cv.one_of(1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)), cv.Length(min=1, max=5)
         ),
     cv.Required(CONF_ICONS): cv.All(
         cv.ensure_list(
@@ -572,16 +582,28 @@ async def to_code(config):
         cg.add_define("EHMTXv2_BLEND_STEPS",config[CONF_BLENDSTEPS])
 
     if config[CONF_RTL]:
-        cg.add_define("EHMTXv2_USE_RTL")    
+        cg.add_define("EHMTXv2_USE_RTL")
     
     if config[CONF_VERTICAL]:
-        cg.add_define("EHMTXv2_USE_VERTICAL_SCROLL")    
+        cg.add_define("EHMTXv2_USE_VERTICAL_SCROLL")
     
     if config[CONF_CLOCK]:
-        cg.add_define("EHMTXv2_ADV_CLOCK")    
+        cg.add_define("EHMTXv2_ADV_CLOCK")
 
     if config[CONF_BITMAP]:
-        cg.add_define("EHMTXv2_ADV_BITMAP")    
+        cg.add_define("EHMTXv2_ADV_BITMAP")
+
+    if config[CONF_BOOT] and config.get(CONF_BOOTLOGO):
+        cg.add_define("EHMTXv2_ADV_BOOT")
+        cg.add(var.set_boot_logo(config[CONF_BOOTLOGO]))
+        if config[CONF_BOOTMODE] == 0:
+            cg.add_define("EHMTXv2_ADV_BOOT_MODE_0")
+        if config[CONF_BOOTMODE] == 1:
+            cg.add_define("EHMTXv2_ADV_BOOT_MODE_1")
+        if config[CONF_BOOTMODE] == 2:
+            cg.add_define("EHMTXv2_ADV_BOOT_MODE_2")
+        if config[CONF_BOOTMODE] == 3:
+            cg.add_define("EHMTXv2_ADV_BOOT_MODE_3")
 
     if config[CONF_NIGHT_MODE_SCREENS]:
         cg.add_define("EHMTXv2_CONF_NIGHT_MODE_SCREENS",config[CONF_NIGHT_MODE_SCREENS])

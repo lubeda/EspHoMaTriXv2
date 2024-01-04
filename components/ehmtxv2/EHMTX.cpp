@@ -35,10 +35,17 @@ namespace esphome
     this->set_weekday_color();
     this->night_mode = false;
     this->weekday_accent = false;
+
     #ifdef EHMTXv2_USE_VERTICAL_SCROLL
       this->vertical_scroll = false;
     #endif
 
+    #ifdef USE_ESP32
+    #ifdef EHMTXv2_ADV_BOOT
+      this->boot_logo = nullptr;
+    #endif
+    #endif
+    
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
       this->queue[i] = new EHMTX_queue(this);
@@ -203,7 +210,7 @@ namespace esphome
       return false;
     }
   }
-
+  
   std::string get_icon_name(std::string iconname, char delim = '|')
   {
     std::stringstream stream(iconname);
@@ -238,7 +245,43 @@ namespace esphome
     return (tokens.size() > 1) ? tokens[1] : (tokens.size() > 0) ? (iconname.find("*") != std::string::npos) ? get_icon_name(tokens[0], '_') : tokens[0] : "";
   }
 
+#ifdef USE_ESP32
+  #ifdef EHMTXv2_ADV_BOOT
+  void EHMTX::set_boot_logo(std::string logo)
+  {
+    if (logo == "")
+    {
+      delete [] this->boot_logo;
+      this->boot_logo = nullptr;      
+      return;
+    }
+    
+    if (this->boot_logo == NULL) 
+    {
+      this->boot_logo = new uint8_t[256];
+    }
+
+    const size_t CAPACITY = JSON_ARRAY_SIZE(256);
+    StaticJsonDocument<CAPACITY> doc;
+    deserializeJson(doc, logo);
+    JsonArray array = doc.as<JsonArray>();
+    // extract the values
+    uint16_t i = 0;
+    for (JsonVariant v : array)
+    {
+      uint16_t buf = v.as<int>();
+
+      unsigned char b = (((buf)&0x001F) << 3);
+      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      this->boot_logo[i++] = (r + g + b == C_BLACK) ? 0 : 1;
+    }
+  }
+  #endif
+#endif
+
 #ifndef USE_ESP8266
+
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
     std::string ic = get_icon_name(text);
@@ -1289,9 +1332,63 @@ namespace esphome
     }
     else
     {
-      uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
-      uint8_t l = 32 / 2 - w / 2 ;
-      this->display->rectangle(l, 2, w, 4, this->rainbow_color); 
+      #ifdef USE_ESP32
+      #ifdef EHMTXv2_ADV_BOOT
+
+      if (this->boot_logo != NULL)
+      {
+        #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_2
+        for (uint8_t x = 0; x < 32; x++)
+        {
+          for (uint8_t y = 0; y < 8; y++)
+          {
+            if (this->boot_logo[x + y * 32] == 1)
+            {
+              #ifdef EHMTXv2_ADV_BOOT_MODE_0
+              this->display->draw_pixel_at(x, y, Color(C_RED, C_GREEN, C_BLUE));
+              #else
+              this->display->draw_pixel_at(x, y, this->rainbow_color);
+              #endif
+            }
+          }
+        }
+        #endif
+        #if defined EHMTXv2_ADV_BOOT_MODE_1 || defined EHMTXv2_ADV_BOOT_MODE_3
+        if (this->boot_anim % 8 == 0)
+        {
+          uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim * 2 / 16)) % 32;
+          uint8_t l = 16 - w / 2 ;
+          uint8_t r = 15 + w / 2 ;
+          for (uint8_t y = 0; y < 8; y++)
+          {
+            if (this->boot_logo[l + y * 32] == 1)
+            {
+              #ifdef EHMTXv2_ADV_BOOT_MODE_1
+              this->display->draw_pixel_at(l, y, Color(C_RED, C_GREEN, C_BLUE));
+              #else
+              this->display->draw_pixel_at(l, y, this->rainbow_color);
+              #endif
+            }
+            if (this->boot_logo[r + y * 32] == 1)
+            {
+              #ifdef EHMTXv2_ADV_BOOT_MODE_1
+              this->display->draw_pixel_at(r, y, Color(C_RED, C_GREEN, C_BLUE));
+              #else
+              this->display->draw_pixel_at(r, y, this->rainbow_color);
+              #endif
+            }
+          }
+        }
+        #endif
+      }
+      else
+      #endif
+      #endif
+      {
+        uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
+        uint8_t l = 32 / 2 - w / 2 ;
+        this->display->rectangle(l, 2, w, 4, this->rainbow_color); 
+      }
       this->boot_anim++;
     }
   }
