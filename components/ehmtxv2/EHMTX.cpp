@@ -274,7 +274,12 @@ namespace esphome
       unsigned char b = (((buf)&0x001F) << 3);
       unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
       unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
-      this->boot_logo[i++] = (r + g + b == C_BLACK) ? 0 : 1;
+      #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
+        this->boot_logo[i++] = Color(r,g,b);
+      #else
+        this->boot_logo[i++] = (r + g + b == C_BLACK) ? 0 : 1;
+      #endif
+      
     }
   }
   #endif
