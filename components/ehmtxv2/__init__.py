@@ -99,7 +99,7 @@ CONF_VERTICAL = "vertical_scroll"
 CONF_CLOCK = "advanced_clock"
 CONF_BITMAP = "advanced_bitmap"
 CONF_BOOTLOGO = "boot_logo"
-CONF_BOOTMODE = "boot_mode"
+CONF_BOOTLOGOMODE = "boot__logo_mode"
 CONF_FRAMEDURATION = "frame_duration"
 CONF_SCROLLCOUNT = "scroll_count"
 CONF_MATRIXCOMPONENT = "matrix_component"
@@ -175,7 +175,7 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_BOOTLOGO
     ): cv.string,
     cv.Optional(
-        CONF_BOOTMODE, default="0"
+        CONF_BOOTLOGOMODE, default="0"
     ): cv.templatable(cv.int_range(min=0, max=4)),
     cv.Optional(
         CONF_SHOW_SECONDS, default=False
@@ -593,17 +593,22 @@ async def to_code(config):
 
     if config.get(CONF_BOOTLOGO) and config[CONF_BOOTMODE]:
         cg.add(var.set_boot_logo(config[CONF_BOOTLOGO]))
-        if config[CONF_BOOTMODE] > 0:
+        if config[CONF_BOOTLOGOMODE] > 0:
             cg.add_define("EHMTXv2_ADV_BOOT")
-        if config[CONF_BOOTMODE] == 1:
-            cg.add_define("EHMTXv2_ADV_BOOT_MODE_1")
-        if config[CONF_BOOTMODE] == 2:
-            cg.add_define("EHMTXv2_ADV_BOOT_MODE_2")
-        if config[CONF_BOOTMODE] == 3:
-            cg.add_define("EHMTXv2_ADV_BOOT_MODE_3")
-        if config[CONF_BOOTMODE] == 4:
-            cg.add_define("EHMTXv2_ADV_BOOT_MODE_4")
 
+        if config[CONF_BOOTLOGOMODE] == 1:
+            cg.add_define("EHMTXv2_ADV_BOOT_MODE_0")
+        if config[CONF_BOOTLOGOMODE] == 1:
+            cg.add_define("EHMTXv2_ADV_BOOT_MODE_1")
+        if config[CONF_BOOTLOGOMODE] == 2:
+            cg.add_define("EHMTXv2_ADV_BOOT_MODE_2")
+        if config[CONF_BOOTLOGOMODE] == 3:
+            cg.add_define("EHMTXv2_ADV_BOOT_MODE_3")
+        if config[CONF_BOOTLOGOMODE] == 4:
+            cg.add_define("EHMTXv2_ADV_BOOT_MODE_4")
+        if config[CONF_BOOTLOGOMODE] == 5:
+            cg.add_define("EHMTXv2_ADV_BOOT_MODE_5")
+    
     if config[CONF_NIGHT_MODE_SCREENS]:
         cg.add_define("EHMTXv2_CONF_NIGHT_MODE_SCREENS",config[CONF_NIGHT_MODE_SCREENS])
 

@@ -918,18 +918,24 @@ Example:
 
 **clock_interval** (optional, s): the interval in seconds to force the clock display. By default, the clock screen, if any, will be displayed according to the position in the queue. **If you set the clock_interval close to the screen_time of the clock, you will only see the clock!** (default=0)
 
-**advanced_boot** (optional, boolean , only on ESP32 ): This enables the different `boot_mode` settings. (default=false)
+**boot_logo** (optional, string , only on ESP32): Display a fullscreen logo defined as rgb565 array.
+
+```yaml
+  boot_logo: "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]" 
+```
 
 Allows you to show a custom boot logo instead of the default animation when booting.
 advanced_boot (optional, boolean, only on ESP32, Default: false) Enables advanced mode of boot logo display.
 boot_logo (optional, string, only on ESP32): Mask defined as rgb565 array used to display boot logo, color is completely ignored, output depends on boot logo display mode.
 
-**boot_mode** (optional, integer, only on ESP32, Default: 3) Mode of displaying boot logo, can take value from 0 to 3:
+**boot_logo_mode** (optional, integer, only on ESP32, Default: 3) Mode of displaying boot logo, can take value from 0 to 3:
 
-0 - Display boot_logo in white color
-1 - Display boot_logo in white color, the mask appears from the center to the sides.
-2 - Display boot_logo with rainbow color
-3 - Display boot_logo in rainbow color, the mask appears from the center to the sides
+0 - Display the boot_logo with the defined colors (default)
+1 - Display the boot_logo with the defined colors, the mask appears from the center to the sides.
+2 - Display boot_logo in white color
+3 - Display boot_logo in white color, the mask appears from the center to the sides.
+4 - Display boot_logo with rainbow color
+5 - Display boot_logo in rainbow color, the mask appears from the center to the sides
 
 Mode 3 is best used with the option
 
