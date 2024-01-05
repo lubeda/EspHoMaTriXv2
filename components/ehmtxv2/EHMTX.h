@@ -129,7 +129,11 @@ namespace esphome
     PROGMEM Color hour_color, minutes_color, spacer_color, info_clock_lcolor, info_clock_rcolor;
   #endif
   #ifdef EHMTXv2_ADV_BOOT
-    uint8_t* boot_logo;
+  #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
+        Color*  boot_logo;
+      #else
+        uint8_t* boot_logo;
+      #endif
   #endif
 #endif
 
