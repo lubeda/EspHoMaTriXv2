@@ -258,7 +258,11 @@ namespace esphome
     
     if (this->boot_logo == NULL) 
     {
-      this->boot_logo = new uint8_t[256];
+      #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
+        this->boot_logo = new Color[256];
+      #else
+        this->boot_logo = new uint8_t[256];
+      #endif
     }
 
     const size_t CAPACITY = JSON_ARRAY_SIZE(256);
