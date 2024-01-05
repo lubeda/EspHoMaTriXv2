@@ -1337,14 +1337,6 @@ namespace esphome
 
       if (this->boot_logo != NULL)
       {
-        for (uint8_t x = 0; x < 32; x++)
-        {
-          for (uint8_t y = 0; y < 8; y++)
-          {          
-        #if 
-              this->display->draw_pixel_at(x, y, this->boot_logo[x + y * 32]);
-          }
-        }
         #if defined EHMTXv2_ADV_BOOT_MODE_0  || defined EHMTXv2_ADV_BOOT_MODE_2 || defined EHMTXv2_ADV_BOOT_MODE_4
         for (uint8_t x = 0; x < 32; x++)
         {
