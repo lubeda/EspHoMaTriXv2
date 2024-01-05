@@ -1369,7 +1369,7 @@ namespace esphome
               this->display->draw_pixel_at(l, y, Color(C_RED, C_GREEN, C_BLUE));
               #elif EHMTXv2_ADV_BOOT_MODE_5
               this->display->draw_pixel_at(l, y, this->rainbow_color);
-              #else EHMTXv2_ADV_BOOT_MODE_1
+              #else
               this->display->draw_pixel_at(l, y, this->boot_logo[x + y * 32]);
               #endif
             }
