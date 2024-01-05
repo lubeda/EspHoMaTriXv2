@@ -1337,14 +1337,14 @@ namespace esphome
 
       if (this->boot_logo != NULL)
       {
-        #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_2
+        #if defined EHMTXv2_ADV_BOOT_MODE_1 || defined EHMTXv2_ADV_BOOT_MODE_3
         for (uint8_t x = 0; x < 32; x++)
         {
           for (uint8_t y = 0; y < 8; y++)
           {
             if (this->boot_logo[x + y * 32] == 1)
             {
-              #ifdef EHMTXv2_ADV_BOOT_MODE_0
+              #ifdef EHMTXv2_ADV_BOOT_MODE_1
               this->display->draw_pixel_at(x, y, Color(C_RED, C_GREEN, C_BLUE));
               #else
               this->display->draw_pixel_at(x, y, this->rainbow_color);
@@ -1353,7 +1353,7 @@ namespace esphome
           }
         }
         #endif
-        #if defined EHMTXv2_ADV_BOOT_MODE_1 || defined EHMTXv2_ADV_BOOT_MODE_3
+        #if defined EHMTXv2_ADV_BOOT_MODE_2 || defined EHMTXv2_ADV_BOOT_MODE_4
         if (this->boot_anim % 8 == 0)
         {
           uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim * 2 / 16)) % 32;
@@ -1363,7 +1363,7 @@ namespace esphome
           {
             if (this->boot_logo[l + y * 32] == 1)
             {
-              #ifdef EHMTXv2_ADV_BOOT_MODE_1
+              #ifdef EHMTXv2_ADV_BOOT_MODE_2
               this->display->draw_pixel_at(l, y, Color(C_RED, C_GREEN, C_BLUE));
               #else
               this->display->draw_pixel_at(l, y, this->rainbow_color);
@@ -1371,7 +1371,7 @@ namespace esphome
             }
             if (this->boot_logo[r + y * 32] == 1)
             {
-              #ifdef EHMTXv2_ADV_BOOT_MODE_1
+              #ifdef EHMTXv2_ADV_BOOT_MODE_2
               this->display->draw_pixel_at(r, y, Color(C_RED, C_GREEN, C_BLUE));
               #else
               this->display->draw_pixel_at(r, y, this->rainbow_color);
