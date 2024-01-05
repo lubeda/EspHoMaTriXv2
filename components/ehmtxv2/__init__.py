@@ -176,7 +176,7 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.string,
     cv.Optional(
         CONF_BOOTLOGOMODE, default="0"
-    ): cv.templatable(cv.int_range(min=0, max=4)),
+    ): cv.templatable(cv.int_range(min=0, max=5)),
     cv.Optional(
         CONF_SHOW_SECONDS, default=False
     ): cv.boolean,
@@ -591,12 +591,11 @@ async def to_code(config):
     if config[CONF_BITMAP]:
         cg.add_define("EHMTXv2_ADV_BITMAP")
 
-    if config.get(CONF_BOOTLOGO) and config[CONF_BOOTLOGOMODE]:
+    if config.get(CONF_BOOTLOGO):
         cg.add(var.set_boot_logo(config[CONF_BOOTLOGO]))
-        if config[CONF_BOOTLOGOMODE] > 0:
-            cg.add_define("EHMTXv2_ADV_BOOT")
-
-        if config[CONF_BOOTLOGOMODE] == 1:
+        cg.add_define("EHMTXv2_ADV_BOOT")         
+      
+        if config[CONF_BOOTLOGOMODE] == 0:
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_0")
         if config[CONF_BOOTLOGOMODE] == 1:
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_1")

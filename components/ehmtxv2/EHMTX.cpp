@@ -5,6 +5,10 @@
 #include <string>
 #include <regex>
 
+// #define USE_ESP32
+// #define EHMTXv2_ADV_BOOT
+// #define EHMTXv2_ADV_BOOT_MODE_0
+
 namespace esphome
 {
   EHMTX::EHMTX() : PollingComponent(POLLINGINTERVAL)
@@ -36,28 +40,28 @@ namespace esphome
     this->night_mode = false;
     this->weekday_accent = false;
 
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      this->vertical_scroll = false;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    this->vertical_scroll = false;
+#endif
 
-    #ifdef USE_ESP32
-    #ifdef EHMTXv2_ADV_BOOT
-      this->boot_logo = nullptr;
-    #endif
-    #endif
-    
+#ifdef USE_ESP32
+#ifdef EHMTXv2_ADV_BOOT
+    this->boot_logo = nullptr;
+#endif
+#endif
+
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
       this->queue[i] = new EHMTX_queue(this);
     }
 
-    #ifdef EHMTXv2_ADV_CLOCK
-      this->info_clock_lcolor = Color(CG_GREY, CG_GREY, CG_GREY);
-      this->info_clock_rcolor = Color(CG_GREY * 2, CG_GREY * 2, CG_GREY * 2);
+#ifdef EHMTXv2_ADV_CLOCK
+    this->info_clock_lcolor = Color(CG_GREY, CG_GREY, CG_GREY);
+    this->info_clock_rcolor = Color(CG_GREY * 2, CG_GREY * 2, CG_GREY * 2);
 
-      this->set_clock_color();
-      this->set_adv_clock_color();
-    #endif
+    this->set_clock_color();
+    this->set_adv_clock_color();
+#endif
 
     ESP_LOGD(TAG, "Constructor finish");
   }
@@ -66,7 +70,7 @@ namespace esphome
   {
     if (size > 0)
     {
-      this->rindicator_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b);
+      this->rindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
       this->display_rindicator = size & 3;
       ESP_LOGD(TAG, "show rindicator size: %d r: %d g: %d b: %d", size, r, g, b);
     }
@@ -80,7 +84,7 @@ namespace esphome
   {
     if (size > 0)
     {
-      this->lindicator_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b);
+      this->lindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
       this->display_lindicator = size & 3;
       ESP_LOGD(TAG, "show lindicator size: %d r: %d g: %d b: %d", size, r, g, b);
     }
@@ -94,7 +98,7 @@ namespace esphome
   {
     if (size > 0)
     {
-      this->icon_indicator_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b);
+      this->icon_indicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
       this->display_icon_indicator = size;
       this->icon_indicator_height = height;
       this->icon_indicator_y_pos = pos;
@@ -183,13 +187,13 @@ namespace esphome
 
   void EHMTX::set_today_color(int r, int g, int b)
   {
-    this->today_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
+    this->today_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
     ESP_LOGD(TAG, "default today color r: %d g: %d b: %d", r, g, b);
   }
 
   void EHMTX::set_weekday_color(int r, int g, int b)
   {
-    this->weekday_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
+    this->weekday_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
     ESP_LOGD(TAG, "default weekday color: %d g: %d b: %d", r, g, b);
   }
 
@@ -210,13 +214,13 @@ namespace esphome
       return false;
     }
   }
-  
+
   std::string get_icon_name(std::string iconname, char delim = '|')
   {
     std::stringstream stream(iconname);
     std::string icon;
     std::vector<std::string> tokens;
-      
+
     while (std::getline(stream, icon, delim))
     {
       if (!icon.empty())
@@ -233,7 +237,7 @@ namespace esphome
     std::stringstream stream(iconname);
     std::string screen_id;
     std::vector<std::string> tokens;
-    
+
     while (std::getline(stream, screen_id, delim))
     {
       if (!screen_id.empty())
@@ -242,27 +246,28 @@ namespace esphome
       }
     }
 
-    return (tokens.size() > 1) ? tokens[1] : (tokens.size() > 0) ? (iconname.find("*") != std::string::npos) ? get_icon_name(tokens[0], '_') : tokens[0] : "";
+    return (tokens.size() > 1) ? tokens[1] : (tokens.size() > 0) ? (iconname.find("*") != std::string::npos) ? get_icon_name(tokens[0], '_') : tokens[0]
+                                                                 : "";
   }
 
 #ifdef USE_ESP32
-  #ifdef EHMTXv2_ADV_BOOT
+#ifdef EHMTXv2_ADV_BOOT
   void EHMTX::set_boot_logo(std::string logo)
   {
     if (logo == "")
     {
-      delete [] this->boot_logo;
-      this->boot_logo = nullptr;      
+      delete[] this->boot_logo;
+      this->boot_logo = nullptr;
       return;
     }
-    
-    if (this->boot_logo == NULL) 
+
+    if (this->boot_logo == NULL)
     {
-      #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
-        this->boot_logo = new Color[256];
-      #else
-        this->boot_logo = new uint8_t[256];
-      #endif
+#if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
+      this->boot_logo = new Color[256];
+#else
+      this->boot_logo = new uint8_t[256];
+#endif
     }
 
     const size_t CAPACITY = JSON_ARRAY_SIZE(256);
@@ -275,18 +280,17 @@ namespace esphome
     {
       uint16_t buf = v.as<int>();
 
-      unsigned char b = (((buf)&0x001F) << 3);
-      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
-      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
-      #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
-        this->boot_logo[i++] = Color(r,g,b);
-      #else
-        this->boot_logo[i++] = (r + g + b == C_BLACK) ? 0 : 1;
-      #endif
-      
+      unsigned char b = (((buf) & 0x001F) << 3);
+      unsigned char g = (((buf) & 0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf) & 0xF800) >> 8); // shift >> 11 and << 3
+#if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
+      this->boot_logo[i++] = Color(r, g, b);
+#else
+      this->boot_logo[i++] = (r + g + b == C_BLACK) ? 0 : 1;
+#endif
     }
   }
-  #endif
+#endif
 #endif
 
 #ifndef USE_ESP8266
@@ -299,20 +303,20 @@ namespace esphome
     if (text.find("|") != std::string::npos)
     {
       id = get_screen_id(text);
-    } 
+    }
 
-    #ifdef EHMTXv2_ADV_BITMAP
+#ifdef EHMTXv2_ADV_BITMAP
     EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_BITMAP_SCREEN, id);
-    #else
+#else
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_BITMAP_SCREEN);
-    #endif
+#endif
 
-    #ifdef EHMTXv2_ADV_BITMAP
-    if (screen->bitmap == NULL) 
+#ifdef EHMTXv2_ADV_BITMAP
+    if (screen->bitmap == NULL)
     {
       screen->bitmap = new Color[256];
     }
-    #endif
+#endif
 
     const size_t CAPACITY = JSON_ARRAY_SIZE(256);
     StaticJsonDocument<CAPACITY> doc;
@@ -324,16 +328,16 @@ namespace esphome
     {
       uint16_t buf = v.as<int>();
 
-      unsigned char b = (((buf)&0x001F) << 3);
-      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
-      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      unsigned char b = (((buf) & 0x001F) << 3);
+      unsigned char g = (((buf) & 0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf) & 0xF800) >> 8); // shift >> 11 and << 3
       Color c = Color(r, g, b);
 
-      #ifdef EHMTXv2_ADV_BITMAP
+#ifdef EHMTXv2_ADV_BITMAP
       screen->bitmap[i++] = c;
-      #else
+#else
       this->bitmap[i++] = c;
-      #endif
+#endif
     }
 
     screen->icon_name = id;
@@ -341,10 +345,10 @@ namespace esphome
     screen->mode = MODE_BITMAP_SCREEN;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      screen->pixels_ = 0;
-      screen->scroll_reset = 32;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    screen->pixels_ = 0;
+    screen->scroll_reset = 32;
+#endif
     if (id == "")
     {
       for (auto *t : on_add_screen_triggers_)
@@ -371,10 +375,10 @@ namespace esphome
     if (icon.find("|") != std::string::npos)
     {
       id = get_screen_id(icon);
-    } 
+    }
 
     EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_BITMAP_SMALL, id);
-    
+
     screen->text = text;
     screen->icon_name = id;
     screen->text_color = Color(r, g, b);
@@ -382,8 +386,8 @@ namespace esphome
     screen->default_font = default_font;
     screen->calc_scroll_time(text, screen_time);
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    
-    if (screen->sbitmap == NULL) 
+
+    if (screen->sbitmap == NULL)
     {
       screen->sbitmap = new Color[64];
     }
@@ -398,9 +402,9 @@ namespace esphome
     {
       uint16_t buf = v.as<int>();
 
-      unsigned char b = (((buf)&0x001F) << 3);
-      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
-      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      unsigned char b = (((buf) & 0x001F) << 3);
+      unsigned char g = (((buf) & 0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf) & 0xF800) >> 8); // shift >> 11 and << 3
       Color c = Color(r, g, b);
 
       screen->sbitmap[i++] = c;
@@ -433,10 +437,10 @@ namespace esphome
     if (icon.find("|") != std::string::npos)
     {
       id = get_screen_id(icon);
-    } 
+    }
 
     EHMTX_queue *screen = this->find_mode_icon_queue_element(MODE_RAINBOW_BITMAP_SMALL, id);
-    
+
     screen->text = text;
     screen->icon_name = id;
     screen->mode = MODE_RAINBOW_BITMAP_SMALL;
@@ -444,7 +448,7 @@ namespace esphome
     screen->calc_scroll_time(text, screen_time);
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
 
-    if (screen->sbitmap == NULL) 
+    if (screen->sbitmap == NULL)
     {
       screen->sbitmap = new Color[64];
     }
@@ -459,9 +463,9 @@ namespace esphome
     {
       uint16_t buf = v.as<int>();
 
-      unsigned char b = (((buf)&0x001F) << 3);
-      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
-      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      unsigned char b = (((buf) & 0x001F) << 3);
+      unsigned char g = (((buf) & 0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf) & 0xF800) >> 8); // shift >> 11 and << 3
       Color c = Color(r, g, b);
 
       screen->sbitmap[i++] = c;
@@ -486,18 +490,18 @@ namespace esphome
     screen->status();
   }
 
-  std::string trim(std::string const& s)
+  std::string trim(std::string const &s)
   {
-    auto const first{ s.find_first_not_of(' ') };
+    auto const first{s.find_first_not_of(' ')};
     if (first == std::string::npos)
-        return {};
-    auto const last{ s.find_last_not_of(' ') };
+      return {};
+    auto const last{s.find_last_not_of(' ')};
     return s.substr(first, (last - first + 1));
   }
 
   void EHMTX::bitmap_stack(std::string icons, int lifetime, int screen_time)
   {
-    icons.erase(remove(icons.begin(), icons.end(), ' '), icons.end());  
+    icons.erase(remove(icons.begin(), icons.end(), ' '), icons.end());
 
     std::string ic = get_icon_name(icons);
     std::string id = "";
@@ -505,13 +509,13 @@ namespace esphome
     if (icons.find("|") != std::string::npos)
     {
       id = get_screen_id(icons);
-    } 
+    }
 
     std::stringstream stream(ic);
     std::string icon;
     std::vector<std::string> tokens;
     uint8_t count = 0;
-    
+
     while (std::getline(stream, icon, ','))
     {
       icon = trim(icon);
@@ -532,11 +536,11 @@ namespace esphome
     }
 
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_BITMAP_STACK_SCREEN);
-    if (screen->sbitmap == NULL) 
+    if (screen->sbitmap == NULL)
     {
       screen->sbitmap = new Color[64];
     }
-    
+
     uint8_t real_count = 0;
     for (uint8_t i = 0; i < count; i++)
     {
@@ -558,13 +562,13 @@ namespace esphome
     }
     if (real_count == 0)
     {
-      delete [] screen->sbitmap;
+      delete[] screen->sbitmap;
       screen->sbitmap = nullptr;
 
       ESP_LOGW(TAG, "bitmap stack: icons list [%s] does not contain any known icons.", ic.c_str());
       return;
     }
-    
+
     screen->icon = real_count;
     screen->mode = MODE_BITMAP_STACK_SCREEN;
     screen->icon_name = id;
@@ -664,9 +668,9 @@ namespace esphome
     {
       uint16_t buf = v.as<int>();
 
-      unsigned char b = (((buf)&0x001F) << 3);
-      unsigned char g = (((buf)&0x07E0) >> 3); // Fixed: shift >> 5 and << 2
-      unsigned char r = (((buf)&0xF800) >> 8); // shift >> 11 and << 3
+      unsigned char b = (((buf) & 0x001F) << 3);
+      unsigned char g = (((buf) & 0x07E0) >> 3); // Fixed: shift >> 5 and << 2
+      unsigned char r = (((buf) & 0xF800) >> 8); // shift >> 11 and << 3
       Color c = Color(r, g, b);
       this->cgauge[i++] = c;
       this->display_gauge = true;
@@ -770,14 +774,14 @@ namespace esphome
 
     register_service(&EHMTX::full_screen, "full_screen", {"icon_name", "lifetime", "screen_time"});
     register_service(&EHMTX::icon_screen, "icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
-    register_service(&EHMTX::alert_screen, "alert_screen", {"icon_name","text", "screen_time", "default_font", "r", "g", "b"});
-    register_service(&EHMTX::rainbow_alert_screen, "rainbow_alert_screen", {"icon_name","text", "screen_time", "default_font"});
+    register_service(&EHMTX::alert_screen, "alert_screen", {"icon_name", "text", "screen_time", "default_font", "r", "g", "b"});
+    register_service(&EHMTX::rainbow_alert_screen, "rainbow_alert_screen", {"icon_name", "text", "screen_time", "default_font"});
     register_service(&EHMTX::icon_clock, "icon_clock", {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::icon_date, "icon_date", {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
-    #ifdef USE_GRAPH
-      register_service(&EHMTX::graph_screen, "graph_screen", {"lifetime", "screen_time"});
-      register_service(&EHMTX::icon_graph_screen, "icon_graph_screen", {"icon_name", "lifetime", "screen_time"});
-    #endif
+#ifdef USE_GRAPH
+    register_service(&EHMTX::graph_screen, "graph_screen", {"lifetime", "screen_time"});
+    register_service(&EHMTX::icon_graph_screen, "icon_graph_screen", {"icon_name", "lifetime", "screen_time"});
+#endif
     register_service(&EHMTX::rainbow_icon_screen, "rainbow_icon_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font"});
 
     register_service(&EHMTX::icon_text_screen, "icon_text_screen", {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
@@ -808,14 +812,14 @@ namespace esphome
     register_service(&EHMTX::show_icon_indicator, "show_icon_indicator", {"r", "g", "b", "size", "pos", "height"});
     register_service(&EHMTX::hide_icon_indicator, "hide_icon_indicator");
 
-    #ifdef USE_Fireplugin
-      register_service(&EHMTX::fire_screen, "fire_screen", {"lifetime", "screen_time"});
-    #endif
+#ifdef USE_Fireplugin
+    register_service(&EHMTX::fire_screen, "fire_screen", {"lifetime", "screen_time"});
+#endif
 
-    #ifdef EHMTXv2_ADV_CLOCK
-      register_service(&EHMTX::set_clock_infotext_color, "set_clock_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset"});
-      register_service(&EHMTX::set_adv_clock_color, "set_adv_clock_color", {"hr", "hg", "hb", "mr", "mg", "mb", "sr", "sg", "sb"});
-    #endif
+#ifdef EHMTXv2_ADV_CLOCK
+    register_service(&EHMTX::set_clock_infotext_color, "set_clock_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset"});
+    register_service(&EHMTX::set_adv_clock_color, "set_adv_clock_color", {"hr", "hg", "hb", "mr", "mg", "mb", "sr", "sg", "sb"});
+#endif
 
     register_service(&EHMTX::text_screen_progress, "text_screen_progress", {"text", "value", "progress", "lifetime", "screen_time", "default_font", "value_color_as_progress", "r", "g", "b"});
     register_service(&EHMTX::icon_screen_progress, "icon_screen_progress", {"icon_name", "text", "progress", "lifetime", "screen_time", "default_font", "r", "g", "b"});
@@ -831,7 +835,7 @@ namespace esphome
   {
     if (size > 0)
     {
-      this->alarm_color = Color((uint8_t)r , (uint8_t)g , (uint8_t)b );
+      this->alarm_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
       this->display_alarm = size & 3;
       ESP_LOGD(TAG, "show alarm size: %d color r: %d g: %d b: %d", size, r, g, b);
     }
@@ -920,19 +924,19 @@ namespace esphome
       if (this->queue[i]->mode == mode)
       {
         bool force = true;
-        if ( (mode == MODE_ICON_SCREEN) || 
-             (mode == MODE_ICON_CLOCK) || 
-             (mode == MODE_ICON_DATE) || 
-             (mode == MODE_FULL_SCREEN) || 
-             (mode == MODE_RAINBOW_ICON) || 
-             (mode == MODE_ICON_PROGRESS) ||
-             (mode == MODE_ICON_TEXT_SCREEN) ||
-             (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
-             (mode == MODE_TEXT_PROGRESS) ||
-        #ifdef EHMTXv2_ADV_BITMAP
-             (mode == MODE_BITMAP_SCREEN) ||
-        #endif
-             (mode == MODE_PROGNOSIS_SCREEN) )
+        if ((mode == MODE_ICON_SCREEN) ||
+            (mode == MODE_ICON_CLOCK) ||
+            (mode == MODE_ICON_DATE) ||
+            (mode == MODE_FULL_SCREEN) ||
+            (mode == MODE_RAINBOW_ICON) ||
+            (mode == MODE_ICON_PROGRESS) ||
+            (mode == MODE_ICON_TEXT_SCREEN) ||
+            (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
+            (mode == MODE_TEXT_PROGRESS) ||
+#ifdef EHMTXv2_ADV_BITMAP
+            (mode == MODE_BITMAP_SCREEN) ||
+#endif
+            (mode == MODE_PROGNOSIS_SCREEN))
         {
           if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
           {
@@ -1127,14 +1131,14 @@ namespace esphome
           this->queue[i]->mode = MODE_EMPTY;
           if (this->queue[i]->sbitmap != NULL)
           {
-            delete [] this->queue[i]->sbitmap;
+            delete[] this->queue[i]->sbitmap;
             this->queue[i]->sbitmap = nullptr;
           }
         }
       }
     }
   }
-  
+
   uint8_t EHMTX::queue_count()
   {
     float ts = this->get_tick();
@@ -1148,7 +1152,7 @@ namespace esphome
     }
 
     return c;
-  } 
+  }
 
   // tick in milliseconds
   float EHMTX::get_tick()
@@ -1167,7 +1171,7 @@ namespace esphome
     return static_cast<float>(tv.tv_sec * 1000 + tv.tv_usec / 1000);
 #endif
   }
- 
+
   void EHMTX::tick()
   {
     this->hue_++;
@@ -1199,9 +1203,9 @@ namespace esphome
         this->screen_pointer = this->find_last_clock();
         this->scroll_step = 0;
         this->ticks_ = 0;
-        #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-          this->vertical_scroll = false;
-        #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+        this->vertical_scroll = false;
+#endif
 
         if (this->screen_pointer == MAXQUEUE)
         {
@@ -1341,79 +1345,77 @@ namespace esphome
     }
     else
     {
-      #ifdef USE_ESP32
-      #ifdef EHMTXv2_ADV_BOOT
+#ifdef USE_ESP32
+#ifdef EHMTXv2_ADV_BOOT
 
       if (this->boot_logo != NULL)
       {
-        #if defined EHMTXv2_ADV_BOOT_MODE_0  || defined EHMTXv2_ADV_BOOT_MODE_2 || defined EHMTXv2_ADV_BOOT_MODE_4
+#if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_2 || defined EHMTXv2_ADV_BOOT_MODE_4
         for (uint8_t x = 0; x < 32; x++)
         {
           for (uint8_t y = 0; y < 8; y++)
           {
+#ifdef EHMTXv2_ADV_BOOT_MODE_0
+            this->display->draw_pixel_at(x, y, this->boot_logo[x + y * 32]);
+#else
+#if defined EHMTXv2_ADV_BOOT_MODE_2 || defined EHMTXv2_ADV_BOOT_MODE_4
             if (this->boot_logo[x + y * 32] == 1)
             {
-              #ifdef EHMTXv2_ADV_BOOT_MODE_2
+#ifdef EHMTXv2_ADV_BOOT_MODE_2
               this->display->draw_pixel_at(x, y, Color(C_RED, C_GREEN, C_BLUE));
-              #elif EHMTXv2_ADV_BOOT_MODE_4
+#else
               this->display->draw_pixel_at(x, y, this->rainbow_color);
-              #else
-              this->display->draw_pixel_at(x, y, this->boot_logo[x + y * 32]);
-              #endif
+#endif
             }
+#endif
+#endif
           }
         }
-        #endif
-        #if defined EHMTXv2_ADV_BOOT_MODE_1 ||defined EHMTXv2_ADV_BOOT_MODE_3 || defined EHMTXv2_ADV_BOOT_MODE_5
-        if (this->boot_anim % 8 == 0)
+#endif
+#if defined EHMTXv2_ADV_BOOT_MODE_1 || defined EHMTXv2_ADV_BOOT_MODE_3 || defined EHMTXv2_ADV_BOOT_MODE_5
+        if (this->boot_anim % 8 == 0 )
         {
-          uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim * 2 / 16)) % 32;
-          uint8_t l = 16 - w / 2 ;
-          uint8_t r = 15 + w / 2 ;
+          uint8_t w = (2 + (uint8_t)(32 / 16) * (this->boot_anim * 2 / 16)) % 32;
+          uint8_t l = 16 - w / 2;
+          uint8_t r = 15 + w / 2;
           for (uint8_t y = 0; y < 8; y++)
           {
-
-            #if defined EHMTXv2_ADV_BOOT_MODE_3 || defined EHMTXv2_ADV_BOOT_MODE_3
+#if defined EHMTXv2_ADV_BOOT_MODE_3 || defined EHMTXv2_ADV_BOOT_MODE_5
             if (this->boot_logo[l + y * 32] == 1)
             {
-              #ifdef EHMTXv2_ADV_BOOT_MODE_3
+#ifdef EHMTXv2_ADV_BOOT_MODE_3
               this->display->draw_pixel_at(l, y, Color(C_RED, C_GREEN, C_BLUE));
-              #elif EHMTXv2_ADV_BOOT_MODE_5
+#else
               this->display->draw_pixel_at(l, y, this->rainbow_color);
-              #else
-              this->display->draw_pixel_at(l, y, this->boot_logo[x + y * 32]);
-              #endif
+#endif
             }
             if (this->boot_logo[r + y * 32] == 1)
             {
-              #ifdef EHMTXv2_ADV_BOOT_MODE_2
+#ifdef EHMTXv2_ADV_BOOT_MODE_3
               this->display->draw_pixel_at(r, y, Color(C_RED, C_GREEN, C_BLUE));
-              #else
+#else
               this->display->draw_pixel_at(r, y, this->rainbow_color);
-              #endif
+#endif
             }
-            #elif defined EHMTXv2_ADV_BOOT_MODE_1
-            if (this->boot_logo[l + y * 32] == 1)
-            {
-              this->display->draw_pixel_at(l, y, this->boot_logo[l + y * 32]);            
-            }
-            if (this->boot_logo[r + y * 32] == 1)
-            {
-              this->display->draw_pixel_at(l, y, this->boot_logo[r + y * 32]);            
-            }
-            #endif
+#endif
+#ifdef EHMTXv2_ADV_BOOT_MODE_1
+            this->display->draw_pixel_at(l, y, this->boot_logo[l + y * 32]);
+            this->display->draw_pixel_at(r, y, this->boot_logo[r + y * 32]);
+#endif
           }
         }
-        #endif
+#endif
       }
-      else
-      #endif
-      #endif
+      
+#endif
+#endif
+#ifndef EHMTXv2_ADV_BOOT
       {
         uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
-        uint8_t l = 32 / 2 - w / 2 ;
-        this->display->rectangle(l, 2, w, 4, this->rainbow_color); 
+        uint8_t l = 32 / 2 - w / 2;
+        this->display->rectangle(l, 2, w, 4, this->rainbow_color);
       }
+#endif
       this->boot_anim++;
     }
   }
@@ -1437,9 +1439,12 @@ namespace esphome
     ESP_LOGI(TAG, "status brightness: %d (0..255)", this->brightness_);
     ESP_LOGI(TAG, "status date format: %s", EHMTXv2_DATE_FORMAT);
     ESP_LOGI(TAG, "screen_pointer: %d", this->screen_pointer);
-    if (this->screen_pointer != MAXQUEUE){
+    if (this->screen_pointer != MAXQUEUE)
+    {
       ESP_LOGI(TAG, "current screen mode: %d", this->queue[this->screen_pointer]->mode);
-    } else {
+    }
+    else
+    {
       ESP_LOGI(TAG, "screenpointer at max");
     }
     ESP_LOGI(TAG, "status time format: %s", EHMTXv2_TIME_FORMAT);
@@ -1482,7 +1487,7 @@ namespace esphome
     ESP_LOGI(TAG, "replace_time_date %s", b ? F("on") : F("off"));
   }
 
-  std::string EHMTX::replace_time_date(std::string time_date)  // Replace Time Date Strings / Trip5
+  std::string EHMTX::replace_time_date(std::string time_date) // Replace Time Date Strings / Trip5
   {
     std::string replace_from_string = EHMTXv2_REPLACE_TIME_DATE_FROM;
     std::string replace_to_string = EHMTXv2_REPLACE_TIME_DATE_TO;
@@ -1495,22 +1500,25 @@ namespace esphome
     {
       std::istringstream iss_from(replace_from_string);
       std::vector<std::string> replace_from_arr;
-      for(std::string s_from;iss_from>>s_from;)
-          replace_from_arr.push_back(s_from);
+      for (std::string s_from; iss_from >> s_from;)
+        replace_from_arr.push_back(s_from);
       replace_arr_n = replace_from_arr.size();
       std::istringstream iss_to(replace_to_string);
       std::vector<std::string> replace_to_arr;
-      for(std::string s_to;iss_to>>s_to;)
-          replace_to_arr.push_back(s_to);
-      if (replace_to_arr.size() < replace_arr_n) { replace_arr_n = replace_to_arr.size(); }
-    uint16_t k = 0;
-    do
+      for (std::string s_to; iss_to >> s_to;)
+        replace_to_arr.push_back(s_to);
+      if (replace_to_arr.size() < replace_arr_n)
+      {
+        replace_arr_n = replace_to_arr.size();
+      }
+      uint16_t k = 0;
+      do
       {
         std::vector<std::uint8_t> data(time_date.begin(), time_date.end());
         std::vector<std::uint8_t> pattern(replace_from_arr[k].begin(), replace_from_arr[k].end());
         std::vector<std::uint8_t> replaceData(replace_to_arr[k].begin(), replace_to_arr[k].end());
         std::vector<std::uint8_t>::iterator itr;
-        while((itr = std::search(data.begin(), data.end(), pattern.begin(), pattern.end())) != data.end())
+        while ((itr = std::search(data.begin(), data.end(), pattern.begin(), pattern.end())) != data.end())
         {
           data.erase(itr, itr + pattern.size());
           data.insert(itr, replaceData.begin(), replaceData.end());
@@ -1530,19 +1538,19 @@ namespace esphome
       {
         bool force = true;
         ESP_LOGD(TAG, "del_screen: icon %s in position: %s mode %d", icon_name.c_str(), this->queue[i]->icon_name.c_str(), mode);
-        if ( (mode == MODE_ICON_SCREEN) || 
-             (mode == MODE_ICON_CLOCK) || 
-             (mode == MODE_ICON_DATE) || 
-             (mode == MODE_FULL_SCREEN) || 
-             (mode == MODE_RAINBOW_ICON) || 
-             (mode == MODE_ICON_PROGRESS) ||
-             (mode == MODE_ICON_TEXT_SCREEN) ||
-             (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
-             (mode == MODE_TEXT_PROGRESS) ||
-        #ifdef EHMTXv2_ADV_BITMAP
-             (mode == MODE_BITMAP_SCREEN) ||
-        #endif
-             (mode == MODE_PROGNOSIS_SCREEN) )
+        if ((mode == MODE_ICON_SCREEN) ||
+            (mode == MODE_ICON_CLOCK) ||
+            (mode == MODE_ICON_DATE) ||
+            (mode == MODE_FULL_SCREEN) ||
+            (mode == MODE_RAINBOW_ICON) ||
+            (mode == MODE_ICON_PROGRESS) ||
+            (mode == MODE_ICON_TEXT_SCREEN) ||
+            (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
+            (mode == MODE_TEXT_PROGRESS) ||
+#ifdef EHMTXv2_ADV_BITMAP
+            (mode == MODE_BITMAP_SCREEN) ||
+#endif
+            (mode == MODE_PROGNOSIS_SCREEN))
         {
           if (this->string_has_ending(icon_name, "*"))
           {
@@ -1566,20 +1574,20 @@ namespace esphome
           this->queue[i]->last_time = 0.0;
           if (this->queue[i]->sbitmap != NULL)
           {
-            delete [] this->queue[i]->sbitmap;
+            delete[] this->queue[i]->sbitmap;
             this->queue[i]->sbitmap = nullptr;
           }
-          #ifdef EHMTXv2_ADV_BITMAP
+#ifdef EHMTXv2_ADV_BITMAP
           if (this->queue[i]->bitmap != NULL)
           {
-            delete [] this->queue[i]->bitmap;
+            delete[] this->queue[i]->bitmap;
             this->queue[i]->bitmap = nullptr;
           }
-          #endif
+#endif
           if (i == this->screen_pointer)
           {
             this->next_action_time = this->get_tick();
-          }  
+          }
         }
       }
     }
@@ -1601,7 +1609,7 @@ namespace esphome
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_ALERT_SCREEN);
 
     screen->text = text;
-    
+
     screen->text_color = Color(r, g, b);
     screen->default_font = default_font;
     screen->mode = MODE_ALERT_SCREEN;
@@ -1636,7 +1644,7 @@ namespace esphome
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_RAINBOW_ALERT_SCREEN);
 
     screen->text = text;
-    
+
     screen->default_font = default_font;
     screen->mode = MODE_RAINBOW_ALERT_SCREEN;
     screen->icon_name = iconname;
@@ -1698,13 +1706,14 @@ namespace esphome
     screen->default_font = default_font;
     screen->mode = MODE_TEXT_PROGRESS;
     screen->icon = value_color_as_progress;
-    screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100 : progress;
+    screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100
+                                                                  : progress;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      screen->pixels_ = 0;
-      screen->scroll_reset = 32;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    screen->pixels_ = 0;
+    screen->scroll_reset = 32;
+#endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
@@ -1737,7 +1746,8 @@ namespace esphome
     screen->mode = MODE_ICON_PROGRESS;
     screen->icon_name = id;
     screen->icon = icon;
-    screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100 : progress;
+    screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100
+                                                                  : progress;
     screen->calc_scroll_time(text, screen_time);
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     for (auto *t : on_add_screen_triggers_)
@@ -1784,10 +1794,10 @@ namespace esphome
     screen->icon = icon;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      screen->pixels_ = 0;
-      screen->scroll_reset = 32;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    screen->pixels_ = 0;
+    screen->scroll_reset = 32;
+#endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
@@ -1821,10 +1831,10 @@ namespace esphome
     screen->icon = icon;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      screen->pixels_ = 0;
-      screen->scroll_reset = 32;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    screen->pixels_ = 0;
+    screen->scroll_reset = 32;
+#endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
@@ -1882,10 +1892,10 @@ namespace esphome
     {
       screen->screen_time_ = EHMTXv2_CLOCK_INTERVALL * 1000.0 - 2000.0;
     }
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      screen->pixels_ = 0;
-      screen->scroll_reset = 32;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    screen->pixels_ = 0;
+    screen->scroll_reset = 32;
+#endif
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     screen->status();
   }
@@ -1899,10 +1909,10 @@ namespace esphome
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      screen->pixels_ = 0;
-      screen->scroll_reset = 32;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    screen->pixels_ = 0;
+    screen->scroll_reset = 32;
+#endif
     screen->status();
   }
 
@@ -1914,7 +1924,7 @@ namespace esphome
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     for (auto *t : on_add_screen_triggers_)
     {
-      t->process("blank",(uint8_t)screen->mode);
+      t->process("blank", (uint8_t)screen->mode);
     }
     screen->status();
   }
@@ -1928,7 +1938,7 @@ namespace esphome
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     for (auto *t : on_add_screen_triggers_)
     {
-      t->process("color",(uint8_t)screen->mode);
+      t->process("color", (uint8_t)screen->mode);
     }
     screen->status();
   }
@@ -1964,10 +1974,10 @@ namespace esphome
     screen->icon = 0;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      screen->pixels_ = 0;
-      screen->scroll_reset = 32;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    screen->pixels_ = 0;
+    screen->scroll_reset = 32;
+#endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process("Fire", (uint8_t)screen->mode);
@@ -1996,10 +2006,10 @@ namespace esphome
     screen->icon_name = iconname;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      screen->pixels_ = 0;
-      screen->scroll_reset = 32;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    screen->pixels_ = 0;
+    screen->scroll_reset = 32;
+#endif
     for (auto *t : on_add_screen_triggers_)
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
@@ -2017,10 +2027,10 @@ namespace esphome
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      screen->pixels_ = 0;
-      screen->scroll_reset = 32;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    screen->pixels_ = 0;
+    screen->scroll_reset = 32;
+#endif
     screen->status();
   }
 
@@ -2035,10 +2045,10 @@ namespace esphome
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      screen->pixels_ = 0;
-      screen->scroll_reset = 32;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    screen->pixels_ = 0;
+    screen->scroll_reset = 32;
+#endif
     screen->status();
   }
 
@@ -2142,7 +2152,7 @@ namespace esphome
     screen->calc_scroll_time(text, screen_time);
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
 
-    if (screen->sbitmap == NULL) 
+    if (screen->sbitmap == NULL)
     {
       screen->sbitmap = new Color[64];
     }
@@ -2195,10 +2205,10 @@ namespace esphome
   {
     for (size_t i = 0; i < MAXQUEUE; i++)
     {
-      if ( ( (this->queue[i]->mode == MODE_ICON_SCREEN) ||
-             (this->queue[i]->mode == MODE_RAINBOW_ICON) ||
-             (this->queue[i]->mode == MODE_ICON_PROGRESS) ) &&
-          (this->queue[i]->icon == icon) )
+      if (((this->queue[i]->mode == MODE_ICON_SCREEN) ||
+           (this->queue[i]->mode == MODE_RAINBOW_ICON) ||
+           (this->queue[i]->mode == MODE_ICON_PROGRESS)) &&
+          (this->queue[i]->icon == icon))
       {
         ESP_LOGD(TAG, "icon_screen: found by icon");
         return this->queue[i];
@@ -2288,7 +2298,7 @@ namespace esphome
     ESP_LOGD(TAG, "set_display");
   }
 
-  #ifdef USE_GRAPH
+#ifdef USE_GRAPH
   void EHMTX::set_graph(graph::Graph *graph)
   {
     this->graph = graph;
@@ -2298,17 +2308,17 @@ namespace esphome
   void EHMTX::graph_screen(int lifetime, int screen_time)
   {
     ESP_LOGD(TAG, "graph screen: lifetime: %d screen_time: %d", lifetime, screen_time);
-    
+
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_GRAPH_SCREEN);
 
     screen->mode = MODE_GRAPH_SCREEN;
     screen->icon = MAXICONS;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      screen->pixels_ = 0;
-      screen->scroll_reset = 32;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    screen->pixels_ = 0;
+    screen->scroll_reset = 32;
+#endif
 
     this->graph->set_height(8);
     this->graph->set_width(32);
@@ -2342,10 +2352,10 @@ namespace esphome
     screen->icon_name = iconname;
     screen->screen_time_ = screen_time * 1000.0;
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      screen->pixels_ = 0;
-      screen->scroll_reset = 32;
-    #endif
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    screen->pixels_ = 0;
+    screen->scroll_reset = 32;
+#endif
 
     this->graph->set_height(8);
     this->graph->set_width(24);
@@ -2358,7 +2368,7 @@ namespace esphome
     screen->status();
   }
 
-  #endif
+#endif
 
   void EHMTX::set_clock(time::RealTimeClock *clock)
   {
@@ -2366,7 +2376,7 @@ namespace esphome
     ESP_LOGD(TAG, "set_clock");
   }
 
-  #define max3(x,y,z) ( (x) > (y) ? ((x) > (z) ? (x) : (z)) : ((y) > (z) ? (y) : (z)) )
+#define max3(x, y, z) ((x) > (y) ? ((x) > (z) ? (x) : (z)) : ((y) > (z) ? (y) : (z)))
 
   void EHMTX::draw_day_of_week(int ypos, bool small)
   {
@@ -2381,7 +2391,7 @@ namespace esphome
         accent_color = this->weekday_color + max_diff;
       }
 
-      if (! small)
+      if (!small)
       {
         for (uint8_t i = 0; i <= 6; i++)
         {
@@ -2400,7 +2410,7 @@ namespace esphome
           }
         }
       }
-      else 
+      else
       {
         uint8_t off_l = (this->icon_to_9 == 3) ? 11 : 10;
         uint8_t off_r = (this->icon_to_9 == 3) ? 12 : 11;
@@ -2412,11 +2422,11 @@ namespace esphome
             this->display->line(off_l + i * 3, ypos + 7, off_r + i * 3, ypos + 7, this->today_color);
           }
           else
-          {          
+          {
             this->display->line(off_l + i * 3, ypos + 7, off_r + i * 3, ypos + 7, this->weekday_color);
             if (accent_color != esphome::display::COLOR_OFF)
             {
-              this->display->line( (i < dow ? off_r : off_l) + i * 3, ypos + 7, (i < dow ? off_r : off_l) + i * 3, ypos + 7, accent_color);
+              this->display->line((i < dow ? off_r : off_l) + i * 3, ypos + 7, (i < dow ? off_r : off_l) + i * 3, ypos + 7, accent_color);
             }
           }
         }
@@ -2444,7 +2454,7 @@ namespace esphome
 
   bool EHMTX::draw_clock(std::string format, esphome::display::BaseFont *font, Color color, int xpos, int ypos)
   {
-    std::regex rgx {"^(%[HI])(.)(%M)(.)?(%S|%p)?$"};
+    std::regex rgx{"^(%[HI])(.)(%M)(.)?(%S|%p)?$"};
     std::smatch match;
     if (!std::regex_search(format, match, rgx))
       return false;
@@ -2491,8 +2501,10 @@ namespace esphome
       {
         if (!(this->show_seconds && parts.at(i) == sep && (this->clock->now().second % 2 == 1)))
         {
-          Color c_ = i == 0 ? this->hour_color : i == 2 ? this->minutes_color : parts.at(i) == sep ? this->spacer_color : color;
-          if (c_.r + c_.g + c_.b == C_BLACK) 
+          Color c_ = i == 0 ? this->hour_color : i == 2           ? this->minutes_color
+                                             : parts.at(i) == sep ? this->spacer_color
+                                                                  : color;
+          if (c_.r + c_.g + c_.b == C_BLACK)
           {
             c_ = color;
           }
@@ -2516,27 +2528,27 @@ namespace esphome
   {
     std::string weekday_char = "";
     int pos = 0;
-  
-    for (int i = 0; i < strlen(EHMTXv2_WEEKDAYTEXT);) 
+
+    for (int i = 0; i < strlen(EHMTXv2_WEEKDAYTEXT);)
     {
       weekday_char = weekday_char + EHMTXv2_WEEKDAYTEXT[i];
-      if(EHMTXv2_WEEKDAYTEXT[i] & 0x80) 
+      if (EHMTXv2_WEEKDAYTEXT[i] & 0x80)
       {
         weekday_char = weekday_char + EHMTXv2_WEEKDAYTEXT[i + 1];
-        if(EHMTXv2_WEEKDAYTEXT[i] & 0x20) 
+        if (EHMTXv2_WEEKDAYTEXT[i] & 0x20)
         {
           weekday_char = weekday_char + EHMTXv2_WEEKDAYTEXT[i + 2];
-          if(EHMTXv2_WEEKDAYTEXT[i] & 0x10) 
+          if (EHMTXv2_WEEKDAYTEXT[i] & 0x10)
           {
             weekday_char = weekday_char + EHMTXv2_WEEKDAYTEXT[i + 3];
             i += 4;
-          } 
-          else 
+          }
+          else
           {
             i += 3;
           }
-        } 
-        else 
+        }
+        else
         {
           i += 2;
         }
@@ -2559,43 +2571,43 @@ namespace esphome
 
   int EHMTX::GetTextBounds(esphome::display::BaseFont *font, const char *buffer)
   {
-    int x = 0;      // A pointer to store the returned x coordinate of the upper left corner in. 
+    int x = 0;      // A pointer to store the returned x coordinate of the upper left corner in.
     int y = 0;      // A pointer to store the returned y coordinate of the upper left corner in.
     int width = 0;  // A pointer to store the returned text width in.
-    int height = 0; // A pointer to store the returned text height in. 
+    int height = 0; // A pointer to store the returned text height in.
     this->display->get_text_bounds(0, 0, buffer, font, esphome::display::TextAlign::TOP_LEFT, &x, &y, &width, &height);
     return width;
   }
 
-  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char raw_char)
+  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char *formatting, const char raw_char)
   {
     char temp_buffer[80];
     sprintf(temp_buffer, formatting, raw_char);
     return GetTextBounds(font, temp_buffer);
   }
 
-  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char *raw_text)
+  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char *formatting, const char *raw_text)
   {
     char temp_buffer[80];
     sprintf(temp_buffer, formatting, raw_text);
     return GetTextBounds(font, temp_buffer);
   }
 
-  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const int raw_int)
+  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char *formatting, const int raw_int)
   {
     char temp_buffer[80];
     sprintf(temp_buffer, formatting, raw_int);
     return GetTextBounds(font, temp_buffer);
   }
 
-  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const float raw_float)
+  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char *formatting, const float raw_float)
   {
     char temp_buffer[80];
     sprintf(temp_buffer, formatting, raw_float);
     return GetTextBounds(font, temp_buffer);
   }
 
-  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char* formatting, esphome::ESPTime time)
+  int EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char *formatting, esphome::ESPTime time)
   {
     auto c_tm = time.to_c_tm();
     size_t buffer_length = 80;
@@ -2628,7 +2640,8 @@ namespace esphome
     ESP_LOGCONFIG(TAG, "Night mode: %s", this->night_mode ? F("On") : F("Off"));
     ESP_LOGCONFIG(TAG, "Weekday accent: %s", this->weekday_accent ? F("On") : F("Off"));
     ESP_LOGCONFIG(TAG, "Replace Time and Date: %s", this->replace_time_date_active ? F("On") : F("Off"));
-    if (this->replace_time_date_active) {
+    if (this->replace_time_date_active)
+    {
       ESP_LOGCONFIG(TAG, "Replace from: %s", EHMTXv2_REPLACE_TIME_DATE_FROM);
       ESP_LOGCONFIG(TAG, "Replace to  : %s", EHMTXv2_REPLACE_TIME_DATE_TO);
     }
@@ -2705,19 +2718,19 @@ namespace esphome
         if (this->queue[this->screen_pointer]->mode == id)
         {
           if ((this->queue[this->screen_pointer]->mode == MODE_ICON_CLOCK && this->icon_to_9 == 1) ||
-              (this->queue[this->screen_pointer]->mode == MODE_ICON_DATE  && this->icon_to_9 == 2) ||
+              (this->queue[this->screen_pointer]->mode == MODE_ICON_DATE && this->icon_to_9 == 2) ||
               (this->icon_to_9 == 3))
           {
             if (this->icon_indicator_height == 1)
             {
-              this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
-                                  4 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
+              this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos,
+                                  4 + display_icon_indicator / 2, this->icon_indicator_y_pos,
                                   this->icon_indicator_color);
             }
             else
             {
-              this->display->filled_rectangle(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
-                                              this->display_icon_indicator, this->icon_indicator_height, 
+              this->display->filled_rectangle(4 - display_icon_indicator / 2, this->icon_indicator_y_pos,
+                                              this->display_icon_indicator, this->icon_indicator_height,
                                               this->icon_indicator_color);
             }
           }
@@ -2725,14 +2738,14 @@ namespace esphome
           {
             if (this->icon_indicator_height == 1)
             {
-              this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
-                                  3 + display_icon_indicator / 2, this->icon_indicator_y_pos, 
+              this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos,
+                                  3 + display_icon_indicator / 2, this->icon_indicator_y_pos,
                                   this->icon_indicator_color);
             }
             else
             {
-              this->display->filled_rectangle(4 - display_icon_indicator / 2, this->icon_indicator_y_pos, 
-                                              this->display_icon_indicator, this->icon_indicator_height, 
+              this->display->filled_rectangle(4 - display_icon_indicator / 2, this->icon_indicator_y_pos,
+                                              this->display_icon_indicator, this->icon_indicator_height,
                                               this->icon_indicator_color);
             }
           }
@@ -2744,11 +2757,11 @@ namespace esphome
 
   void HOT EHMTX::draw()
   {
-    if ((this->is_running) && (this->show_display) )
+    if ((this->is_running) && (this->show_display))
     {
-      if (this->screen_pointer != MAXQUEUE) 
+      if (this->screen_pointer != MAXQUEUE)
       {
-        this->queue[this->screen_pointer]->draw();  
+        this->queue[this->screen_pointer]->draw();
       }
       if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN &&
           this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN &&

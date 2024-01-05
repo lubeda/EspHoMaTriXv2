@@ -2,9 +2,11 @@
 
 ## 2024.1.0
 
-cleaned up docu
+- cleaned up docu
+- readded `boot_logo` extended with @andrewjswan `boot_logo_mode`
 
 ## 2023.9.1
+
 - Added night mode
   - `night_mode_on`
   - `night_mode_off`
