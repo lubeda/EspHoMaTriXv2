@@ -591,7 +591,7 @@ async def to_code(config):
     if config[CONF_BITMAP]:
         cg.add_define("EHMTXv2_ADV_BITMAP")
 
-    if config.get(CONF_BOOTLOGO) and config[CONF_BOOTMODE]:
+    if config.get(CONF_BOOTLOGO) and config[CONF_BOOTLOGOMODE]:
         cg.add(var.set_boot_logo(config[CONF_BOOTLOGO]))
         if config[CONF_BOOTLOGOMODE] > 0:
             cg.add_define("EHMTXv2_ADV_BOOT")
