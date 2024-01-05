@@ -1372,6 +1372,8 @@ namespace esphome
           uint8_t r = 15 + w / 2 ;
           for (uint8_t y = 0; y < 8; y++)
           {
+
+            #if defined EHMTXv2_ADV_BOOT_MODE_3 || defined EHMTXv2_ADV_BOOT_MODE_3
             if (this->boot_logo[l + y * 32] == 1)
             {
               #ifdef EHMTXv2_ADV_BOOT_MODE_3
@@ -1390,6 +1392,16 @@ namespace esphome
               this->display->draw_pixel_at(r, y, this->rainbow_color);
               #endif
             }
+            #elif defined EHMTXv2_ADV_BOOT_MODE_1
+            if (this->boot_logo[l + y * 32] == 1)
+            {
+              this->display->draw_pixel_at(l, y, this->boot_logo[l + y * 32]);            
+            }
+            if (this->boot_logo[r + y * 32] == 1)
+            {
+              this->display->draw_pixel_at(l, y, this->boot_logo[r + y * 32]);            
+            }
+            #endif
           }
         }
         #endif
