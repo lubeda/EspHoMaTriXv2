@@ -219,7 +219,7 @@ display:
       return (y * 32) + (31 - x);
     rotation: 0°
     update_interval: 16ms
-    auto_clear_enabled: true
+    auto_clear_enabled: false
     lambda: |-
       id(rgb8x32)->tick();
       id(rgb8x32)->draw();
