@@ -936,6 +936,8 @@ boot_logo (optional, string, only on ESP32): Mask defined as rgb565 array used t
 - 3 - Display boot_logo in white color, the mask appears from the center to the sides.
 - 4 - Display boot_logo with rainbow color
 - 5 - Display boot_logo in rainbow color, the mask appears from the center to the sides
+- 6 - Display boot_logo in white color, in pseudo-animation mode, this mode for true starship astronavigators.
+- 7 - Display boot_logo in rainbow color, in pseudo-animation mode, this mode for true starship astronavigators.
 
 Mode 3 is best used with the option
 
@@ -949,6 +951,14 @@ After startup, to save memory, you can clear the array with the boot logo by cal
 ```c++
 id(rgb8x32)->set_boot_logo("");
 ```
+
+`Mode 6,7` - True starship astronavigator modes.
+Each element of the image mask array can take values from 0 to 255 (if the value is greater than 255, it is automatically reset to 255). 
+Each pixel is output depending on the bit that is set in its value byte, for example:
+
+- `1` - `10000000` - Will be displayed at every 1 cycle of the boot logo image output.
+- `4` - `00100000` - Will be displayed at every 3 cycle of the boot logo image output.
+- `255` - `11111111` - Will be displayed at each cycle of the boot logo image output.
 
 **night_mode_screens** (optional, screen array, default [2, 3, 16]): List of screens displayed in [night mode](#night-mode).
 
