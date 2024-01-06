@@ -1765,4 +1765,4 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 
 ## Special thanks to all sponsors
 
-As of the 1.1.2024 there were only four of them. 😿
+As of the 6.1.2024 there were only five of them. 😿
