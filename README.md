@@ -15,7 +15,7 @@
 
 If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!
 
-**EspHoMaTriXv2** is a flexible, highly customizable DIY LED Matrix display, built with a 8x32 RGB LED panel and implemented with [esphome.io](https://esphome.io)
+**EspHoMaTriXv2** is a flexible, highly customizable DIY LED Matrix display, built with a 8×32 RGB LED panel and implemented with [esphome.io](https://esphome.io)
 
 ![sample image](./images/sample.png)
 
@@ -27,7 +27,7 @@ You can control it with home assistant using service calls or by using lambda wi
 
 For starters, I assume you use an Ulanzi TC001 pixel clock. For tinkerers and people that want more, read the [For experienced user](#for-experienced-users) part.
 
-Copy all three files (ulanzi-easy.yaml, 1pixel.gif , MatrixChunky6.ttf) from the install folder to your esphome folder, adapt your Wi-Fi settings in the yaml, install it via USB and the device should boot
+Copy all three files (ulanzi-easy.yaml, 1pixel.gif , MatrixChunky6.ttf) from the **install**ation folder to your esphome folder, adapt your Wi-Fi settings in the YAML, install it via USB and the device should boot
 
 ![boot](images/booting.png)
 
@@ -39,7 +39,7 @@ The base file is configured to show a clock with the day of the month over a cal
 
 ![sample](images/icon_clock.png)
 
-There are some preinstalled [icons](https://raw.githubusercontent.com/lubeda/EspHoMaTriXv2/2024.1.0/resources/default_icons.html) in the yaml, so you can easily start showing information on your display with home assistant service calls.
+There are some preinstalled [icons](https://raw.githubusercontent.com/lubeda/EspHoMaTriXv2/2024.1.0/resources/default_icons.html) in the YAML, so you can easily start showing information on your display with home assistant service calls.
 
 #### Normal icon screen
 
@@ -80,7 +80,7 @@ data:
 
 #### alert icon screen
 
-Sometimes you have to display information immediately, this is done with alerts, the parameter coresspond [to](#normal-icon-screen)
+Occasionally, you have to display information immediately, this is done with alerts, the parameter correspond [to](#normal-icon-screen)
 
 ```yaml
 service: esphome.ulanzi_alert_screen
@@ -98,7 +98,7 @@ For funny colors, there is also a service: `esphome.ulanzi_rainbow_alert_screen`
 
 #### show progress
 
-To visualize e.g. a print progress you can use:
+To visualize e.g., a print progress you can use:
 
 ![sample](images/icon_progress.png)
 
@@ -171,7 +171,7 @@ Download and install all needed icons (.jpg/.png) and animations (.GIF) under th
 
 You can also specify a URL to directly download the image file. The URLs will only be downloaded once at compile time, so there is no additional traffic on the hosting website.
 
-All other solutions provide ready-made icons, especially Lametric has a big database of [icons](https://developer.lametric.com/icons). If you find an icon, you can use it with its id. e.g. `lameid: 1234` Please, check the copyright of the icons you use. The maximum number of icons is limited to 90 in the code and also by the flash space and the RAM of your board.
+All other solutions provide ready-made icons, especially Lametric has a big database of [icons](https://developer.lametric.com/icons). If you find an icon, you can use it with its ID. e.g., `lameid: 1234` Please, check the copyright of the icons you use. The maximum number of icons is limited to 90 in the code and also by the flash space and the RAM of your board.
 
 ***Sample***
 
@@ -210,7 +210,7 @@ You can configure two fonts if you like.
 
 The font needs to be readable on a matrix display. I use a font with 6 pixels height and one with 8 Pixel height. The 6px font is my default on all screens, with a progress bar or the day of week lower line.
 
-Some people use a "normal" font from Trip5 and another for Cyrillic, Korean or Hebrew letters. For the RTL based users take a look at [bidi](https://github.com/idodov/bidi) from @iodov to enhance the readability.
+Some people use a “normal” font from Trip5 and another for Cyrillic, Korean or Hebrew letters. For the RTL based users, take a look at [bidi](https://github.com/idodov/bidi) from @iodov to enhance the readability.
 
 @dbuezas has also contributed tow optimized fonts with umlauts for this kind of display `mateine.ttf` and `mateineThin.ttf` see [here](https://github.com/lubeda/EspHoMaTriXv2/issues/63).
 
@@ -280,11 +280,11 @@ ehmtxv2:
 
 **special_font_xoffset** (optional, pixel): xoffset the text is aligned BASELINE_LEFT, the left defaults to `1`
 
-**scroll_small_text** (optional, bool): normally small text is centered on the display if possible, with this set to `true` even small text is scrolled in `text_screen` and `rainbow_text_screen` (default: false)
+**scroll_small_text** (optional, boolean): normally small text is centered on the display if possible, with this set to `true` even small text is scrolled in `text_screen` and `rainbow_text_screen` (default: false)
 
 **matrix_component** (required, ID): ID of the addressable display
 
-**show_dow** (optional, bool): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g., if you want larger fonts, defaults to true.
+**show_dow** (optional, boolean): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g., if you want larger fonts, defaults to true.
 
 **time_component** (required, ID): ID of the time component. The display shows `!t!` until the time source is valid.
 
@@ -292,7 +292,7 @@ ehmtxv2:
 
 **special_font** (required, ID): ID of the special font, you can reuse your default font, but occasionally, it's nice to have a special font to minimize scrolling
 
-**week_start_monday** (optional, bool): default Monday is first day of week, false => Sunday
+**week_start_monday** (optional, boolen): default Monday is first day of week, false => Sunday
 
 **weekdays** (optional, string, default: "SUMOTUWETHFRSA"): Abbreviations of the days of the week, starting from Sunday, from *7 to 14* characters.
 
@@ -301,7 +301,7 @@ Example:
   - `weekdays: "일월화수목금토"`
   - `weekdays: "НДПНВТСРЧТПТСБ"`
 
-**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` from [display](https://esphome.io/components/display/addressable_light.html)
+**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the `update_interval` of [display](https://esphome.io/components/display/addressable_light.html)
 
 **icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons. (default = `false`)
 
@@ -377,7 +377,7 @@ There are some “RGB-matrices” status displays/clocks out there, the commerci
 - [Pixelix](https://github.com/BlueAndi/esp-rgb-led-matrix) controlled via REST API or Websocket
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of AWTRIX, optimized for the Ulanzi TC001 hardware
 
-All of the various solutions have their pros and cons. I tried some and used AWTRIX for a long time, but I found it lacking in a lot of ways (in my opinion,) so I started work on an esphome.io variant. Targeted for an optimized and extensible Home Assistant integration without paid blueprints, MQTT broker requirement, or the need to upload files to the ESP board.
+All the various solutions have their pros and cons. I tried some and used AWTRIX for a long time, but I found it lacking in many ways (in my opinion), so I started work on an esphome.io variant. Targeted for an optimized and extensible Home Assistant integration without paid blueprints, MQTT broker requirement, or the need to upload files to the ESP board.
 
 ### word of warning
 
@@ -408,9 +408,9 @@ animation:
     id: breaking202371
 ```
 
-You have also to copy the file 1pixel.gif from the install folder to the esphome directory with your yaml.
+You have also to copy the file 1pixel.gif from the **install**ation folder to the esphome directory with your YAML.
 
-Also there might be [breaking changes](#breaking-changes) due to a redesign of EspHoMaTriXv2.
+Also, there might be [breaking changes](#breaking-changes) due to a redesign of EspHoMaTriXv2.
 
 ### Concept
 
@@ -421,11 +421,11 @@ You can add screens from home assistant with service-calls or from esphome via l
 
 ### Advice
 
-It is highly recomended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESO8266 device** so some of the features had to be removed for these boards (Example: bitmap_screen).
+It is highly recommended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESO8266 device** so some features had to be removed for these boards (Example: bitmap_screen).
 
-### Service via home assistanat API
+### Service via home assistant API
 
-There are a lot of services and parameter to use, some are only available on ESP32-platform due to resource limitations.
+There are many services and parameters to use, some are only available on ESP32-platform due to resource limitations.
 
 You can call this from, e.g., the developer tools service. [![Open your Home Assistant instance with the developer tools service.](https://my.home-assistant.io/badges/developer_services.svg)](https://my.home-assistant.io/redirect/developer_services/)
 
@@ -548,7 +548,7 @@ void rainbow_icon_screen(std::string icon, std::string text, int lifetime=D_LIFE
 void alert_screen(std::string icon_name, std::string text, int screen_time, bool default_font, int r, int g, int b)
 ```
 
-`icon_screen` and `rainbow_icon_screen` are in the queue for `lifetime` minutes. `alert_screen` and `rainbow_alert_screen` is displayed once, imidiatly for at least `screentime` seconds for long text the dcreentime is calculated automagically.
+`icon_screen` and `rainbow_icon_screen` are in the queue for `lifetime` minutes. `alert_screen` and `rainbow_alert_screen` is displayed once, immediately for at least `screentime` seconds. For long text, the screentime is calculated automagically.
 
 #### full_screen
 
@@ -588,7 +588,7 @@ void icon_clock(std::string iconname, int lifetime, int screen_time, bool defaul
 
 **This feature is only available on ESP32 platform!!!!!**
 
-For 8x32 images as text. You can generate these images with, e.g., [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator) or just open [bitmap-convert.html](./resources/bitmap-convert.html) (in the resources-folder) in your browser and select images you want. For good results the images should have a ratio of 4x1 or 1x1 to look good on your display. For better results you could add black borders as needed to your image.
+For 8x32 images as text. You can generate these images with, e.g., [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator) or just open [bitmap-convert.html](./resources/bitmap-convert.html) (in the resources-folder) in your browser and select the images you want. For good results, the images should have a ratio of 4x1 or 1x1 to look good on your display. For better results, you could add black borders as needed to your image.
 
 #### service via API
 
@@ -606,9 +606,9 @@ void bitmap_screen(string text, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
 
 ![elements](./images/alarm-indicator.png)
 
-The `alarm` is in the upper right corner (red)
-The `rindicator` is in the lower right corner (yellow)
-The `lindicator` is in the lower left corner (yellow)
+The `alarm` is in the upper-right corner (red)
+The `rindicator` is in the lower-right corner (yellow)
+The `lindicator` is in the lower-left corner (yellow)
 
 #### alarm
 
@@ -812,7 +812,7 @@ display:
 
 #### Light component
 
-The light component is used by the addressable_light component and referenced by ID under `addressable_light_id:`.
+The light component is used by the `addressable_light` component and referenced by ID under `addressable_light_id:`.
 
 To use the light component directly from home assistant, add the sample lambdas```on_turn_on``` and ```on_turn_off``` to the light component.
 
@@ -847,7 +847,7 @@ Since it is a clock, you need a time component, e.g., [home assistant](https://e
 
 ##### ehmtxv2 component
 
-Here are also the more advenced parameters listed
+Here are also the more advanced parameters listed
 
 ***Example***
 
@@ -873,7 +873,7 @@ ehmtxv2:
 
 **time_format** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M"` (use `"%I:%M%p"` for the US)
 
-**time_format_big** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M:%S"`, work only in **advanced_clock** mode and sets the time format for a screen with a clock without an icon
+**time_format_big** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M:%S"`, works only in **advanced_clock** mode and sets the time format for a screen with a clock without an icon
 
 **advanced_clock** (optional, boolean): Enables or disables advanced clock mode. (default: false) [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
 
@@ -887,17 +887,17 @@ ehmtxv2:
 
 **special_font_xoffset** (optional, pixel): xoffset the text is aligned BASELINE_LEFT, the left defaults to `1`
 
-**scroll_small_text** (optional, bool): normally small text is centered on the display if possible, with this set to `true` even small text is scrolled in `text_screen` and `rainbow_text_screen` (default: false)
+**scroll_small_text** (optional, boolean): normally small text is centered on the display if possible, with this set to `true` even small text is scrolled in `text_screen` and `rainbow_text_screen` (default: false)
 
-**rtl** (optional, boolean): if `true` write text (but only the scroll direction, the words and numbers aren't changed!) from right to left (Arabic, Hebrew etc.). Default is `false`
+**rtl** (optional, boolean): if `true` write text (but only the scroll direction, the words, and numbers aren't changed!) from right to left (Arabic, Hebrew etc.). Default is `false`
 
 **vertical_scroll** (optional, boolean): If true, the screen change is vertical scrolling. Default is `false`
 
 **matrix_component** (required, ID): ID of the addressable display
 
-**show_dow** (optional, bool): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g., if you want larger fonts, defaults to true.
+**show_dow** (optional, boolean): draw the day of week rindicator on the bottom of the clock screen. Disable, e.g., if you want larger fonts, defaults to true.
 
-**blend_steps** (optional, int): on screen transition you can blend in the new screen, a value of 16, 32, 64 works nice, defaults 0. The blend_steps is proportionally reduced depending on the brightness, from the maximum specified in the configuration to half its value at a brightness of 50 units. If the brightness is less than 50 units, then the blend_steps is not applied.
+**blend_steps** (optional, int): on screen transition you can blend in the new screen, a value of 16, 32, 64 works nice, defaults 0. The `blend_steps` is proportionally reduced depending on the brightness, from the maximum specified in the configuration to half its value at a brightness of 50 units. If the brightness is less than 50 units, then the blend_steps is not applied.
 
 **time_component** (required, ID): ID of the time component. The display shows `!t!` until the time source is valid.
 
@@ -905,7 +905,7 @@ ehmtxv2:
 
 **special_font** (required, ID): ID of the special font, you can reuse your default font, but occasionally, it's nice to have a special font to minimize scrolling
 
-**week_start_monday** (optional, bool): default Monday is first day of week, false => Sunday
+**week_start_monday** (optional, boolean): default Monday is first day of week, false => Sunday
 
 **weekdays** (optional, string, default: "SUMOTUWETHFRSA"): Abbreviations of the days of the week, starting from Sunday, from *7 to 14* characters.
 
@@ -914,7 +914,7 @@ Example:
   - `weekdays: "일월화수목금토"`
   - `weekdays: "НДПНВТСРЧТПТСБ"`
 
-**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the ```update_interval``` of the [display](https://esphome.io/components/display/addressable_light.html)
+**scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the `update_interval` of the [display](https://esphome.io/components/display/addressable_light.html)
 
 **clock_interval** (optional, s): the interval in seconds to force the clock display. By default, the clock screen, if any, will be displayed according to the position in the queue. **If you set the clock_interval close to the screen_time of the clock, you will only see the clock!** (default=0)
 
@@ -926,7 +926,7 @@ Example:
 
 Allows you to show a custom boot logo instead of the default animation when booting.
 advanced_boot (optional, boolean, only on ESP32, Default: false) Enables advanced mode of boot logo display.
-boot_logo (optional, string, only on ESP32): Mask defined as rgb565 array used to display boot logo, color is completely ignored, output depends on boot logo display mode.
+boot_logo (optional, string, only on ESP32): Mask defined as rgb565 array used to display boot logo, color is entirely ignored, output depends on boot logo display mode.
 
 **boot_logo_mode** (optional, integer, only on ESP32, Default: 3) Mode of displaying boot logo, can take value from 0 to 3:
 
@@ -944,13 +944,13 @@ display:
     auto_clear_enabled: false
 ```
 
-After startup, to save memory, you can clear the array with the boot logo by calling the boot_logo setup function with an empty parameter.
+After startup, to save memory, you can clear the array with the boot logo by calling the `boot_logo` setup function with an empty parameter.
 
 ```c++
 id(rgb8x32)->set_boot_logo("");
 ```
 
-**boot_logo** (optional, string , only on ESP32): Display a fullscreen logo defined as rgb565 array.
+**boot_logo** (optional, string , only on ESP32): Display a full screen logo defined as rgb565 array.
 
 ```yaml
   boot_logo: "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]" 
@@ -964,7 +964,7 @@ id(rgb8x32)->set_boot_logo("");
 
 **iconscache** (optional, boolean): If true, it caches icons in the `.cache\icons` folder and if it finds the specified icons in the cache, it uses them instead of trying to download them again from the Internet. (default = `false`)
 
-**always_show_rl_indicators** (optional, boolean): If true, always show the r/l indicators on all screens. Default is to not show either on clock, date, full, and bitmap screens, left on icon, or if display gauge displayed. (default = `false`)
+**always_show_rl_indicators** (optional, boolean): If true, always show the r/l indicators on all screens. The default is to not show either on clock, date, full, and bitmap screens, left on icon, or if display gauge displayed. (default = `false`)
 
 ***Example output:***
 ![icon preview](./images/icons_preview.png)
@@ -1064,9 +1064,9 @@ Numerous features are accessible with services from home assistant and lambdas t
 - **lifetime**: how long does this screen stay in the queue (minutes)
 - **screen_time**: how long is this screen display in the loop (seconds). For short text without scrolling it is shown the defined time, longer text is scrolled at least `scroll_count` times.
 - **default_font**: use the default font (true) or the special font (false)
-- **progress**: сan take a value from -100 to 100, the color of the progress bar is calculated automatically, if no colors are specified in the function `set_progressbar_color`, then if the progress is in the range `0..100`, then `from red to green`, if in the range `-100..0`, then from `green to red`.
+- **progress**: can take a value from -100 to 100, the color of the progress bar is calculated automatically, if no colors are specified in the function `set_progressbar_color`, then if the progress is in the range `0..100`, then `from red to green`, if in the range `-100..0`, then from `green to red`.
 - **value_color_as_progress**: display the value with the color of the current color on the progress bar
-- **value**: the brightness 0..255 
+- **value**: the brightness 0...255 
 - **prognosis**: 24 triplets of digits (72 in total), each triplet, one point on the prognosis bar in the specified color in the triplet color. Like: [200,200,200, ..., 100,100,100] see [details](https://github.com/lubeda/EspHoMaTriXv2/issues/149)
 
 ### Night mode
@@ -1159,7 +1159,7 @@ on_empty_queue:
 
 #### on_start_running
 
-This trigger is called without parameters once after the device boot.
+This trigger is called without parameters once after the device boots.
 
 See the examples:
 
@@ -1266,13 +1266,13 @@ See the examples:
 
 The trigger ```on_show_display``` is triggered when the screen is turned on or off. In lambda's you can use one local boolean variable:
 
-**state** (Display state, bool): value to use in lambda
+**state** (Display state, boolean): value to use in lambda
 
 #### on_night_mode
 
 The trigger ```on_night_mode``` is triggered when the night mode is turned on or off. In lambda's you can use one local boolean variable:
 
-**state** (Night mode state, bool): value to use in lambda
+**state** (Night mode state, boolean): value to use in lambda
 
 ##### Change something for each clock circle
 
@@ -1319,7 +1319,7 @@ For example, if you have multiple icons named weather_sunny, weather_rain & weat
 *Parameters:*
 
 - ```icon_name```: Icon `id` defined in the YAML (see installation)
-- ```mode```: The mode is a filter to select different screen types e. g. use `5`for icon_screen
+- ```mode```: The mode is a filter to select different screen types, e.g. use `5`for icon_screen
 
 
 **(D)** Service **display_on** / **display_off**
@@ -1444,11 +1444,11 @@ To control your display, it has to be integrated in Home Assistant. Then it prov
 
 ### Services
 
-All communication with Home Assistant use the homeasistant-api. The services can be provided by default or also defined additionally in the YAML. To define the additional services, you need the id of the ehmtx-component e.g. ```id(rgb8x32)```.
+All communication with Home Assistant use the homeasistant-api. The services can be provided by default or also defined additionally in the YAML. To define the additional services, you need the ID of the ehmtx-component e.g. ```id(rgb8x32)```.
 
 ### Use in Home Assistant automations
 
-The easiest way to use ehmtx as a status display is to use the icon names as trigger id. In my example, I have an icon named “wind” when the sensor.wind_speed has a new state, this automation sends the new data to the screen with the icon named “wind” and so on.
+The easiest way to use ehmtx as a status display is to use the icon names as trigger ID. In my example, I have an icon named “wind” when the sensor.wind_speed has a new state, this automation sends the new data to the screen with the icon named “wind” and so on.
 
 ```yaml
 alias: EHMTX 8266 Test
@@ -1611,7 +1611,7 @@ switch:
 
 ### automatic brightness
 
-Awtrix and PixelIt have hard-coded functionality. EHMTX is also capable of building something like that with lambdas. Feel free to expierement as you see fit. See the Ulanzi simple YAML as a guide.
+Awtrix and PixelIt have hard-coded functionality. EHMTX is also capable of building something like that with lambdas. You are welcome to experiment as you see fit. See the Ulanzi simple YAML as a guide.
 
 Example: automatic brightness control with a bh1570 sensor
 
@@ -1650,7 +1650,7 @@ data:
   screen_time: 10
 ```
 
-Mode of displaying icons with **two** modifier:
+Mode of displaying icons with **two** modifiers:
 ```
 service: esphome.esp_hall_pixel_clock_bitmap_stack
 data:
@@ -1704,23 +1704,23 @@ select:
 
 ## Breaking changes
 
-Please take a look at the [changelog](CHANGELOG.md) also.
+Please take a look at the [changelog](CHANGELOG.md) for more details also.
 
 ### 2024.1.0
 
-- new and "clean" release
+- new and “clean” release
 
 ## EspHoMaTriX in the media
 
 See this German tutorial video with information on setting up your display [RGB-LED Status Display für Home Assistant mit ESPHome | ESPHoMaTrix](https://www.youtube.com/watch?v=DTd9vAhet9A).
 
-Another german tutorial video focused on the Ulanzi [Smarte Pixel Clock über Home Assistant steuern - Entitäten / Icons und mehr in der Ulanzi](https://www.youtube.com/watch?v=LgaT0mNbl34)
+Another German tutorial video focused on the Ulanzi [Smarte Pixel Clock über Home Assistant steuern - Entitäten / Icons und mehr in der Ulanzi](https://www.youtube.com/watch?v=LgaT0mNbl34)
 
 See this [nice article](https://blakadder.com/esphome-pixel-clock/) about EsphoMaTrix on a Ulanzi TC001 from [blakadder](https://github.com/blakadder).
 
 Short video on Instagram [@blak_adder](https://www.insbuiltagram.com/reel/CpYVByRIaSI)
 
-See these english discussions:
+See these English discussions:
 [Share your projects](https://community.home-assistant.io/t/esphomatrix-a-simple-clock-status-display/425325)
 [ESPHOME](https://community.home-assistant.io/t/a-simple-diy-status-display-with-an-8x32-rgb-led/379051)
 
@@ -1761,8 +1761,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **Everybody** who has fun by using this software
 - **Everybody** who found bugs/issues and reported them!
 
-  **Contact me if I missed to mention your contribution**
+  **Contact me if I missed mentioning your contribution**
 
 ## Special thanks to all sponsors
 
-As of the 6.1.2024 there were only five of them. 😿
+As of the 6/1/2024 there were only five of them. 😿
