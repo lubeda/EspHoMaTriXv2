@@ -930,12 +930,12 @@ boot_logo (optional, string, only on ESP32): Mask defined as rgb565 array used t
 
 **boot_logo_mode** (optional, integer, only on ESP32, Default: 3) Mode of displaying boot logo, can take value from 0 to 3:
 
-0 - Display the boot_logo with the defined colors (default)
-1 - Display the boot_logo with the defined colors, the mask appears from the center to the sides.
-2 - Display boot_logo in white color
-3 - Display boot_logo in white color, the mask appears from the center to the sides.
-4 - Display boot_logo with rainbow color
-5 - Display boot_logo in rainbow color, the mask appears from the center to the sides
+- 0 - Display the boot_logo with the defined colors (default)
+- 1 - Display the boot_logo with the defined colors, the logo appears from the center to the sides.
+- 2 - Display boot_logo in white color
+- 3 - Display boot_logo in white color, the mask appears from the center to the sides.
+- 4 - Display boot_logo with rainbow color
+- 5 - Display boot_logo in rainbow color, the mask appears from the center to the sides
 
 Mode 3 is best used with the option
 
@@ -948,12 +948,6 @@ After startup, to save memory, you can clear the array with the boot logo by cal
 
 ```c++
 id(rgb8x32)->set_boot_logo("");
-```
-
-**boot_logo** (optional, string , only on ESP32): Display a full screen logo defined as rgb565 array.
-
-```yaml
-  boot_logo: "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]" 
 ```
 
 **night_mode_screens** (optional, screen array, default [2, 3, 16]): List of screens displayed in [night mode](#night-mode).

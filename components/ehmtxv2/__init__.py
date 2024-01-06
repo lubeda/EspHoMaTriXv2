@@ -31,7 +31,7 @@ SVG_FULL_SCREEN_START = '<svg width="320px" height="80px" viewBox="0 0 320 80">'
 SVG_END = "</svg>"
 
 logging.warning(f"")
-logging.warning(f"!!!!This version (2023.9.1) has breaking changes!!!!")
+logging.warning(f"!!!!This version (2024.1.0) has breaking changes!!!!")
 logging.warning(f"Please check the documentation and wiki https://github.com/lubeda/EspHoMaTriXv2")
 logging.warning(f"This will only work with esphome >= 2023.7.0")
 logging.warning(f"")
