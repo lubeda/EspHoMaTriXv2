@@ -176,7 +176,7 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.string,
     cv.Optional(
         CONF_BOOTLOGOMODE, default="0"
-    ): cv.templatable(cv.int_range(min=0, max=5)),
+    ): cv.templatable(cv.int_range(min=0, max=7)),
     cv.Optional(
         CONF_SHOW_SECONDS, default=False
     ): cv.boolean,
@@ -607,6 +607,10 @@ async def to_code(config):
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_4")
         if config[CONF_BOOTLOGOMODE] == 5:
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_5")
+        if config[CONF_BOOTLOGOMODE] == 6:
+            cg.add_define("EHMTXv2_ADV_BOOT_MODE_6")
+        if config[CONF_BOOTLOGOMODE] == 7:
+            cg.add_define("EHMTXv2_ADV_BOOT_MODE_7")
     
     if config[CONF_NIGHT_MODE_SCREENS]:
         cg.add_define("EHMTXv2_CONF_NIGHT_MODE_SCREENS",config[CONF_NIGHT_MODE_SCREENS])
