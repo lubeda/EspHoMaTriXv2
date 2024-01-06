@@ -45,9 +45,9 @@ namespace esphome
 #endif
 
 #ifdef USE_ESP32
-#ifdef EHMTXv2_ADV_BOOT
+  #ifdef EHMTXv2_ADV_BOOT
     this->boot_logo = nullptr;
-#endif
+  #endif
 #endif
 
     for (uint8_t i = 0; i < MAXQUEUE; i++)
@@ -251,7 +251,7 @@ namespace esphome
   }
 
 #ifdef USE_ESP32
-#ifdef EHMTXv2_ADV_BOOT
+  #ifdef EHMTXv2_ADV_BOOT
   void EHMTX::set_boot_logo(std::string logo)
   {
     if (logo == "")
@@ -263,11 +263,11 @@ namespace esphome
 
     if (this->boot_logo == NULL)
     {
-#if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
+    #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
       this->boot_logo = new Color[256];
-#else
+    #else
       this->boot_logo = new uint8_t[256];
-#endif
+    #endif
     }
 
     const size_t CAPACITY = JSON_ARRAY_SIZE(256);
@@ -280,21 +280,20 @@ namespace esphome
     {
       uint16_t buf = v.as<int>();
 
+    #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
       unsigned char b = (((buf) & 0x001F) << 3);
       unsigned char g = (((buf) & 0x07E0) >> 3); // Fixed: shift >> 5 and << 2
       unsigned char r = (((buf) & 0xF800) >> 8); // shift >> 11 and << 3
-#if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
       this->boot_logo[i++] = Color(r, g, b);
-#else
-      this->boot_logo[i++] = (r + g + b == C_BLACK) ? 0 : 1;
-#endif
+    #else
+      this->boot_logo[i++] = (buf == 0) ? 0 : 1;
+    #endif
     }
   }
-#endif
+  #endif
 #endif
 
 #ifndef USE_ESP8266
-
   void EHMTX::bitmap_screen(std::string text, int lifetime, int screen_time)
   {
     std::string ic = get_icon_name(text);
@@ -1346,33 +1345,32 @@ namespace esphome
     else
     {
 #ifdef USE_ESP32
-#ifdef EHMTXv2_ADV_BOOT
-
+  #ifdef EHMTXv2_ADV_BOOT
       if (this->boot_logo != NULL)
       {
-#if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_2 || defined EHMTXv2_ADV_BOOT_MODE_4
+    #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_2 || defined EHMTXv2_ADV_BOOT_MODE_4
         for (uint8_t x = 0; x < 32; x++)
         {
           for (uint8_t y = 0; y < 8; y++)
           {
-#ifdef EHMTXv2_ADV_BOOT_MODE_0
+      #ifdef EHMTXv2_ADV_BOOT_MODE_0
             this->display->draw_pixel_at(x, y, this->boot_logo[x + y * 32]);
-#else
-#if defined EHMTXv2_ADV_BOOT_MODE_2 || defined EHMTXv2_ADV_BOOT_MODE_4
+      #else
+        #if defined EHMTXv2_ADV_BOOT_MODE_2 || defined EHMTXv2_ADV_BOOT_MODE_4
             if (this->boot_logo[x + y * 32] == 1)
             {
-#ifdef EHMTXv2_ADV_BOOT_MODE_2
+          #ifdef EHMTXv2_ADV_BOOT_MODE_2
               this->display->draw_pixel_at(x, y, Color(C_RED, C_GREEN, C_BLUE));
-#else
+          #else
               this->display->draw_pixel_at(x, y, this->rainbow_color);
-#endif
+          #endif
             }
-#endif
-#endif
+        #endif
+      #endif
           }
         }
-#endif
-#if defined EHMTXv2_ADV_BOOT_MODE_1 || defined EHMTXv2_ADV_BOOT_MODE_3 || defined EHMTXv2_ADV_BOOT_MODE_5
+    #endif
+    #if defined EHMTXv2_ADV_BOOT_MODE_1 || defined EHMTXv2_ADV_BOOT_MODE_3 || defined EHMTXv2_ADV_BOOT_MODE_5
         if (this->boot_anim % 8 == 0 )
         {
           uint8_t w = (2 + (uint8_t)(32 / 16) * (this->boot_anim * 2 / 16)) % 32;
@@ -1380,35 +1378,35 @@ namespace esphome
           uint8_t r = 15 + w / 2;
           for (uint8_t y = 0; y < 8; y++)
           {
-#if defined EHMTXv2_ADV_BOOT_MODE_3 || defined EHMTXv2_ADV_BOOT_MODE_5
+      #if defined EHMTXv2_ADV_BOOT_MODE_3 || defined EHMTXv2_ADV_BOOT_MODE_5
             if (this->boot_logo[l + y * 32] == 1)
             {
-#ifdef EHMTXv2_ADV_BOOT_MODE_3
+        #ifdef EHMTXv2_ADV_BOOT_MODE_3
               this->display->draw_pixel_at(l, y, Color(C_RED, C_GREEN, C_BLUE));
-#else
+        #else
               this->display->draw_pixel_at(l, y, this->rainbow_color);
-#endif
+        #endif
             }
             if (this->boot_logo[r + y * 32] == 1)
             {
-#ifdef EHMTXv2_ADV_BOOT_MODE_3
+        #ifdef EHMTXv2_ADV_BOOT_MODE_3
               this->display->draw_pixel_at(r, y, Color(C_RED, C_GREEN, C_BLUE));
-#else
+        #else
               this->display->draw_pixel_at(r, y, this->rainbow_color);
-#endif
+        #endif
             }
-#endif
-#ifdef EHMTXv2_ADV_BOOT_MODE_1
+      #endif
+      #ifdef EHMTXv2_ADV_BOOT_MODE_1
             this->display->draw_pixel_at(l, y, this->boot_logo[l + y * 32]);
             this->display->draw_pixel_at(r, y, this->boot_logo[r + y * 32]);
-#endif
+      #endif
           }
         }
-#endif
+    #endif
       }
-      
+  #endif
 #endif
-#endif
+
 #ifndef EHMTXv2_ADV_BOOT
       {
         uint8_t w = 2 + ((uint8_t)(32 / 16) * (this->boot_anim / 16)) % 32;
