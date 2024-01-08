@@ -2541,7 +2541,7 @@ namespace esphome
 
   bool EHMTX::draw_date(std::string format, esphome::display::BaseFont *font, Color color, int xpos, int ypos)
   {
-    std::regex rgx{"^(%\D)(.)(%\D)(.)?(?:(%\D)(.)?)?$"};
+    std::regex rgx{"^(%\\D)(.+)(%\\D)(.+)?(?:(%\\D)(.+)?)?$"};
     std::smatch match;
     if (!std::regex_search(format, match, rgx))
       return false;

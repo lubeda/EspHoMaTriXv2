@@ -725,14 +725,14 @@ namespace esphome
           if (this->icon_name.find("day") != std::string::npos || this->icon_name.find("weekday") != std::string::npos)
           {
             int8_t i_y_offset = this->config_->info_y_offset;
-            Color i_lcolor = this->config_->info_rcolor;
+            Color i_lcolor = this->config_->info_lcolor;
             Color i_rcolor = this->config_->info_rcolor;
 
             #ifdef EHMTXv2_ADV_CLOCK
             if (this->mode == MODE_ICON_CLOCK)
             {
               i_y_offset = this->config_->info_clock_y_offset;
-              i_lcolor = this->config_->info_clock_rcolor;
+              i_lcolor = this->config_->info_clock_lcolor;
               i_rcolor = this->config_->info_clock_rcolor;
               info_font = this->config_->info_clock_font ? this->config_->default_font : this->config_->special_font;
             }
