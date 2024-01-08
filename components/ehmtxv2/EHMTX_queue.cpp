@@ -592,19 +592,28 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_DATE) ? this->config_->rainbow_color : this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
-          if (this->config_->replace_time_date_active) // check for replace active
+          #ifdef EHMTXv2_ADV_CLOCK
+          if (!this->config_->draw_date(EHMTXv2_DATE_FORMAT, font, color_, xoffset + 15, this->ypos() + yoffset))
           {
-            std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
-            time_new = this->config_->replace_time_date(time_new);
-            this->config_->display->printf(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
-          } else {
-            this->config_->display->strftime(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
-                                             this->config_->clock->now());                    
+          #endif
+            if (this->config_->replace_time_date_active) // check for replace active
+            {
+              std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
+              time_new = this->config_->replace_time_date(time_new);
+              this->config_->display->printf(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+            }
+            else
+            {
+              this->config_->display->strftime(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
+                                               this->config_->clock->now());                    
+            }
+            if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
+            {
+              this->config_->display->draw_pixel_at(0, 0, color_);
+            }
+          #ifdef EHMTXv2_ADV_CLOCK
           }
-          if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
-          {
-            this->config_->display->draw_pixel_at(0, 0, color_);
-          }
+          #endif
           if (this->mode != MODE_RAINBOW_DATE)
           {
             this->config_->draw_day_of_week(this->ypos());
@@ -651,17 +660,24 @@ namespace esphome
           }
           else
           {
-            if (this->config_->replace_time_date_active) // check for replace active
+            #ifdef EHMTXv2_ADV_CLOCK
+            if (!this->config_->draw_date(EHMTXv2_DATE_FORMAT, font, color_, xoffset + offset, this->ypos() + yoffset))
             {
-              std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
-              time_new = this->config_->replace_time_date(time_new);
-              this->config_->display->printf(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
-            } 
-            else 
-            {
-              this->config_->display->strftime(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
-                                               this->config_->clock->now());
+            #endif
+              if (this->config_->replace_time_date_active) // check for replace active
+              {
+                std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
+                time_new = this->config_->replace_time_date(time_new);
+                this->config_->display->printf(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+              } 
+              else 
+              {
+                this->config_->display->strftime(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
+                                                 this->config_->clock->now());
+              }
+            #ifdef EHMTXv2_ADV_CLOCK
             }
+            #endif
           }
           if (this->icon != BLANKICON)
           {
