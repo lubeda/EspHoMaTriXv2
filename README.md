@@ -928,7 +928,7 @@ Allows you to show a custom boot logo instead of the default animation when boot
 advanced_boot (optional, boolean, only on ESP32, Default: false) Enables advanced mode of boot logo display.
 boot_logo (optional, string, only on ESP32): Mask defined as rgb565 array used to display boot logo, color is entirely ignored, output depends on boot logo display mode.
 
-**boot_logo_mode** (optional, integer, only on ESP32, Default: 3) Mode of displaying boot logo, can take value from 0 to 3:
+**boot_logo_mode** (optional, integer, only on ESP32, Default: 0) Mode of displaying boot logo, can take value from 0 to 7:
 
 - 0 - Display the boot_logo with the defined colors (default)
 - 1 - Display the boot_logo with the defined colors, the logo appears from the center to the sides.
