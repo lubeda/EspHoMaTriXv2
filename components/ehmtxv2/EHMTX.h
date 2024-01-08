@@ -240,6 +240,7 @@ namespace esphome
       void set_clock_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY, bool info_font = true, int y_offset = 0);
       void set_adv_clock_color(int hr = C_BLACK, int hg = C_BLACK, int hb = C_BLACK, int mr = C_BLACK, int mg = C_BLACK, int mb = C_BLACK, int sr = C_BLACK, int sg = C_BLACK, int sb = C_BLACK);
       bool draw_clock(std::string format, esphome::display::BaseFont *font, Color color, int xpos = 0, int ypos = 0);
+      bool draw_date(std::string format, esphome::display::BaseFont *font, Color color, int xpos = 0, int ypos = 0);
     #endif
 
     void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
