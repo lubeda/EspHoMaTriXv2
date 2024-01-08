@@ -2494,7 +2494,7 @@ namespace esphome
       {
         if (output.find("%") != std::string::npos)
         {
-          if (output == "%p" && this->replace_time_date_active) // check for replace active
+          if (this->replace_time_date_active && output == "%p") // check for replace active
           {
             output = this->clock->now().strftime(output);
             output = this->replace_time_date(output);
@@ -2532,6 +2532,67 @@ namespace esphome
 
           this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%s", parts.at(i).c_str());
         }
+        x += len.at(i);
+      }
+    }
+
+    return true;
+  }
+
+  bool EHMTX::draw_date(std::string format, esphome::display::BaseFont *font, Color color, int xpos, int ypos)
+  {
+    std::regex rgx{"^(%\D)(.)(%\D)(.)?(?:(%\D)(.)?)?$"};
+    std::smatch match;
+    if (!std::regex_search(format, match, rgx))
+      return false;
+
+    std::vector<std::string> parts;
+    std::vector<uint8_t> len;
+    std::string sep = "";
+
+    uint8_t full_length = 0;
+
+    for (int i = 1; i < match.length(); i++)
+    {
+      std::string output = match[i].str();
+
+      if (output.length() > 0)
+      {
+        if (output.find("%") != std::string::npos)
+        {
+          if (this->replace_time_date_active && (output == "%a" || output == "%A" || output == "%b" || output == "%B")) // check for replace active
+          {
+            output = this->clock->now().strftime(output);
+            output = this->replace_time_date(output);
+          }
+          else
+          {
+            output = this->clock->now().strftime(output);
+          }
+        }
+        else if (sep == "")
+        {
+          sep = output;
+        }
+
+        parts.push_back(output);
+        len.push_back(output.length() > 0 ? this->GetTextWidth(font, "%s", output.c_str()) : 0);
+        full_length += len.back();
+      }
+    }
+
+    uint8_t x = xpos - full_length / 2;
+    for (int i = 0; i < parts.size(); i++)
+    {
+      if (parts.at(i).length() > 0)
+      {
+        Color c_ = parts.at(i) == sep ? this->spacer_color : color;
+        if (c_.r + c_.g + c_.b == C_BLACK)
+        {
+          c_ = color;
+        }
+        this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%s", parts.at(i).c_str());
+
         x += len.at(i);
       }
     }
