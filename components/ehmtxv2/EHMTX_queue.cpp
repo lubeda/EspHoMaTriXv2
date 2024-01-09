@@ -593,7 +593,7 @@ namespace esphome
           color_ = (this->mode == MODE_RAINBOW_DATE) ? this->config_->rainbow_color : this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
           #ifdef EHMTXv2_ADV_CLOCK
-          if (!this->config_->draw_date(EHMTXv2_DATE_FORMAT, font, color_, xoffset + 15, this->ypos() + yoffset))
+          if (!this->config_->draw_date(EHMTXv2_DATE_FORMAT_BIG, font, color_, xoffset + 15, this->ypos() + yoffset))
           {
           #endif
             if (this->config_->replace_time_date_active) // check for replace active
@@ -735,6 +735,13 @@ namespace esphome
               i_lcolor = this->config_->info_clock_lcolor;
               i_rcolor = this->config_->info_clock_rcolor;
               info_font = this->config_->info_clock_font ? this->config_->default_font : this->config_->special_font;
+            }
+            else // if (this->mode == MODE_ICON_DATE)
+            {
+              i_y_offset = this->config_->info_date_y_offset;
+              i_lcolor = this->config_->info_date_lcolor;
+              i_rcolor = this->config_->info_date_rcolor;
+              info_font = this->config_->info_date_font ? this->config_->default_font : this->config_->special_font;
             }
             #endif
 

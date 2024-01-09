@@ -827,6 +827,7 @@ namespace esphome
 
 #ifdef EHMTXv2_ADV_CLOCK
     register_service(&EHMTX::set_clock_infotext_color, "set_clock_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset"});
+    register_service(&EHMTX::set_date_infotext_color, "set_date_infotext_color", {"left_r", "left_g", "left_b", "right_r", "right_g", "right_b", "default_font", "y_offset"});
     register_service(&EHMTX::set_adv_clock_color, "set_adv_clock_color", {"hr", "hg", "hb", "mr", "mg", "mb", "sr", "sg", "sb"});
 #endif
 
@@ -890,6 +891,10 @@ namespace esphome
     this->info_font = df;
     this->info_y_offset = y_offset;
     ESP_LOGD(TAG, "info text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", lr, lg, lb, rr, rg, rb, y_offset);
+#ifdef EHMTXv2_ADV_CLOCK
+    this->set_clock_infotext_color(lr, lg, lb, rr, rg, rb, df, y_offset);
+    this->set_date_infotext_color(lr, lg, lb, rr, rg, rb, df, y_offset);
+#endif
   }
 
   void EHMTX::set_solid_color(int r, int g, int b)
@@ -2463,6 +2468,15 @@ namespace esphome
     this->info_clock_font = df;
     this->info_clock_y_offset = y_offset;
     ESP_LOGD(TAG, "info clock text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", lr, lg, lb, rr, rg, rb, y_offset);
+  }
+
+  void EHMTX::set_date_infotext_color(int lr, int lg, int lb, int rr, int rg, int rb, bool df, int y_offset)
+  {
+    this->info_date_lcolor = Color((uint8_t)lr, (uint8_t)lg, (uint8_t)lb);
+    this->info_date_rcolor = Color((uint8_t)rr, (uint8_t)rg, (uint8_t)rb);
+    this->info_date_font = df;
+    this->info_date_y_offset = y_offset;
+    ESP_LOGD(TAG, "info date text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", lr, lg, lb, rr, rg, rb, y_offset);
   }
 
   void EHMTX::set_adv_clock_color(int hr, int hg, int hb, int mr, int mg, int mb, int sr, int sg, int sb)
