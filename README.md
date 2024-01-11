@@ -313,9 +313,9 @@ Example:
 
 |mode|value|
 |----|----|
-|MODE_BLANK|1|
-|MODE_CLOCK | 2|
-|MODE_DATE | 3|
+|MODE_BLANK| 1|
+|MODE_CLOCK| 2|
+|MODE_DATE| 3|
 |MODE_FULL_SCREEN| 4|
 |MODE_ICON_SCREEN| 5|
 |MODE_TEXT_SCREEN| 6|
