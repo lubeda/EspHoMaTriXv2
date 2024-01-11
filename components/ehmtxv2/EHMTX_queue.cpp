@@ -592,28 +592,19 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_DATE) ? this->config_->rainbow_color : this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
-          #ifdef EHMTXv2_ADV_CLOCK
-          if (!this->config_->draw_date(EHMTXv2_DATE_FORMAT_BIG, font, color_, xoffset + 15, this->ypos() + yoffset))
+          if (this->config_->replace_time_date_active) // check for replace active
           {
-          #endif
-            if (this->config_->replace_time_date_active) // check for replace active
-            {
-              std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
-              time_new = this->config_->replace_time_date(time_new);
-              this->config_->display->printf(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
-            }
-            else
-            {
-              this->config_->display->strftime(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
-                                               this->config_->clock->now());                    
-            }
-            if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
-            {
-              this->config_->display->draw_pixel_at(0, 0, color_);
-            }
-          #ifdef EHMTXv2_ADV_CLOCK
+            std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
+            time_new = this->config_->replace_time_date(time_new);
+            this->config_->display->printf(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+          } else {
+            this->config_->display->strftime(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
+                                             this->config_->clock->now());                    
           }
-          #endif
+          if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
+          {
+            this->config_->display->draw_pixel_at(0, 0, color_);
+          }
           if (this->mode != MODE_RAINBOW_DATE)
           {
             this->config_->draw_day_of_week(this->ypos());
@@ -660,24 +651,17 @@ namespace esphome
           }
           else
           {
-            #ifdef EHMTXv2_ADV_CLOCK
-            if (!this->config_->draw_date(EHMTXv2_DATE_FORMAT, font, color_, xoffset + offset, this->ypos() + yoffset))
+            if (this->config_->replace_time_date_active) // check for replace active
             {
-            #endif
-              if (this->config_->replace_time_date_active) // check for replace active
-              {
-                std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
-                time_new = this->config_->replace_time_date(time_new);
-                this->config_->display->printf(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
-              } 
-              else 
-              {
-                this->config_->display->strftime(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
-                                                 this->config_->clock->now());
-              }
-            #ifdef EHMTXv2_ADV_CLOCK
+              std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
+              time_new = this->config_->replace_time_date(time_new);
+              this->config_->display->printf(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
+            } 
+            else 
+            {
+              this->config_->display->strftime(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
+                                               this->config_->clock->now());
             }
-            #endif
           }
           if (this->icon != BLANKICON)
           {
@@ -725,23 +709,16 @@ namespace esphome
           if (this->icon_name.find("day") != std::string::npos || this->icon_name.find("weekday") != std::string::npos)
           {
             int8_t i_y_offset = this->config_->info_y_offset;
-            Color i_lcolor = this->config_->info_lcolor;
+            Color i_lcolor = this->config_->info_rcolor;
             Color i_rcolor = this->config_->info_rcolor;
 
             #ifdef EHMTXv2_ADV_CLOCK
             if (this->mode == MODE_ICON_CLOCK)
             {
               i_y_offset = this->config_->info_clock_y_offset;
-              i_lcolor = this->config_->info_clock_lcolor;
+              i_lcolor = this->config_->info_clock_rcolor;
               i_rcolor = this->config_->info_clock_rcolor;
               info_font = this->config_->info_clock_font ? this->config_->default_font : this->config_->special_font;
-            }
-            else // if (this->mode == MODE_ICON_DATE)
-            {
-              i_y_offset = this->config_->info_date_y_offset;
-              i_lcolor = this->config_->info_date_lcolor;
-              i_rcolor = this->config_->info_date_rcolor;
-              info_font = this->config_->info_date_font ? this->config_->default_font : this->config_->special_font;
             }
             #endif
 
