@@ -227,10 +227,20 @@ ehmtxv2:
   matrix_component: ehmtx_display
   time_component: ehmtx_time
   time_format: "%H:%M"
-  date_format: "%d.%m."
-  show_seconds: false
+  time_format_big: "%H:%M:%S"
+  date_format: "%d•%m"
+  date_format_big: "%a•%d•%b"
+  weekdays: "일월화수목금토"
+  replace_time_date_from: "Sun Mon Tue Wed Thu Fri Sat Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec"
+  replace_time_date_to:   "ВС ПН ВТ СР ЧТ ПТ СБ Січ Лют Бер Кві Тра Чер Лип Сер Вер Жов Лис Гру"
   default_font_id: default_font
-  special_font_id: default_font 
+  default_font_yoffset: 7
+  special_font_id: default_font
+  special_font_yoffset: 8
+  blend_steps: 32
+  show_seconds: false
+  advanced_clock: true
+  advanced_bitmap: true
   icons: 
     - id: error
       lameid: 40530
@@ -258,8 +268,18 @@ ehmtxv2:
        lambda: |-
           id(rgb8x32)->bitmap_screen("[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",1,10);
           id(rgb8x32)->bitmap_small("[2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,2016,0,0,0,0,2016,0,2016,0,31,31,0,0,0,2016,0,31,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,0,0,0,0,0,0,31,31,31,31]", "2023.x.y", 1, 10);
-          id(rgb8x32)->clock_screen(10,10);
-          id(rgb8x32)->date_screen(10,5);
+  
+          id(rgb8x32)->expand_icon_to_9(3);
+
+          id(rgb8x32)->set_clock_infotext_color(200,200,200, 200,200,200, true, 0);
+          id(rgb8x32)->set_adv_clock_color(0,0,0, 0,0,0, 150,150,150);
+          id(rgb8x32)->icon_clock("blank|day#2", 1440, 10, true);
+
+          id(rgb8x32)->set_date_infotext_color(0,150,240, 0,150,240, false, 1);
+          id(rgb8x32)->icon_date("blank|weekday", 1440, 5, true);
+
+          id(rgb8x32)->show_icon_indicator(240,240,240, 7, 7, 1);
+          id(rgb8x32)->set_weekday_accent_on();
   on_next_screen:
     - homeassistant.event:
         event: esphome.new_screen
