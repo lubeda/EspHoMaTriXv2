@@ -117,6 +117,8 @@ namespace esphome
   #ifdef EHMTXv2_ADV_CLOCK
     bool info_clock_font = true;
     int8_t info_clock_y_offset = 0;
+    bool info_date_font = true;
+    int8_t info_date_y_offset = 0;
   #endif
 #ifdef USE_ESP32
     PROGMEM Color text_color, alarm_color, rindicator_color, lindicator_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor, icon_indicator_color, solid_color, calendar_color;
@@ -126,7 +128,7 @@ namespace esphome
     PROGMEM Color cgauge[8];
     PROGMEM EHMTX_Icon *icons[MAXICONS];
   #ifdef EHMTXv2_ADV_CLOCK
-    PROGMEM Color hour_color, minutes_color, spacer_color, info_clock_lcolor, info_clock_rcolor;
+    PROGMEM Color hour_color, minutes_color, spacer_color, info_clock_lcolor, info_clock_rcolor, info_date_lcolor, info_date_rcolor;
   #endif
   #ifdef EHMTXv2_ADV_BOOT
   #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
@@ -142,7 +144,7 @@ namespace esphome
     EHMTX_Icon *icons[MAXICONS];
     uint8_t gauge_value;
   #ifdef EHMTXv2_ADV_CLOCK
-    Color hour_color, minutes_color, spacer_color, info_clock_lcolor, info_clock_rcolor;
+    Color hour_color, minutes_color, spacer_color, info_clock_lcolor, info_clock_rcolor, info_date_lcolor, info_date_rcolor;
   #endif
 #endif
     display::BaseFont *default_font;
@@ -238,8 +240,10 @@ namespace esphome
     void set_calendar_color(int r = C_RED, int g = C_BLACK, int b = C_BLACK);
     #ifdef EHMTXv2_ADV_CLOCK
       void set_clock_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY, bool info_font = true, int y_offset = 0);
+      void set_date_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY, bool info_font = true, int y_offset = 0);
       void set_adv_clock_color(int hr = C_BLACK, int hg = C_BLACK, int hb = C_BLACK, int mr = C_BLACK, int mg = C_BLACK, int mb = C_BLACK, int sr = C_BLACK, int sg = C_BLACK, int sb = C_BLACK);
       bool draw_clock(std::string format, esphome::display::BaseFont *font, Color color, int xpos = 0, int ypos = 0);
+      bool draw_date(std::string format, esphome::display::BaseFont *font, Color color, int xpos = 0, int ypos = 0);
     #endif
 
     void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
