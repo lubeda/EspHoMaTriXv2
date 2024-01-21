@@ -2475,7 +2475,7 @@ namespace esphome
 
   bool EHMTX::draw_clock(std::string format, esphome::display::BaseFont *font, Color color, int xpos, int ypos)
   {
-    std::regex rgx{"^(%[HI])(.)(%M)(.)?(%S|%p)?$"};
+    std::regex rgx{" "};
     std::smatch match;
     if (!std::regex_search(format, match, rgx))
       return false;
