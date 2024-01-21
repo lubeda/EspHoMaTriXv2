@@ -300,6 +300,7 @@ Example:
   - `weekdays: "SUMOTUWETHFRSA"`
   - `weekdays: "일월화수목금토"`
   - `weekdays: "НДПНВТСРЧТПТСБ"`
+  - `weekdays: "DiLuMaMeJeVeSa" # french`
 
 **scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the `update_interval` of [display](https://esphome.io/components/display/addressable_light.html)
 
