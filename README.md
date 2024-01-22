@@ -9,11 +9,10 @@
 [![Publish wiki](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/wiki.yaml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/wiki.yaml)
 [![Build](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml)
 
+> [!TIP]
+> If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me 🙏 !
+
 ## Introduction
-
-### Important information
-
-If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me!
 
 **EspHoMaTriXv2** is a flexible, highly customizable DIY LED Matrix display, built with a 8×32 RGB LED panel and implemented with [esphome.io](https://esphome.io)
 
@@ -21,33 +20,55 @@ If you like this project, please donate a star on GitHub and consider [sponsorin
 
 You can control it with home assistant using service calls or by using lambda with esphome.
 
-## For Beginners
-
 ### How to install
 
 For starters, I assume you use an Ulanzi TC001 pixel clock. For tinkerers and people that want more, read the [For experienced user](#for-experienced-users) part.
 
-Copy all three files (ulanzi-easy.yaml, 1pixel.gif , MatrixChunky6.ttf) from the **install**ation folder to your esphome folder, adapt your Wi-Fi settings in the YAML, install it via USB and the device should boot
+1. Copy all three files (ulanzi-easy.yaml, 1pixel.gif , MatrixChunky6.ttf) from the `install` folder to your esphome folder.
+2. Define your secret settings (OTA password, Wi-Fi settings) in the secrets.yaml file or with the ESPHome UI.
+3. Define the weekdays variable for your language (see [parameters](#parameters-reference)).
+4. Install it via USB and the device should boot.
 
 ![boot](images/booting.png)
 
 and after a while (~30 seconds) it should display the correct time.
 
-### How to use it
+### Overview
 
-The base file is configured to show a clock with the day of the month over a calendar icon.
+The base file is configured to show a clock with the day of the month over a calendar icon:
 
 ![sample](images/icon_clock.png)
 
+Then, you can add screens to a queue and all these screens are displayed one after another.
+
+![timing](./images/timingv2.png)
+Each screen can display different information or animation or text, even in rainbow color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the time screen is displayed.
+
+Some screens can show additional [display elements](#display-elements):
+
+![elements](./images/alarm-indicator.png)
+
+The `alarm` is in the upper-right corner (red)
+The `rindicator` is in the lower-right corner (yellow)
+The `lindicator` is in the lower-left corner (yellow)
+
+You can add/remove/emphasize screens and toggle elements from home assistant with service-calls or from esphome via lambdas in your YAML.
+
 There are some preinstalled [icons](https://raw.githubusercontent.com/lubeda/EspHoMaTriXv2/2024.1.0/resources/default_icons.html) in the YAML, so you can easily start showing information on your display with home assistant service calls.
 
-#### Normal icon screen
+#### Screen types
 
-This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disappears from the queue. The text color (`r`,`g`,`b`) is specified with RGB values. The display decides when to display this screen depending on the queue.
+The following screen types are available:
+
+##### Normal icon screen
+
+This is the regular screen, designed to show an icon and text aside.
+
+The example below shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue; after 2 minutes of `lifetime` it disappears from the queue. The text color (`r`,`g`,`b`) is specified with RGB values. The display decides when to display this screen depending on the queue. 
 
 ![sample](images/icon_screen.png)
 
-example home assistant service call:
+Example home assistant service call:
 
 ```yaml
 service: esphome.ulanzi_icon_screen
@@ -62,25 +83,9 @@ data:
   b: 200
 ```
 
-#### rainbow icon screen
+##### Alert icon screen
 
-This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disappears from the queue. The text color changes automatically. The display decides when to display this screen depending on the queue.
-
-example home assistant service call:
-
-```yaml
-service: esphome.ulanzi_rainbow_icon_screen
-data:
-  default_font: true
-  icon_name: solar
-  text: sun is shining
-  lifetime: 2
-  screen_time: 10
-```
-
-#### alert icon screen
-
-Occasionally, you have to display information immediately, this is done with alerts, the parameter correspond [to](#normal-icon-screen)
+Occasionally, you have to display information immediately; this one does not have a lifetime parameter:
 
 ```yaml
 service: esphome.ulanzi_alert_screen
@@ -96,7 +101,23 @@ data:
 
 For funny colors, there is also a service: `esphome.ulanzi_rainbow_alert_screen`
 
-#### show progress
+##### Rainbow icon screen
+
+This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disappears from the queue. The text color changes automatically. The display decides when to display this screen depending on the queue.
+
+example home assistant service call:
+
+```yaml
+service: esphome.ulanzi_rainbow_icon_screen
+data:
+  default_font: true
+  icon_name: solar
+  text: sun is shining
+  lifetime: 2
+  screen_time: 10
+```
+
+##### Progress screen
 
 To visualize e.g., a print progress you can use:
 
@@ -118,7 +139,7 @@ data:
 
 A positive progress value is getting greener on its way to 100 a negative value is going to red.
 
-#### long text without an icon
+##### Text-only screen
 
 ![sample](images/text_screen.png)
 
@@ -136,7 +157,7 @@ data:
 
 Same with rainbow-colored text `esphome.ulanzi_rainbow_text_screen`
 
-### combining some icons
+##### Combined icons screen
 
 Try this and enjoy the cool animations. 
 
@@ -150,7 +171,7 @@ data:
   screen_time: 10
 ```
 
-### show a blank screen
+##### Blank screen
 
 Try this:
 
@@ -162,6 +183,39 @@ data:
 ```
 
 These were only static examples, in your automations you can customize a lot more. See the upcoming chapter for more possibilities.
+
+#### Removing a screen from the queue
+
+If you added e.g. an icon screen (`MODE_ICON_SCREEN` which is 5, see [modes](modes)) with icon `power`, just call:
+
+```yaml
+service: esphome.ulanzi_del_screen
+data:
+  icon_name: "power"
+  mode: 5
+```
+
+If you want to remove a screen generated with the service: `esphome.ulanzi_blank_screen`, you can do this via:
+
+```yaml
+service: esphome.ulanzi_del_screen
+data:
+  icon_name: "*"
+  mode: 1
+```
+
+Since a blank screen has no icon, you have to use "*" as `icon_name`.
+
+#### Emphasizing a specific screen
+
+To show one of the screens from the queue right now, use:
+
+```yaml
+service: esphome.ulanzi_force_screen
+data:
+  icon_name: "solar"
+  mode: 5
+```
 
 ## For experienced users
 
@@ -226,15 +280,11 @@ font:
 
 You find my first [attempt](./resources/EHMTXv2.ttf) to adapt a font also in the resources-folder. 
 
-### configuration options
-
-#### Configuration
-
-##### ehmtxv2 component
+### Configuration
 
 This component is highly customizable.
 
-***Example***
+#### Example
 
 ```yaml
 ehmtxv2:
@@ -262,7 +312,7 @@ ehmtxv2:
   .....
 ```
 
-***Parameters***
+#### Parameters reference
 
 **id** (required, ID): Manually specify the ID used for code generation and in service definitions.
 
@@ -308,9 +358,9 @@ Example:
 
 **iconscache** (optional, boolean): If true, it caches icons in the `.cache\icons` folder and if it finds the specified icons in the cache, it uses them instead of trying to download them again from the Internet. (default = `false`)
 
-### special functions
+### Special functions
 
-#### modes
+#### Modes
 
 |mode|value|
 |----|----|
@@ -341,30 +391,6 @@ Example:
 |MODE_PROGNOSIS_SCREEN| 25|
 |MODE_RAINBOW_ALERT_SCREEN| 26|
 
-#### remove a screen from the queue
-
-e.q. you want to remove a screen generated with the service: `esphome.ulanzi_blank_screen`
-
-you can do this via:
-
-```yaml
-service: esphome.ulanzi_del_screen
-data:
-  icon_name: "*"
-  mode: 1
-```
-
-Since a blank screen has no icon, you have to use "*" as `icon_name`. To remove a `icon_screen` you must choose the correct icon_name and mode, in this case **5**.
-
-To emphasize a special screen use:
-
-```yaml
-service: esphome.ulanzi_force_screen
-data:
-  icon_name: "solar"
-  mode: 5
-```
-
 ## More details, for curious users
 
 ### Background
@@ -380,9 +406,8 @@ There are some “RGB-matrices” status displays/clocks out there, the commerci
 
 All the various solutions have their pros and cons. I tried some and used AWTRIX for a long time, but I found it lacking in many ways (in my opinion), so I started work on an esphome.io variant. Targeted for an optimized and extensible Home Assistant integration without paid blueprints, MQTT broker requirement, or the need to upload files to the ESP board.
 
-### word of warning
-
-Some updates of [esphome](https://esphome.io) will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
+> [!WARNING]
+> Some updates of [esphome](https://esphome.io) will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
 
 ### Compile errors `animation.h` is missing
 
@@ -413,18 +438,13 @@ You have also to copy the file 1pixel.gif from the **install**ation folder to th
 
 Also, there might be [breaking changes](#breaking-changes) due to a redesign of EspHoMaTriXv2.
 
-### Concept
-
-You can add screens to a queue and all these screens are displayed one after another.
-![timing](./images/timingv2.png)
-Each screen can display different information or animation or text, even in rainbow color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the date and time screens are displayed. Some screens can show additional features like an alarm or rindicator see [elements](#display-elements).
-You can add screens from home assistant with service-calls or from esphome via lambdas in your YAML.
-
 ### Advice
 
 It is highly recommended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESO8266 device** so some features had to be removed for these boards (Example: bitmap_screen).
 
-### Service via home assistant API
+### API 
+
+#### Home Assistant services
 
 There are many services and parameters to use, some are only available on ESP32-platform due to resource limitations.
 
@@ -517,7 +537,7 @@ You can call this from, e.g., the developer tools service. [![Open your Home Ass
 >[hint]
 >The rainbow_* variants don't display the day of week bar.
 
-### Lambda
+#### Lambda
 
 You can use the above functions also in [lambdas](https://esphome.io/guides/automations.html?highlight=lambda#lambda-action) in your esphome YAML.
 
@@ -529,11 +549,11 @@ void rainbow_clock_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME
 void date_screen(int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true, int r=C_RED, int g=C_GREEN, int b=C_BLUE);     
 ```
 
-#### icon screen
+#### Icon screen
 
 ![icon screen](./images/icon_screen.png)
 
-#### Service via API
+##### Service via API
 
 ```c
 icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
@@ -541,7 +561,7 @@ rainbow_icon_screen => {"icon_name", "text", "lifetime", "screen_time", "default
 alert_screen => {"icon_name","text", "screen_time", "default_font", "r", "g", "b"}
 ```
 
-#### Lambda
+##### Lambda
 
 ```c
 void icon_screen(std::string icon, std::string text, int lifetime=D_LIFETIME, int screen_time=D_SCREEN_TIME,bool default_font=true,int r=C_RED, int g=C_GREEN, int b=C_BLUE);
@@ -551,53 +571,53 @@ void alert_screen(std::string icon_name, std::string text, int screen_time, bool
 
 `icon_screen` and `rainbow_icon_screen` are in the queue for `lifetime` minutes. `alert_screen` and `rainbow_alert_screen` is displayed once, immediately for at least `screentime` seconds. For long text, the screentime is calculated automagically.
 
-#### full_screen
+#### Full_screen
 
 For 8x32 icons or animations
 
 ![full_screen](./images/fullscreen.png)
 
-#### service via API
+##### Service via API
 
 ```c
 full_screen => {"icon_name", "lifetime", "screen_time"}
 ```
 
-#### Lambda
+##### Lambda
 
 ```c
 void full_screen(string iconname, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
 ```
 
-#### icon clock
+#### Icon clock
 
 display the clock with an icon. the time format an the show_dow are the same as the normal clock. take care of the font size, the time should not need more then 23 pixels width.
 
-#### service via API
+##### Service via API
 
 ```c
 icon_clock => {"icon_name", "lifetime", "screen_time", "default_font", "r", "g", "b"});
 ```
 
-#### Lambda
+##### Lambda
 
 ```c
 void icon_clock(std::string iconname, int lifetime, int screen_time, bool default_font, int r, int g, int b)
 ```
 
-#### bitmap screen
+#### Bitmap screen
 
 **This feature is only available on ESP32 platform!!!!!**
 
 For 8x32 images as text. You can generate these images with, e.g., [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator) or just open [bitmap-convert.html](./resources/bitmap-convert.html) (in the resources-folder) in your browser and select the images you want. For good results, the images should have a ratio of 4x1 or 1x1 to look good on your display. For better results, you could add black borders as needed to your image.
 
-#### service via API
+##### Service via API
 
 ```c
 bitmap_screen => {"[0,4523,0,2342,0,..... (256 values 16bit values rgb565)]", "lifetime", "screen_time"}
 ```
 
-#### Lambda
+##### Lambda
 
 ```c
 void bitmap_screen(string text, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
@@ -605,23 +625,22 @@ void bitmap_screen(string text, int =D_LIFETIME, int screen_time=D_SCREEN_TIME);
 
 #### Display Elements
 
-![elements](./images/alarm-indicator.png)
-
-The `alarm` is in the upper-right corner (red)
-The `rindicator` is in the lower-right corner (yellow)
-The `lindicator` is in the lower-left corner (yellow)
-
-#### alarm
+##### Alarm
 
 The alarm is displayed in the upper-right corner on all screen types! You can set its color and its size.
 
-#### service
+###### Home Assistant Service
 
 ```c
 show_alarm => { "r", "g", "b","size"}
 ```
 
-###### API
+To remove it, call:
+```c
+hide_alarm => no parameter
+```
+
+###### Lambda
 
 ```c
 void EHMTX::show_alarm(int r, int g, int b, int size=2);
@@ -632,14 +651,6 @@ size: **0-3** (zero turns it off)
 
 To remove it, call:
 
-###### Service
-
-```c
-hide_alarm => no parameter
-```
-
-###### Lambda
-
 ```c
 void hide_alarm();
 ```
@@ -648,13 +659,19 @@ void hide_alarm();
 
 The rindicator is in the lower-left corner, but not displayed in full screen 8x32 animations. You can set its color.
 
-###### Service
+###### Home Assistant Service
 
 ```c
 show_rindicator => { "r", "g", "b","size"}
 ```
 
-###### API
+To remove it, call:
+
+```c
+hide_rindicator => no parameter
+```
+
+###### Lambda
 
 ```c
 void show_rindicator(int r, int g, int ,int size=3);
@@ -664,14 +681,6 @@ r, g, b: 0-255 color components
 size: **0-3** (zero turns it off)
 
 To remove it, call:
-
-###### Service
-
-```c
-hide_rindicator => no parameter
-```
-
-###### Lambda
 
 ```c
 void hide_rindicator();
@@ -685,13 +694,19 @@ Same as above but in the lower-left corner, this is not visible while icons are 
 
 The gauge is displayed in the left most column. You can set its color and its value from 0-100, the resolution is limited to 8 pixels, so it is not a precision gauge.
 
-###### service
+###### Home Assistant Service
 
 ```c
 show_gauge => {"value","r", "g", "b","bg_r", "bg_g", "bg_b"}
 ```
 
-###### API
+To remove it, call:
+
+```c
+hide_gauge => no parameter
+```
+
+###### Lambda
 
 ```c
 void show_gauge(int percent, int r, int g, int b, int bg_r, int bg_g, int bg_b);
@@ -703,14 +718,6 @@ bg_r, bg_g, bg_b: 0-255 background color components
 
 To remove it, call:
 
-###### service
-
-```c
-hide_gauge => no parameter
-```
-
-###### API
-
 ```c
 void hide_gauge();
 ```
@@ -719,7 +726,7 @@ void hide_gauge();
 
 **EspHoMaTriXv2** is a custom component, you have to include it in your YAML configuration. To always use the newest features, you should use the repo, to use a stable version, you copy a working version to your esphome installation.
 
-##### use of local copy
+##### Use of local copy
 
 If you download the components-folder from the repo and install it in your esphome you have a stable installation. But if there are new features, you won't see them. If needed, customize the YAML to your folder structure.
 
@@ -730,7 +737,7 @@ external_components:
        path: components # e.g. /config/esphome/components
 ```
 
-##### use from repo
+##### Use from repo
 
 Use the GitHub repo as a component. Esphome refreshes the external components “only” once a day, perhaps you have to refresh it manually. In this mode, there may be breaking changes, so read the changelog and check the logs while installing the firmware.
 
@@ -974,7 +981,7 @@ Each pixel is output depending on the bit that is set in its value byte, for exa
 ***Example output:***
 ![icon preview](./images/icons_preview.png)
 
-### advanced icon parameter
+### Advanced icon parameters
 
 ***Parameters***
 See [icon details](#icons-and-animations)
@@ -1387,7 +1394,7 @@ binary_sensor:
 
 **(D)** Service **get_status**
 
-This service displays the running queue and a list of icons in the logs
+This service displays the running queue and a list of icons in the ESPhome device logs (INFO level or above).
 
 ```log
 [13:10:10][I][EHMTX:175]: status status: 1  as: 1
@@ -1674,8 +1681,6 @@ Enables advanced mode of Bitmap screen (MODE_BITMAP_SCREEN), allows the use of [
 ehmtxv2:
   advanced_bitmap: true
 ```
-
-
 
 ### Select for Expand Icon to 9
 
