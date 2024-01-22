@@ -52,7 +52,7 @@ The `alarm` is in the upper-right corner (red)
 The `rindicator` is in the lower-right corner (yellow)
 The `lindicator` is in the lower-left corner (yellow)
 
-You can add/remove/emphasize screens and toggle elements from home assistant with service-calls or from esphome via lambdas in your YAML.
+You can [add](#normal-icon-screen)/[remove](#removing-a-screen-from-the-queue)/[emphasize](#emphasizing-a-specific-screen) screens and toggle elements from home assistant with service-calls or from esphome via lambdas in your YAML (see [API reference](#public-functionsservices)).
 
 There are some preinstalled [icons](https://raw.githubusercontent.com/lubeda/EspHoMaTriXv2/2024.1.0/resources/default_icons.html) in the YAML, so you can easily start showing information on your display with home assistant service calls.
 
@@ -358,8 +358,6 @@ Example:
 
 **iconscache** (optional, boolean): If true, it caches icons in the `.cache\icons` folder and if it finds the specified icons in the cache, it uses them instead of trying to download them again from the Internet. (default = `false`)
 
-### Special functions
-
 #### Modes
 
 |mode|value|
@@ -438,9 +436,8 @@ You have also to copy the file 1pixel.gif from the **install**ation folder to th
 
 Also, there might be [breaking changes](#breaking-changes) due to a redesign of EspHoMaTriXv2.
 
-### Advice
-
-It is highly recommended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESO8266 device** so some features had to be removed for these boards (Example: bitmap_screen).
+> [!TIP]
+> It is highly recommended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESO8266 device** so some features had to be removed for these boards (Example: bitmap_screen).
 
 ### API 
 
@@ -607,7 +604,8 @@ void icon_clock(std::string iconname, int lifetime, int screen_time, bool defaul
 
 #### Bitmap screen
 
-**This feature is only available on ESP32 platform!!!!!**
+> [!WARNING]
+> This feature is only available on ESP32 platform !!!
 
 For 8x32 images as text. You can generate these images with, e.g., [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator) or just open [bitmap-convert.html](./resources/bitmap-convert.html) (in the resources-folder) in your browser and select the images you want. For good results, the images should have a ratio of 4x1 or 1x1 to look good on your display. For better results, you could add black borders as needed to your image.
 
