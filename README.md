@@ -1766,6 +1766,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[trvrnrth](https://github.com/trvrnrth)** PRs with fixing an error
 - **[malinovsku](https://github.com/malinovsku)** Issues and testing.
 - **[chertvl](https://github.com/chertvl)** Issues and testing.
+- **[fthiery](https://github.com/fthiery)** for improving documentation
 - **Everybody** who has fun by using this software
 - **Everybody** who found bugs/issues and reported them!
 
