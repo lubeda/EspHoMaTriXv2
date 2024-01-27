@@ -120,6 +120,7 @@ CONF_PINGPONG = "pingpong"
 CONF_TIME_FORMAT = "time_format"
 CONF_TIME_FORMAT_BIG = "time_format_big"
 CONF_DATE_FORMAT = "date_format"
+CONF_DATE_FORMAT_BIG = "date_format_big"
 CONF_ON_START_RUNNING = "on_start_running"
 CONF_ON_EMPTY_QUEUE = "on_empty_queue"
 CONF_ON_NEXT_SCREEN = "on_next_screen"
@@ -209,6 +210,9 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.boolean,
     cv.Optional(
         CONF_DATE_FORMAT, default="%d.%m."
+    ): cv.string,
+    cv.Optional(
+        CONF_DATE_FORMAT_BIG, default="%d.%m."
     ): cv.string,
     cv.Optional(
         CONF_DEFAULT_FONT_XOFFSET, default="1"
@@ -569,9 +573,10 @@ async def to_code(config):
     cg.add_define("EHMTXv2_DEFAULT_FONT_OFFSET_Y",config[CONF_DEFAULT_FONT_YOFFSET])
     cg.add_define("EHMTXv2_SPECIAL_FONT_OFFSET_X",config[CONF_SPECIAL_FONT_XOFFSET])
     cg.add_define("EHMTXv2_SPECIAL_FONT_OFFSET_Y",config[CONF_SPECIAL_FONT_YOFFSET])
-    cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])
     cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])
     cg.add_define("EHMTXv2_TIME_FORMAT_BIG",config[CONF_TIME_FORMAT_BIG])
+    cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])
+    cg.add_define("EHMTXv2_DATE_FORMAT_BIG",config[CONF_DATE_FORMAT_BIG])
     
     if config[CONF_SCROLL_SMALL_TEXT]:
         cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT")
