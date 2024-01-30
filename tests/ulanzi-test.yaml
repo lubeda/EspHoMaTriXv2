@@ -20,11 +20,7 @@ switch:
     icon: mdi:brightness-auto
     restore_mode: RESTORE_DEFAULT_ON
     lambda: |-
-      if (id(aab_enable)) {
-        return true;
-      } else {
-        return false;
-      }
+      return id(aab_enable);
     turn_on_action:
       lambda: |-
         id(aab_enable) = true;
