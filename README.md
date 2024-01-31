@@ -1286,6 +1286,17 @@ The trigger ```on_show_display``` is triggered when the screen is turned on or o
 
 The trigger ```on_night_mode``` is triggered when the night mode is turned on or off. In lambda's you can use one local boolean variable:
 
+```yaml
+ehmtxv2:
+  ....
+  on_night_mode:
+      lambda: |-
+          if (state) 
+            id(rgb8x32)->icon_screen("night","true");
+          else
+            id(rgb8x32)->icon_screen("night","false");
+```
+
 **state** (Night mode state, boolean): value to use in lambda
 
 ##### Change something for each clock circle
