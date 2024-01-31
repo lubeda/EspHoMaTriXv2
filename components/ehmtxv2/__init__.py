@@ -258,7 +258,7 @@ EHMTX_SCHEMA = cv.Schema({
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(AddScreenTrigger),
         }
     ),
-    cv.Optional(CONF_ON_EXPIRED_SCREEN): automation.validate_automation(
+    cv.Optional(CONF_ON_NEXT_SCREEN): automation.validate_automation(
         {
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(NextScreenTrigger),
         }
@@ -655,4 +655,12 @@ async def to_code(config):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [] , conf)
 
+    for conf in config.get(CONF_ON_SHOW_DISPLAY, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [(bool, "state")] , conf)
+
+    for conf in config.get(CONF_ON_NIGHT_MODE, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [(bool, "state")] , conf)
+    
     await cg.register_component(var, config)
