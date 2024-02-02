@@ -1188,14 +1188,16 @@ namespace esphome
 
   void EHMTX::tick()
   {
-    this->hue_++;
-    if (this->hue_ == 360)
+    if (millis() - this->last_rainbow_time >= EHMTXv2_RAINBOW_INTERVALL)
     {
-      this->hue_ = 0;
+      this->hue_++;
+      if (this->hue_ == 360)
+      {
+        this->hue_ = 0;
+      }
+      this->rainbow_color = esphome::light::ESPHSVColor(this->hue_, 255, 240).to_rgb();
+      this->last_rainbow_time = millis();
     }
-    float red, green, blue;
-    esphome::hsv_to_rgb(this->hue_, 0.8, 0.8, red, green, blue);
-    this->rainbow_color = Color(uint8_t(255 * red), uint8_t(255 * green), uint8_t(255 * blue));
 
     if (this->is_running && this->clock->now().is_valid())
     {

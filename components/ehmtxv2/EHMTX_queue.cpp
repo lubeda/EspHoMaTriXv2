@@ -392,19 +392,6 @@ namespace esphome
 
   void EHMTX_queue::update_screen()
   {
-    if (millis() - this->config_->last_rainbow_time >= EHMTXv2_RAINBOW_INTERVALL)
-    {
-      this->config_->hue_++;
-      if (this->config_->hue_ == 360)
-      {
-        this->config_->hue_ = 0;
-      }
-      float red, green, blue;
-      esphome::hsv_to_rgb(this->config_->hue_, 0.8, 0.8, red, green, blue);
-      this->config_->rainbow_color = Color(uint8_t(255 * red), uint8_t(255 * green), uint8_t(255 * blue));
-      this->config_->last_rainbow_time = millis();
-    }
-
     if (this->mode == MODE_BITMAP_STACK_SCREEN && this->sbitmap != NULL)
     {
       uint32_t average_frame_duration = 0;
