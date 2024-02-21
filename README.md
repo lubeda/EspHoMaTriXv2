@@ -12,6 +12,9 @@
 > [!TIP]
 > If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me 🙏 !
 
+## Important breaking news
+with the ulanzi-hardware and esphome 2024.2.0 you have to remove all the rtttl stuff to make things work!!!
+
 ## Introduction
 
 **EspHoMaTriXv2** is a flexible, highly customizable DIY LED Matrix display, built with a 8×32 RGB LED panel and implemented with [esphome.io](https://esphome.io)
