@@ -1575,6 +1575,8 @@ namespace esphome
             (mode == MODE_ICON_TEXT_SCREEN) ||
             (mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ||
             (mode == MODE_TEXT_PROGRESS) ||
+            (mode == MODE_BITMAP_SMALL) ||
+            (mode == MODE_RAINBOW_BITMAP_SMALL) ||
 #ifdef EHMTXv2_ADV_BITMAP
             (mode == MODE_BITMAP_SCREEN) ||
 #endif
@@ -1594,6 +1596,7 @@ namespace esphome
             force = false;
           }
         }
+
         if (force)
         {
           ESP_LOGW(TAG, "del_screen: slot %d deleted", i);
