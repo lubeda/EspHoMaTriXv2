@@ -10,7 +10,8 @@
 [![Build](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/build.yaml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/build.yaml)
 
 ## Important
-with the ulanzi-hardware and esphome 2024.2.0 you have to remove allt the rtttl stuff to make things work!!!
+
+With the ulanzi-hardware and esphome 2024.2.0 you have to remove allt the rtttl stuff to make things work!!!
 
 ## Attention
 
