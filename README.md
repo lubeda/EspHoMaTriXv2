@@ -13,7 +13,7 @@
 > If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me 🙏 !
 
 ## Important breaking news
-with the ulanzi-hardware and esphome 2024.2.0 you have to remove all the rtttl stuff to make things work!!!
+With the ulanzi-hardware and esphome 2024.2.0 you have to remove all the rtttl stuff to make things work!!!
 
 ## Introduction
 
