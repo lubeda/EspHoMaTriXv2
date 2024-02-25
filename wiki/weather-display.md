@@ -111,3 +111,15 @@ action:
           g: 192
           b: 192
 ```
+
+### How to add error-checking to sensors which may go offline (and cause the script to abort)
+
+```
+          text: >
+            {% set state = states('sensor.openweathermap_temperature') %} {% if
+            is_number(state) %}
+              {{ state|round(1) }}°
+            {% else %}
+              {{ "error" }}
+            {% endif %}
+```
