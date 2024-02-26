@@ -114,8 +114,9 @@ logger:
 output:
   - platform: gpio
     pin: GPIO15
+    ignore_strapping_warning: true
     id: crazy_hardware_workaround
-    
+
 api:
 
 sensor:
