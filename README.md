@@ -18,8 +18,11 @@ The hardware design of the ulanzi isn't perfect. If your ulanzi makes a crazy be
 ```yaml
 output:
   - platform: gpio
-    pin: GPIO15
-    id: crazy_hardware_workaround
+    pin:
+      number: GPIO15
+      ignore_strapping_warning: true
+    id: buzzer_pin
+
 ```
 
 ## Attention
