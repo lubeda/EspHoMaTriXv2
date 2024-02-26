@@ -17,7 +17,7 @@ output:
     pin:
       number: GPIO15
       ignore_strapping_warning: true
-      id: buzzer_pin
+    id: buzzer_pin
 
 switch:
   - platform: template
