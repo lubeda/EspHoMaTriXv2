@@ -111,6 +111,11 @@ binary_sensor:
 logger:
   level: WARN
 
+output:
+  - platform: gpio
+    pin: GPIO15
+    id: crazy_hardware_workaround
+    
 api:
 
 sensor:

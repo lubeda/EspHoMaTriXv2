@@ -11,7 +11,16 @@
 
 ## Important
 
-With the ulanzi-hardware and esphome 2024.2.0 you have to remove allt the rtttl stuff to make things work!!!
+With the ulanzi-hardware and esphome 2024.2.0 you have to remove all the rtttl stuff to make things work!!!
+
+The hardware design of the ulanzi isn't perfect. If your ulanzi makes a crazy beeping noise after removinf the rtttl-component you may use this setting to make it silent again.
+
+```yaml
+output:
+  - platform: gpio
+    pin: GPIO15
+    id: crazy_hardware_workaround
+```
 
 ## Attention
 
