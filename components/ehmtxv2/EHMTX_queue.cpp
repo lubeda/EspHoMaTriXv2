@@ -503,6 +503,11 @@ namespace esphome
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
 #else
+        #ifdef EHMTXv2_RAINBOW_SHIMMER
+        if (this->mode == MODE_RAINBOW_BITMAP_SMALL)
+          this->config_->draw_rainbow_text(this->text, font, this->xpos() + xoffset, this->ypos() + yoffset);
+        else
+        #endif
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
 #endif
@@ -867,6 +872,11 @@ namespace esphome
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
 #else
+        #ifdef EHMTXv2_RAINBOW_SHIMMER
+        if (this->mode == MODE_RAINBOW_ICON || this->mode == MODE_RAINBOW_ALERT_SCREEN)
+          this->config_->draw_rainbow_text(this->text, font, this->xpos() + xoffset, this->ypos() + yoffset);
+        else
+        #endif
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
 #endif
@@ -1010,6 +1020,11 @@ namespace esphome
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
 #else
+        #ifdef EHMTXv2_RAINBOW_SHIMMER
+        if (this->mode == MODE_RAINBOW_ICON_TEXT_SCREEN)
+          this->config_->draw_rainbow_text(this->text, font, this->xpos() + xoffset, this->ypos() + yoffset);
+        else
+        #endif
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
 #endif
@@ -1054,6 +1069,11 @@ namespace esphome
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
 #else
+        #ifdef EHMTXv2_RAINBOW_SHIMMER
+        if (this->mode == MODE_RAINBOW_TEXT)
+          this->config_->draw_rainbow_text(this->text, font, this->xpos() + xoffset, this->ypos() + yoffset);
+        else
+        #endif
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
                                       this->text.c_str());
 #endif

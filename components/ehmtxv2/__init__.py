@@ -31,7 +31,7 @@ SVG_FULL_SCREEN_START = '<svg width="320px" height="80px" viewBox="0 0 320 80">'
 SVG_END = "</svg>"
 
 logging.warning(f"")
-logging.warning(f"!!!!This version (2024.1.0) has breaking changes!!!!")
+logging.warning(f"!!!!This version (2024.3.0) has breaking changes!!!!")
 logging.warning(f"Please check the documentation and wiki https://github.com/lubeda/EspHoMaTriXv2")
 logging.warning(f"This will only work with esphome >= 2023.7.0")
 logging.warning(f"")
@@ -108,6 +108,7 @@ CONF_CACHE = "iconscache"
 CONF_SCROLLINTERVAL = "scroll_interval"
 CONF_BLENDSTEPS = "blend_steps"
 CONF_RAINBOWINTERVAL = "rainbow_interval"
+CONF_RAINBOWSHIMMER = "rainbow_shimmer"
 CONF_FRAMEINTERVAL = "frame_interval"
 CONF_DEFAULT_FONT_ID = "default_font_id"
 CONF_DEFAULT_FONT = "default_font"
@@ -227,13 +228,15 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_SPECIAL_FONT_YOFFSET, default="6"
     ): cv.templatable(cv.int_range(min=-32, max=32)),
     cv.Optional(CONF_SCROLLINTERVAL, default="80"
-                ): cv.templatable(cv.positive_int),
+    ): cv.templatable(cv.positive_int),
     cv.Optional(CONF_BLENDSTEPS, default="0"
-                ): cv.templatable(cv.positive_int),
+    ): cv.templatable(cv.positive_int),
     cv.Optional(CONF_RAINBOWINTERVAL, default="32"
-                ): cv.templatable(cv.positive_int),
+    ): cv.templatable(cv.positive_int),
+    cv.Optional(CONF_RAINBOWSHIMMER, default=False
+    ): cv.boolean,
     cv.Optional(CONF_SCROLLCOUNT, default="2"
-                ): cv.templatable(cv.positive_int),
+    ): cv.templatable(cv.positive_int),
     cv.Optional(
         CONF_FRAMEINTERVAL, default="192"
     ): cv.templatable(cv.positive_int),
@@ -578,6 +581,9 @@ async def to_code(config):
     cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])
     cg.add_define("EHMTXv2_DATE_FORMAT_BIG",config[CONF_DATE_FORMAT_BIG])
     
+    if config[CONF_RAINBOWSHIMMER]:
+        cg.add_define("EHMTXv2_RAINBOW_SHIMMER")
+
     if config[CONF_SCROLL_SMALL_TEXT]:
         cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT")
 

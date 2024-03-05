@@ -1191,10 +1191,6 @@ namespace esphome
     if (millis() - this->last_rainbow_time >= EHMTXv2_RAINBOW_INTERVALL)
     {
       this->hue_++;
-      if (this->hue_ == 360)
-      {
-        this->hue_ = 0;
-      }
       this->rainbow_color = esphome::light::ESPHSVColor(this->hue_, 255, 240).to_rgb();
       this->last_rainbow_time = millis();
     }
@@ -2620,6 +2616,25 @@ namespace esphome
   }
 #endif
 
+#ifdef EHMTXv2_RAINBOW_SHIMMER
+  void EHMTX::draw_rainbow_text(std::string text, esphome::display::BaseFont *font, int xpos, int ypos)
+  {
+    uint16_t str_len  = GetTextCharCount(text);
+    uint16_t x        = 0;
+
+    for (uint16_t i = 0; i < str_len; i++)
+    {
+      uint8_t hue = this->hue_ + map(i, 0, (int)str_len - 1, 0, 255);
+      Color color = esphome::light::ESPHSVColor(hue, 255, 240).to_rgb();
+      this->display->printf(x + xpos, ypos, font,
+                            color,
+                            display::TextAlign::BASELINE_LEFT, 
+                            "%s", GetTextChar(text, i).c_str());
+      x += this->GetTextWidth(font, "%s", GetTextChar(text, i).c_str());
+    }
+  }
+#endif
+
   void EHMTX::set_weekday_char_count(uint8_t i)
   {
     this->weekday_char_count = i;
@@ -2627,21 +2642,26 @@ namespace esphome
 
   std::string EHMTX::GetWeekdayChar(int position)
   {
-    std::string weekday_char = "";
+    return GetTextChar(EHMTXv2_WEEKDAYTEXT, position);
+  }
+
+  std::string EHMTX::GetTextChar(std::string text, int position)
+  {
+    std::string text_char = "";
     int pos = 0;
 
-    for (int i = 0; i < strlen(EHMTXv2_WEEKDAYTEXT);)
+    for (int i = 0; i < strlen(text.c_str());)
     {
-      weekday_char = weekday_char + EHMTXv2_WEEKDAYTEXT[i];
-      if (EHMTXv2_WEEKDAYTEXT[i] & 0x80)
+      text_char = text_char + text[i];
+      if (text[i] & 0x80)
       {
-        weekday_char = weekday_char + EHMTXv2_WEEKDAYTEXT[i + 1];
-        if (EHMTXv2_WEEKDAYTEXT[i] & 0x20)
+        text_char = text_char + text[i + 1];
+        if (text[i] & 0x20)
         {
-          weekday_char = weekday_char + EHMTXv2_WEEKDAYTEXT[i + 2];
-          if (EHMTXv2_WEEKDAYTEXT[i] & 0x10)
+          text_char = text_char + text[i + 2];
+          if (text[i] & 0x10)
           {
-            weekday_char = weekday_char + EHMTXv2_WEEKDAYTEXT[i + 3];
+            text_char = text_char + text[i + 3];
             i += 4;
           }
           else
@@ -2661,14 +2681,50 @@ namespace esphome
 
       if (pos == position)
       {
-        return weekday_char;
+        return text_char;
       }
-      weekday_char = "";
+      text_char = "";
       pos++;
     }
 
     return "";
   }
+
+#ifdef EHMTXv2_RAINBOW_SHIMMER
+  int EHMTX::GetTextCharCount(std::string text)
+  {
+    int count = 0;
+  
+    for (int i = 0; i < strlen(text.c_str());) 
+    {
+      if(text[i] & 0x80) 
+      {
+        if(text[i] & 0x20) 
+        {
+          if(text[i] & 0x10) 
+          {
+            i += 4;
+          } 
+          else 
+          {
+            i += 3;
+          }
+        } 
+        else 
+        {
+          i += 2;
+        }
+      }
+      else
+      {
+        i += 1;
+      }
+      count++;
+    }
+
+    return count;
+  }
+#endif
 
   int EHMTX::GetTextBounds(esphome::display::BaseFont *font, const char *buffer)
   {
