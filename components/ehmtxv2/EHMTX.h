@@ -28,7 +28,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2024.1.1";
+static const char *const EHMTX_VERSION = "2024.3.0";
 static const char *const TAG = "EHMTXv2";
 
 enum show_mode : uint8_t
@@ -107,7 +107,7 @@ namespace esphome
 #ifdef USE_Fireplugin
     void fire_screen( int lifetime, int screen_time);
 #endif    
-    uint16_t hue_ = 0;
+    uint8_t hue_ = 0;
     void dump_config();
     bool info_font = true;
     int8_t info_y_offset = 0;
@@ -292,12 +292,20 @@ namespace esphome
     void draw_lindicator();
     void draw_icon_indicator();
 
+    #ifdef EHMTXv2_RAINBOW_SHIMMER
+      void draw_rainbow_text(std::string text, esphome::display::BaseFont *font, int xpos, int ypos);
+    #endif
+
     void set_replace_time_date_active(bool b=false);
     void set_weekday_char_count(uint8_t i);
     bool replace_time_date_active;
     std::string replace_time_date(std::string time_date);
     uint8_t weekday_char_count;
     std::string GetWeekdayChar(int position);
+    std::string GetTextChar(std::string text, int position);
+    #ifdef EHMTXv2_RAINBOW_SHIMMER
+      int GetTextCharCount(std::string text);
+    #endif
 
     int GetTextBounds(esphome::display::BaseFont *font, const char *buffer);
     int GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char raw_char);
