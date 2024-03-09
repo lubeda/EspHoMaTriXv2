@@ -111,3 +111,27 @@ action:
           g: 192
           b: 192
 ```
+
+### Add error-checking to sensors which may go offline (note the continue_on_error bit too!)
+
+```
+      - service: esphome.pixelclock_icon_screen
+        data:
+          default_font: true
+          icon_name: >-
+            weather_{{ states('sensor.openweathermap_condition')|replace("-",
+            "_") }}
+          text: >
+            {% set state = states('sensor.openweathermap_temperature') %} {% if
+            is_number(state) %}
+              {{ state|round(1) }}°
+            {% else %}
+              {{ "error" }}
+            {% endif %}
+          lifetime: 5
+          screen_time: 3
+          r: 192
+          g: 192
+          b: 192
+        continue_on_error: true
+```
