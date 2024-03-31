@@ -31,7 +31,7 @@ SVG_FULL_SCREEN_START = '<svg width="320px" height="80px" viewBox="0 0 320 80">'
 SVG_END = "</svg>"
 
 logging.warning(f"")
-logging.warning(f"!!!!This version (2024.3.0) has breaking changes!!!!")
+logging.warning(f"!!!! This version (2024.4.0) has breaking changes !!!!")
 logging.warning(f"Please check the documentation and wiki https://github.com/lubeda/EspHoMaTriXv2")
 logging.warning(f"This will only work with esphome >= 2023.7.0")
 logging.warning(f"")
@@ -577,9 +577,17 @@ async def to_code(config):
     cg.add_define("EHMTXv2_SPECIAL_FONT_OFFSET_X",config[CONF_SPECIAL_FONT_XOFFSET])
     cg.add_define("EHMTXv2_SPECIAL_FONT_OFFSET_Y",config[CONF_SPECIAL_FONT_YOFFSET])
     cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])
-    cg.add_define("EHMTXv2_TIME_FORMAT_BIG",config[CONF_TIME_FORMAT_BIG])
     cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])
-    cg.add_define("EHMTXv2_DATE_FORMAT_BIG",config[CONF_DATE_FORMAT_BIG])
+
+    if config[CONF_TIME_FORMAT_BIG]:
+        cg.add_define("EHMTXv2_TIME_FORMAT_BIG",config[CONF_TIME_FORMAT_BIG])
+    else:
+        cg.add_define("EHMTXv2_TIME_FORMAT_BIG",config[EHMTXv2_TIME_FORMAT])
+
+    if config[CONF_DATE_FORMAT_BIG]:
+        cg.add_define("EHMTXv2_DATE_FORMAT_BIG",config[CONF_DATE_FORMAT_BIG])
+    else:
+        cg.add_define("EHMTXv2_DATE_FORMAT_BIG",config[CONF_DATE_FORMAT])
     
     if config[CONF_RAINBOWSHIMMER]:
         cg.add_define("EHMTXv2_RAINBOW_SHIMMER")
