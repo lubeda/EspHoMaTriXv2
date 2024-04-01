@@ -979,6 +979,11 @@ namespace esphome
     float last_time = this->get_tick();
     for (size_t i = 0; i < MAXQUEUE; i++)
     {
+      if (this->queue[i]->mode == MODE_EMPTY)
+      {
+        continue;
+      }
+
       if (this->night_mode)
       {
         bool skip = true;
@@ -1159,6 +1164,27 @@ namespace esphome
     uint8_t c = 0;
     for (size_t i = 0; i < MAXQUEUE; i++)
     {
+      if (this->queue[i]->mode == MODE_EMPTY)
+      {
+        continue;
+      }
+
+      if (this->night_mode)
+      {
+        bool skip = true;
+        for (auto id : EHMTXv2_CONF_NIGHT_MODE_SCREENS)
+        {
+          if (this->queue[i]->mode == id)
+          {
+            skip = false;
+          }
+        }
+        if (skip)
+        {
+          continue;
+        }
+      }
+
       if (this->queue[i]->endtime > ts)
       {
         c++;
