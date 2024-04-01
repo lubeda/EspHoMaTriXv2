@@ -591,6 +591,7 @@ async def to_code(config):
     
     if config[CONF_RAINBOWSHIMMER]:
         cg.add_define("EHMTXv2_RAINBOW_SHIMMER")
+        logging.info(f"[X] Rainbow shimmer")
 
     if config[CONF_SCROLL_SMALL_TEXT]:
         cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT")
@@ -603,16 +604,20 @@ async def to_code(config):
     
     if config[CONF_VERTICAL]:
         cg.add_define("EHMTXv2_USE_VERTICAL_SCROLL")
+        logging.info(f"[X] Vertical scroll")
     
     if config[CONF_CLOCK]:
         cg.add_define("EHMTXv2_ADV_CLOCK")
+        logging.info(f"[X] Advanced clock mode")
 
     if config[CONF_BITMAP]:
         cg.add_define("EHMTXv2_ADV_BITMAP")
+        logging.info(f"[X] Advanced bitmap mode")
 
     if config.get(CONF_BOOTLOGO):
         cg.add(var.set_boot_logo(config[CONF_BOOTLOGO]))
         cg.add_define("EHMTXv2_ADV_BOOT")         
+        logging.info(f"[X] Advanced boot")
       
         if config[CONF_BOOTLOGOMODE] == 0:
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_0")
