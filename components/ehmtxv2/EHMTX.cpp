@@ -2307,7 +2307,7 @@ namespace esphome
     {
       if (this->queue[i]->mode == mode && strcmp(this->queue[i]->icon_name.c_str(), name.c_str()) == 0)
       {
-        ESP_LOGD(TAG, "find screen: found by mode %d icon %s", i, name);
+        ESP_LOGD(TAG, "find screen: found by mode %d icon %s", i, name.c_str());
         return this->queue[i];
       }
     }
