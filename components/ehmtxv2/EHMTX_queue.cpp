@@ -447,6 +447,24 @@ namespace esphome
         #ifdef EHMTXv2_ADV_BITMAP
         if (this->bitmap != NULL)
         {
+          std::size_t pos = icon_name.find("#");
+          if (pos != std::string::npos)
+          {
+            uint8_t bri;
+            std::string str_mode = icon_name.substr(pos + 1);
+            if (str_mode.length())
+            {
+              bri = static_cast<uint8_t>(std::stoi(str_mode));
+            }
+            else
+            {
+              bri = C_BLUE;
+            }
+            if (bri > this->config_->get_brightness())
+            {
+              this->config_->set_brightness_silent(bri);
+            }
+          }
         #endif
         for (uint8_t x = 0; x < 32; x++)
         {

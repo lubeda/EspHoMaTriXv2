@@ -208,6 +208,9 @@ namespace esphome
     void set_show_day_of_week(bool b=true);
     void set_show_seconds(bool b=false);
     void set_brightness(int b);
+    #ifdef EHMTXv2_ADV_BITMAP
+      void set_brightness_silent(int b);
+    #endif
     void set_display_on();
     void set_display_off();
     void set_night_mode_off();
