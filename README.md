@@ -1714,6 +1714,12 @@ ehmtxv2:
   advanced_bitmap: true
 ```
 
+It is also possible to specify the required brightness when displaying a given Bitmap screen (MODE_BITMAP_SCREEN).
+```
+icon: [....]|screen_id#    - Brightness 240 (Default)
+icon: [....]|screen_id#200 - Brightness 200
+```
+
 ### Select for Expand Icon to 9
 
 ```

@@ -2336,6 +2336,16 @@ namespace esphome
     }
   }
 
+#ifdef EHMTXv2_ADV_BITMAP
+  void EHMTX::set_brightness_silent(int value)
+  {
+    if (value < 256)
+    {
+      this->target_brightness_ = value;
+    }
+  }
+#endif
+
   uint8_t EHMTX::get_brightness()
   {
     return this->brightness_;
