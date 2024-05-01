@@ -10,7 +10,7 @@ To use graphs on your display you have to add a graph to your yaml, only this gr
 
 ```yaml
 logger:
-  level: DEBUG
+  level: INFO
   logs:
     graph: error
 

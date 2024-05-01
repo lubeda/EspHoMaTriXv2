@@ -21,7 +21,6 @@ namespace esphome
 {
   EHMTX::EHMTX() : PollingComponent(POLLINGINTERVAL)
   {
-    ESP_LOGD(TAG, "Constructor start");
     this->show_display = true;
     this->display_gauge = false;
     this->display_rindicator = 0;
@@ -71,7 +70,6 @@ namespace esphome
     this->set_adv_clock_color();
 #endif
 
-    ESP_LOGD(TAG, "Constructor finish");
   }
 
   void EHMTX::show_rindicator(int r, int g, int b, int size)
@@ -1023,7 +1021,7 @@ namespace esphome
     }
     else
     {
-      ESP_LOGD(TAG, "oldest queue element not found");
+        // Queue is empty
     }
     this->queue[hit]->status();
 
@@ -1033,7 +1031,7 @@ namespace esphome
   uint8_t EHMTX::find_last_clock()
   {
     uint8_t hit = MAXQUEUE;
-    if (EHMTXv2_CLOCK_INTERVALL > 0)
+    if (EHMTXv2_CLOCK_INTERVAL > 0)
     {
       float ts = this->get_tick();
       for (size_t i = 0; i < MAXQUEUE; i++)
@@ -1056,7 +1054,7 @@ namespace esphome
 
         if ((this->queue[i]->mode == MODE_CLOCK) || (this->queue[i]->mode == MODE_RAINBOW_CLOCK) || (this->queue[i]->mode == MODE_ICON_CLOCK))
         {
-          if (ts > (this->queue[i]->last_time + EHMTXv2_CLOCK_INTERVALL * 1000.0))
+          if (ts > (this->queue[i]->last_time + EHMTXv2_CLOCK_INTERVAL * 1000.0))
           {
             hit = i;
           }
@@ -1076,7 +1074,7 @@ namespace esphome
     if (this->clock->now().is_valid())
     {
       std::string infotext;
-      float ts = this->get_tick() + static_cast<float>(EHMTXv2_SCROLL_INTERVALL); // Force remove expired queue element
+      float ts = this->get_tick() + static_cast<float>(EHMTXv2_SCROLL_INTERVAL); // Force remove expired queue element
 
       for (size_t i = 0; i < MAXQUEUE; i++)
       {
@@ -1218,7 +1216,7 @@ namespace esphome
 
   void EHMTX::tick()
   {
-    if (millis() - this->last_rainbow_time >= EHMTXv2_RAINBOW_INTERVALL)
+    if (millis() - this->last_rainbow_time >= EHMTXv2_RAINBOW_INTERVAL)
     {
       this->hue_++;
       this->rainbow_color = esphome::light::ESPHSVColor(this->hue_, 255, 240).to_rgb();
@@ -1229,7 +1227,7 @@ namespace esphome
     {
       float ts = this->get_tick();
 
-      if (millis() - this->last_scroll_time >= EHMTXv2_SCROLL_INTERVALL)
+      if (millis() - this->last_scroll_time >= EHMTXv2_SCROLL_INTERVAL)
       {
         this->scroll_step++;
         this->last_scroll_time = millis();
@@ -1352,12 +1350,12 @@ namespace esphome
         }
         else
         {
-          this->next_action_time = ts;
+          this->next_action_time = ts + 15000 ; // come back in 15 Seconds
           for (auto *t : on_empty_queue_triggers_)
           {
-            ESP_LOGD(TAG, "on_empty_queue trigger");
-            t->process();
-          }
+              ESP_LOGD(TAG, "on_empty_queue trigger");
+              t->process();
+            } 
         }
       }
 
@@ -1941,13 +1939,13 @@ namespace esphome
     ESP_LOGD(TAG, "rainbow_clock_screen lifetime: %d screen_time: %d", lifetime, screen_time);
     screen->mode = MODE_RAINBOW_CLOCK;
     screen->default_font = default_font;
-    if (EHMTXv2_CLOCK_INTERVALL == 0 || (EHMTXv2_CLOCK_INTERVALL * 1000.0 > screen_time * 1000.0))
+    if (EHMTXv2_CLOCK_INTERVAL == 0 || (EHMTXv2_CLOCK_INTERVAL * 1000.0 > screen_time * 1000.0))
     {
       screen->screen_time_ = screen_time * 1000.0;
     }
     else
     {
-      screen->screen_time_ = EHMTXv2_CLOCK_INTERVALL * 1000.0 - 2000.0;
+      screen->screen_time_ = EHMTXv2_CLOCK_INTERVAL * 1000.0 - 2000.0;
     }
 #ifdef EHMTXv2_USE_VERTICAL_SCROLL
     screen->pixels_ = 0;
@@ -2817,10 +2815,10 @@ namespace esphome
   {
     ESP_LOGCONFIG(TAG, "EspHoMatriXv2 version: %s", EHMTX_VERSION);
     ESP_LOGCONFIG(TAG, "Icons: %d of %d", this->icon_count, MAXICONS);
-    ESP_LOGCONFIG(TAG, "Clock interval: %d s", EHMTXv2_CLOCK_INTERVALL);
+    ESP_LOGCONFIG(TAG, "Clock interval: %d s", EHMTXv2_CLOCK_INTERVAL);
     ESP_LOGCONFIG(TAG, "Date format: %s", EHMTXv2_DATE_FORMAT);
     ESP_LOGCONFIG(TAG, "Time format: %s", EHMTXv2_TIME_FORMAT);
-    ESP_LOGCONFIG(TAG, "Interval (ms) scroll: %d", EHMTXv2_SCROLL_INTERVALL);
+    ESP_LOGCONFIG(TAG, "Interval (ms) scroll: %d", EHMTXv2_SCROLL_INTERVAL);
     if (this->show_day_of_week)
     {
       ESP_LOGCONFIG(TAG, "Show day of week");

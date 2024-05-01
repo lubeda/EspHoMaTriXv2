@@ -31,7 +31,6 @@ SVG_FULL_SCREEN_START = '<svg width="320px" height="80px" viewBox="0 0 320 80">'
 SVG_END = "</svg>"
 
 logging.warning(f"")
-logging.warning(f"!!!! This version (2024.4.0) has breaking changes !!!!")
 logging.warning(f"Please check the documentation and wiki https://github.com/lubeda/EspHoMaTriXv2")
 logging.warning(f"This will only work with esphome >= 2023.7.0")
 logging.warning(f"")
@@ -566,10 +565,10 @@ async def to_code(config):
         if config[CONF_REPLACE_TIME_DATE_FROM]:
             logging.warning(f"replace_time_date_from: defined but no replace_time_date_to:! (not using replacements)\n\r")
 
-    cg.add_define("EHMTXv2_SCROLL_INTERVALL",config[CONF_SCROLLINTERVAL])
-    cg.add_define("EHMTXv2_RAINBOW_INTERVALL",config[CONF_RAINBOWINTERVAL])
-    cg.add_define("EHMTXv2_FRAME_INTERVALL",config[CONF_FRAMEINTERVAL])
-    cg.add_define("EHMTXv2_CLOCK_INTERVALL",config[CONF_CLOCKINTERVAL])
+    cg.add_define("EHMTXv2_SCROLL_INTERVAL",config[CONF_SCROLLINTERVAL])
+    cg.add_define("EHMTXv2_RAINBOW_INTERVAL",config[CONF_RAINBOWINTERVAL])
+    cg.add_define("EHMTXv2_FRAME_INTERVAL",config[CONF_FRAMEINTERVAL])
+    cg.add_define("EHMTXv2_CLOCK_INTERVAL",config[CONF_CLOCKINTERVAL])
     cg.add_define("EHMTXv2_SCROLL_COUNT",config[CONF_SCROLLCOUNT])
     cg.add_define("EHMTXv2_WEEK_START",config[CONF_WEEK_START_MONDAY])
     cg.add_define("EHMTXv2_DEFAULT_FONT_OFFSET_X",config[CONF_DEFAULT_FONT_XOFFSET])

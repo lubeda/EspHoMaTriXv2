@@ -1,5 +1,8 @@
 # Changelog
 
+## 2024.5.0
+- changed on_empty_queue behavior (triggered every 15 sec after first occurance)
+
 ## 2024.1.0
 
 - cleaned up docu

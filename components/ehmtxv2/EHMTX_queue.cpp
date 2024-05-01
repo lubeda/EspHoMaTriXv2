@@ -177,7 +177,7 @@ namespace esphome
 #endif
 
     default:
-      ESP_LOGD(TAG, "queue: UPPS");
+      // Queue not initialized
       break;
     }
   }
@@ -284,7 +284,7 @@ namespace esphome
       {
         uint8_t reverse_steps = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) + 8);
 
-        if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > reverse_steps)
+        if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVAL) > reverse_steps)
         {
           result = (item + 1 == this->icon) ? width - this->config_->scroll_step : -8 + this->config_->scroll_step;
           if (item == 0 && (item_pos == 32767 || item_pos < target))
@@ -324,7 +324,7 @@ namespace esphome
       {
         uint8_t reverse_steps = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) * this->icon + 8 * (this->icon + 1)) + 8;
 
-        if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > reverse_steps)
+        if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVAL) > reverse_steps)
         {
           if (item_pos > target)
           {
@@ -354,7 +354,7 @@ namespace esphome
 
       uint8_t height = 8;
 
-      if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > height)
+      if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVAL) > height)
       {
         if (this->config_->vertical_scroll)
         {
@@ -363,7 +363,7 @@ namespace esphome
         this->config_->vertical_scroll = this->config_->scroll_step >= height;
         return this->config_->scroll_step - height;
       }
-      return height - round((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL);
+      return height - round((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVAL);
     #else
       return 0;
     #endif
@@ -375,7 +375,7 @@ namespace esphome
     
     if ((this->progress == 1) && (this->icon == 1 || (this->icon == 3 && item == 1)))
     {
-      if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL) > height)
+      if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVAL) > height)
       {
         if (this->default_font)
         {
@@ -384,7 +384,7 @@ namespace esphome
         this->default_font = this->config_->scroll_step >= height;
         return this->config_->scroll_step - height;
       }
-      return height - round((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVALL);
+      return height - round((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVAL);
     }
     
     return 0;
@@ -1243,7 +1243,7 @@ namespace esphome
     case MODE_RAINBOW_TEXT:
 #ifdef EHMTXv2_SCROLL_SMALL_TEXT
       max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-      display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+      display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVAL);
       this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
 #else
       if (this->pixels_ < 32)
@@ -1253,7 +1253,7 @@ namespace esphome
       else
       {
         max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVAL);
         this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
 #endif
@@ -1274,7 +1274,7 @@ namespace esphome
       else
       {
         max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVAL);
         this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
       break;
@@ -1287,7 +1287,7 @@ namespace esphome
       else
       {
         max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVAL);
         this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
       }
       break;
@@ -1320,7 +1320,7 @@ namespace esphome
     else
     {
       max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
-      display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVALL);
+      display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVAL);
       this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
     }
 

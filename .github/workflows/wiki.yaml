@@ -2,7 +2,7 @@ name: Publish wiki
 on:
   push:
     branches: 
-      - 2023.9.1
+      - 2024.5.0
       - 2024.1.0-prerelease
     paths:
       - wiki/**
