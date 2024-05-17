@@ -96,6 +96,7 @@ CONF_SHOWDOW = "show_dow"
 CONF_RTL = "rtl"
 CONF_VERTICAL = "vertical_scroll"
 CONF_CLOCK = "advanced_clock"
+CONF_FLIP_FLOP = "flip_flop_clock"
 CONF_BITMAP = "advanced_bitmap"
 CONF_BOOTLOGO = "boot_logo"
 CONF_BOOTLOGOMODE = "boot_logo_mode"
@@ -168,6 +169,9 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.boolean,
      cv.Optional(
         CONF_CLOCK, default=False
+    ): cv.boolean,
+    cv.Optional(
+        CONF_FLIP_FLOP, default=False
     ): cv.boolean,
     cv.Optional(
         CONF_BITMAP, default=False
@@ -609,6 +613,10 @@ async def to_code(config):
         cg.add_define("EHMTXv2_ADV_CLOCK")
         logging.info(f"[X] Advanced clock mode")
 
+    if config[CONF_CLOCK] and config[CONF_FLIP_FLOP]:
+        cg.add_define("EHMTXv2_FLIP_FLOP")
+        logging.info(f"[X] Flip Flop clock mode")
+
     if config[CONF_BITMAP]:
         cg.add_define("EHMTXv2_ADV_BITMAP")
         logging.info(f"[X] Advanced bitmap mode")
@@ -620,20 +628,28 @@ async def to_code(config):
       
         if config[CONF_BOOTLOGOMODE] == 0:
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_0")
+            logging.info(f"[X] Advanced boot mode 0")
         if config[CONF_BOOTLOGOMODE] == 1:
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_1")
+            logging.info(f"[X] Advanced boot mode 1")
         if config[CONF_BOOTLOGOMODE] == 2:
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_2")
+            logging.info(f"[X] Advanced boot mode 2")
         if config[CONF_BOOTLOGOMODE] == 3:
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_3")
+            logging.info(f"[X] Advanced boot mode 3")
         if config[CONF_BOOTLOGOMODE] == 4:
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_4")
+            logging.info(f"[X] Advanced boot mode 4")
         if config[CONF_BOOTLOGOMODE] == 5:
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_5")
+            logging.info(f"[X] Advanced boot mode 5")
         if config[CONF_BOOTLOGOMODE] == 6:
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_6")
+            logging.info(f"[X] Advanced boot mode 6")
         if config[CONF_BOOTLOGOMODE] == 7:
             cg.add_define("EHMTXv2_ADV_BOOT_MODE_7")
+            logging.info(f"[X] Advanced boot mode 7")
     
     if config[CONF_NIGHT_MODE_SCREENS]:
         cg.add_define("EHMTXv2_CONF_NIGHT_MODE_SCREENS",config[CONF_NIGHT_MODE_SCREENS])
