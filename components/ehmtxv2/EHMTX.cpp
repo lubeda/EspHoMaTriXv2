@@ -2022,6 +2022,7 @@ namespace esphome
     screen->status();
   }
 
+#ifdef USE_Fireplugin
   void EHMTX::fire_screen(int lifetime, int screen_time)
   {
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_FIRE);
@@ -2040,6 +2041,7 @@ namespace esphome
     ESP_LOGD(TAG, "fire screen: lifetime: %d screen_time:%d ", lifetime, screen_time);
     screen->status();
   }
+#endif
 
   void EHMTX::full_screen(std::string iconname, int lifetime, int screen_time)
   {
