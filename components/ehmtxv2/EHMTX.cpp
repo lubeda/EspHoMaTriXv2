@@ -2566,7 +2566,7 @@ namespace esphome
             output = this->replace_time_date(output);
 
   #ifdef EHMTXv2_FLIP_FLOP
-            seconds = s; // Disable Flip Flop fot Seconds if AM/PM
+            seconds = s; // Disable Flip Flop for Seconds if AM/PM
   #endif
           }
           else
