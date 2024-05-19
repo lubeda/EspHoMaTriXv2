@@ -4,9 +4,11 @@
 #define USE_Fireplugin
 #include "esphome/components/time/real_time_clock.h"
 
-#ifdef CONFIG_IDF_TARGET_ESP32S3
-#undef USE_Fireplugin
-#define F(x) (x)
+#if defined CONFIG_IDF_TARGET_ESP32S3 || defined CONFIG_IDF_TARGET_ESP32
+  #undef USE_Fireplugin
+  #ifndef F
+    #define F(x) (x)
+  #endif
 #endif
 
 const uint8_t MAXQUEUE = 24;
