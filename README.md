@@ -903,11 +903,12 @@ ehmtxv2:
 
 **time_format_big** (optional, string): formats the date display with [strftime syntax](https://esphome.io/components/time.html?highlight=strftime), defaults `"%H:%M:%S"`, works only in **advanced_clock** mode and sets the time format for a screen with a clock without an icon
 
-**advanced_clock** (optional, boolean): Enables or disables advanced clock mode. (default: false) [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
+**advanced_clock** (optional, boolean): Enables or disables advanced clock mode. (default: false) You can specify the color for hours,minuted,seconds in RGB separatly:
+ `set_adv_clock_color(hr,hg,hb,mr,mg,mb,sr,sg,sb)` [More info](https://github.com/lubeda/EspHoMaTriXv2/issues/164)
 
 **flip_flop_clock** (optional, boolean): Enables or disables flip_flop_clock clock mode. (default: false), works only in **advanced_clock** mode.
 
-**advanced_bitmap**  (optional, boolean): Enables or disables advanced clock mode. (default: false) [More info](#advanced-bitmap-mode)
+**advanced_bitmap**  (optional, boolean): Enables or disables advanced bitmap mode. (default: false) [More info](#advanced-bitmap-mode)
 
 **default_font_yoffset** (optional, pixel): yoffset the text is aligned BASELINE_LEFT, the baseline defaults to `6`
 
