@@ -2535,6 +2535,17 @@ namespace esphome
     if (!std::regex_search(format, match, rgx))
       return false;
 
+  #ifdef EHMTXv2_FLIP_FLOP
+    static uint8_t hours;
+    static uint8_t minutes;
+    static uint8_t seconds;
+    static uint8_t ystep = 0;
+
+    uint8_t h = this->clock->now().hour;
+    uint8_t m = this->clock->now().minute;
+    uint8_t s = this->clock->now().second;
+  #endif
+
     std::vector<std::string> parts;
     std::vector<uint8_t> len;
     std::string sep = "";
@@ -2553,9 +2564,19 @@ namespace esphome
           {
             output = this->clock->now().strftime(output);
             output = this->replace_time_date(output);
+
+  #ifdef EHMTXv2_FLIP_FLOP
+            seconds = s; // Disable Flip Flop fot Seconds if AM/PM
+  #endif
           }
           else
           {
+  #ifdef EHMTXv2_FLIP_FLOP
+            if (output == "%I" && h > 12) // check for 12-hour clock
+            {
+              h = h - 12; // Switch to 12-hour clock
+            }
+  #endif
             output = this->clock->now().strftime(output);
           }
         }
@@ -2585,7 +2606,119 @@ namespace esphome
             c_ = color;
           }
 
+  #ifdef EHMTXv2_FLIP_FLOP
+          bool step = false;
+          uint8_t y = ystep / 2;
+
+          if (i == 0) // Hours
+          {
+            if (h != hours)
+            {
+              step = true;
+              if (h / 10 != hours / 10)
+              {
+                this->display->printf(x, ypos + y - 8, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(h / 10));
+                this->display->printf(x, ypos + y, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(hours / 10));
+              }
+              else
+              {
+                this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(h / 10));
+              }
+              uint8_t xstep = this->GetTextWidth(font, "%c", parts.at(i).c_str()[1]);
+              if (h % 10 != hours % 10)
+              {
+                this->display->printf(x + xstep, ypos + y - 8, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(h % 10));
+                this->display->printf(x + xstep, ypos + y, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(hours % 10));
+              }
+              else
+              {
+                this->display->printf(x + xstep, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(h % 10));
+              }
+            }
+            else
+            {
           this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%s", parts.at(i).c_str());
+        }
+          }
+          else if (i == 2) // Minutes
+          {
+            if (m != minutes)
+            {
+              step = true;
+              if (m / 10 != minutes / 10)
+              {
+                this->display->printf(x, ypos + y - 8, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(m / 10));
+                this->display->printf(x, ypos + y, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(minutes / 10));
+              }
+              else
+              {
+                this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(m / 10));
+              }
+              uint8_t xstep = this->GetTextWidth(font, "%c", parts.at(i).c_str()[1]);
+              if (m % 10 != minutes % 10)
+              {
+                this->display->printf(x + xstep, ypos + y - 8, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(m % 10));
+                this->display->printf(x + xstep, ypos + y, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(minutes % 10));
+              }
+              else
+              {
+                this->display->printf(x + xstep, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(m % 10));
+              }
+            }
+            else
+            {
+              this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%s", parts.at(i).c_str());
+            }
+          }
+          else if (i == 4) // Seconds
+          {
+            if (s != seconds)
+            {
+              step = true;
+              if (s / 10 != seconds / 10)
+              {
+                this->display->printf(x, ypos + y - 8, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(s / 10));
+                this->display->printf(x, ypos + y, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(seconds / 10));
+              }
+              else
+              {
+                this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(s / 10));
+              }
+              uint8_t xstep = this->GetTextWidth(font, "%c", parts.at(i).c_str()[1]);
+              if (s % 10 != seconds % 10)
+              {
+                this->display->printf(x + xstep, ypos + y - 8, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(s % 10));
+                this->display->printf(x + xstep, ypos + y, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(seconds % 10));
+              }
+              else
+              {
+                this->display->printf(x + xstep, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%d", (int)(s % 10));
+              }
+            }
+            else
+            {
+              this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%s", parts.at(i).c_str());
+            }
+          }
+          else
+          {
+            this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%s", parts.at(i).c_str());
+          }
+
+          if (step)
+          {
+            ystep++;
+            if (ystep == 16)
+            {
+              hours   = h;
+              minutes = m;
+              seconds = s;
+              ystep = 0;
+            }
+          }
+  #else
+          this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%s", parts.at(i).c_str());
+  #endif
         }
         x += len.at(i);
       }
