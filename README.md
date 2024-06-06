@@ -908,6 +908,8 @@ ehmtxv2:
 
 **flip_flop_clock** (optional, boolean): Enables or disables flip_flop_clock clock mode. (default: false), works only in **advanced_clock** mode.
 
+**flip_flop_speed** (optional, int): Set flip_flop_clock speed. (default: 2, range 1..10), works only in **advanced_clock** mode.
+
 **advanced_bitmap**  (optional, boolean): Enables or disables advanced bitmap mode. (default: false) [More info](#advanced-bitmap-mode)
 
 **default_font_yoffset** (optional, pixel): yoffset the text is aligned BASELINE_LEFT, the baseline defaults to `6`

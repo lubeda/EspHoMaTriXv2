@@ -2608,7 +2608,7 @@ namespace esphome
 
   #ifdef EHMTXv2_FLIP_FLOP
           bool step = false;
-          uint8_t y = ystep / 2;
+          uint8_t y = ystep / EHMTXv2_FLIP_FLOP_SPEED;
 
           if (i == 0) // Hours
           {
@@ -2708,7 +2708,7 @@ namespace esphome
           if (step)
           {
             ystep++;
-            if (ystep == 16)
+            if (ystep == 8 * EHMTXv2_FLIP_FLOP_SPEED)
             {
               hours   = h;
               minutes = m;
