@@ -1,4 +1,7 @@
 #include "esphome.h"
+#ifdef EHMTXv2_MULTICOLOR_TEXT
+#include <regex>
+#endif
 
 namespace esphome
 {
@@ -526,8 +529,7 @@ namespace esphome
           this->config_->draw_rainbow_text(this->text, font, this->xpos() + xoffset, this->ypos() + yoffset);
         else
         #endif
-        this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
-                                      this->text.c_str());
+        this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
         if (this->sbitmap != NULL)
         {
@@ -895,8 +897,7 @@ namespace esphome
           this->config_->draw_rainbow_text(this->text, font, this->xpos() + xoffset, this->ypos() + yoffset);
         else
         #endif
-        this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
-                                      this->text.c_str());
+        this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
         if (this->mode == MODE_ICON_PROGRESS)
         {
@@ -1043,8 +1044,7 @@ namespace esphome
           this->config_->draw_rainbow_text(this->text, font, this->xpos() + xoffset, this->ypos() + yoffset);
         else
         #endif
-        this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
-                                      this->text.c_str());
+        this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
         if (this->icon != BLANKICON)
         {
@@ -1092,8 +1092,7 @@ namespace esphome
           this->config_->draw_rainbow_text(this->text, font, this->xpos() + xoffset, this->ypos() + yoffset);
         else
         #endif
-        this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_LEFT,
-                                      this->text.c_str());
+        this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
         break;
 
@@ -1226,13 +1225,19 @@ namespace esphome
     uint8_t startx = 0;
     uint16_t max_steps = 0;
 
+    std::string text_ = text;
+    #ifdef EHMTXv2_MULTICOLOR_TEXT
+    std::regex color_re("(#[A-Fa-f0-9]{6})");
+    text_ = std::regex_replace(text, color_re, "");
+    #endif
+
     if (this->default_font)
     {
-      this->config_->display->get_text_bounds(0, 0, text.c_str(), this->config_->default_font, display::TextAlign::LEFT, &x, &y, &w, &h);
+      this->config_->display->get_text_bounds(0, 0, text_.c_str(), this->config_->default_font, display::TextAlign::LEFT, &x, &y, &w, &h);
     }
     else
     {
-      this->config_->display->get_text_bounds(0, 0, text.c_str(), this->config_->special_font, display::TextAlign::LEFT, &x, &y, &w, &h);
+      this->config_->display->get_text_bounds(0, 0, text_.c_str(), this->config_->special_font, display::TextAlign::LEFT, &x, &y, &w, &h);
     }
 
     this->pixels_ = w;
@@ -1296,7 +1301,6 @@ namespace esphome
     }
 
     this->scroll_reset = (width - startx) + this->pixels_;
-    ;
 
     ESP_LOGD(TAG, "calc_scroll_time: mode: %d text: \"%s\" pixels %d calculated: %.1f defined: %d max_steps: %d", this->mode, text.c_str(), this->pixels_, this->screen_time_ / 1000.0, screen_time, this->scroll_reset);
   }

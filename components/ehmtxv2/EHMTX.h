@@ -305,6 +305,7 @@ namespace esphome
     #ifdef EHMTXv2_RAINBOW_SHIMMER
       void draw_rainbow_text(std::string text, esphome::display::BaseFont *font, int xpos, int ypos);
     #endif
+    void draw_text(std::string text, esphome::display::BaseFont *font, Color color, int xpos, int ypos);
 
     void set_replace_time_date_active(bool b=false);
     void set_weekday_char_count(uint8_t i);

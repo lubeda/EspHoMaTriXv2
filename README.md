@@ -373,6 +373,29 @@ Example:
 
 **rainbow_shimmer** (optional, boolean): If true, enables color shimmer when displaying text in rainbow modes.
 
+**multicolor_text** (optional, boolean): If true, enables text multi color support when displaying text.
+
+Example:
+```Yaml
+ehmtxv2:
+  id: rgb8x32
+...
+  multicolor_text: true
+```
+
+```Yaml
+service: esphome.ulanzi_text_screen
+data:
+  default_font: true
+  text: "Test Test #00FF00Test #FF0000Test #0000FFTest"
+  lifetime: 2
+  screen_time: 10
+  r: 255
+  g: 255
+  b: 255
+```
+Shows text in different colors, `Test Test` in the default color `#FFFFFF` (r: 255, g:255, b: 255), followed by `Test` in green `#00FF00`, then `Test` in red `#FF0000` and finally `Test` in blue `#0000FF`.
+
 **icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons. (default = `false`)
 
 **iconscache** (optional, boolean): If true, it caches icons in the `.cache\icons` folder and if it finds the specified icons in the cache, it uses them instead of trying to download them again from the Internet. (default = `false`)
