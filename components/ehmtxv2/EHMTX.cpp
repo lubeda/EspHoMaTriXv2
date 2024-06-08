@@ -2637,8 +2637,8 @@ namespace esphome
             }
             else
             {
-          this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%s", parts.at(i).c_str());
-        }
+              this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%s", parts.at(i).c_str());
+            }
           }
           else if (i == 2) // Minutes
           {
