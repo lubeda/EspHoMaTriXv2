@@ -97,6 +97,7 @@ CONF_RTL = "rtl"
 CONF_VERTICAL = "vertical_scroll"
 CONF_CLOCK = "advanced_clock"
 CONF_FLIP_FLOP = "flip_flop_clock"
+CONF_FLIP_FLOP_SPEED = "flip_flop_speed"
 CONF_BITMAP = "advanced_bitmap"
 CONF_BOOTLOGO = "boot_logo"
 CONF_BOOTLOGOMODE = "boot_logo_mode"
@@ -173,6 +174,9 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(
         CONF_FLIP_FLOP, default=False
     ): cv.boolean,
+    cv.Optional(
+        CONF_FLIP_FLOP_SPEED, default="2"
+    ): cv.templatable(cv.int_range(min=1, max=10)),
     cv.Optional(
         CONF_BITMAP, default=False
     ): cv.boolean,
@@ -616,6 +620,9 @@ async def to_code(config):
     if config[CONF_CLOCK] and config[CONF_FLIP_FLOP]:
         cg.add_define("EHMTXv2_FLIP_FLOP")
         logging.info(f"[X] Flip Flop clock mode")
+        if config[CONF_FLIP_FLOP_SPEED]:
+          cg.add_define("EHMTXv2_FLIP_FLOP_SPEED", config[CONF_FLIP_FLOP_SPEED])
+          logging.info(f"[X] Flip Flop Speed " + str(config[CONF_FLIP_FLOP_SPEED]))
 
     if config[CONF_BITMAP]:
         cg.add_define("EHMTXv2_ADV_BITMAP")
