@@ -2591,7 +2591,7 @@ namespace esphome
       }
     }
 
-    uint8_t x = xpos - full_length / 2;
+    int x = xpos - full_length / 2;
     for (int i = 0; i < parts.size(); i++)
     {
       if (parts.at(i).length() > 0)
@@ -2608,7 +2608,7 @@ namespace esphome
 
   #ifdef EHMTXv2_FLIP_FLOP
           bool step = false;
-          uint8_t y = ystep / 2;
+          uint8_t y = ystep / EHMTXv2_FLIP_FLOP_SPEED;
 
           if (i == 0) // Hours
           {
@@ -2708,7 +2708,7 @@ namespace esphome
           if (step)
           {
             ystep++;
-            if (ystep == 16)
+            if (ystep == 8 * EHMTXv2_FLIP_FLOP_SPEED)
             {
               hours   = h;
               minutes = m;
@@ -2788,6 +2788,71 @@ namespace esphome
     return true;
   }
 #endif
+
+  void EHMTX::draw_text(std::string text, esphome::display::BaseFont *font, Color color, int xpos, int ypos)
+  {
+  #ifdef EHMTXv2_MULTICOLOR_TEXT
+    std::size_t pos = text.find("#");
+    if (pos == std::string::npos)
+    {
+      this->display->print(xpos, ypos, font, color, esphome::display::TextAlign::BASELINE_LEFT, text.c_str());
+      return;
+    }
+
+    std::regex regex ("(#[A-Fa-f0-9]{6})|(.+?)");
+
+    std::regex_iterator<std::string::iterator> next ( text.begin(), text.end(), regex );
+    std::regex_iterator<std::string::iterator> end;
+  
+    std::vector<std::string> res;
+  
+    std::string iter = "";
+    while (next != end)
+    {
+      std::string part = next->str();
+      if (part.length() == 7)
+      {
+        if (iter.length() > 0)
+        {
+          res.push_back (iter);
+          iter = "";
+        }
+        res.push_back (part);
+      }
+      else 
+      {
+        iter += part;
+      }
+      next++;
+    }
+    if (iter.length() > 0)
+    {
+      res.push_back (iter);
+    }
+    
+    Color c = color;
+    int x = xpos;
+    std::regex is_color ("^#[A-Fa-f0-9]{6}$");
+    for (int i = 0; i < res.size(); i++)
+    {
+      if (res.at(i).length() > 0)
+      {
+        int r, g, b;
+        if (res.at(i).length() == 7 && std::regex_match(res.at(i), is_color) && sscanf(&res.at(i).c_str()[1], "%02x%02x%02x", &r, &g, &b))
+        {
+          c = Color(r, g ,b);
+        }
+        else
+        {
+          this->display->print(x, ypos, font, c, esphome::display::TextAlign::BASELINE_LEFT, res.at(i).c_str());
+          x += this->GetTextWidth(font, "%s", res.at(i).c_str());
+        }
+      }
+    }
+  #else
+    this->display->print(xpos, ypos, font, color, esphome::display::TextAlign::BASELINE_LEFT, text.c_str());
+  #endif
+  }
 
 #ifdef EHMTXv2_RAINBOW_SHIMMER
   void EHMTX::draw_rainbow_text(std::string text, esphome::display::BaseFont *font, int xpos, int ypos)

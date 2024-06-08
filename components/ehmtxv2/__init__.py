@@ -97,6 +97,7 @@ CONF_RTL = "rtl"
 CONF_VERTICAL = "vertical_scroll"
 CONF_CLOCK = "advanced_clock"
 CONF_FLIP_FLOP = "flip_flop_clock"
+CONF_FLIP_FLOP_SPEED = "flip_flop_speed"
 CONF_BITMAP = "advanced_bitmap"
 CONF_BOOTLOGO = "boot_logo"
 CONF_BOOTLOGOMODE = "boot_logo_mode"
@@ -109,6 +110,7 @@ CONF_SCROLLINTERVAL = "scroll_interval"
 CONF_BLENDSTEPS = "blend_steps"
 CONF_RAINBOWINTERVAL = "rainbow_interval"
 CONF_RAINBOWSHIMMER = "rainbow_shimmer"
+CONF_MULTICOLOR_TEXT = "multicolor_text"
 CONF_FRAMEINTERVAL = "frame_interval"
 CONF_DEFAULT_FONT_ID = "default_font_id"
 CONF_DEFAULT_FONT = "default_font"
@@ -174,6 +176,9 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_FLIP_FLOP, default=False
     ): cv.boolean,
     cv.Optional(
+        CONF_FLIP_FLOP_SPEED, default="2"
+    ): cv.templatable(cv.int_range(min=1, max=10)),
+    cv.Optional(
         CONF_BITMAP, default=False
     ): cv.boolean,
     cv.Optional(
@@ -237,6 +242,8 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(CONF_RAINBOWINTERVAL, default="32"
     ): cv.templatable(cv.positive_int),
     cv.Optional(CONF_RAINBOWSHIMMER, default=False
+    ): cv.boolean,
+    cv.Optional(CONF_MULTICOLOR_TEXT, default=False
     ): cv.boolean,
     cv.Optional(CONF_SCROLLCOUNT, default="2"
     ): cv.templatable(cv.positive_int),
@@ -596,6 +603,10 @@ async def to_code(config):
         cg.add_define("EHMTXv2_RAINBOW_SHIMMER")
         logging.info(f"[X] Rainbow shimmer")
 
+    if config[CONF_MULTICOLOR_TEXT]:
+        cg.add_define("EHMTXv2_MULTICOLOR_TEXT")
+        logging.info(f"[X] Multi color text")
+
     if config[CONF_SCROLL_SMALL_TEXT]:
         cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT")
 
@@ -616,6 +627,9 @@ async def to_code(config):
     if config[CONF_CLOCK] and config[CONF_FLIP_FLOP]:
         cg.add_define("EHMTXv2_FLIP_FLOP")
         logging.info(f"[X] Flip Flop clock mode")
+        if config[CONF_FLIP_FLOP_SPEED]:
+          cg.add_define("EHMTXv2_FLIP_FLOP_SPEED", config[CONF_FLIP_FLOP_SPEED])
+          logging.info(f"[X] Flip Flop Speed " + str(config[CONF_FLIP_FLOP_SPEED]))
 
     if config[CONF_BITMAP]:
         cg.add_define("EHMTXv2_ADV_BITMAP")
