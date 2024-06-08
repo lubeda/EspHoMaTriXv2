@@ -67,7 +67,7 @@ esphome:
   name: $devicename 
   project:
     name: "Ulanzi.EHMTXv2"
-    version: "2024.5.0"
+    version: "2024.6.0"
   on_boot:
     then:
       - ds1307.read_time:
@@ -225,6 +225,7 @@ ehmtxv2:
   show_seconds: false
   default_font_id: px6_font
   default_font_yoffset: 7
+  multicolor_text: true
   special_font_id: px6_font
   special_font_yoffset: 7
   # until here
