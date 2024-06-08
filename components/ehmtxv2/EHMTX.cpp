@@ -2840,7 +2840,14 @@ namespace esphome
         int r, g, b;
         if (res.at(i).length() == 7 && std::regex_match(res.at(i), is_color) && sscanf(&res.at(i).c_str()[1], "%02x%02x%02x", &r, &g, &b))
         {
-          c = Color(r, g ,b);
+          if (r + g + b > 0)
+          {
+            c = Color(r, g ,b);
+          }
+          else
+          {
+            c = color;
+          }
         }
         else
         {
