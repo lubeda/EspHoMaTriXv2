@@ -396,6 +396,12 @@ data:
 ```
 Shows text in different colors, `Default Color Text` in the default color `#FFFFFF` (r: 255, g:255, b: 255), followed by `Green Color Text` in green `#00FF00`, then `Red Color Text` in red `#FF0000`, then `Blue Color Text` in blue `#0000FF` and finally `Default Color Text` in default color, due `#000000`.
 
+> [!WARNING]
+> In this mode, with a large number of color changes, or with long lines, a short-term decrease in performance is possible.
+>
+> ```[13:26:02][W][component:237]: Component display took a long time for an operation (55 ms).```
+> ```[13:26:02][W][component:238]: Components should block for at most 30 ms.```
+
 **icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons. (default = `false`)
 
 **iconscache** (optional, boolean): If true, it caches icons in the `.cache\icons` folder and if it finds the specified icons in the cache, it uses them instead of trying to download them again from the Internet. (default = `false`)
