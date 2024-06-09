@@ -83,11 +83,21 @@ namespace esphome
     this->default_font = true;
     this->progress = 0;
     this->sbitmap = nullptr;
-    #ifdef EHMTXv2_ADV_BITMAP
+#ifdef EHMTXv2_ADV_BITMAP
     this->bitmap = nullptr;
-    #endif
+#endif
+#ifdef EHMTXv2_MULTICOLOR_TEXT
+    this->_textcolors = {};
+#endif
     this->progressbar_color = esphome::display::COLOR_OFF;
     this->progressbar_back_color = esphome::display::COLOR_OFF;
+  }
+
+  EHMTX_queue::EHMTX_queue(EHMTX *config, std::string text_)
+  {
+    EHMTX_queue(config);
+
+    text = text_;
   }
 
   void EHMTX_queue::status()
@@ -174,7 +184,7 @@ namespace esphome
     case MODE_RAINBOW_BITMAP_SMALL:
       ESP_LOGD(TAG, "queue: rainbow small bitmap for: %.1f sec", this->screen_time_ / 1000.0);
       break;
-    case MODE_BITMAP_STACK_SCREEN :
+    case MODE_BITMAP_STACK_SCREEN:
       ESP_LOGD(TAG, "queue: bitmap stack for: %.1f sec", this->screen_time_ / 1000.0);
       break;
 #endif
@@ -252,7 +262,7 @@ namespace esphome
     return result;
   }
 
-  void c16to8(int16_t t, uint8_t& r, uint8_t& g)
+  void c16to8(int16_t t, uint8_t &r, uint8_t &g)
   {
     r = static_cast<uint8_t>((t & 0xFF00) >> 8);
     g = static_cast<uint8_t>(t & 0x00FF);
@@ -263,7 +273,7 @@ namespace esphome
     return (static_cast<uint16_t>(r) << 8) | g;
   }
 
-  uint8_t is_tick(int step, uint8_t& state)
+  uint8_t is_tick(int step, uint8_t &state)
   {
     if (step % 2 == state)
     {
@@ -277,11 +287,11 @@ namespace esphome
   {
     uint8_t width = 32;
     int result = width - this->config_->scroll_step + item * 9;
-    
+
     if (this->icon < 5)
     {
       int16_t item_pos = c8to16(this->sbitmap[item].r, this->sbitmap[item].g);
-      
+
       uint8_t target = round(((static_cast<float>(width) - 8 * static_cast<float>(this->icon)) / static_cast<float>(this->icon + 1)) * (item + 1) + 8 * item);
       if ((this->progress == 1) && (this->icon == 2 || this->icon == 3))
       {
@@ -339,7 +349,7 @@ namespace esphome
           item_pos -= is_tick(this->config_->scroll_step, this->sbitmap[item].w);
         }
       }
-      
+
       c16to8(item_pos, this->sbitmap[item].r, this->sbitmap[item].g);
       result = item_pos;
     }
@@ -349,33 +359,33 @@ namespace esphome
 
   int EHMTX_queue::ypos()
   {
-    #ifdef EHMTXv2_USE_VERTICAL_SCROLL
-      if (this->config_->queue_count() <= 1)
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    if (this->config_->queue_count() <= 1)
+    {
+      return 0;
+    }
+
+    uint8_t height = 8;
+
+    if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVAL) > height)
+    {
+      if (this->config_->vertical_scroll)
       {
         return 0;
       }
-
-      uint8_t height = 8;
-
-      if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVAL) > height)
-      {
-        if (this->config_->vertical_scroll)
-        {
-          return 0;
-        }
-        this->config_->vertical_scroll = this->config_->scroll_step >= height;
-        return this->config_->scroll_step - height;
-      }
-      return height - round((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVAL);
-    #else
-      return 0;
-    #endif
+      this->config_->vertical_scroll = this->config_->scroll_step >= height;
+      return this->config_->scroll_step - height;
+    }
+    return height - round((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVAL);
+#else
+    return 0;
+#endif
   }
 
   int EHMTX_queue::ypos(uint8_t item)
   {
     uint8_t height = 8;
-    
+
     if ((this->progress == 1) && (this->icon == 1 || (this->icon == 3 && item == 1)))
     {
       if (ceil((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVAL) > height)
@@ -389,7 +399,7 @@ namespace esphome
       }
       return height - round((this->config_->next_action_time - this->config_->get_tick()) / EHMTXv2_SCROLL_INTERVAL);
     }
-    
+
     return 0;
   }
 
@@ -403,7 +413,7 @@ namespace esphome
         average_frame_duration += this->config_->icons[this->sbitmap[i].b]->frame_duration;
       }
       average_frame_duration = average_frame_duration / this->icon;
-      
+
       if (millis() - this->config_->last_anim_time >= average_frame_duration)
       {
         for (uint8_t i = 0; i < this->icon; i++)
@@ -427,7 +437,7 @@ namespace esphome
   {
     display::BaseFont *font = this->default_font ? this->config_->default_font : this->config_->special_font;
     display::BaseFont *info_font = this->config_->info_font ? this->config_->default_font : this->config_->special_font;
-    
+
     int8_t yoffset = this->default_font ? EHMTXv2_DEFAULT_FONT_OFFSET_Y : EHMTXv2_SPECIAL_FONT_OFFSET_Y;
     int8_t xoffset = this->default_font ? EHMTXv2_DEFAULT_FONT_OFFSET_X : EHMTXv2_SPECIAL_FONT_OFFSET_X;
 
@@ -447,7 +457,7 @@ namespace esphome
 
       case MODE_BITMAP_SCREEN:
 #ifndef USE_ESP8266
-        #ifdef EHMTXv2_ADV_BITMAP
+#ifdef EHMTXv2_ADV_BITMAP
         if (this->bitmap != NULL)
         {
           std::size_t pos = icon_name.find("#");
@@ -468,21 +478,21 @@ namespace esphome
               this->config_->set_brightness_silent(bri);
             }
           }
-        #endif
-        for (uint8_t x = 0; x < 32; x++)
-        {
-          for (uint8_t y = 0; y < 8; y++)
+#endif
+          for (uint8_t x = 0; x < 32; x++)
           {
-            #ifdef EHMTXv2_ADV_BITMAP
+            for (uint8_t y = 0; y < 8; y++)
+            {
+#ifdef EHMTXv2_ADV_BITMAP
               this->config_->display->draw_pixel_at(x, this->ypos() + y, this->bitmap[x + y * 32]);
-            #else
-              this->config_->display->draw_pixel_at(x, this->ypos() + y, this->config_->bitmap[x + y * 32]);
-            #endif
+#else
+            this->config_->display->draw_pixel_at(x, this->ypos() + y, this->config_->bitmap[x + y * 32]);
+#endif
             }
           }
-        #ifdef EHMTXv2_ADV_BITMAP
+#ifdef EHMTXv2_ADV_BITMAP
         }
-        #endif
+#endif
 #endif
         break;
 
@@ -524,12 +534,12 @@ namespace esphome
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
 #else
-        #ifdef EHMTXv2_RAINBOW_SHIMMER
+#ifdef EHMTXv2_RAINBOW_SHIMMER
         if (this->mode == MODE_RAINBOW_BITMAP_SMALL)
           this->config_->draw_rainbow_text(this->text, font, this->xpos() + xoffset, this->ypos() + yoffset);
         else
-        #endif
-        this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
+#endif
+          this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
         if (this->sbitmap != NULL)
         {
@@ -565,28 +575,28 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_CLOCK) ? this->config_->rainbow_color : this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
-          #ifdef EHMTXv2_ADV_CLOCK
+#ifdef EHMTXv2_ADV_CLOCK
           if (!this->config_->draw_clock(EHMTXv2_TIME_FORMAT_BIG, font, color_, xoffset + 15, this->ypos() + yoffset))
           {
-          #endif
+#endif
             if (this->config_->replace_time_date_active) // check for replace active
             {
               std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
               time_new = this->config_->replace_time_date(time_new);
               this->config_->display->printf(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
-            } 
-            else 
+            }
+            else
             {
               this->config_->display->strftime(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
-                                               this->config_->clock->now());                    
+                                               this->config_->clock->now());
             }
             if (this->config_->show_seconds && (this->config_->clock->now().second % 2 == 0))
             {
               this->config_->display->draw_pixel_at(0, 0, color_);
             }
-          #ifdef EHMTXv2_ADV_CLOCK
+#ifdef EHMTXv2_ADV_CLOCK
           }
-          #endif
+#endif
           if (this->mode != MODE_RAINBOW_CLOCK)
           {
             this->config_->draw_day_of_week(this->ypos());
@@ -604,10 +614,10 @@ namespace esphome
         {
           color_ = (this->mode == MODE_RAINBOW_DATE) ? this->config_->rainbow_color : this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
-          #ifdef EHMTXv2_ADV_CLOCK
+#ifdef EHMTXv2_ADV_CLOCK
           if (!this->config_->draw_date(EHMTXv2_DATE_FORMAT_BIG, font, color_, xoffset + 15, this->ypos() + yoffset))
           {
-          #endif
+#endif
             if (this->config_->replace_time_date_active) // check for replace active
             {
               std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
@@ -617,15 +627,15 @@ namespace esphome
             else
             {
               this->config_->display->strftime(xoffset + 15, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
-                                               this->config_->clock->now());                    
+                                               this->config_->clock->now());
             }
             if ((this->config_->clock->now().second % 2 == 0) && this->config_->show_seconds)
             {
               this->config_->display->draw_pixel_at(0, 0, color_);
             }
-          #ifdef EHMTXv2_ADV_CLOCK
+#ifdef EHMTXv2_ADV_CLOCK
           }
-          #endif
+#endif
           if (this->mode != MODE_RAINBOW_DATE)
           {
             this->config_->draw_day_of_week(this->ypos());
@@ -651,80 +661,80 @@ namespace esphome
 
           if (this->mode == MODE_ICON_CLOCK)
           {
-            #ifdef EHMTXv2_ADV_CLOCK
+#ifdef EHMTXv2_ADV_CLOCK
             if (!this->config_->draw_clock(EHMTXv2_TIME_FORMAT, font, color_, xoffset + offset, this->ypos() + yoffset))
             {
-            #endif
+#endif
               if (this->config_->replace_time_date_active) // check for replace active
               {
                 std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
                 time_new = this->config_->replace_time_date(time_new);
                 this->config_->display->printf(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
-              } 
-              else 
+              }
+              else
               {
                 this->config_->display->strftime(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_TIME_FORMAT,
                                                  this->config_->clock->now());
               }
-            #ifdef EHMTXv2_ADV_CLOCK
+#ifdef EHMTXv2_ADV_CLOCK
             }
-            #endif
+#endif
           }
           else
           {
-            #ifdef EHMTXv2_ADV_CLOCK
+#ifdef EHMTXv2_ADV_CLOCK
             if (!this->config_->draw_date(EHMTXv2_DATE_FORMAT, font, color_, xoffset + offset, this->ypos() + yoffset))
             {
-            #endif
+#endif
               if (this->config_->replace_time_date_active) // check for replace active
               {
                 std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
                 time_new = this->config_->replace_time_date(time_new);
                 this->config_->display->printf(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, "%s", time_new.c_str());
-              } 
-              else 
+              }
+              else
               {
                 this->config_->display->strftime(xoffset + offset, this->ypos() + yoffset, font, color_, display::TextAlign::BASELINE_CENTER, EHMTXv2_DATE_FORMAT,
                                                  this->config_->clock->now());
               }
-            #ifdef EHMTXv2_ADV_CLOCK
+#ifdef EHMTXv2_ADV_CLOCK
             }
-            #endif
+#endif
           }
           if (this->icon != BLANKICON)
           {
             if (this->icon == SOLIDICON)
             {
               if ((this->mode == MODE_ICON_CLOCK && this->config_->icon_to_9 == 1) ||
-                  (this->mode == MODE_ICON_DATE  && this->config_->icon_to_9 == 2) ||
+                  (this->mode == MODE_ICON_DATE && this->config_->icon_to_9 == 2) ||
                   (this->config_->icon_to_9 == 3))
               {
-                this->config_->display->filled_rectangle(0, this->ypos(), 9, 8, this->config_->solid_color); 
+                this->config_->display->filled_rectangle(0, this->ypos(), 9, 8, this->config_->solid_color);
               }
               else
               {
-                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
+                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color);
               }
             }
             else if (this->icon == CALENDARICON)
             {
               if ((this->mode == MODE_ICON_CLOCK && this->config_->icon_to_9 == 1) ||
-                  (this->mode == MODE_ICON_DATE  && this->config_->icon_to_9 == 2) ||
+                  (this->mode == MODE_ICON_DATE && this->config_->icon_to_9 == 2) ||
                   (this->config_->icon_to_9 == 3))
               {
-                this->config_->display->filled_rectangle(0, this->ypos(), 9, 8, Color(C_RED, C_GREEN, C_BLUE)); 
-                this->config_->display->filled_rectangle(0, this->ypos(), 9, 2, this->config_->calendar_color); 
+                this->config_->display->filled_rectangle(0, this->ypos(), 9, 8, Color(C_RED, C_GREEN, C_BLUE));
+                this->config_->display->filled_rectangle(0, this->ypos(), 9, 2, this->config_->calendar_color);
               }
               else
               {
-                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
-                this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color); 
+                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
+                this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color);
               }
             }
             else
             {
               if ((this->mode == MODE_ICON_CLOCK && this->config_->icon_to_9 == 1) ||
-                  (this->mode == MODE_ICON_DATE  && this->config_->icon_to_9 == 2) ||
+                  (this->mode == MODE_ICON_DATE && this->config_->icon_to_9 == 2) ||
                   (this->config_->icon_to_9 == 3))
               {
                 this->config_->display->image(1, this->ypos(), this->config_->icons[this->icon]);
@@ -740,7 +750,7 @@ namespace esphome
             Color i_lcolor = this->config_->info_lcolor;
             Color i_rcolor = this->config_->info_rcolor;
 
-            #ifdef EHMTXv2_ADV_CLOCK
+#ifdef EHMTXv2_ADV_CLOCK
             if (this->mode == MODE_ICON_CLOCK)
             {
               i_y_offset = this->config_->info_clock_y_offset;
@@ -755,7 +765,7 @@ namespace esphome
               i_rcolor = this->config_->info_date_rcolor;
               info_font = this->config_->info_date_font ? this->config_->default_font : this->config_->special_font;
             }
-            #endif
+#endif
 
             int mode = 0;
             std::size_t pos = icon_name.find("#");
@@ -877,7 +887,7 @@ namespace esphome
         }
         else
         {
-          this->config_->display->print( xoffset + 19, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!t!");
+          this->config_->display->print(xoffset + 19, yoffset, font, this->config_->alarm_color, display::TextAlign::BASELINE_CENTER, "!t!");
         }
         break;
 
@@ -892,12 +902,12 @@ namespace esphome
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
 #else
-        #ifdef EHMTXv2_RAINBOW_SHIMMER
+#ifdef EHMTXv2_RAINBOW_SHIMMER
         if (this->mode == MODE_RAINBOW_ICON || this->mode == MODE_RAINBOW_ALERT_SCREEN)
           this->config_->draw_rainbow_text(this->text, font, this->xpos() + xoffset, this->ypos() + yoffset);
         else
-        #endif
-        this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
+#endif
+          this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
         if (this->mode == MODE_ICON_PROGRESS)
         {
@@ -906,12 +916,12 @@ namespace esphome
             this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
             if (this->icon == SOLIDICON)
             {
-              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color);
             }
             else if (this->icon == CALENDARICON)
             {
-              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
-              this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color); 
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color);
             }
             else
             {
@@ -940,12 +950,12 @@ namespace esphome
             this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
             if (this->icon == SOLIDICON)
             {
-              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color);
             }
             else if (this->icon == CALENDARICON)
             {
-              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
-              this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color); 
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
+              this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color);
             }
             else
             {
@@ -969,12 +979,12 @@ namespace esphome
             {
               if (this->icon == SOLIDICON)
               {
-                this->config_->display->filled_rectangle(2, this->ypos(), 8, 8, this->config_->solid_color); 
+                this->config_->display->filled_rectangle(2, this->ypos(), 8, 8, this->config_->solid_color);
               }
               else if (this->icon == CALENDARICON)
               {
-                this->config_->display->filled_rectangle(2, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
-                this->config_->display->filled_rectangle(2, this->ypos(), 8, 2, this->config_->calendar_color); 
+                this->config_->display->filled_rectangle(2, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
+                this->config_->display->filled_rectangle(2, this->ypos(), 8, 2, this->config_->calendar_color);
               }
               else
               {
@@ -990,12 +1000,12 @@ namespace esphome
             {
               if (this->icon == SOLIDICON)
               {
-                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color); 
+                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color);
               }
               else if (this->icon == CALENDARICON)
               {
-                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
-                this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color); 
+                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
+                this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color);
               }
               else
               {
@@ -1039,12 +1049,12 @@ namespace esphome
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
 #else
-        #ifdef EHMTXv2_RAINBOW_SHIMMER
+#ifdef EHMTXv2_RAINBOW_SHIMMER
         if (this->mode == MODE_RAINBOW_ICON_TEXT_SCREEN)
           this->config_->draw_rainbow_text(this->text, font, this->xpos() + xoffset, this->ypos() + yoffset);
         else
-        #endif
-        this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
+#endif
+          this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
         if (this->icon != BLANKICON)
         {
@@ -1066,12 +1076,12 @@ namespace esphome
           this->config_->display->line(x + 8, this->ypos(), x + 8, this->ypos() + 7, esphome::display::COLOR_OFF);
           if (this->icon == SOLIDICON)
           {
-            this->config_->display->filled_rectangle(x, this->ypos(), 8, 8, this->config_->solid_color); 
+            this->config_->display->filled_rectangle(x, this->ypos(), 8, 8, this->config_->solid_color);
           }
           else if (this->icon == CALENDARICON)
           {
-            this->config_->display->filled_rectangle(x, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
-            this->config_->display->filled_rectangle(x, this->ypos(), 8, 2, this->config_->calendar_color); 
+            this->config_->display->filled_rectangle(x, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
+            this->config_->display->filled_rectangle(x, this->ypos(), 8, 2, this->config_->calendar_color);
           }
           else
           {
@@ -1087,12 +1097,12 @@ namespace esphome
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
                                       this->text.c_str());
 #else
-        #ifdef EHMTXv2_RAINBOW_SHIMMER
+#ifdef EHMTXv2_RAINBOW_SHIMMER
         if (this->mode == MODE_RAINBOW_TEXT)
           this->config_->draw_rainbow_text(this->text, font, this->xpos() + xoffset, this->ypos() + yoffset);
         else
-        #endif
-        this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
+#endif
+          this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
         break;
 
@@ -1106,12 +1116,12 @@ namespace esphome
             {
               if (this->icon == SOLIDICON)
               {
-                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(i), 8, 8, this->config_->solid_color); 
+                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(i), 8, 8, this->config_->solid_color);
               }
               else if (this->icon == CALENDARICON)
               {
-                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE)); 
-                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(), 8, 2, this->config_->calendar_color); 
+                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
+                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(), 8, 2, this->config_->calendar_color);
               }
               else
               {
@@ -1226,10 +1236,10 @@ namespace esphome
     uint16_t max_steps = 0;
 
     std::string text_ = text;
-    #ifdef EHMTXv2_MULTICOLOR_TEXT
+#ifdef EHMTXv2_MULTICOLOR_TEXT
     std::regex color_re("(#[A-Fa-f0-9]{6})");
     text_ = std::regex_replace(text, color_re, "");
-    #endif
+#endif
 
     if (this->default_font)
     {
@@ -1332,5 +1342,4 @@ namespace esphome
 
     ESP_LOGD(TAG, "calc_scroll_time: mode: %d icons count: %d pixels %d calculated: %.1f defined: %d max_steps: %d", this->mode, icon_count, this->pixels_, this->screen_time_ / 1000.0, screen_time, this->scroll_reset);
   }
-
 }
