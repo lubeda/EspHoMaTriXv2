@@ -379,7 +379,9 @@ async def to_code(config):
                 except Exception as e:
                     raise core.EsphomeError(f" ICONS: Could not load image file {path}: {e}")
             else:
-                r = requests.get("https://developer.lametric.com/content/apps/icon_thumbs/" + conf[CONF_LAMEID], timeout=4.0)
+                r = requests.get("https://developer.lametric.com/content/apps/icon_thumbs/" + conf[CONF_LAMEID],
+                                 headers = {"Cache-Control": "no-cache, no-store, must-revalidate", "Pragma": "no-cache"},
+                                 timeout=4.0)
                 if r.status_code != requests.codes.ok:
                     raise core.EsphomeError(f" ICONS: Could not download image file {conf[CONF_LAMEID]}: {conf[CONF_ID]}")
                 image = Image.open(io.BytesIO(r.content))
@@ -400,7 +402,9 @@ async def to_code(config):
                 except Exception as e:
                     raise core.EsphomeError(f" ICONS: Could not load image file {path}: {e}")
             else:
-                r = requests.get(conf[CONF_URL], timeout=4.0)
+                r = requests.get(conf[CONF_URL], 
+                                 headers = {"Cache-Control": "no-cache, no-store, must-revalidate", "Pragma": "no-cache"},
+                                 timeout=4.0)
                 if r.status_code != requests.codes.ok:
                     raise core.EsphomeError(f" ICONS: Could not download image file {conf[CONF_URL]}: {conf[CONF_ID]}")
                 image = Image.open(io.BytesIO(r.content))
