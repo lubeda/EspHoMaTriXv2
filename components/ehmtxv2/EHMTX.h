@@ -346,6 +346,7 @@ namespace esphome
   {
   protected:
     EHMTX *config_;
+    void init(EHMTX *config);
 
   public:
     uint16_t pixels_;
@@ -380,6 +381,7 @@ namespace esphome
     EHMTX_queue(EHMTX *config,std::string text);
     Color heatColor(uint8_t temperature);
     void status();
+    
     void draw();
     bool isfree();
     bool update_slot(uint8_t _icon);

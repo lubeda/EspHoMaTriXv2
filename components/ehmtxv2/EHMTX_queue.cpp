@@ -70,8 +70,8 @@ namespace esphome
 
 #endif
 
-  EHMTX_queue::EHMTX_queue(EHMTX *config)
-  {
+   void EHMTX_queue::init(EHMTX *config)
+   {
     this->config_ = config;
     this->endtime = 0.0;
     this->last_time = 0.0;
@@ -91,11 +91,16 @@ namespace esphome
 #endif
     this->progressbar_color = esphome::display::COLOR_OFF;
     this->progressbar_back_color = esphome::display::COLOR_OFF;
+   }
+
+  EHMTX_queue::EHMTX_queue(EHMTX *config)
+  {
+    init(config);
   }
 
   EHMTX_queue::EHMTX_queue(EHMTX *config, std::string text_)
   {
-    EHMTX_queue(config);
+    init(config_);
 
     text = text_;
   }
