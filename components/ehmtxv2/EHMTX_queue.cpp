@@ -70,8 +70,8 @@ namespace esphome
 
 #endif
 
-   void EHMTX_queue::init(EHMTX *config)
-   {
+  EHMTX_queue::EHMTX_queue(EHMTX *config)
+  {
     this->config_ = config;
     this->endtime = 0.0;
     this->last_time = 0.0;
@@ -87,24 +87,24 @@ namespace esphome
     this->bitmap = nullptr;
 #endif
 #ifdef EHMTXv2_MULTICOLOR_TEXT
-    this->_textcolors = {};
+    this->charcolors = {};
 #endif
     this->progressbar_color = esphome::display::COLOR_OFF;
     this->progressbar_back_color = esphome::display::COLOR_OFF;
-   }
-
-  EHMTX_queue::EHMTX_queue(EHMTX *config)
-  {
-    init(config);
   }
 
-  EHMTX_queue::EHMTX_queue(EHMTX *config, std::string text_)
-  {
-    init(config_);
+    #ifdef EHMTXv2_MULTICOLOR_TEXT
+    void EHMTX_queue::multicolor(std::string _text,Color c)
+    {
+      std::regex color_re("(#[A-Fa-f0-9]{6})");
+      this->text = std::regex_replace(_text, color_re, "");
 
-    text = text_;
-  }
-
+      for (std::string::size_type i = 0; i < _text.size(); ++i) {
+        this->charcolors[i] = c;
+      }
+    }
+    #endif
+  
   void EHMTX_queue::status()
   {
     switch (this->mode)

@@ -346,8 +346,6 @@ namespace esphome
   {
   protected:
     EHMTX *config_;
-    void init(EHMTX *config);
-
   public:
     uint16_t pixels_;
     float screen_time_;
@@ -368,7 +366,8 @@ namespace esphome
     PROGMEM std::string text;
     PROGMEM std::string icon_name;
     #ifdef EHMTXv2_MULTICOLOR_TEXT
-      PROGMEM std::array<Color, 96> _textcolors;
+      PROGMEM std::array<Color, 96> charcolors;
+
     #endif
 #endif
 #ifdef USE_ESP8266
@@ -378,10 +377,14 @@ namespace esphome
 #endif
 
     EHMTX_queue(EHMTX *config);
-    EHMTX_queue(EHMTX *config,std::string text);
+
     Color heatColor(uint8_t temperature);
     void status();
-    
+
+    #ifdef EHMTXv2_MULTICOLOR_TEXT
+    void multicolor(std::string text,Color c);
+    #endif
+
     void draw();
     bool isfree();
     bool update_slot(uint8_t _icon);
