@@ -1,3 +1,13 @@
+/**
+ * @file EHMTX.cpp
+ * @author Lubeda and a lot helper
+ * @brief  The main file for the custom component
+ * @version 0.1
+ * @date 2024-06-11
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #include "esphome.h"
 #include <sstream>
 #include <vector>
@@ -19,6 +29,10 @@
 
 namespace esphome
 {
+  /**
+   * @brief Construct a new EHMTX::EHMTX object
+   * 
+   */
   EHMTX::EHMTX() : PollingComponent(POLLINGINTERVAL)
   {
     this->show_display = true;
@@ -72,6 +86,14 @@ namespace esphome
 
   }
 
+/**
+ * @brief display a indicator on the right side
+ * 
+ * @param r red
+ * @param g green
+ * @param b blue
+ * @param size 1-3
+ */
   void EHMTX::show_rindicator(int r, int g, int b, int size)
   {
     if (size > 0)
@@ -86,6 +108,14 @@ namespace esphome
     }
   }
 
+/**
+ * @brief display a indicator on the left side
+ * 
+ * @param r red
+ * @param g green
+ * @param b blue
+ * @param size 1-3
+ */
   void EHMTX::show_lindicator(int r, int g, int b, int size)
   {
     if (size > 0)
@@ -100,6 +130,16 @@ namespace esphome
     }
   }
 
+/**
+ * @brief line indicator in the Icons area on the specified screen
+ * 
+ * @param r red
+ * @param g green
+ * @param b blue
+ * @param size ??
+ * @param pos ??
+ * @param height ??
+ */
   void EHMTX::show_icon_indicator(int r, int g, int b, int size, int pos, int height)
   {
     if (size > 0)
@@ -116,24 +156,40 @@ namespace esphome
     }
   }
 
+/**
+ * @brief hides the right indicator
+ * 
+ */
   void EHMTX::hide_rindicator()
   {
     this->display_rindicator = 0;
     ESP_LOGD(TAG, "hide rindicator");
   }
 
+/**
+ * @brief * @brief hides the left indicator
+ * 
+ */
   void EHMTX::hide_lindicator()
   {
     this->display_lindicator = 0;
     ESP_LOGD(TAG, "hide lindicator");
   }
 
+ 
+/**
+ * @brief hides the icon indicator
+ */
   void EHMTX::hide_icon_indicator()
   {
     this->display_icon_indicator = 0;
     ESP_LOGD(TAG, "hide icon indicator");
   }
 
+/**
+ * @brief turns display off
+ * 
+ */
   void EHMTX::set_display_off()
   {
     this->show_display = false;
@@ -150,6 +206,10 @@ namespace esphome
     }
   }
 
+/**
+ * @brief turns display on
+ * 
+ */
   void EHMTX::set_display_on()
   {
     this->show_display = true;
@@ -160,7 +220,10 @@ namespace esphome
       t->process(this->show_display);
     }
   }
-
+/**
+ * @brief end night mode
+ * 
+ */
   void EHMTX::set_night_mode_off()
   {
     this->night_mode = false;
@@ -171,7 +234,10 @@ namespace esphome
       t->process(this->night_mode);
     }
   }
-
+/**
+ * @brief  in night mode not all screens are shown
+ * 
+ */
   void EHMTX::set_night_mode_on()
   {
     this->night_mode = true;
@@ -188,31 +254,58 @@ namespace esphome
     this->weekday_accent = false;
     ESP_LOGD(TAG, "weekday accent off");
   }
-
+/**
+ * @brief turns on the display of small days (accent) of the week when brightness is insufficient
+ * 
+ */
   void EHMTX::set_weekday_accent_on()
   {
     this->weekday_accent = true;
     ESP_LOGD(TAG, "weekday accent on");
   }
-
+/**
+ * @brief sets the default color for the line indication the actuall day of week
+ * 
+ * @param r 
+ * @param g 
+ * @param b 
+ */
   void EHMTX::set_today_color(int r, int g, int b)
   {
     this->today_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
     ESP_LOGD(TAG, "default today color r: %d g: %d b: %d", r, g, b);
   }
 
+/**
+ * @brief sets the default color for the line indication the other days
+ * 
+ * @param r 
+ * @param g 
+ * @param b 
+ */
   void EHMTX::set_weekday_color(int r, int g, int b)
   {
     this->weekday_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
     ESP_LOGD(TAG, "default weekday color: %d g: %d b: %d", r, g, b);
   }
-
+/**
+ * @brief some mode look better with wider icons
+ * 
+ * @param mode the screen mode
+ */
   void EHMTX::expand_icon_to_9(int mode)
   {
     this->icon_to_9 = mode;
     ESP_LOGD(TAG, "icon expanded to 9 mode: %d", mode);
   }
-
+/**
+ * @brief helper to check trailing chars for behavior selection
+ * 
+ * @param fullString the text to examine
+ * @param ending the characters to look for
+ * @return true 
+ * @return false 
+ */
   bool EHMTX::string_has_ending(std::string const &fullString, std::string const &ending)
   {
     if (fullString.length() >= ending.length())
@@ -224,7 +317,13 @@ namespace esphome
       return false;
     }
   }
-
+/**
+ * @brief Get the icon name object
+ * 
+ * @param iconname icon name with additional parameters after `delim`
+ * @param delim the delimiter
+ * @return std::string the cleaned up iconname
+ */
   std::string get_icon_name(std::string iconname, char delim = '|')
   {
     std::stringstream stream(iconname);
