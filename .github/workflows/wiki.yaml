@@ -18,3 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: Andrew-Chen-Wang/github-wiki-action@v4.4.0
+      - uses: mattnotmitt/doxygen-action@v1.9.5
+        with:
+          working-directory: 'components/ehmtxv2/docs'
+          doxyfile-path: 'components/ehmtxv2'
