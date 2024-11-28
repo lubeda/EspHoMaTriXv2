@@ -25,7 +25,7 @@ MAXFRAMES = 110
 MAXICONS = 120
 ICONWIDTH = 8
 ICONHEIGHT = 8
-ICONBUFFERSIZE = ICONWIDTH * ICONHEIGHT * 4
+ICONBUFFERSIZE = ICONWIDTH * ICONHEIGHT * 2
 SVG_ICONSTART = '<svg width="80px" height="80px" viewBox="0 0 80 80">'
 SVG_FULL_SCREEN_START = '<svg width="320px" height="80px" viewBox="0 0 320 80">'
 SVG_END = "</svg>"
@@ -446,11 +446,15 @@ async def to_code(config):
             pos = 0 
             frameIndex = 0
             html_string += f"<DIV ID={conf[CONF_ID]}>"
-            data = [0 for _ in range(ICONBUFFERSIZE * 2 * frames)]
+            data = [0 for _ in range(ICONBUFFERSIZE * frames)]
+            if image.has_transparency_data:
+                logging.warning(f" icon {conf[CONF_ID]} has transparency!")
+            
             for frameIndex in range(frames):
                 
                 image.seek(frameIndex)
-                frame = image.convert("RGBA")
+                frame = image.convert("RGB")
+
                 if CONF_RESIZE in conf:
                     frame = frame.resize([width, height])
 
@@ -472,8 +476,7 @@ async def to_code(config):
                     y = i//width
                     i +=1
                     rgb = (R << 11) | (G << 5) | B
-                    if pix[3] < 64:
-                        rgb = 0
+                    
                     html_string += rgb565_svg(x,y,R,G,B)
                     data[pos] = rgb >> 8
                     pos += 1
