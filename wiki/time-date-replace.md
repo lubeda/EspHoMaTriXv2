@@ -20,7 +20,7 @@ Normal time and date function to get: `4:30PM` and `Oct 11`:
 An example to get Korean date and time like `4:30오후` and `10월11일`:
 
 ```yaml
-  time_format: "%l:%M%p"
+  time_format: "%p%l:%M"
   date_format: "%b%d일"
   replace_time_date_from: "AM PM Sun Mon Tue Wed Thu Fri Sat Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec"
   replace_time_date_to: "오전 오후 일 월 화 수 목 금 토 1월 2월 3월 4월 5월 6월 7월 8월 9월 10월 11월 12월"
