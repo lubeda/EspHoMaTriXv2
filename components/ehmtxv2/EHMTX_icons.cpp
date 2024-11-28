@@ -10,6 +10,7 @@ namespace esphome
     this->reverse = revers;
     this->frame_duration = frame_duration;
     this->counting_up = true;
+    this->transparent_=false;
   }
 
   void EHMTX_Icon::next_frame()
