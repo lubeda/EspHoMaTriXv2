@@ -73,7 +73,10 @@ esphome:
       - ds1307.read_time:
 
 esp32:
-  board: esp32dev
+  board: "$board"
+  framework:
+    advanced:
+      ignore_efuse_custom_mac: true
 
 font:
   - file: MatrixChunky6.ttf
