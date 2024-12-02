@@ -2,15 +2,15 @@ substitutions:
   devicename: ulanzi
   friendly_name: EspHoMaTriXv2
   board: esp32dev
-  # Pin definition from https://github.com/aptonline/PixelIt_Ulanzi 
-  battery_pin: GPIO34 
-  ldr_pin: GPIO35 
-  matrix_pin: GPIO32 
-  left_button_pin: GPIO26 
-  mid_button_pin: GPIO27 
-  right_button_pin: GPIO14 
-  scl_pin: GPIO22 
-  sda_pin: GPIO21 
+  # Pin definition from https://github.com/aptonline/PixelIt_Ulanzi
+  battery_pin: GPIO34
+  ldr_pin: GPIO35
+  matrix_pin: GPIO32
+  left_button_pin: GPIO26
+  mid_button_pin: GPIO27
+  right_button_pin: GPIO14
+  scl_pin: GPIO22
+  sda_pin: GPIO21
 
 output:
   - platform: gpio
@@ -58,16 +58,16 @@ external_components:
   - source:
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: "2024.6.0"
-    refresh: 600s 
-    components: [ ehmtxv2 ]   
+      ref: "2024.12.0"
+    refresh: 600s
+    components: [ ehmtxv2 ]
 
 esphome:
   comment: "EHMTXv2 from LuBeDa"
-  name: $devicename 
+  name: $devicename
   project:
     name: "Ulanzi.EHMTXv2"
-    version: "2024.6.0"
+    version: "2024.12.0"
   on_boot:
     then:
       - ds1307.read_time:
@@ -79,9 +79,9 @@ font:
   - file: MatrixChunky6.ttf
     id: px6_font
     size: 6
-    glyphs:  |
+    glyphs:  |-
       ! "#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz°
-  
+
 binary_sensor:
   - platform: status
     name: "$devicename Status"
@@ -91,13 +91,13 @@ binary_sensor:
       inverted: true
     name: "Left button"
   - platform: gpio
-    pin: 
+    pin:
       inverted: true
       number: $mid_button_pin
       mode: INPUT_PULLUP
     name: "Middle button"
   - platform: gpio
-    pin: 
+    pin:
       number: $right_button_pin
       inverted: true
     name: "Right button"
@@ -155,11 +155,11 @@ sensor:
               if (n > id(aab_max)) n = id(aab_max);
               if (n < id(aab_min)) n = id(aab_min);
               int c = id(rgb8x32)->get_brightness(); // current value
-              c = c>0?c:1 ; 
+              c = c>0?c:1 ;
               int d = (n - c) * 100 / c; // diff in %
               if ( abs(d) > 2 ) id(rgb8x32)->set_brightness(n);
             }
-      
+
 ota:
   - platform: esphome
     password: !secret ota_password
@@ -188,7 +188,7 @@ light:
     gamma_correct: 2.0
     name: "$devicename Light"
     restore_mode: ALWAYS_OFF
-    
+
 time:
   - platform: homeassistant
     on_time_sync:
@@ -215,7 +215,7 @@ display:
     lambda: |-
       id(rgb8x32)->tick();
       id(rgb8x32)->draw();
-      
+
 ehmtxv2:
   id: rgb8x32
   icons2html: true
@@ -230,7 +230,7 @@ ehmtxv2:
   special_font_id: px6_font
   special_font_yoffset: 7
   # until here
-  icons: 
+  icons:
     - id: error
       lameid: 40530
     - id: home_assistant
