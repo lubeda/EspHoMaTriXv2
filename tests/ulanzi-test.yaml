@@ -66,8 +66,8 @@ font:
   - file: ehmtx.ttf
     size: 16
     id: default_font
-    glyphs:  |
-      !?"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnÖÄÜöäüopqrstuvwxyz@<>ß§€/
+    glyphs:  |-
+       !?"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnÖÄÜöäüopqrstuvwxyz@<>ß§€/
   
 binary_sensor:
   - platform: status
