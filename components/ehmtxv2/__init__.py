@@ -437,7 +437,7 @@ async def to_code(config):
 
         if hasattr(image, 'n_frames'):
             frames = min(image.n_frames, MAXFRAMES)
-            logging.info(f"animation {conf[CONF_ID]} with { frames } frames")
+            logging.info(f"animation {conf[CONF_ID]} with { frames } frame(s)")
         else:
             frames = 1
 
