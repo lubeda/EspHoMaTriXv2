@@ -32,7 +32,6 @@ SVG_END = "</svg>"
 
 logging.warning(f"")
 logging.warning(f"Please check the documentation and wiki https://github.com/lubeda/EspHoMaTriXv2")
-logging.warning(f"This will only work with esphome >= 2023.7.0")
 logging.warning(f"")
 
 def rgb565_svg(x,y,r,g,b):

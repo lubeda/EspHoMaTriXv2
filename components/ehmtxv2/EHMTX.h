@@ -38,7 +38,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2024.6.0";
+static const char *const EHMTX_VERSION = "2024.11.0";
 static const char *const TAG = "EHMTXv2";
 
 enum show_mode : uint8_t
