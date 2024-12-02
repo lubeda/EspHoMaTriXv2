@@ -86,24 +86,24 @@ namespace esphome
 #ifdef EHMTXv2_ADV_BITMAP
     this->bitmap = nullptr;
 #endif
-#ifdef EHMTXv2_MULTICOLOR_TEXT
-    this->charcolors = {};
-#endif
+// #ifdef EHMTXv2_MULTICOLOR_TEXT
+//     this->charcolors = {};
+// #endif
     this->progressbar_color = esphome::display::COLOR_OFF;
     this->progressbar_back_color = esphome::display::COLOR_OFF;
   }
 
-    #ifdef EHMTXv2_MULTICOLOR_TEXT
-    void EHMTX_queue::multicolor(std::string _text,Color c)
-    {
-      std::regex color_re("(#[A-Fa-f0-9]{6})");
-      this->text = std::regex_replace(_text, color_re, "");
-
-      for (std::string::size_type i = 0; i < _text.size(); ++i) {
-        this->charcolors[i] = c;
-      }
-    }
-    #endif
+//     #ifdef EHMTXv2_MULTICOLOR_TEXT
+//     void EHMTX_queue::multicolor(std::string _text,Color c)
+//     {
+//       std::regex color_re("(#[A-Fa-f0-9]{6})");
+//       this->text = std::regex_replace(_text, color_re, "");
+//
+//       for (std::string::size_type i = 0; i < _text.size(); ++i) {
+//         this->charcolors[i] = c;
+//       }
+//     }
+//     #endif
   
   void EHMTX_queue::status()
   {
