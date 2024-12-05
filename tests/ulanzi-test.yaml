@@ -250,7 +250,3 @@ ehmtxv2:
 animation:
   - id: animation_black
     file: 1pixel.gif
-
-image:
-  - id: image_black
-    file: 1pixel.gif

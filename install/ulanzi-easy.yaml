@@ -299,7 +299,3 @@ ehmtxv2:
 animation:
   - file: "1pixel.gif"
     id: animation_1p
-
-image:
-  - file: "1pixel.gif"
-    id: image_1p
