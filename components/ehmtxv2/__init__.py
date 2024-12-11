@@ -328,7 +328,7 @@ EHMTX_SCHEMA = cv.Schema({
         cv.Length(max=MAXICONS),
     )})
 
-CONFIG_SCHEMA = cv.All(font.validate_pillow_installed, EHMTX_SCHEMA)
+CONFIG_SCHEMA = cv.All( EHMTX_SCHEMA)
 
 CODEOWNERS = ["@lubeda"]
 
