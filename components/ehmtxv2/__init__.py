@@ -109,7 +109,6 @@ CONF_SCROLLINTERVAL = "scroll_interval"
 CONF_BLENDSTEPS = "blend_steps"
 CONF_RAINBOWINTERVAL = "rainbow_interval"
 CONF_RAINBOWSHIMMER = "rainbow_shimmer"
-CONF_MULTICOLOR_TEXT = "multicolor_text"
 CONF_FRAMEINTERVAL = "frame_interval"
 CONF_DEFAULT_FONT_ID = "default_font_id"
 CONF_DEFAULT_FONT = "default_font"
@@ -241,8 +240,6 @@ EHMTX_SCHEMA = cv.Schema({
     cv.Optional(CONF_RAINBOWINTERVAL, default="32"
     ): cv.templatable(cv.positive_int),
     cv.Optional(CONF_RAINBOWSHIMMER, default=False
-    ): cv.boolean,
-    cv.Optional(CONF_MULTICOLOR_TEXT, default=False
     ): cv.boolean,
     cv.Optional(CONF_SCROLLCOUNT, default="2"
     ): cv.templatable(cv.positive_int),
@@ -615,10 +612,6 @@ async def to_code(config):
     if config[CONF_RAINBOWSHIMMER]:
         cg.add_define("EHMTXv2_RAINBOW_SHIMMER")
         logging.info(f"[X] Rainbow shimmer")
-
-    if config[CONF_MULTICOLOR_TEXT]:
-        cg.add_define("EHMTXv2_MULTICOLOR_TEXT")
-        logging.info(f"[X] Multi color text")
 
     if config[CONF_SCROLL_SMALL_TEXT]:
         cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT")

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024.12.1
+- prepared for esphome 2024.12.0
+- removed multicolor_text
+
 ## 2024.5.0
 - changed on_empty_queue behavior (triggered every 15 sec after first occurance)
 
