@@ -1,9 +1,6 @@
 #ifndef EHMTX_H
 #define EHMTX_H
 #include "esphome.h"
-#ifdef EHMTXv2_MULTICOLOR_TEXT
-#include <array>
-#endif
 #define USE_Fireplugin
 #include "esphome/components/time/real_time_clock.h"
 
@@ -38,7 +35,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2024.11.0";
+static const char *const EHMTX_VERSION = "2024.12.1";
 static const char *const TAG = "EHMTXv2";
 
 enum show_mode : uint8_t
@@ -365,10 +362,6 @@ namespace esphome
     PROGMEM Color text_color, progressbar_color, progressbar_back_color;
     PROGMEM std::string text;
     PROGMEM std::string icon_name;
-    #ifdef EHMTXv2_MULTICOLOR_TEXT
-      PROGMEM std::array<Color, 96> charcolors;
-
-    #endif
 #endif
 #ifdef USE_ESP8266
     Color text_color, progressbar_color, progressbar_back_color;
@@ -380,10 +373,6 @@ namespace esphome
 
     Color heatColor(uint8_t temperature);
     void status();
-
-    #ifdef EHMTXv2_MULTICOLOR_TEXT
-    void multicolor(std::string text,Color c);
-    #endif
 
     void draw();
     bool isfree();
