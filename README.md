@@ -21,7 +21,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: 2024.12.1
+      ref: 2024.12.3
     refresh: 60s 
     components: [ ehmtxv2 ]   
 ```
@@ -388,6 +388,35 @@ Example:
 **scroll_interval** (optional, ms): the interval in ms to scroll the text (default=80), should be a multiple of the `update_interval` of [display](https://esphome.io/components/display/addressable_light.html)
 
 **rainbow_shimmer** (optional, boolean): If true, enables color shimmer when displaying text in rainbow modes.
+
+**multicolor_text** (optional, boolean): If true, enables text multi color support when displaying text.
+
+Example:
+```Yaml
+ehmtxv2:
+  id: rgb8x32
+...
+  multicolor_text: true
+```
+
+```Yaml
+service: esphome.ulanzi_text_screen
+data:
+  default_font: true
+  text: "Default Color Text #00FF00Green Color Text #FF0000Red Color Text #0000FFBlue Color Text #000000Default Color Text"
+  lifetime: 2
+  screen_time: 10
+  r: 255
+  g: 255
+  b: 255
+```
+Shows text in different colors, `Default Color Text` in the default color `#FFFFFF` (r: 255, g:255, b: 255), followed by `Green Color Text` in green `#00FF00`, then `Red Color Text` in red `#FF0000`, then `Blue Color Text` in blue `#0000FF` and finally `Default Color Text` in default color, due `#000000`.
+
+> [!WARNING]
+> In this mode, with a large number of color changes, or with long lines, a short-term decrease in performance is possible.
+>
+> ```[13:26:02][W][component:237]: Component display took a long time for an operation (55 ms).```
+> ```[13:26:02][W][component:238]: Components should block for at most 30 ms.```
 
 **icons2html** (optional, boolean): If true, generate the HTML-file (*filename*.html) to show all included icons. (default = `false`)
 

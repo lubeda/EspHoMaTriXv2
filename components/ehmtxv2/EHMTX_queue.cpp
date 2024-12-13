@@ -1,4 +1,7 @@
 #include "esphome.h"
+#ifdef EHMTXv2_MULTICOLOR_TEXT
+#include <regex>
+#endif
 
 namespace esphome
 {
@@ -1229,6 +1232,10 @@ namespace esphome
     uint16_t max_steps = 0;
 
     std::string text_ = text;
+#ifdef EHMTXv2_MULTICOLOR_TEXT
+    std::regex color_re("(#[A-Fa-f0-9]{6})");
+    text_ = std::regex_replace(text, color_re, "");
+#endif
 
     if (this->default_font)
     {

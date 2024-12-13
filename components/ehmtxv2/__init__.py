@@ -19,7 +19,7 @@ from urllib.parse import urlparse
 _LOGGER = logging.getLogger(__name__)
 
 DEPENDENCIES = ["display", "light", "api"]
-AUTO_LOAD = ["ehmtxv2","json","image"]
+AUTO_LOAD = ["ehmtxv2", "json", "image", "animation"]
 IMAGE_TYPE_RGB565 = 4
 MAXFRAMES = 110
 MAXICONS = 120
@@ -109,6 +109,7 @@ CONF_SCROLLINTERVAL = "scroll_interval"
 CONF_BLENDSTEPS = "blend_steps"
 CONF_RAINBOWINTERVAL = "rainbow_interval"
 CONF_RAINBOWSHIMMER = "rainbow_shimmer"
+CONF_MULTICOLOR_TEXT = "multicolor_text"
 CONF_FRAMEINTERVAL = "frame_interval"
 CONF_DEFAULT_FONT_ID = "default_font_id"
 CONF_DEFAULT_FONT = "default_font"
@@ -241,6 +242,8 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.templatable(cv.positive_int),
     cv.Optional(CONF_RAINBOWSHIMMER, default=False
     ): cv.boolean,
+    cv.Optional(CONF_MULTICOLOR_TEXT, default=False
+    ): cv.boolean,
     cv.Optional(CONF_SCROLLCOUNT, default="2"
     ): cv.templatable(cv.positive_int),
     cv.Optional(
@@ -325,7 +328,7 @@ EHMTX_SCHEMA = cv.Schema({
         cv.Length(max=MAXICONS),
     )})
 
-CONFIG_SCHEMA = cv.All( EHMTX_SCHEMA)
+CONFIG_SCHEMA = cv.All(EHMTX_SCHEMA)
 
 CODEOWNERS = ["@lubeda"]
 
@@ -612,6 +615,10 @@ async def to_code(config):
     if config[CONF_RAINBOWSHIMMER]:
         cg.add_define("EHMTXv2_RAINBOW_SHIMMER")
         logging.info(f"[X] Rainbow shimmer")
+
+    if config[CONF_MULTICOLOR_TEXT]:
+        cg.add_define("EHMTXv2_MULTICOLOR_TEXT")
+        logging.info(f"[X] Multi color text")
 
     if config[CONF_SCROLL_SMALL_TEXT]:
         cg.add_define("EHMTXv2_SCROLL_SMALL_TEXT")
