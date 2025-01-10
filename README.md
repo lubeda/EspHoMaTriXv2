@@ -1,3 +1,19 @@
+# Important
+
+Each esphome release is packed with suprises (breaking changes), so it is hard to stay up to date for me. Each user can decide which version of esphome he uses. So there is not one combination of esphome, ehmtx and yaml that fits all.
+
+## So ehmtx is prone to breaking on every esphome update.
+
+**My suggestion is:**
+
+**Keep esphome up to date with the latest official version!**
+
+For ehmtx use the newest version tag by manually editing the ref tag in the external_componets section in your yaml.
+Only change your selected ehmtx version if there are compile errors. But expect manual changes to your yaml or even your automations.
+I will try to make new releases if there are errors due to esphome-updates or new features due to pull-requests i like.
+
+
+
 # EspHoMaTriX version 2 (EHMTXv2)
 
 [donation-badge]:https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white
