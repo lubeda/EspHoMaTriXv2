@@ -1,3 +1,8 @@
+# Bad news
+since esphome 2025.2 ehmtx isn't supported anymore
+
+=======================
+
 # Important
 
 Each esphome release is packed with suprises (breaking changes), so it is hard to stay up to date for me. Each user can decide which version of esphome he uses. So there is not one combination of esphome, ehmtx and yaml that fits all.
