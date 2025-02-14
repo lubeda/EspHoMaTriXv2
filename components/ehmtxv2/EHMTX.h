@@ -474,8 +474,9 @@ namespace esphome
    * @param icon_name 
    * @param revers play reverse
    * @param frame_duration time per frame
+   * @param transparency
    */
-    EHMTX_Icon(const uint8_t *data_start, int width, int height, uint32_t animation_frame_count, esphome::image::ImageType type, std::string icon_name, bool revers, uint16_t frame_duration);
+    EHMTX_Icon(const uint8_t *data_start, int width, int height, uint32_t animation_frame_count, esphome::image::ImageType type, std::string icon_name, bool revers, uint16_t frame_duration, esphome::image::Transparency transparency);
 #ifdef USE_ESP32
     PROGMEM std::string name;
 #endif
