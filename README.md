@@ -14,14 +14,14 @@
 
 ## Important breaking news
 
-The latest esphome releases introduced a lot of problems with my code. So my advice alway use the latest version of this tool and use it directly from the repo, like this:
+The latest esphome releases introduced a lot of problems with my code. So my advice **always** use the latest version of this tool and use it directly from the repo, like this:
 
 ```yaml
 external_components:
   - source:
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: 2024.12.3
+      ref: 2025.2.0
     refresh: 60s 
     components: [ ehmtxv2 ]   
 ```

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2025.2.0
+- @skgsergio kept ehmtx alive by his [PR](https://github.com/lubeda/EspHoMaTriXv2/pull/277) 
+
 ## 2024.12.1
 - prepared for esphome 2024.12.0
 - removed multicolor_text
