@@ -13,6 +13,10 @@ jobs:
   build-stable:
     name: Compile test
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        file: tests/ehtmxv2-template.yaml
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -22,6 +26,6 @@ jobs:
         uses: esphome/build-action@v6
         id: esphome-build
         with:
-          yaml-file: ./tests/ehtmxv2-template.yaml
+          yaml-file: ${{ matrix.file }}
           version: dev
 
