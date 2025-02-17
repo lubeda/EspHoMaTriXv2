@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 2023.8.0
+      - 2025.2.0
+      - latest
       - main
   pull_request:
 
@@ -14,49 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        firmware:
-          - file: tests/ulanzi-easy.yaml
-            name: Ulanzi-Easy
-            manifest_filename: ulanzi-easy-manifest.json
           - file:  tests/ehtmxv2-template.yaml
             name: EHMTX template
             manifest_filename: ehtmxv2-template-manifest.json
-          - file:  tests/ehtmxv2-special.yaml
-            name: EHMTX template 8266
-            manifest_filename: ehtmxv2-special-template-manifest.json
-        devfirmware:
-          - file: tests/ulanzi-easy.yaml
-            name: Ulanzi-Easy
-            manifest_filename: ulanzi-easy-manifest.json
       fail-fast: false
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v4
+        with:
+          ref: 2025.2.0
       - name: Build firmware
-        uses: esphome/build-action@v1.8.0
+        uses: esphome/build-action@v6
         id: esphome-build
         with:
           yaml_file: ${{ matrix.firmware.file }}
           version: latest
-  build-develop:
-    name: Build ${{ matrix.firmware.name }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        firmware:
-          - file: tests/ulanzi-easy.yaml
-            name: Ulanzi-Easy
-            manifest_filename: ulanzi-easy-manifest.json
-          - file:  tests/ehtmxv2-special.yaml
-            name: EHMTX template 8266
-            manifest_filename: ehtmxv2-special-template-manifest.json
-      fail-fast: false
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v3.3.0
-      - name: Build firmware
-        uses: esphome/build-action@v1.8.0
-        id: esphome-build
-        with:
-          yaml_file: ${{ matrix.firmware.file }}
-          version: beta
