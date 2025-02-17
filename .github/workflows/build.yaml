@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        file: tests/ehtmxv2-template.yaml
+        file: "./tests/ehtmxv2-template.yaml"
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
