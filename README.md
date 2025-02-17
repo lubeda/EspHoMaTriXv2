@@ -1,24 +1,3 @@
-# Bad news
-since esphome 2025.2 ehmtx isn't supported anymore
-
-=======================
-
-# Important
-
-Each esphome release is packed with suprises (breaking changes), so it is hard to stay up to date for me. Each user can decide which version of esphome he uses. So there is not one combination of esphome, ehmtx and yaml that fits all.
-
-## So ehmtx is prone to breaking on every esphome update.
-
-**My suggestion is:**
-
-**Keep esphome up to date with the latest official version!**
-
-For ehmtx use the newest version tag by manually editing the ref tag in the external_componets section in your yaml.
-Only change your selected ehmtx version if there are compile errors. But expect manual changes to your yaml or even your automations.
-I will try to make new releases if there are errors due to esphome-updates or new features due to pull-requests i like.
-
-
-
 # EspHoMaTriX version 2 (EHMTXv2)
 
 [donation-badge]:https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white
@@ -30,12 +9,44 @@ I will try to make new releases if there are errors due to esphome-updates or ne
 [![Publish wiki](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/wiki.yaml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/wiki.yaml)
 [![Build](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/build.yaml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/build.yaml)
 
+
+# Important
+
+Each esphome release is packed with new features and suprises (breaking changes), so it is hard to stay up to date for me. Each user can decide which version of esphome he uses. So there is not one combination of esphome, ehmtx and yaml that fits all.
+
+## So ehmtx is prone to breaking on every esphome update.
+
+**My suggestion is:**
+
+**Keep esphome up to date with the latest official version!**
+
+**Which are:**
+[Branch 2025.2.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.0) for esphome 2025.2.0-
+[Branch 2024.12.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.0) for esphome 2024.12.0-...
+
+For ehmtx use the newest version tag by manually editing the ref tag in the external_componets section in your yaml.
+Only change your selected ehmtx version if there are compile errors. But expect manual changes to your yaml or even your automations.
+
+The details to each EspHoMaTriX version are on the branch pages
+
+```yaml
+external_components:
+  - source:
+      #type: local
+      #path: EsphoMaTrix/components # e.g. /config/esphome/components
+      type: git
+      url: https://github.com/lubeda/EspHoMaTriXv2
+      ref: 2025.2.0
+    refresh: 60s 
+    components: [ ehmtxv2 ]   
+```
+
 ## Important
 
 With the ulanzi-hardware and esphome 2024.2.0 you have to remove all the rtttl stuff to make things work!!!
 
 The hardware design of the ulanzi isn't perfect. If your ulanzi makes a crazy beeping noise after removinf the rtttl-component you may use this setting to make it silent again.
-
+vv
 ```yaml
 output:
   - platform: gpio
