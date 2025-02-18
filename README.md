@@ -12,9 +12,9 @@
 > [!TIP]
 > If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me 🙏 !
 
-## Important breaking news
+## Advice
 
-The latest esphome releases introduced a lot of problems with my code. So my advice **always** use the latest version of this tool and use it directly from the repo, like this:
+**Always** use the latest version of this tool and use it directly from the repo, like this:
 
 ```yaml
 external_components:
@@ -27,23 +27,6 @@ external_components:
 ```
 
 Use the `ref` parameter to select the right version. **But** when there are breaking changes in esphome you have to expect breaking changes in EspHoMaTriX too (at least some funnny workarounds)
-
-## Important breaking news for ulanzi TC001 users
-
-With the ulanzi-hardware and esphome 2024.2.0 you have to remove all the rtttl stuff to make things work!!!
-
-### Details
-
-The hardware design of the ulanzi isn't perfect. If your ulanzi makes a crazy beeping noise after removinf the rtttl-component you may use this setting to make it silent again.
-
-```yaml
-output:
-  - platform: gpio
-    pin:
-      number: GPIO15
-      ignore_strapping_warning: true
-    id: buzzer_pin
-```
 
 ## Introduction
 
@@ -487,13 +470,11 @@ compilation terminated.
 You have to add this to your YAML ()
 
 ```yaml
-image:
-   - file: 1pixel.gif
-     id: breaking20237
-
 animation:
-  - file: 1pixel.gif
-    id: breaking202371
+  - id: animation_1p
+    file: "1pixel.gif"
+    resize: 8x32
+    type: rgb565
 ```
 
 You have also to copy the file 1pixel.gif from the **install**ation folder to the esphome directory with your YAML.
