@@ -247,7 +247,3 @@ ehmtxv2:
         data_template:
           iconname: !lambda "return icon.c_str();"
           text: !lambda "return text.c_str();"
-animation:
-  - id: animation_black
-    file: 1pixel.gif
-

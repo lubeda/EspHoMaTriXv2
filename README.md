@@ -40,7 +40,7 @@ You can control it with home assistant using service calls or by using lambda wi
 
 For starters, I assume you use an Ulanzi TC001 pixel clock. For tinkerers and people that want more, read the [For experienced user](#for-experienced-users) part.
 
-1. Copy all three files (ulanzi-easy.yaml, 1pixel.gif , MatrixChunky6.ttf) from the `install` folder to your esphome folder.
+1. Copy all three files (ulanzi-easy.yaml, MatrixChunky6.ttf) from the `install` folder to your esphome folder.
 2. Define your secret settings (OTA password, Wi-Fi settings) in the secrets.yaml file or with the ESPHome UI.
 3. Define the weekdays variable for your language (see [parameters](#parameters-reference)).
 4. Install it via USB and the device should boot.
@@ -453,29 +453,6 @@ All the various solutions have their pros and cons. I tried some and used AWTRIX
 
 > [!WARNING]
 > Some updates of [esphome](https://esphome.io) will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
-
-### Compile errors `animation.h` is missing
-
-```cpp
-Error:
-In file included from src/esphome.h:25,
-                 from src/esphome/components/ehmtx/EHMTX.cpp:1:
-src/esphome/components/ehmtx/EHMTX.h:6:10: fatal error: esphome/components/animation/animation.h: No such file or directory
- #include "esphome/components/animation/animation.h"
-          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-... 
-```
-
-You have to add this to your YAML ()
-
-```yaml
-animation:
-  - id: animation_1p
-    file: "1pixel.gif"
-    resize: 8x32
-    type: rgb565
-```
 
 You have also to copy the file 1pixel.gif from the **install**ation folder to the esphome directory with your YAML.
 

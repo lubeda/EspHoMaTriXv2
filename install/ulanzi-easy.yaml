@@ -294,7 +294,3 @@ ehmtxv2:
       - lambda: |-
           id(rgb8x32).set_infotext_color(20,20,20,20,20,20,false,1);
           id(rgb8x32).icon_clock("calendar|day#0",1440,10,false);
-
-animation:
-  - file: "1pixel.gif"
-    id: animation_1p
