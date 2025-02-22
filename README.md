@@ -14,36 +14,19 @@
 
 ## Important breaking news
 
-The latest esphome releases introduced a lot of problems with my code. So my advice alway use the latest version of this tool and use it directly from the repo, like this:
+So my advice alway use the latest version of this tool and use it directly from the [repo](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.0), like this:
 
 ```yaml
 external_components:
   - source:
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: 2024.12.3
+      ref: 202%.2.0
     refresh: 60s 
     components: [ ehmtxv2 ]   
 ```
 
 Use the `ref` parameter to select the right version. **But** when there are breaking changes in esphome you have to expect breaking changes in EspHoMaTriX too (at least some funnny workarounds)
-
-## Important breaking news for ulanzi TC001 users
-
-With the ulanzi-hardware and esphome 2024.2.0 you have to remove all the rtttl stuff to make things work!!!
-
-### Details
-
-The hardware design of the ulanzi isn't perfect. If your ulanzi makes a crazy beeping noise after removinf the rtttl-component you may use this setting to make it silent again.
-
-```yaml
-output:
-  - platform: gpio
-    pin:
-      number: GPIO15
-      ignore_strapping_warning: true
-    id: buzzer_pin
-```
 
 ## Introduction
 
