@@ -14,7 +14,7 @@
 
 # Don't use "latest"
 
-**Always** use the latest version according to your esphome version of this tool and use it directly from the repo, like this:
+**Always** use the latest version **according to your esphome version** of this tool and use it directly from the repo, like this:
 
 ```yaml
 external_components:
