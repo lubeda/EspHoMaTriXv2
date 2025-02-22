@@ -40,7 +40,7 @@ You can control it with home assistant using service calls or by using lambda wi
 
 For starters, I assume you use an Ulanzi TC001 pixel clock. For tinkerers and people that want more, read the [For experienced user](#for-experienced-users) part.
 
-1. Copy all three files (ulanzi-easy.yaml, MatrixChunky6.ttf) from the `install` folder to your esphome folder.
+1. Copy all two files (ulanzi-easy.yaml, MatrixChunky6.ttf) from the `install` folder to your esphome folder.
 2. Define your secret settings (OTA password, Wi-Fi settings) in the secrets.yaml file or with the ESPHome UI.
 3. Define the weekdays variable for your language (see [parameters](#parameters-reference)).
 4. Install it via USB and the device should boot.
