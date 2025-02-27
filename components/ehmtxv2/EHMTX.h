@@ -27,7 +27,6 @@ const uint8_t C_BLACK = 0;
 const uint8_t D_LIFETIME = 5;
 const uint8_t D_SCREEN_TIME = 10;
 
-const uint8_t MAXICONS = 90;
 const uint8_t BLANKICON = MAXICONS + 1;
 const uint8_t SOLIDICON = MAXICONS + 3;
 const uint8_t CALENDARICON = MAXICONS + 5;
@@ -35,7 +34,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2025.2.0";
+static const char *const EHMTX_VERSION = "2025.2.3";
 static const char *const TAG = "EHMTXv2";
 
 enum show_mode : uint8_t

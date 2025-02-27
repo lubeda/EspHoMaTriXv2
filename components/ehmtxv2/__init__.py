@@ -13,6 +13,7 @@ import esphome.codegen as cg
 from esphome.const import CONF_BLUE, CONF_GREEN, CONF_RED, CONF_RESIZE, CONF_FILE, CONF_ID, CONF_BRIGHTNESS, CONF_RAW_DATA_ID,  CONF_TIME, CONF_TRIGGER_ID
 from esphome.core import CORE, HexInt
 from esphome.cpp_generator import RawExpression
+from esphome.components.image import CONF_ALPHA_CHANNEL, IMAGE_TYPE
 
 from urllib.parse import urlparse
 
@@ -20,12 +21,10 @@ _LOGGER = logging.getLogger(__name__)
 
 DEPENDENCIES = ["display", "light", "api"]
 AUTO_LOAD = ["ehmtxv2", "json", "image", "animation"]
-IMAGE_TYPE_RGB565 = 4
 MAXFRAMES = 110
-MAXICONS = 120
+MAXICONS = 100
 ICONWIDTH = 8
 ICONHEIGHT = 8
-ICONSIZE = ICONWIDTH * ICONHEIGHT * 2 # 
 SVG_ICONSTART = '<svg width="80px" height="80px" viewBox="0 0 80 80">'
 SVG_FULL_SCREEN_START = '<svg width="320px" height="80px" viewBox="0 0 320 80">'
 SVG_END = "</svg>"
@@ -34,8 +33,8 @@ logging.warning(f"")
 logging.warning(f"Please check the documentation and wiki https://github.com/lubeda/EspHoMaTriXv2")
 logging.warning(f"")
 
-def rgb565_svg(x,y,r,g,b):
-    return f"<rect style=\"fill:rgb({(r << 3) | (r >> 2)},{(g << 2) | (g >> 4)},{(b << 3) | (b >> 2)});\" x=\"{x*10}\" y=\"{y*10}\" width=\"10\" height=\"10\"/>"
+def rgb565_svg(x,y, r,g,b,a):
+    return f"<rect style=\"fill:rgb({(r << 3) | (r >> 2)},{(g << 2) | (g >> 4)},{(b << 3) | (b >> 2)});fill-opacity:{(a / 255)};\" x=\"{x*10}\" y=\"{y*10}\" width=\"10\" height=\"10\"/>"
 
 def rgb565_888(v565):
     b = (((v565)&0x001F) << 3)
@@ -145,6 +144,7 @@ CONF_NIGHT_MODE_SCREENS = "night_mode_screens"
 DEFAULT_NIGHT_MODE_SCREENS = [2,3,16]
 CONF_ICON_INDICATOR_SCREENS = "icon_indicator_screens"
 DEFAULT_ICON_INDICATOR_SCREENS = [15,18]
+DEF_TYPE = "RGB565"
 
 EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_ID): cv.declare_id(EHMTX_),
@@ -342,33 +342,29 @@ async def to_code(config):
         except Exception as e:
             raise core.EsphomeError(f" ICONS: Could not load image file {path}: {e}")
 
-    def thumbnails(frames):
-        for frame in frames:
-            thumbnail = frame.copy()
-            thumbnail.thumbnail((32,8), Image.ANTIALIAS)
-            yield thumbnail
-
     var = cg.new_Pvariable(config[CONF_ID])
 
     logging.info(f"Preparing icons, this may take some seconds.")
 
-    html_string = F"<HTML><HEAD><TITLE>{CORE.config_path}</TITLE></HEAD>"
+    html_string = F"<html><head><title>{CORE.config_path}</title></head>"
     html_string += '''\
-    <STYLE>
+    <style>
     svg { padding-top: 2x; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; }
-    </STYLE><BODY>\
+    body { background-color: black; color: white; }
+    </style><body>\
 '''
 
-    yaml_string= ""
+    cg.add_define("MAXICONS", MAXICONS)
 
+    yaml_string= ""
     for conf in config[CONF_ICONS]:
-                
         if CONF_FILE in conf:
             path = CORE.relative_config_path(conf[CONF_FILE])
             try:
                 image = openImageFile(path)
             except Exception as e:
                 raise core.EsphomeError(f" ICONS: Could not load image file {path}: {e}")
+
         elif CONF_LAMEID in conf:
             path = CORE.relative_config_path(".cache/icons/lameid/" + conf[CONF_LAMEID])
             if config[CONF_CACHE] and os.path.isfile(path):
@@ -391,6 +387,7 @@ async def to_code(config):
                     f.write(r.content) 
                     f.close()
                     logging.info(f" ICONS: Save {conf[CONF_LAMEID]} to cache.")
+
         elif CONF_URL in conf:
             a = urlparse(conf[CONF_URL])
             path = CORE.relative_config_path(".cache/icons/url/" + os.path.basename(a.path))
@@ -414,6 +411,7 @@ async def to_code(config):
                     f.write(r.content) 
                     f.close()
                     logging.info(f" ICONS: Save {conf[CONF_URL]} to cache.")
+
         elif CONF_RGB565ARRAY in conf:
             r = list(json.loads(conf[CONF_RGB565ARRAY]))
             if len(r) == 64:
@@ -426,8 +424,7 @@ async def to_code(config):
                 for y in range(0,8):
                     for x in range(0,32):
                         image.putpixel((x,y),rgb565_888(r[x+y*32]))
-                        
-                           
+
         width, height = image.size
 
         if CONF_RESIZE in conf:
@@ -446,29 +443,62 @@ async def to_code(config):
         else:
             if (conf[CONF_FRAMEDURATION] == 0):
                 try:
-                    duration =  image.info['duration']         
+                    duration = image.info['duration']
                 except:
                     duration = config[CONF_FRAMEINTERVAL]
             else:
                 duration = conf[CONF_FRAMEDURATION]
 
-            html_string += F"<BR><B>{conf[CONF_ID]}</B>&nbsp;-&nbsp;({duration} ms):<BR>"
             yaml_string += F"\"{conf[CONF_ID]}\","
+
+            dither = Image.Dither.NONE
+            transparency = CONF_ALPHA_CHANNEL
+            invert_alpha = False
+
+            total_rows = height * frames
+            encoder = IMAGE_TYPE[DEF_TYPE](
+                width,
+                total_rows,
+                transparency,
+                dither,
+                invert_alpha,
+            )
+            for frame_index in range(frames):
+                image.seek(frame_index)
+                pixels = encoder.convert(image.resize((width, height)), path).getdata()
+                for row in range(height):
+                    for col in range(width):
+                        encoder.encode(pixels[row * width + col])
+                    encoder.end_row()
+
+            rhs = [HexInt(x) for x in encoder.data]
+            prog_arr = cg.progmem_array(conf[CONF_RAW_DATA_ID], rhs)
+
+            image_type = espImage.get_image_type_enum(DEF_TYPE)
+            trans_value = espImage.get_transparency_enum(encoder.transparency)
+
+            logging.debug("Icons: icon %s %s", conf[CONF_ID], rhs)
+
+            cg.new_Pvariable(
+                conf[CONF_ID],
+                prog_arr,
+                width,
+                height,
+                frames,
+                image_type,
+                str(conf[CONF_ID]),
+                conf[CONF_PINGPONG],
+                duration,
+                trans_value,
+            )
+            cg.add(var.add_icon(RawExpression(str(conf[CONF_ID]))))
+
+            html_string += F"<br/>Icon: <b>{conf[CONF_ID]}</b>&nbsp;-&nbsp;({duration} ms):<br/><br/>"
+            html_string += f"<div id={conf[CONF_ID]}>"
             pos = 0 
-            frameIndex = 0
-            html_string += f"<DIV ID={conf[CONF_ID]}>"
-            if width == 8:
-                data = [0 for _ in range(ICONSIZE * frames)]
-            else:
-                data = [0 for _ in range(4* ICONSIZE * frames)]
-            if image.has_transparency_data:
-                logging.debug(f"icon {conf[CONF_ID]} has transparency!")
-            
             for frameIndex in range(frames):
-                
                 image.seek(frameIndex)
-                
-                frame = image.convert("RGB")
+                frame = image.convert("RGBA")
 
                 if CONF_RESIZE in conf:
                     frame = frame.resize([width, height])
@@ -482,47 +512,20 @@ async def to_code(config):
                     html_string += SVG_FULL_SCREEN_START
                 i = 0
                 for pix in pixels:
-                    R = pix[0] >> 3
-                    G = pix[1] >> 2
-                    B = pix[2] >> 3
+                    r, g, b, a = pix
+                    r = r >> 3
+                    g = g >> 2
+                    b = b >> 3
                                             
-                    x = (i % width)
-                    y = i//width
-                    i +=1
-                    rgb = (R << 11) | (G << 5) | B
-                    
-                    html_string += rgb565_svg(x,y,R,G,B)
-                    data[pos] = rgb >> 8
-                    pos += 1
-                    data[pos] = rgb & 255
-                    pos += 1
-                    
+                    x = i % width
+                    y = i // width
+                    i += 1
+
+                    html_string += rgb565_svg(x,y, r,g,b,a)
                 html_string += SVG_END
-            html_string += f"</DIV>"
-        
-            rhs = [HexInt(x) for x in data]
-            
-            logging.debug(f"icon {conf[CONF_ID]} {rhs}")
+            html_string += f"</div>"
+    html_string += "</body></html>"
 
-            prog_arr = cg.progmem_array(conf[CONF_RAW_DATA_ID], rhs)
-
-            cg.new_Pvariable(
-                conf[CONF_ID],
-                prog_arr,
-                width,
-                height,
-                frames,
-                espImage.get_image_type_enum("RGB565"),
-                str(conf[CONF_ID]),
-                conf[CONF_PINGPONG],
-                duration,
-                espImage.get_transparency_enum("opaque"),
-            )
-
-            cg.add(var.add_icon(RawExpression(str(conf[CONF_ID]))))
-
-    html_string += "</BODY></HTML>"
-    
     if config[CONF_HTML]:
         try:
             htmlfn = CORE.config_path.replace(".yaml","") + ".html"
@@ -531,12 +534,11 @@ async def to_code(config):
                 f.write(html_string)
                 f.close()
                 logging.info(f"EsphoMaTrix: wrote html-file with icon preview: {htmlfn}")
-
         except:
             logging.warning(f"EsphoMaTrix: Error writing HTML file: {htmlfn}")    
-    
+
     logging.info("List of icons for e.g. blueprint:\n\n\r["+yaml_string+"]\n")
-    
+
     disp = await cg.get_variable(config[CONF_MATRIXCOMPONENT])
     cg.add(var.set_display(disp))
 
