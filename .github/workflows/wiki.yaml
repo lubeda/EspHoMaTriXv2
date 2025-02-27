@@ -2,7 +2,7 @@ name: Publish wiki
 on:
   push:
     branches: 
-      - 2025.2.0
+      - 2025.2.1
     paths:
       - wiki/**
       - .github/workflows/wiki.yaml
