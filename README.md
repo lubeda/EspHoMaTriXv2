@@ -310,7 +310,7 @@ ehmtxv2:
   matrix_component: ehmtx_display
   time_component: ehmtx_time
   icons2html: true
-  iconcache: true
+  iconscache: true
   default_font_id: default_font
   default_font_yoffset: 6
   special_font_id: special_font
