@@ -1816,6 +1816,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[chertvl](https://github.com/chertvl)** Issues and testing.
 - **[fthiery](https://github.com/fthiery)** for improving documentation
 - **[pznamenskii](https://github.com/pznamenskii)** for improving documentation
+- **[mik-at](https://github.com/mik-at)** fixing typos
 - **Everybody** who has fun by using this software
 - **Everybody** who found bugs/issues and reported them!
 
