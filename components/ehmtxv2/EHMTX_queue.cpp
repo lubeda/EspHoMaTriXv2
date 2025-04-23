@@ -185,11 +185,11 @@ namespace esphome
     }
   }
 
-  int EHMTX_queue::xpos()
+  int32_t EHMTX_queue::xpos()
   {
     uint8_t width = 32;
     uint8_t startx = 0;
-    int result = 0;
+    int32_t result = 0;
     switch (this->mode)
     {
     case MODE_RAINBOW_ICON:
@@ -263,7 +263,7 @@ namespace esphome
     return (static_cast<uint16_t>(r) << 8) | g;
   }
 
-  uint8_t is_tick(int step, uint8_t &state)
+  uint8_t is_tick(int32_t step, uint8_t &state)
   {
     if (step % 2 == state)
     {
@@ -273,10 +273,10 @@ namespace esphome
     return 1;
   }
 
-  int EHMTX_queue::xpos(uint8_t item)
+  int32_t EHMTX_queue::xpos(uint8_t item)
   {
     uint8_t width = 32;
-    int result = width - this->config_->scroll_step + item * 9;
+    int32_t result = width - this->config_->scroll_step + item * 9;
 
     if (this->icon < 5)
     {
@@ -347,7 +347,7 @@ namespace esphome
     return result;
   }
 
-  int EHMTX_queue::ypos()
+  int32_t EHMTX_queue::ypos()
   {
 #ifdef EHMTXv2_USE_VERTICAL_SCROLL
     if (this->config_->queue_count() <= 1)
@@ -372,7 +372,7 @@ namespace esphome
 #endif
   }
 
-  int EHMTX_queue::ypos(uint8_t item)
+  int32_t EHMTX_queue::ypos(uint8_t item)
   {
     uint8_t height = 8;
 
@@ -757,7 +757,7 @@ namespace esphome
             }
 #endif
 
-            int mode = 0;
+            int32_t mode = 0;
             std::size_t pos = icon_name.find("#");
             if (pos != std::string::npos)
             {
@@ -776,8 +776,8 @@ namespace esphome
               uint8_t d = this->config_->clock->now().day_of_month;
 
               // The symbol consists of a visible part, and an empty area to the right with a width of one point.
-              uint8_t l_width = this->config_->GetTextWidth(info_font, "%d", d / 10 % 10);
-              uint8_t r_width = this->config_->GetTextWidth(info_font, "%d", d % 10);
+              uint8_t l_width = this->config_->GetTextWidth(info_font, "%d", (int32_t) (d / 10 % 10));
+              uint8_t r_width = this->config_->GetTextWidth(info_font, "%d", (int32_t) (d % 10));
               switch (mode)
               {
               // To the center
@@ -1054,7 +1054,7 @@ namespace esphome
         this->config_->display->start_clipping(0,0,0,0);
         if (this->icon != BLANKICON)
         {
-          int x = 0;
+          int32_t x = 0;
           if (this->pixels_ > 23)
           {
             if (this->xpos() > 23)
