@@ -846,7 +846,6 @@ namespace esphome
     }
   }
 #endif
-
   void EHMTX::setup()
   {
     ESP_LOGD(TAG, "Setting up services");
