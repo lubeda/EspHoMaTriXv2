@@ -111,7 +111,7 @@ namespace esphome
     EHMTX();
 
 #ifdef USE_Fireplugin
-    void fire_screen( int lifetime, int screen_time);
+    void fire_screen( int32_t lifetime, int32_t screen_time);
 #endif    
     uint8_t hue_ = 0;
     void dump_config();
@@ -155,10 +155,10 @@ namespace esphome
 #endif
     display::BaseFont *default_font;
     display::BaseFont *special_font;
-    int display_rindicator;
-    int display_lindicator;
-    int display_icon_indicator;
-    int display_alarm;
+    int32_t display_rindicator;
+    int32_t display_lindicator;
+    int32_t display_icon_indicator;
+    int32_t display_alarm;
     uint8_t ticks_per_second=62;
     bool display_gauge;
     bool is_running = false;
@@ -170,8 +170,8 @@ namespace esphome
     addressable_light::AddressableLightDisplay *display;
     esphome::time::RealTimeClock *clock;
     #ifdef USE_GRAPH
-      void graph_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
-      void icon_graph_screen(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
+      void graph_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME);
+      void icon_graph_screen(std::string icon, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME);
       graph::Graph *graph;
     #endif
 
@@ -192,7 +192,7 @@ namespace esphome
     uint8_t find_oldest_queue_element();
     uint8_t queue_count();
     uint8_t find_icon_in_queue(std::string);
-    void force_screen(std::string name, int mode = MODE_ICON_SCREEN);
+    void force_screen(std::string name, int32_t mode = MODE_ICON_SCREEN);
     void add_icon(EHMTX_Icon *icon);
     bool show_display = false;
     bool night_mode = false;
@@ -200,7 +200,7 @@ namespace esphome
     uint8_t find_icon(std::string name);
     uint8_t find_last_clock();
     bool string_has_ending(std::string const &fullString, std::string const &ending);
-    void draw_day_of_week(int ypos = 0, bool small = false);
+    void draw_day_of_week(int32_t ypos = 0, bool small = false);
     void show_all_icons();
     float get_tick();
     void tick();
@@ -208,14 +208,14 @@ namespace esphome
     void get_status();
     void queue_status();
     void skip_screen();
-    void hold_screen(int t = 30);
+    void hold_screen(int32_t t = 30);
     void set_display(addressable_light::AddressableLightDisplay *disp);
     void set_clock_time(uint16_t t = 10);
     void set_show_day_of_week(bool b=true);
     void set_show_seconds(bool b=false);
-    void set_brightness(int b);
+    void set_brightness(int32_t b);
     #ifdef EHMTXv2_ADV_BITMAP
-      void set_brightness_silent(int b);
+      void set_brightness_silent(int32_t b);
     #endif
     void set_display_on();
     void set_display_off();
@@ -223,7 +223,7 @@ namespace esphome
     void set_night_mode_on();
     void set_weekday_accent_off();
     void set_weekday_accent_on();
-    void expand_icon_to_9(int mode=0);
+    void expand_icon_to_9(int32_t mode=0);
     void set_clock(esphome::time::RealTimeClock *clock);
     #ifdef USE_GRAPH
       void set_graph(esphome::graph::Graph *graph);
@@ -237,63 +237,63 @@ namespace esphome
     #endif
   #endif
 
-    void show_rindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
-    void show_lindicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 3);
-    void show_icon_indicator(int r = C_RED, int g = C_GREEN, int b = C_BLUE, int s = 8, int pos = 7, int h = 1);
-    void set_text_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void set_today_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void set_weekday_color(int r = CD_RED, int g = CD_GREEN, int b = CD_BLUE);
-    void set_clock_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void set_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY, bool info_font = true, int y_offset = 0);
-    void set_solid_color(int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void set_calendar_color(int r = C_RED, int g = C_BLACK, int b = C_BLACK);
+    void show_rindicator(int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE, int32_t s = 3);
+    void show_lindicator(int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE, int32_t s = 3);
+    void show_icon_indicator(int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE, int32_t s = 8, int32_t pos = 7, int32_t h = 1);
+    void set_text_color(int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void set_today_color(int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void set_weekday_color(int32_t r = CD_RED, int32_t g = CD_GREEN, int32_t b = CD_BLUE);
+    void set_clock_color(int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void set_infotext_color(int32_t lr = CG_GREY, int32_t lg = CG_GREY, int32_t lb = CG_GREY, int32_t rr = CG_GREY, int32_t rg = CG_GREY, int32_t rb = CG_GREY, bool info_font = true, int32_t y_offset = 0);
+    void set_solid_color(int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void set_calendar_color(int32_t r = C_RED, int32_t g = C_BLACK, int32_t b = C_BLACK);
     #ifdef EHMTXv2_ADV_CLOCK
-      void set_clock_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY, bool info_font = true, int y_offset = 0);
-      void set_date_infotext_color(int lr = CG_GREY, int lg = CG_GREY, int lb = CG_GREY, int rr = CG_GREY, int rg = CG_GREY, int rb = CG_GREY, bool info_font = true, int y_offset = 0);
-      void set_adv_clock_color(int hr = C_BLACK, int hg = C_BLACK, int hb = C_BLACK, int mr = C_BLACK, int mg = C_BLACK, int mb = C_BLACK, int sr = C_BLACK, int sg = C_BLACK, int sb = C_BLACK);
-      bool draw_clock(std::string format, esphome::display::BaseFont *font, Color color, int xpos = 0, int ypos = 0);
-      bool draw_date(std::string format, esphome::display::BaseFont *font, Color color, int xpos = 0, int ypos = 0);
+      void set_clock_infotext_color(int32_t lr = CG_GREY, int32_t lg = CG_GREY, int32_t lb = CG_GREY, int32_t rr = CG_GREY, int32_t rg = CG_GREY, int32_t rb = CG_GREY, bool info_font = true, int32_t y_offset = 0);
+      void set_date_infotext_color(int32_t lr = CG_GREY, int32_t lg = CG_GREY, int32_t lb = CG_GREY, int32_t rr = CG_GREY, int32_t rg = CG_GREY, int32_t rb = CG_GREY, bool info_font = true, int32_t y_offset = 0);
+      void set_adv_clock_color(int32_t hr = C_BLACK, int32_t hg = C_BLACK, int32_t hb = C_BLACK, int32_t mr = C_BLACK, int32_t mg = C_BLACK, int32_t mb = C_BLACK, int32_t sr = C_BLACK, int32_t sg = C_BLACK, int32_t sb = C_BLACK);
+      bool draw_clock(std::string format, esphome::display::BaseFont *font, Color color, int32_t xpos = 0, int32_t ypos = 0);
+      bool draw_date(std::string format, esphome::display::BaseFont *font, Color color, int32_t xpos = 0, int32_t ypos = 0);
     #endif
 
-    void show_alarm(int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE, int s = 2);
-    void show_gauge(int v, int r = C_RED, int g = C_GREEN, int b = C_BLUE,int bgr = CG_GREY, int bgg = CG_GREY, int bgb = CG_GREY); // int because of register_service
+    void show_alarm(int32_t r = CA_RED, int32_t g = CA_GREEN, int32_t b = CA_BLUE, int32_t s = 2);
+    void show_gauge(int32_t v, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE,int32_t bgr = CG_GREY, int32_t bgg = CG_GREY, int32_t bgb = CG_GREY);
     void hide_gauge();
     void hide_rindicator();
     void hide_lindicator();
     void hide_icon_indicator();
     void hide_alarm();
-    void full_screen(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
-    void icon_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void alert_screen(std::string icon, std::string text, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = CA_RED, int g = CA_GREEN, int b = CA_BLUE);
-    void rainbow_alert_screen(std::string icon, std::string text, int screen_time = D_SCREEN_TIME, bool default_font = true);
-    void icon_clock(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void icon_date(std::string icon, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void date_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void blank_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
-    void color_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void text_screen_progress(std::string text, std::string value, int progress, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, bool value_color_as_progress = false, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void icon_screen_progress(std::string icon, std::string text, int progress, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void set_progressbar_color(std::string icon, int mode = MODE_ICON_PROGRESS, int r = C_BLACK, int g = C_BLACK, int b = C_BLACK, int bg_r = C_BLACK, int bg_g = C_BLACK, int bg_b = C_BLACK);
+    void full_screen(std::string icon, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME);
+    void icon_screen(std::string icon, std::string text, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void alert_screen(std::string icon, std::string text, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = CA_RED, int32_t g = CA_GREEN, int32_t b = CA_BLUE);
+    void rainbow_alert_screen(std::string icon, std::string text, int32_t screen_time = D_SCREEN_TIME, bool default_font = true);
+    void icon_clock(std::string icon, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void icon_date(std::string icon, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void text_screen(std::string text, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void clock_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void date_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void blank_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME);
+    void color_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void text_screen_progress(std::string text, std::string value, int32_t progress, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, bool value_color_as_progress = false, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void icon_screen_progress(std::string icon, std::string text, int32_t progress, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void set_progressbar_color(std::string icon, int32_t mode = MODE_ICON_PROGRESS, int32_t r = C_BLACK, int32_t g = C_BLACK, int32_t b = C_BLACK, int32_t bg_r = C_BLACK, int32_t bg_g = C_BLACK, int32_t bg_b = C_BLACK);
 
-    void icon_text_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void rainbow_icon_text_screen(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
+    void icon_text_screen(std::string icon, std::string text, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void rainbow_icon_text_screen(std::string icon, std::string text, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true);
 
-    void bitmap_stack(std::string icons, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
+    void bitmap_stack(std::string icons, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME);
 
-    void icon_prognosis_screen(std::string icon, std::string text, std::string prognosis, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
-    void icon_prognosis_screen_rgb(std::string icon, std::string text, std::string prognosis, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
+    void icon_prognosis_screen(std::string icon, std::string text, std::string prognosis, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true);
+    void icon_prognosis_screen_rgb(std::string icon, std::string text, std::string prognosis, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
 
-    void bitmap_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME);
+    void bitmap_screen(std::string text, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME);
     void color_gauge(std::string text);
-    void bitmap_small(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true, int r = C_RED, int g = C_GREEN, int b = C_BLUE);
-    void rainbow_bitmap_small(std::string icon, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
-    void rainbow_icon_screen(std::string icon_name, std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
-    void rainbow_text_screen(std::string text, int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
-    void rainbow_clock_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
-    void rainbow_date_screen(int lifetime = D_LIFETIME, int screen_time = D_SCREEN_TIME, bool default_font = true);
-    void del_screen(std::string icon, int mode = MODE_ICON_SCREEN);
+    void bitmap_small(std::string icon, std::string text, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void rainbow_bitmap_small(std::string icon, std::string text, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true);
+    void rainbow_icon_screen(std::string icon_name, std::string text, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true);
+    void rainbow_text_screen(std::string text, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true);
+    void rainbow_clock_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true);
+    void rainbow_date_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true);
+    void del_screen(std::string icon, int32_t mode = MODE_ICON_SCREEN);
 
     void draw_gauge();
     void draw_alarm();
@@ -302,27 +302,27 @@ namespace esphome
     void draw_icon_indicator();
 
     #ifdef EHMTXv2_RAINBOW_SHIMMER
-      void draw_rainbow_text(std::string text, esphome::display::BaseFont *font, int xpos, int ypos);
+      void draw_rainbow_text(std::string text, esphome::display::BaseFont *font, int32_t xpos, int32_t ypos);
     #endif
-    void draw_text(std::string text, esphome::display::BaseFont *font, Color color, int xpos, int ypos);
+    void draw_text(std::string text, esphome::display::BaseFont *font, Color color, int32_t xpos, int32_t ypos);
 
     void set_replace_time_date_active(bool b=false);
     void set_weekday_char_count(uint8_t i);
     bool replace_time_date_active;
     std::string replace_time_date(std::string time_date);
     uint8_t weekday_char_count;
-    std::string GetWeekdayChar(int position);
-    std::string GetTextChar(std::string text, int position);
+    std::string GetWeekdayChar(int32_t position);
+    std::string GetTextChar(std::string text, int32_t position);
     #ifdef EHMTXv2_RAINBOW_SHIMMER
-      int GetTextCharCount(std::string text);
+      int32_t GetTextCharCount(std::string text);
     #endif
 
-    int GetTextBounds(esphome::display::BaseFont *font, const char *buffer);
-    int GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char raw_char);
-    int GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char *raw_text);
-    int GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const int raw_int);
-    int GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const float raw_float);
-    int GetTextWidth(esphome::display::BaseFont *font, const char* formatting, esphome::ESPTime time);
+    int32_t GetTextBounds(esphome::display::BaseFont *font, const char *buffer);
+    int32_t GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char raw_char);
+    int32_t GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const char *raw_text);
+    int32_t GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const int32_t raw_int);
+    int32_t GetTextWidth(esphome::display::BaseFont *font, const char* formatting, const float raw_float);
+    int32_t GetTextWidth(esphome::display::BaseFont *font, const char* formatting, esphome::ESPTime time);
 
     void add_on_next_screen_trigger(EHMTXNextScreenTrigger *t) { this->on_next_screen_triggers_.push_back(t); }
     void add_on_empty_queue_trigger(EHMTXEmptyQueueTrigger *t) { this->on_empty_queue_triggers_.push_back(t); }
@@ -380,10 +380,10 @@ namespace esphome
     void hold_slot(uint8_t _sec);
     void calc_scroll_time(std::string text, uint16_t screen_time);
     void calc_scroll_time(uint8_t icon_count, uint16_t screen_time);
-    int xpos();
-    int xpos(uint8_t item);
-    int ypos();
-    int ypos(uint8_t item);
+    int32_t xpos();
+    int32_t xpos(uint8_t item);
+    int32_t ypos();
+    int32_t ypos(uint8_t item);
   };
 
   class EHMTXNextScreenTrigger : public Trigger<std::string, std::string>
@@ -475,7 +475,7 @@ namespace esphome
    * @param frame_duration time per frame
    * @param transparency
    */
-    EHMTX_Icon(const uint8_t *data_start, int width, int height, uint32_t animation_frame_count, esphome::image::ImageType type, std::string icon_name, bool revers, uint16_t frame_duration, esphome::image::Transparency transparency);
+    EHMTX_Icon(const uint8_t *data_start, int32_t width, int32_t height, uint32_t animation_frame_count, esphome::image::ImageType type, std::string icon_name, bool revers, uint16_t frame_duration, esphome::image::Transparency transparency);
 #ifdef USE_ESP32
     PROGMEM std::string name;
 #endif
