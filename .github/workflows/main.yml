@@ -21,11 +21,9 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v4
       - name: Build firmware
-        uses: esphome/build-action@v3
+        uses: esphome/build-action@v6
         id: esphome-build
         with:
           yaml_file: ${{ matrix.firmware.file }}
-          # enter version-tag
-          version: 2025.5.1
