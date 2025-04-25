@@ -1453,7 +1453,13 @@ namespace esphome
           {
               ESP_LOGD(TAG, "on_empty_queue trigger");
               t->process();
-            } 
+          }
+          // check if automation has enqueued a new element
+          this->screen_pointer = find_oldest_queue_element();
+          if (this->screen_pointer != MAXQUEUE)
+          {
+            this->next_action_time = ts + this->queue[this->screen_pointer]->screen_time_;
+          }
         }
       }
 
