@@ -1,7 +1,6 @@
 substitutions:
   devicename: ulanzi
   friendly_name: LED Matrix
-  board: esp32dev
   # Pin definition from https://github.com/aptonline/PixelIt_Ulanzi 
   battery_pin: GPIO34 
   ldr_pin: GPIO35 

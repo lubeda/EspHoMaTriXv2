@@ -18,6 +18,9 @@ jobs:
           - file: tests/esp32-idf.yaml
             name: esp32-idf
             manifest_filename: esp32-idf-manifest.json
+          - file: tests/esp8266-arduino.yaml
+            name: esp8266-arduino
+            manifest_filename: esp8266-arduino-manifest.json
       fail-fast: false
     steps:
       - name: Checkout source code

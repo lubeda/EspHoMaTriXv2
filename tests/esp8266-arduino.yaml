@@ -1,5 +1,6 @@
 substitutions:
   devicename: ulanzi
+  friendly_name: LED Matrix
   # Pin definition from https://github.com/aptonline/PixelIt_Ulanzi 
   battery_pin: GPIO34 
   ldr_pin: GPIO35 
@@ -20,16 +21,15 @@ esphome:
   comment: "EHMTXv2 from LuBeDa"
   name: $devicename 
   project:
-    name: "Ulanzi.EHMTXv2"
+    name: "TEST8266.EHMTXv2"
     version: "2.0.0"
   on_boot:
     then:
       - ds1307.read_time:
 
-esp32:
-  board: esp32dev
+esp8266:
+  board: nodemcuv2
   framework:
-    type: esp-idf
     version: recommended
 
 font:
@@ -83,15 +83,18 @@ i2c:
   id: i2cbus
 
 light:
-  - platform: esp32_rmt_led_strip
+  - platform: neopixelbus
     id: ehmtx_light
-    rgb_order: GRB
+    type: GRB
+    internal: true
+    variant: WS2812
     pin: $matrix_pin
     num_leds: 256
-    chipset: ws2812
+    color_correct: [30%, 30%, 30%]
+    gamma_correct: 2.0
     name: "$devicename Light"
     restore_mode: ALWAYS_OFF
-
+    
 time:
   - platform: homeassistant
     on_time_sync:
