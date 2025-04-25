@@ -16,6 +16,7 @@
 - [Problem with own services in the yaml](problem-with-text-as-variable-name)
 - [Display RTL text](rtl-text)
 - [overview of default icons](default_icons.html)
+- [using esp-idf](esp_idf.html)
 
 ## Intermediate & Advanced Configuration
 
