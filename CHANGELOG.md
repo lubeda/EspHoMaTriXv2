@@ -1,5 +1,10 @@
 # Changelog
 
+## 2025.5.1
+- @DT-art1 made it possible to compile with the esp-idf, but due to some incompabilities this automatically disables RAINBOW_SHIMMER and the fireplugin
+
+## 2025.2.1
+
 ## 2025.2.0
 - @skgsergio kept ehmtx alive by his [PR](https://github.com/lubeda/EspHoMaTriXv2/pull/277) 
 

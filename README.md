@@ -21,7 +21,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: 2025.2.1
+      ref: 2025.5.1
     refresh: 60s 
     components: [ ehmtxv2 ]   
 ```
@@ -1761,10 +1761,6 @@ select:
 ## Breaking changes
 
 Please take a look at the [changelog](CHANGELOG.md) for more details also.
-
-### 2024.1.0
-
-- new and “clean” release
 
 ## EspHoMaTriX in the media
 
