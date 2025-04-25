@@ -26,4 +26,4 @@ jobs:
         uses: esphome/build-action@v6
         id: esphome-build
         with:
-          yaml_file: ${{ matrix.firmware.file }}
+          yaml-file: ${{ matrix.firmware.file }}
