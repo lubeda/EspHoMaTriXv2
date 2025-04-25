@@ -9,7 +9,7 @@
   #pragma warning ( "with IDF-Framework no Fire and Rainbowshimmer") 
   #undef USE_Fireplugin
   #ifndef F
-    #define F(x) (x)
+  //  #define F(x) (x)
   #endif
 #endif
 

@@ -12,37 +12,6 @@ substitutions:
   scl_pin: GPIO22 
   sda_pin: GPIO21 
 
-switch:
-  - platform: template
-    name: "Auto-Adjust Brightness"
-    id: switch_autobrightness
-    icon: mdi:brightness-auto
-    restore_mode: RESTORE_DEFAULT_ON
-    lambda: |-
-      return id(aab_enable);
-    turn_on_action:
-      lambda: |-
-        id(aab_enable) = true;
-    turn_off_action:
-      lambda: |-
-        id(aab_enable) = false;
-
-globals:
-  # aab = auto-adjustable brightness
-  - id: aab_enable
-    type: "bool"
-    restore_value: true
-    initial_value: "true"
-  - id: aab_add
-    type: int
-    initial_value: '10'
-  - id: aab_max
-    type: int
-    initial_value: '220'
-  - id: aab_min
-    type: int
-    initial_value: '20'
-
 external_components:
   - source:
       type: local
@@ -61,6 +30,9 @@ esphome:
 
 esp32:
   board: esp32dev
+  framework:
+    type: esp-idf
+    version: recommended
 
 font:
   - file: ehmtx.ttf
@@ -95,57 +67,6 @@ logger:
 api:
 
 sensor:
-  - platform: sht3xd
-    temperature:
-      name: "$devicename Temperature"
-    humidity:
-      name: "$devicename Relative Humidity"
-    update_interval: 60s
-  - platform: adc
-    pin: $battery_pin
-    name: "$devicename Battery"
-    id: battery_voltage
-    update_interval: 10s
-    device_class: battery
-    accuracy_decimals: 0
-    attenuation: auto
-    filters:
-      - sliding_window_moving_average:
-          window_size: 15
-          send_every: 15
-          send_first_at: 1
-      - multiply: 1.6
-      - lambda: |-
-          auto r = ((x - 3) / 0.69 * 100.00);
-          if (r >= 100) return 100;
-          if (r > 0) return r;
-          if (r <= 0) return 1;
-          return 0;
-    unit_of_measurement: '%'
-  - platform: adc
-    id: light_sensor
-    name: "$devicename Illuminance"
-    pin: $ldr_pin
-    update_interval: 10s
-    attenuation: auto
-    unit_of_measurement: lx
-    device_class: illuminance
-    accuracy_decimals: 0
-    filters:
-      - lambda: |-
-          return (x / 10000.0) * 2000000.0 - 15 ;
-    on_value:
-      then:
-        - lambda: |-
-            if ( id(aab_enable) ) {
-              int n = x / 4 + id(aab_add); // new_value
-              if (n > id(aab_max)) n = id(aab_max);
-              if (n < id(aab_min)) n = id(aab_min);
-              int c = id(rgb8x32)->get_brightness(); // current value
-              c = c>0?c:1 ; 
-              int d = (n - c) * 100 / c; // diff in %
-              if ( abs(d) > 2 ) id(rgb8x32)->set_brightness(n);
-            }
       
 ota:
   - platform: esphome
