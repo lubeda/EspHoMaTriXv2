@@ -2,19 +2,12 @@ substitutions:
   devicename: ulanzi
   friendly_name: LED Matrix
   # Pin definition from https://github.com/aptonline/PixelIt_Ulanzi 
-  battery_pin: GPIO34 
-  ldr_pin: GPIO35 
-  matrix_pin: GPIO32 
-  left_button_pin: GPIO26 
-  mid_button_pin: GPIO27 
-  right_button_pin: GPIO14 
-  scl_pin: GPIO22 
-  sda_pin: GPIO21 
-
+  matrix_pin: GPIO12 
+  
 external_components:
   - source:
       type: local
-      path: ../components
+      path:  ../components
     components: [ ehmtxv2 ]   
 
 esphome:
@@ -23,10 +16,7 @@ esphome:
   project:
     name: "TEST8266.EHMTXv2"
     version: "2.0.0"
-  on_boot:
-    then:
-      - ds1307.read_time:
-
+  
 esp8266:
   board: nodemcuv2
   framework:
@@ -38,27 +28,7 @@ font:
     id: default_font
     glyphs:  |-
        !?"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnÖÄÜöäüopqrstuvwxyz@<>ß€/
-  
-binary_sensor:
-  - platform: status
-    name: "$devicename Status"
-  - platform: gpio
-    pin:
-      number: $left_button_pin
-      inverted: true
-    name: "Left button"
-  - platform: gpio
-    pin: 
-      inverted: true
-      number: $mid_button_pin
-      mode: INPUT_PULLUP
-    name: "Middle button"
-  - platform: gpio
-    pin: 
-      number: $right_button_pin
-      inverted: true
-    name: "Right button"
-
+    
 logger:
   level: WARN
 
@@ -76,12 +46,6 @@ wifi:
 
 web_server:
 
-i2c:
-  sda: $sda_pin
-  scl: $scl_pin
-  scan: true
-  id: i2cbus
-
 light:
   - platform: neopixelbus
     id: ehmtx_light
@@ -97,11 +61,6 @@ light:
     
 time:
   - platform: homeassistant
-    on_time_sync:
-      then:
-        ds1307.write_time:
-  - platform: ds1307
-    update_interval: never
     id: ehmtx_time
 
 display:
