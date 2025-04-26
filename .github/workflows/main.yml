@@ -39,9 +39,4 @@ jobs:
         with:
           yaml-file: ${{ matrix.firmware.file }}
           version: dev
-      - name: Build firmware (beta)
-        uses: esphome/build-action@v6
-        id: esphome-build-beta
-        with:
-          yaml-file: ${{ matrix.firmware.file }}
-          version: beta
+
