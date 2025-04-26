@@ -5,8 +5,7 @@
 #include "esphome/components/time/real_time_clock.h"
 
 #if defined CONFIG_IDF_TARGET_ESP32S3 || defined CONFIG_IDF_TARGET_ESP32
-  #undef EHMTXv2_RAINBOW_SHIMMER
-  #pragma warning ( "with IDF-Framework no Fire and Rainbowshimmer") 
+  #pragma warning ( "With IDF-Framework no Fire") 
   #undef USE_Fireplugin
   #ifndef F
   //  #define F(x) (x)
@@ -36,7 +35,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2025.2.1";
+static const char *const EHMTX_VERSION = "2025.5.2";
 static const char *const TAG = "EHMTXv2";
 
 enum show_mode : uint8_t

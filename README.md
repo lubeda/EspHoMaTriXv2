@@ -21,7 +21,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: 2025.5.1
+      ref: 2025.5.2
     refresh: 60s 
     components: [ ehmtxv2 ]   
 ```
