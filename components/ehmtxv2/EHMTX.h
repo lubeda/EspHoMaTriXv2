@@ -4,13 +4,14 @@
 #define USE_Fireplugin
 #include "esphome/components/time/real_time_clock.h"
 
+#ifndef F
+  #define F(x) (x)
+#endif
+
 #if defined CONFIG_IDF_TARGET_ESP32S3 || defined CONFIG_IDF_TARGET_ESP32
   #undef EHMTXv2_RAINBOW_SHIMMER
   #pragma warning ( "with IDF-Framework no Fire and Rainbowshimmer") 
   #undef USE_Fireplugin
-  #ifndef F
-  //  #define F(x) (x)
-  #endif
 #endif
 
 const uint8_t MAXQUEUE = 24;
