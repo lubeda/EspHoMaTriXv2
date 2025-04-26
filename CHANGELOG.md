@@ -2,6 +2,7 @@
 
 
 ## 2025.5.2
+- @DT-art1 Avoid blank screen for 15 seconds after empty queue.
 - @DT-art1 & @andrewjswan optimisation for esp-idf
 
 ## 2025.5.1
