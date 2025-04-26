@@ -205,6 +205,7 @@ namespace esphome
     void draw_day_of_week(int32_t ypos = 0, bool small = false);
     void show_all_icons();
     float get_tick();
+    void tick_next_screen(float ts);
     void tick();
     void draw();
     void get_status();

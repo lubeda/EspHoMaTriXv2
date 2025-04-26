@@ -1312,6 +1312,108 @@ namespace esphome
 #endif
   }
 
+  void EHMTX::tick_next_screen(float ts)
+  {
+    if (this->screen_pointer == MAXQUEUE)
+    {
+      return;
+    }
+
+    this->queue[this->screen_pointer]->last_time = ts;
+    // todo nur bei animationen
+    if (this->queue[this->screen_pointer]->mode == MODE_BITMAP_STACK_SCREEN && this->queue[this->screen_pointer]->sbitmap != NULL)
+    {
+      for (uint8_t i = 0; i < this->queue[this->screen_pointer]->icon; i++)
+      {
+        this->icons[this->queue[this->screen_pointer]->sbitmap[i].b]->set_frame(0);
+        this->queue[this->screen_pointer]->sbitmap[i] = Color(127, 255, this->queue[this->screen_pointer]->sbitmap[i].b, 5);
+        this->queue[this->screen_pointer]->default_font = false;
+      }
+    }
+    else if (this->queue[this->screen_pointer]->icon < this->icon_count)
+    {
+      this->icons[this->queue[this->screen_pointer]->icon]->set_frame(0);
+    }
+    this->next_action_time = this->queue[this->screen_pointer]->last_time + this->queue[this->screen_pointer]->screen_time_;
+    // Todo switch for Triggers
+    if (this->queue[this->screen_pointer]->mode == MODE_CLOCK)
+    {
+      for (auto *t : on_next_clock_triggers_)
+      {
+        t->process();
+      }
+    }
+    else
+    {
+      for (auto *t : on_next_screen_triggers_)
+      {
+        ESP_LOGD(TAG, "on_next_screen trigger");
+        std::string infotext = "";
+        switch (this->queue[this->screen_pointer]->mode)
+        {
+        case MODE_EMPTY:
+          infotext = "empty";
+          break;
+        case MODE_BLANK:
+          infotext = "blank";
+          break;
+        case MODE_COLOR:
+          infotext = "color";
+          break;
+        case MODE_CLOCK:
+        case MODE_RAINBOW_CLOCK:
+          infotext = "clock";
+          break;
+        case MODE_DATE:
+        case MODE_RAINBOW_DATE:
+          infotext = "date";
+          break;
+        case MODE_FULL_SCREEN:
+          infotext = "full screen " + this->queue[this->screen_pointer]->icon_name;
+          break;
+        case MODE_ICON_SCREEN:
+        case MODE_RAINBOW_ICON:
+        case MODE_ICON_CLOCK:
+        case MODE_ICON_DATE:
+        case MODE_ICON_PROGRESS:
+        case MODE_ICON_TEXT_SCREEN:
+        case MODE_RAINBOW_ICON_TEXT_SCREEN:
+        case MODE_TEXT_PROGRESS:
+        case MODE_PROGNOSIS_SCREEN:
+          infotext = this->queue[this->screen_pointer]->icon_name.c_str();
+          break;
+        case MODE_ALERT_SCREEN:
+        case MODE_RAINBOW_ALERT_SCREEN:
+          infotext = ("alert: " + this->queue[this->screen_pointer]->icon_name).c_str();
+          break;
+        case MODE_GRAPH_SCREEN:
+          infotext = ("graph: " + this->queue[this->screen_pointer]->icon_name).c_str();
+          break;
+        case MODE_RAINBOW_TEXT:
+        case MODE_TEXT_SCREEN:
+          infotext = "text";
+          break;
+        case MODE_BITMAP_SMALL:
+        case MODE_RAINBOW_BITMAP_SMALL:
+          infotext = ("bitmap small: " + this->queue[this->screen_pointer]->icon_name).c_str();
+          break;
+        case MODE_BITMAP_SCREEN:
+          infotext = ("bitmap: " + this->queue[this->screen_pointer]->icon_name).c_str();
+          break;
+        case MODE_BITMAP_STACK_SCREEN:
+          infotext = ("bitmap stack: " + this->queue[this->screen_pointer]->text).c_str();
+          break;
+        case MODE_FIRE:
+          infotext = "fire";
+          break;
+        default:
+          break;
+        }
+        t->process(infotext, this->queue[this->screen_pointer]->text);
+      }
+    }
+  }
+
   void EHMTX::tick()
   {
     if (millis() - this->last_rainbow_time >= EHMTXv2_RAINBOW_INTERVAL)
@@ -1352,99 +1454,7 @@ namespace esphome
 
         if (this->screen_pointer != MAXQUEUE)
         {
-          this->queue[this->screen_pointer]->last_time = ts;
-          // todo nur bei animationen
-          if (this->queue[this->screen_pointer]->mode == MODE_BITMAP_STACK_SCREEN && this->queue[this->screen_pointer]->sbitmap != NULL)
-          {
-            for (uint8_t i = 0; i < this->queue[this->screen_pointer]->icon; i++)
-            {
-              this->icons[this->queue[this->screen_pointer]->sbitmap[i].b]->set_frame(0);
-              this->queue[this->screen_pointer]->sbitmap[i] = Color(127, 255, this->queue[this->screen_pointer]->sbitmap[i].b, 5);
-              this->queue[this->screen_pointer]->default_font = false;
-            }
-          }
-          else if (this->queue[this->screen_pointer]->icon < this->icon_count)
-          {
-            this->icons[this->queue[this->screen_pointer]->icon]->set_frame(0);
-          }
-          this->next_action_time = this->queue[this->screen_pointer]->last_time + this->queue[this->screen_pointer]->screen_time_;
-          // Todo switch for Triggers
-          if (this->queue[this->screen_pointer]->mode == MODE_CLOCK)
-          {
-            for (auto *t : on_next_clock_triggers_)
-            {
-              t->process();
-            }
-          }
-          else
-          {
-            for (auto *t : on_next_screen_triggers_)
-            {
-              ESP_LOGD(TAG, "on_next_screen trigger");
-              std::string infotext = "";
-              switch (this->queue[this->screen_pointer]->mode)
-              {
-              case MODE_EMPTY:
-                infotext = "empty";
-                break;
-              case MODE_BLANK:
-                infotext = "blank";
-                break;
-              case MODE_COLOR:
-                infotext = "color";
-                break;
-              case MODE_CLOCK:
-              case MODE_RAINBOW_CLOCK:
-                infotext = "clock";
-                break;
-              case MODE_DATE:
-              case MODE_RAINBOW_DATE:
-                infotext = "date";
-                break;
-              case MODE_FULL_SCREEN:
-                infotext = "full screen " + this->queue[this->screen_pointer]->icon_name;
-                break;
-              case MODE_ICON_SCREEN:
-              case MODE_RAINBOW_ICON:
-              case MODE_ICON_CLOCK:
-              case MODE_ICON_DATE:
-              case MODE_ICON_PROGRESS:
-              case MODE_ICON_TEXT_SCREEN:
-              case MODE_RAINBOW_ICON_TEXT_SCREEN:
-              case MODE_TEXT_PROGRESS:
-              case MODE_PROGNOSIS_SCREEN:
-                infotext = this->queue[this->screen_pointer]->icon_name.c_str();
-                break;
-              case MODE_ALERT_SCREEN:
-              case MODE_RAINBOW_ALERT_SCREEN:
-                infotext = ("alert: " + this->queue[this->screen_pointer]->icon_name).c_str();
-                break;
-              case MODE_GRAPH_SCREEN:
-                infotext = ("graph: " + this->queue[this->screen_pointer]->icon_name).c_str();
-                break;
-              case MODE_RAINBOW_TEXT:
-              case MODE_TEXT_SCREEN:
-                infotext = "text";
-                break;
-              case MODE_BITMAP_SMALL:
-              case MODE_RAINBOW_BITMAP_SMALL:
-                infotext = ("bitmap small: " + this->queue[this->screen_pointer]->icon_name).c_str();
-                break;
-              case MODE_BITMAP_SCREEN:
-                infotext = ("bitmap: " + this->queue[this->screen_pointer]->icon_name).c_str();
-                break;
-              case MODE_BITMAP_STACK_SCREEN:
-                infotext = ("bitmap stack: " + this->queue[this->screen_pointer]->text).c_str();
-                break;
-              case MODE_FIRE:
-                infotext = "fire";
-                break;
-              default:
-                break;
-              }
-              t->process(infotext, this->queue[this->screen_pointer]->text);
-            }
-          }
+          tick_next_screen(ts);
         }
         else
         {
@@ -1453,7 +1463,13 @@ namespace esphome
           {
               ESP_LOGD(TAG, "on_empty_queue trigger");
               t->process();
-            } 
+          }
+          // check if automation has enqueued a new element
+          this->screen_pointer = find_oldest_queue_element();
+          if (this->screen_pointer != MAXQUEUE)
+          {
+            tick_next_screen(ts);
+          }
         }
       }
 
