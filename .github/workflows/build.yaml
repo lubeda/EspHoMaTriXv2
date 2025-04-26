@@ -6,7 +6,6 @@ on:
     branches:
       - 2025.2.0
       - latest
-      - main
   pull_request:
 
 jobs:

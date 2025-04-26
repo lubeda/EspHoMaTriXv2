@@ -25,7 +25,7 @@ Each esphome release is packed with new features and suprises (breaking changes)
 - [Branch 2025.5.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.5.1) for esphome 2025.4.0- 
 - [Branch 2025.2.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.1) for esphome 2025.2.0- (optimized handling of transparent icons)
 - [Branch 2025.2.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.0) for esphome 2025.2.0-
-- [Branch 2024.12.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.0) for esphome 2024.12.0-...
+- [Branch 2024.12.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2024.12.1) for esphome 2024.12.0-...
 
 For ehmtx use the newest version tag by manually editing the ref tag in the external_componets section in your yaml.
 Only change your selected ehmtx version if there are compile errors. But expect manual changes to your yaml or even your automations.
