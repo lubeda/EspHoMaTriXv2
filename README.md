@@ -39,7 +39,7 @@ external_components:
       #path: EsphoMaTrix/components # e.g. /config/esphome/components
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: 2025.2.0
+      ref: 2025.5.2
     refresh: 60s 
     components: [ ehmtxv2 ]   
 ```
@@ -76,6 +76,8 @@ Or in German:
 THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 
 ## Thanks
+
+See all the **coding heroes** in the newest branch!
 
 - **[blakadder](https://github.com/blakadder)** for his contribution (cleanup README.md, fixed sample)
 - **[dbuezas](https://github.com/dbuezas)** for his fonts [infos](https://github.com/lubeda/EspHoMaTriXv2/issues/63)
