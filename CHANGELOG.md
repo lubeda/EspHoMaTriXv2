@@ -1,5 +1,9 @@
 # Changelog
 
+
+## 2025.5.2
+- @DT-art1 & @andrewjswan optimisation for esp-idf
+
 ## 2025.5.1
 - @DT-art1 made it possible to compile with the esp-idf, but due to some incompabilities this automatically disables RAINBOW_SHIMMER and the fireplugin
 

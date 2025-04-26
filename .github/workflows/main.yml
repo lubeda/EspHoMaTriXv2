@@ -28,8 +28,20 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-      - name: Build firmware
+      - name: Build firmware (latest)
         uses: esphome/build-action@v6
         id: esphome-build
         with:
           yaml-file: ${{ matrix.firmware.file }}
+      - name: Build firmware (dev)
+        uses: esphome/build-action@v6
+        id: esphome-build
+        with:
+          yaml-file: ${{ matrix.firmware.file }}
+          version: dev
+      - name: Build firmware (dev)
+        uses: esphome/build-action@v6
+        id: esphome-build
+        with:
+          yaml-file: ${{ matrix.firmware.file }}
+          version: beta
