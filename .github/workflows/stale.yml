@@ -1,4 +1,4 @@
-name: Mark and Close Stale Issues
+name: Mark Stale Issues
 
 on:
   schedule:
