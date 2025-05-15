@@ -145,6 +145,14 @@ DEFAULT_NIGHT_MODE_SCREENS = [2,3,16]
 CONF_ICON_INDICATOR_SCREENS = "icon_indicator_screens"
 DEFAULT_ICON_INDICATOR_SCREENS = [15,18]
 DEF_TYPE = "RGB565"
+CONF_RCINDICATOR = "right_center_indicator"
+CONF_RBINDICATOR = "right_bottom_indicator"
+CONF_LTINDICATOR = "left_top_indicator"
+CONF_LCINDICATOR = "left_center_indicator"
+CONF_LBINDICATOR = "left_bottom_indicator"
+CONF_ICINDICATOR = "icon_indicator"
+CONF_GAUGE = "gauge"
+CONF_FIRE = "fire_screen"
 
 EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_ID): cv.declare_id(EHMTX_),
@@ -250,6 +258,30 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_FRAMEINTERVAL, default="192"
     ): cv.templatable(cv.positive_int),
     cv.Optional(CONF_BRIGHTNESS, default=80): cv.templatable(cv.int_range(min=0, max=255)),
+    cv.Optional(
+        CONF_RCINDICATOR, default=False
+    ): cv.boolean,
+    cv.Optional(
+        CONF_RBINDICATOR, default=True
+    ): cv.boolean,
+    cv.Optional(
+        CONF_LTINDICATOR, default=False
+    ): cv.boolean,
+    cv.Optional(
+        CONF_LCINDICATOR, default=False
+    ): cv.boolean,
+    cv.Optional(
+        CONF_LBINDICATOR, default=True
+    ): cv.boolean,
+    cv.Optional(
+        CONF_ICINDICATOR, default=True
+    ): cv.boolean,
+    cv.Optional(
+        CONF_GAUGE, default=True
+    ): cv.boolean,
+    cv.Optional(
+        CONF_FIRE, default=True
+    ): cv.boolean,
     cv.Optional(CONF_ON_NEXT_SCREEN): automation.validate_automation(
         {
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(NextScreenTrigger),
@@ -691,6 +723,32 @@ async def to_code(config):
 
     cg.add(var.set_show_seconds(config[CONF_SHOW_SECONDS]))
     
+    logging.info(f"[X] Right Top Indicator - Alarm")
+    if config[CONF_RCINDICATOR]:
+        cg.add_define("EHMTXv2_RCINDICATOR")
+        logging.info(f"[X] Right Center Indicator")
+    if config[CONF_RBINDICATOR]:
+        cg.add_define("EHMTXv2_RBINDICATOR")
+        logging.info(f"[X] Right Bottom Indicator - Right")
+    if config[CONF_LTINDICATOR]:
+        cg.add_define("EHMTXv2_LTINDICATOR")
+        logging.info(f"[X] Left Top Indicator")
+    if config[CONF_LCINDICATOR]:
+        cg.add_define("EHMTXv2_LCINDICATOR")
+        logging.info(f"[X] Left Center Indicator")
+    if config[CONF_LBINDICATOR]:
+        cg.add_define("EHMTXv2_LBINDICATOR")
+        logging.info(f"[X] Left Bottom Indicator - Left")
+    if config[CONF_ICINDICATOR]:
+        cg.add_define("EHMTXv2_ICINDICATOR")
+        logging.info(f"[X] Icon Indicator")
+    if config[CONF_GAUGE]:
+        cg.add_define("EHMTXv2_GAUGE")
+        logging.info(f"[X] Gauge")
+    if config[CONF_FIRE]:
+        cg.add_define("USE_Fireplugin")
+        logging.info(f"[X] Fire screen")
+
     for conf in config.get(CONF_ON_NEXT_SCREEN, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.std_string, "text")], conf)
