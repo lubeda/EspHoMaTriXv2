@@ -1703,8 +1703,8 @@ namespace esphome
       if (this->queue[i]->mode == mode)
       {
         bool force = true;
-        std::string ic = get_icon_name(iconname);
-        std::string id = get_screen_id(iconname);
+        std::string ic = get_icon_name(icon_name);
+        std::string id = get_screen_id(icon_name);
         ESP_LOGD(TAG, "del_screen: %s -> icon: %s id: %s in position: %s mode: %d", icon_name.c_str(), ic.c_str(), id.c_str(), this->queue[i]->icon_name.c_str(), mode);
         if ((mode == MODE_ICON_SCREEN) ||
             (mode == MODE_ICON_CLOCK) ||
