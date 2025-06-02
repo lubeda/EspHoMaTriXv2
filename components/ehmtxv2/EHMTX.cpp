@@ -1703,7 +1703,9 @@ namespace esphome
       if (this->queue[i]->mode == mode)
       {
         bool force = true;
-        ESP_LOGD(TAG, "del_screen: icon %s in position: %s mode %d", icon_name.c_str(), this->queue[i]->icon_name.c_str(), mode);
+        std::string ic = get_icon_name(iconname);
+        std::string id = get_screen_id(iconname);
+        ESP_LOGD(TAG, "del_screen: %s -> icon: %s id: %s in position: %s mode: %d", icon_name.c_str(), ic.c_str(), id.c_str(), this->queue[i]->icon_name.c_str(), mode);
         if ((mode == MODE_ICON_SCREEN) ||
             (mode == MODE_ICON_CLOCK) ||
             (mode == MODE_ICON_DATE) ||
@@ -1720,16 +1722,16 @@ namespace esphome
 #endif
             (mode == MODE_PROGNOSIS_SCREEN))
         {
-          if (this->string_has_ending(icon_name, "*"))
+          if (this->string_has_ending(id, "*"))
           {
-            std::string comparename = icon_name.substr(0, icon_name.length() - 1);
+            std::string comparename = id.substr(0, id.length() - 1);
 
             if (this->queue[i]->icon_name.rfind(comparename, 0) != 0)
             {
               force = false;
             }
           }
-          else if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
+          else if (strcmp(this->queue[i]->icon_name.c_str(), id.c_str()) != 0)
           {
             force = false;
           }
