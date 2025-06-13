@@ -405,6 +405,22 @@ Shows text in different colors, `Default Color Text` in the default color `#FFFF
 
 **iconscache** (optional, boolean): If true, it caches icons in the `.cache\icons` folder and if it finds the specified icons in the cache, it uses them instead of trying to download them again from the Internet. (default = `false`)
 
+**right_center_indicator** (optional, boolean, default: false): Controls the ability to use the right center indicator.
+
+**right_bottom_indicator** (optional, boolean, default: true): Controls the ability to use the right bottom indicator.
+
+**left_top_indicator** (optional, boolean, default: false): Controls the ability to use the left top indicator.
+
+**left_center_indicator** (optional, boolean, default: false): Controls the ability to use the left center indicator.
+
+**left_bottom_indicator** (optional, boolean, default: true): Controls the ability to use the left bottom indicator.
+
+**icon_indicator** (optional, boolean, default: true): Controls the ability to use the icon indicator.
+
+**gauge** (optional, boolean, default: true): Controls the ability to use the gauge indicator.
+
+**fire_screen** (optional, boolean, default: true): Controls the ability to use the fire screen.
+
 #### Modes
 
 |mode|value|
@@ -486,7 +502,10 @@ You can call this from, e.g., the developer tools service. [![Open your Home Ass
   hide_icon_indicator
   show_gauge {"percent", "r", "g", "b", "bg_r", "bg_g", "bg_b"});
   show_alarm {"r", "g", "b", "size"}
+  show_rcindicator {"r", "g", "b", "size"}
   show_rindicator {"r", "g", "b", "size"}
+  show_ltindicator {"r", "g", "b", "size"}
+  show_lcindicator {"r", "g", "b", "size"}
   show_lindicator {"r", "g", "b", "size"}
 
   set_today_color {"r", "g", "b"}
@@ -1006,6 +1025,22 @@ Each pixel is output depending on the bit that is set in its value byte, for exa
 
 **always_show_rl_indicators** (optional, boolean): If true, always show the r/l indicators on all screens. The default is to not show either on clock, date, full, and bitmap screens, left on icon, or if display gauge displayed. (default = `false`)
 
+**right_center_indicator** (optional, boolean, default: false): Controls the ability to use the right center indicator.
+
+**right_bottom_indicator** (optional, boolean, default: true): Controls the ability to use the right bottom indicator.
+
+**left_top_indicator** (optional, boolean, default: false): Controls the ability to use the left top indicator.
+
+**left_center_indicator** (optional, boolean, default: false): Controls the ability to use the left center indicator.
+
+**left_bottom_indicator** (optional, boolean, default: true): Controls the ability to use the left bottom indicator.
+
+**icon_indicator** (optional, boolean, default: true): Controls the ability to use the icon indicator.
+
+**gauge** (optional, boolean, default: true): Controls the ability to use the gauge indicator.
+
+**fire_screen** (optional, boolean, default: true): Controls the ability to use the fire screen.
+
 ***Example output:***
 ![icon preview](./images/icons_preview.png)
 
@@ -1050,7 +1085,11 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`night_mode_off`|none|turn [night mode](#night-mode) off|
 |`show_gauge`|"percent", "r", "g", "b"|set the height of the gauge according to the percentage in the given color|
 |`show_alarm`|"r", "g", "b", "size"|shows the color with the given size in the upper-right corner|
+|`show_rcindicator`|"r", "g", "b", "size"|shows the color with the given size in the center-right|
 |`show_rindicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-right corner|
+|`show_ltindicator`|"r", "g", "b", "size"|shows the color with the given size in the top-left corner|
+|`show_lcindicator`|"r", "g", "b", "size"|shows the color with the given size in the center-left|
+|`show_lindicator`|"r", "g", "b", "size"|shows the color with the given size in the lower-left corner|
 |`set_today_color`|"r", "g", "b"|set the special color for today in the day of week line|
 |`set_weekday_color`|"r", "g", "b"|set the default color in the day of week line|
 |`set_clock_color`|"r", "g", "b"|set the default color of clock and date display|
@@ -1097,7 +1136,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 #### Parameter description
 
 - **r, g, b**: Color components for red, green, and blue 0..255
-- **size**: The size of the rindicator or alarm, 1-3
+- **size**: The size of the corner indicator or alarm, 1-3, center indicator 1-4, icon_indicator 1-10
 - **percent**: values from 0..100
 - **icon_name**: the id of the icon to show, as defined in the YAML file (or pseudo-icon `blank` - empty icon, `solid` - solid icon, `calendar` - calendar icon), it is also possible to set the arbitrary [screen identifier](#screen_id), for example `icon_name|screen_id`
 - **icons**: the list of id of the icon to show, as defined in the YAML file, like: icon1,icon2.
