@@ -36,14 +36,9 @@ namespace esphome
   EHMTX::EHMTX() : PollingComponent(POLLINGINTERVAL)
   {
     this->show_display = true;
-    this->display_gauge = false;
-    this->display_rindicator = 0;
-    this->display_lindicator = 0;
-    this->display_icon_indicator = 0;
-    this->icon_indicator_y_pos = 7;
-    this->icon_indicator_height = 1;
+   
+    this->display_indicator = 0;
     this->icon_to_9 = 0;
-    this->display_alarm = 0;
     this->clock_time = 10;
     this->icon_count = 0;
     this->hue_ = 180;
@@ -60,6 +55,16 @@ namespace esphome
     this->set_weekday_color();
     this->night_mode = false;
     this->weekday_accent = false;
+
+#ifdef EHMTXv2_ICINDICATOR
+    this->icon_indicator_y_pos = 7;
+    this->icon_indicator_height = 1;
+#endif
+
+#ifdef EHMTXv2_GAUGE
+    this->display_gauge = false;
+#endif
+
 
 #ifdef EHMTXv2_USE_VERTICAL_SCROLL
     this->vertical_scroll = false;
@@ -87,8 +92,54 @@ namespace esphome
   }
 
 /**
- * @brief display a indicator on the right side
+ * @brief display alarm indicator on the top right side
  * 
+ * @param r red
+ * @param g green
+ * @param b blue
+ * @param size 1-3
+ */
+  void EHMTX::show_alarm(int32_t r, int32_t g, int32_t b, int32_t size)
+  {
+    if (size > 0)
+    {
+      this->alarm_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
+      this->display_indicator = this->IntToBits(this->display_indicator, size % 4, 3, 0);
+      ESP_LOGD(TAG, "Show alarm (top right) size: %d color r: %d g: %d b: %d", size % 4, r, g, b);
+    }
+    else
+    {
+      this->hide_alarm();
+    }
+  }
+
+#ifdef EHMTXv2_RCINDICATOR
+/**
+ * @brief display a indicator on the center right side
+ * 
+ * @param r red
+ * @param g green
+ * @param b blue
+ * @param size 1-4
+ */
+  void EHMTX::show_rcindicator(int32_t r, int32_t g, int32_t b, int32_t size)
+  {
+    if (size > 0)
+    {
+      this->rcindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
+      this->display_indicator = this->IntToBits(this->display_indicator, size % 5, 4, 3);
+      ESP_LOGD(TAG, "Show indicator (center right) size: %d r: %d g: %d b: %d", size % 5, r, g, b);
+    }
+    else
+    {
+      this->hide_rcindicator();
+    }
+  }
+#endif
+
+#ifdef EHMTXv2_RBINDICATOR
+/**
+ * @brief display a indicator on the bottom right side* 
  * @param r red
  * @param g green
  * @param b blue
@@ -98,18 +149,67 @@ namespace esphome
   {
     if (size > 0)
     {
-      this->rindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
-      this->display_rindicator = size & 3;
-      ESP_LOGD(TAG, "show rindicator size: %d r: %d g: %d b: %d", size, r, g, b);
+      this->rbindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
+      this->display_indicator = this->IntToBits(this->display_indicator, size % 4, 3, 7);
+      ESP_LOGD(TAG, "Show indicator (bottom right) size: %d r: %d g: %d b: %d", size % 4, r, g, b);
     }
     else
     {
       this->hide_rindicator();
     }
   }
-
+#endif
+#ifdef EHMTXv2_LTINDICATOR
 /**
- * @brief display a indicator on the left side
+ * @brief display a indicator on the top left side
+ * 
+ * @param r red
+ * @param g green
+ * @param b blue
+ * @param size 1-3
+ */
+  void EHMTX::show_ltindicator(int32_t r, int32_t g, int32_t b, int32_t size)
+  {
+    if (size > 0)
+    {
+      this->ltindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
+      this->display_indicator = this->IntToBits(this->display_indicator, size % 4, 3, 10);
+      ESP_LOGD(TAG, "Show indicator (top left) size: %d r: %d g: %d b: %d", size % 4, r, g, b);
+    }
+    else
+    {
+      this->hide_ltindicator();
+    }
+  }
+#endif
+
+#ifdef EHMTXv2_LCINDICATOR
+/**
+ * @brief display a indicator on the center left side
+ * 
+ * @param r red
+ * @param g green
+ * @param b blue
+ * @param size 1-4
+ */
+  void EHMTX::show_lcindicator(int32_t r, int32_t g, int32_t b, int32_t size)
+  {
+    if (size > 0)
+    {
+      this->lcindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
+      this->display_indicator = this->IntToBits(this->display_indicator, size % 5, 4, 14);
+      ESP_LOGD(TAG, "Show indicator (center left) size: %d r: %d g: %d b: %d", size % 5, r, g, b);
+    }
+    else
+    {
+      this->hide_lcindicator();
+    }
+  }
+#endif
+
+#ifdef EHMTXv2_LBINDICATOR
+/**
+ * @brief display a indicator on the bottom left side* @brief display a indicator on the left side
  * 
  * @param r red
  * @param g green
@@ -120,23 +220,24 @@ namespace esphome
   {
     if (size > 0)
     {
-      this->lindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
-      this->display_lindicator = size & 3;
-      ESP_LOGD(TAG, "show lindicator size: %d r: %d g: %d b: %d", size, r, g, b);
+      this->lbindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
+      this->display_indicator = this->IntToBits(this->display_indicator, size % 4, 3, 17);;
+      ESP_LOGD(TAG, "Show indicator (bottom left) size: %d r: %d g: %d b: %d", size % 4, r, g, b);
     }
     else
     {
       this->hide_lindicator();
     }
   }
-
+#endif
+#ifdef EHMTXv2_ICINDICATOR
 /**
  * @brief line indicator in the Icons area on the specified screen
  * 
  * @param r red
  * @param g green
  * @param b blue
- * @param size ??
+ * @param size 1-10
  * @param pos ??
  * @param height ??
  */
@@ -145,47 +246,93 @@ namespace esphome
     if (size > 0)
     {
       this->icon_indicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
-      this->display_icon_indicator = size;
+      this->display_indicator = this->IntToBits(this->display_indicator, size % 11, 8, 20);
       this->icon_indicator_height = height;
       this->icon_indicator_y_pos = pos;
-      ESP_LOGD(TAG, "show icon_indicator size: %d height: %d r: %d g: %d b: %d pos: %d", size, height, r, g, b, pos);
+      ESP_LOGD(TAG, "Show icon_indicator size: %d height: %d r: %d g: %d b: %d pos: %d", size % 11, height, r, g, b, pos);
     }
     else
     {
       this->hide_icon_indicator();
     }
   }
-
+#endif
 /**
- * @brief hides the right indicator
+  * @brief hides the alarm indicator
  * 
+ */
+  void EHMTX::hide_alarm()
+  {
+    this->display_indicator = this->IntToBits(this->display_indicator, 0, 3, 0);
+    ESP_LOGD(TAG, "Hide alarm indicator");
+  }
+
+#ifdef EHMTXv2_RCINDICATOR
+/**
+ * @brief hides the right center indicator
+ * 
+ */
+  void EHMTX::hide_rcindicator()
+  {
+    this->display_indicator = this->IntToBits(this->display_indicator, 0, 4, 3);
+    ESP_LOGD(TAG, "Hide indicator (center right)");
+  }
+#endif
+
+#ifdef EHMTXv2_RBINDICATOR
+/**
+ * @brief hides the right bottom indicator* 
  */
   void EHMTX::hide_rindicator()
   {
-    this->display_rindicator = 0;
-    ESP_LOGD(TAG, "hide rindicator");
+    this->display_indicator = this->IntToBits(this->display_indicator, 0, 3, 7);
+    ESP_LOGD(TAG, "Hide indicator (bottom right)");
   }
-
+#endif
+#ifdef EHMTXv2_LTINDICATOR
 /**
- * @brief * @brief hides the left indicator
+ * @brief * @brief hides the left top indicator
+ * 
+ */
+   void EHMTX::hide_ltindicator()
+  {
+    this->display_indicator = this->IntToBits(this->display_indicator, 0, 3, 10);
+    ESP_LOGD(TAG, "Hide indicator (top left)");
+  }
+  #endif
+#ifdef EHMTXv2_LCINDICATOR
+/**
+ * @brief * @brief hides the left center indicator
+ * 
+ */
+  void EHMTX::hide_lcindicator()
+  {
+    this->display_indicator = this->IntToBits(this->display_indicator, 0, 4, 14);
+    ESP_LOGD(TAG, "Hide indicator (center left)");
+  }
+#endif
+
+#ifdef EHMTXv2_LBINDICATOR
+/**
+ * @brief * @brief hides the left bottom indicator
  * 
  */
   void EHMTX::hide_lindicator()
   {
-    this->display_lindicator = 0;
-    ESP_LOGD(TAG, "hide lindicator");
+    this->display_indicator = this->IntToBits(this->display_indicator, 0, 3, 17);
+    ESP_LOGD(TAG, "Hide indicator (bottom left)");
   }
-
- 
+#endif
+#ifdef EHMTXv2_ICINDICATOR
 /**
  * @brief hides the icon indicator
  */
   void EHMTX::hide_icon_indicator()
   {
-    this->display_icon_indicator = 0;
-    ESP_LOGD(TAG, "hide icon indicator");
+    this->display_indicator = this->IntToBits(this->display_indicator, 0, 8, 20);
+    ESP_LOGD(TAG, "Hide icon indicator");  
   }
-
+#endif
 /**
  * @brief turns display off
  * 
@@ -759,12 +906,7 @@ namespace esphome
     return MAXICONS;
   }
 
-  void EHMTX::hide_gauge()
-  {
-    this->display_gauge = false;
-    ESP_LOGD(TAG, "hide gauge");
-  }
-
+#ifdef EHMTXv2_GAUGE
 #ifndef USE_ESP8266
   void EHMTX::color_gauge(std::string text)
   {
@@ -823,6 +965,13 @@ namespace esphome
   }
 #endif
 
+  void EHMTX::hide_gauge()
+  {
+    this->display_gauge = false;
+    ESP_LOGD(TAG, "hide gauge");
+  }
+
+#endif  // EHMTXv2_GAUGE
 #ifdef USE_ESP8266
   void EHMTX::draw_gauge()
   {
@@ -853,15 +1002,39 @@ namespace esphome
     register_service(&EHMTX::set_display_on, "display_on");
     register_service(&EHMTX::set_display_off, "display_off");
     register_service(&EHMTX::hold_screen, "hold_screen", {"time"});
-    register_service(&EHMTX::hide_rindicator, "hide_rindicator");
-    register_service(&EHMTX::hide_lindicator, "hide_lindicator");
-    register_service(&EHMTX::hide_gauge, "hide_gauge");
-    register_service(&EHMTX::hide_alarm, "hide_alarm");
-    register_service(&EHMTX::show_gauge, "show_gauge", {"percent", "r", "g", "b", "bg_r", "bg_g", "bg_b"});
     register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b", "size"});
+    register_service(&EHMTX::hide_alarm, "hide_alarm");
+    #ifdef EHMTXv2_RCINDICATOR
+    register_service(&EHMTX::show_rcindicator, "show_rcindicator", {"r", "g", "b", "size"});
+    register_service(&EHMTX::hide_rcindicator, "hide_rcindicator");
+    #endif
+    #ifdef EHMTXv2_RBINDICATOR
     register_service(&EHMTX::show_rindicator, "show_rindicator", {"r", "g", "b", "size"});
+    register_service(&EHMTX::hide_rindicator, "hide_rindicator");
+    #endif
+    #ifdef EHMTXv2_LTINDICATOR
+    register_service(&EHMTX::show_ltindicator, "show_ltindicator", {"r", "g", "b", "size"});
+    register_service(&EHMTX::hide_ltindicator, "hide_ltindicator");
+    #endif
+    #ifdef EHMTXv2_LCINDICATOR
+    register_service(&EHMTX::show_lcindicator, "show_lcindicator", {"r", "g", "b", "size"});
+    register_service(&EHMTX::hide_lcindicator, "hide_lcindicator");
+    #endif
+    #ifdef EHMTXv2_LBINDICATOR
     register_service(&EHMTX::show_lindicator, "show_lindicator", {"r", "g", "b", "size"});
-
+register_service(&EHMTX::hide_lindicator, "hide_lindicator");
+    #endif
+    #ifdef EHMTXv2_ICINDICATOR
+    register_service(&EHMTX::show_icon_indicator, "show_icon_indicator", {"r", "g", "b", "size", "pos", "height"});
+    register_service(&EHMTX::hide_icon_indicator, "hide_icon_indicator");
+    #endif
+    #ifdef EHMTXv2_GAUGE
+    register_service(&EHMTX::show_gauge, "show_gauge", {"percent", "r", "g", "b", "bg_r", "bg_g", "bg_b"});
+    register_service(&EHMTX::hide_gauge, "hide_gauge");
+    #ifndef USE_ESP8266
+      register_service(&EHMTX::color_gauge, "color_gauge", {"colors"});
+    #endif
+    #endif
     register_service(&EHMTX::set_today_color, "set_today_color", {"r", "g", "b"});
     register_service(&EHMTX::set_weekday_color, "set_weekday_color", {"r", "g", "b"});
     register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
@@ -911,16 +1084,14 @@ namespace esphome
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
 #ifndef USE_ESP8266
-    register_service(&EHMTX::color_gauge, "color_gauge", {"colors"});
+    
     register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"icon", "lifetime", "screen_time"});
     register_service(&EHMTX::bitmap_small, "bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::rainbow_bitmap_small, "rainbow_bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font"});
     register_service(&EHMTX::bitmap_stack, "bitmap_stack", {"icons", "lifetime", "screen_time"});
 #endif
 
-    register_service(&EHMTX::show_icon_indicator, "show_icon_indicator", {"r", "g", "b", "size", "pos", "height"});
-    register_service(&EHMTX::hide_icon_indicator, "hide_icon_indicator");
-
+    
 #ifdef USE_Fireplugin
     register_service(&EHMTX::fire_screen, "fire_screen", {"lifetime", "screen_time"});
 #endif
@@ -941,24 +1112,18 @@ namespace esphome
     ESP_LOGD(TAG, "Setup and running!");
   }
 
-  void EHMTX::show_alarm(int32_t r, int32_t g, int32_t b, int32_t size)
+  uint32_t EHMTX::IntToBits(uint32_t data, uint32_t newBitValues, unsigned nbits, unsigned startbit)
   {
-    if (size > 0)
-    {
-      this->alarm_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
-      this->display_alarm = size & 3;
-      ESP_LOGD(TAG, "show alarm size: %d color r: %d g: %d b: %d", size, r, g, b);
-    }
-    else
-    {
-      this->hide_alarm();
-    }
+      uint32_t mask = (1UL << nbits) - 1;
+      uint32_t smask = ~(mask << startbit);
+      data = (data & smask) | ((newBitValues & mask) << startbit);
+      return data;
   }
 
-  void EHMTX::hide_alarm()
+  uint32_t EHMTX::BitsToInt(uint32_t source, unsigned from, unsigned to) 
   {
-    this->display_alarm = 0;
-    ESP_LOGD(TAG, "hide alarm");
+    unsigned mask = ((1UL << (to - from + 1)) - 1) << from;
+    return (source & mask) >> from;
   }
 
   void EHMTX::set_clock_color(int32_t r, int32_t g, int32_t b)
@@ -3172,62 +3337,108 @@ namespace esphome
 
   void EHMTX::draw_alarm()
   {
-    if (this->display_alarm > 2)
+    uint8_t size = this->BitsToInt(this->display_indicator, 0, 2);
+    if (size > 2)
     {
       this->display->line(31, 2, 29, 0, this->alarm_color);
     }
-    if (this->display_alarm > 1)
+     if (size > 1)
     {
       this->display->draw_pixel_at(30, 0, this->alarm_color);
       this->display->draw_pixel_at(31, 1, this->alarm_color);
     }
-    if (this->display_alarm > 0)
+    if (size > 0)
     {
       this->display->draw_pixel_at(31, 0, this->alarm_color);
     }
   }
+#ifdef EHMTXv2_RCINDICATOR
+  void EHMTX::draw_rcindicator()
+  {
+    uint8_t size = this->BitsToInt(this->display_indicator, 3, 6);
+    this->display->line(31, 4 - size / 2, 31, 3 + size / 2, this->rcindicator_color);
+  }
+#endif
 
+#ifdef EHMTXv2_RBINDICATOR
   void EHMTX::draw_rindicator()
   {
-    if (this->display_rindicator > 2)
+      uint8_t size = this->BitsToInt(this->display_indicator, 7, 9);
+    if (size > 2)
     {
-      this->display->line(31, 5, 29, 7, this->rindicator_color);
+      this->display->line(31, 5, 29, 7, this->rbindicator_color);
     }
 
-    if (this->display_rindicator > 1)
+     if (size > 1)
     {
-      this->display->draw_pixel_at(30, 7, this->rindicator_color);
-      this->display->draw_pixel_at(31, 6, this->rindicator_color);
+        this->display->draw_pixel_at(30, 7, this->rbindicator_color);
+      this->display->draw_pixel_at(31, 6, this->rbindicator_color);
     }
 
-    if (this->display_rindicator > 0)
+    if (size > 0)
     {
-      this->display->draw_pixel_at(31, 7, this->rindicator_color);
+      this->display->draw_pixel_at(31, 7, this->rbindicator_color);
     }
   }
+#endif
 
+#ifdef EHMTXv2_LTINDICATOR
+  void EHMTX::draw_ltindicator()
+  {
+    uint8_t size = this->BitsToInt(this->display_indicator, 10, 13);
+    if (size > 2)
+    {
+      this->display->line(0, 2, 2, 0, this->ltindicator_color);
+    }
+
+    if (size > 1)
+    {
+      this->display->draw_pixel_at(1, 0, this->ltindicator_color);
+      this->display->draw_pixel_at(0, 1, this->ltindicator_color);
+    }
+        if (size > 0)
+    {
+      this->display->draw_pixel_at(0, 0, this->ltindicator_color);
+    }
+  }
+#endif
+
+#ifdef EHMTXv2_LCINDICATOR
+  void EHMTX::draw_lcindicator()
+  {
+    uint8_t size = this->BitsToInt(this->display_indicator, 14, 16);
+    this->display->line(0, 4 - size / 2, 0, 3 + size / 2, this->lcindicator_color);
+  }
+#endif
+
+#ifdef EHMTXv2_LBINDICATOR
   void EHMTX::draw_lindicator()
   {
-    if (this->display_lindicator > 2)
+    uint8_t size = this->BitsToInt(this->display_indicator, 17, 19);
+    if (size > 2)
     {
-      this->display->line(0, 5, 2, 7, this->lindicator_color);
+      this->display->line(0, 5, 2, 7, this->lbindicator_color);
     }
 
-    if (this->display_lindicator > 1)
+   if (size > 1)
     {
-      this->display->draw_pixel_at(1, 7, this->lindicator_color);
-      this->display->draw_pixel_at(0, 6, this->lindicator_color);
+   this->display->draw_pixel_at(1, 7, this->lbindicator_color);
+      this->display->draw_pixel_at(0, 6, this->lbindicator_color);
     }
 
-    if (this->display_lindicator > 0)
+    if (size > 0)
     {
-      this->display->draw_pixel_at(0, 7, this->lindicator_color);
+      this->display->draw_pixel_at(0, 7, this->lbindicator_color);
     }
   }
 
+  #endif
+  #ifdef EHMTXv2_ICINDICATOR
   void EHMTX::draw_icon_indicator()
   {
-    if (this->display_icon_indicator > 0)
+    
+     uint8_t size = this->BitsToInt(this->display_indicator, 20, 27);
+    if (size > 0)
     {
       for (auto id : EHMTXv2_CONF_ICON_INDICATOR_SCREENS)
       {
@@ -3239,14 +3450,14 @@ namespace esphome
           {
             if (this->icon_indicator_height == 1)
             {
-              this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos,
-                                  4 + display_icon_indicator / 2, this->icon_indicator_y_pos,
+               this->display->line(4 - size / 2, this->icon_indicator_y_pos,
+                                  4 + size / 2, this->icon_indicator_y_pos,
                                   this->icon_indicator_color);
             }
             else
             {
-              this->display->filled_rectangle(4 - display_icon_indicator / 2, this->icon_indicator_y_pos,
-                                              this->display_icon_indicator, this->icon_indicator_height,
+            this->display->filled_rectangle(4 - size / 2, this->icon_indicator_y_pos,
+                                              size, this->icon_indicator_height,
                                               this->icon_indicator_color);
             }
           }
@@ -3254,14 +3465,14 @@ namespace esphome
           {
             if (this->icon_indicator_height == 1)
             {
-              this->display->line(4 - display_icon_indicator / 2, this->icon_indicator_y_pos,
-                                  3 + display_icon_indicator / 2, this->icon_indicator_y_pos,
+              this->display->line(4 - size / 2, this->icon_indicator_y_pos,
+                                  3 + size / 2, this->icon_indicator_y_pos,
                                   this->icon_indicator_color);
             }
             else
             {
-              this->display->filled_rectangle(4 - display_icon_indicator / 2, this->icon_indicator_y_pos,
-                                              this->display_icon_indicator, this->icon_indicator_height,
+                this->display->filled_rectangle(4 - size / 2, this->icon_indicator_y_pos,
+                                              size, this->icon_indicator_height,
                                               this->icon_indicator_color);
             }
           }
@@ -3270,7 +3481,7 @@ namespace esphome
       }
     }
   }
-
+#endif
   void HOT EHMTX::draw()
   {
     if ((this->is_running) && (this->show_display))
@@ -3279,6 +3490,7 @@ namespace esphome
       {
         this->queue[this->screen_pointer]->draw();
       }
+      #ifdef EHMTXv2_GAUGE
       if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN &&
           this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN &&
           this->queue[this->screen_pointer]->mode != MODE_ICON_PROGRESS &&
@@ -3286,6 +3498,7 @@ namespace esphome
       {
         this->draw_gauge();
       }
+      #endif
 #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
       if (this->queue[this->screen_pointer]->mode != MODE_CLOCK &&
           this->queue[this->screen_pointer]->mode != MODE_DATE &&
@@ -3293,23 +3506,42 @@ namespace esphome
           this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
       {
 #endif
+    #ifdef EHMTXv2_RCINDICATOR
+          this->draw_rcindicator();
+        #endif
+        #ifdef EHMTXv2_RBINDICATOR
         this->draw_rindicator();
+        #endif
 
 #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         if (this->queue[this->screen_pointer]->mode != MODE_ICON_SCREEN &&
             this->queue[this->screen_pointer]->mode != MODE_RAINBOW_ICON &&
-            this->queue[this->screen_pointer]->mode != MODE_PROGNOSIS_SCREEN &&
-            !this->display_gauge)
+            this->queue[this->screen_pointer]->mode != MODE_PROGNOSIS_SCREEN
+            #ifdef EHMTXv2_GAUGE
+            && !this->display_gauge
+            #endif
+            )
         {
 #endif
+  #ifdef EHMTXv2_LTINDICATOR
+          this->draw_ltindicator();
+        #endif
+        #ifdef EHMTXv2_LCINDICATOR
+          this->draw_lcindicator();
+        #endif
+        #ifdef EHMTXv2_LBINDICATOR
           this->draw_lindicator();
+        #endif
 #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         }
       }
 #endif
 
-      this->draw_icon_indicator();
+      
       this->draw_alarm();
+         #ifdef EHMTXv2_ICINDICATOR
+      this->draw_icon_indicator();
+      #endif
     }
   }
 

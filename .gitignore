@@ -29,3 +29,5 @@ ltr3.png
 docs/
 .vscode/c_cpp_properties.json
 .vs/
+/.esphome/
+/secrets.yaml
