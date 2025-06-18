@@ -21,6 +21,7 @@ Each esphome release is packed with new features and suprises (breaking changes)
 **Keep esphome up to date with the latest official version!**
 
 **Which are:**
+- [Branch 2025.6.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.6.0) for esphome 2025.6.0- (some fixes and PRs from andrewjswan)
 - [Branch 2025.5.2](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.5.2) for esphome 2025.4.0- (some fixes "empty queue")
 - [Branch 2025.5.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.5.1) for esphome 2025.4.0- 
 - [Branch 2025.2.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.1) for esphome 2025.2.0- (optimized handling of transparent icons)
