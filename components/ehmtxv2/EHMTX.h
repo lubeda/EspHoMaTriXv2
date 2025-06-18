@@ -37,7 +37,7 @@ const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
 static const char *const EHMTX_VERSION = "2025.6.0";
-static const char *const TAG = "EHMTXv2"; 
+static const char *const TAG = "EHMTXv2";
 
 enum show_mode : uint8_t
 {
@@ -172,7 +172,6 @@ namespace esphome
 #ifdef USE_ESP8266
     Color text_color, alarm_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor, solid_color, calendar_color;
     EHMTX_Icon *icons[MAXICONS];
-    uint8_t gauge_value;
   #ifdef EHMTXv2_ADV_CLOCK
     Color hour_color, minutes_color, spacer_color, info_clock_lcolor, info_clock_rcolor, info_date_lcolor, info_date_rcolor;
   #endif
