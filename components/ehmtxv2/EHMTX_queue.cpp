@@ -219,12 +219,10 @@ namespace esphome
       break;
     }
 
-    #ifdef EHMTXv2_GAUGE
     if (this->config_->display_gauge)
     {
       startx += 2;
     }
-    #endif
     width -= startx;
 
 #ifdef EHMTXv2_USE_RTL
@@ -535,7 +533,6 @@ namespace esphome
 #endif
         if (this->sbitmap != NULL)
         {
-          #ifdef EHMTXv2_GAUGE
           if (this->config_->display_gauge)
           {
             this->config_->display->line(10, this->ypos(), 10, this->ypos() + 7, esphome::display::COLOR_OFF);
@@ -548,7 +545,6 @@ namespace esphome
             }
           }
           else
-          #endif
           {
             this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
             for (uint8_t x = 0; x < 8; x++)
@@ -970,7 +966,6 @@ namespace esphome
         }
         else
         {
-          #ifdef EHMTXv2_GAUGE
           if (this->config_->display_gauge)
           {
             if (this->icon != BLANKICON)
@@ -992,7 +987,6 @@ namespace esphome
             this->config_->display->line(10, this->ypos(), 10, this->ypos() + 7, esphome::display::COLOR_OFF);
           }
           else
-          #endif
           {
             this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
             if (this->icon != BLANKICON)
