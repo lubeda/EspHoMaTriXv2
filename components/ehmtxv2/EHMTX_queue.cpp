@@ -890,7 +890,7 @@ namespace esphome
       case MODE_RAINBOW_ICON:
       case MODE_ICON_PROGRESS:
       case MODE_PROGNOSIS_SCREEN:
-        this->config_->display->start_clipping(8,0,31,7);
+        this->config_->display->start_clipping(8,0,32,8);
         color_ = (this->mode == MODE_RAINBOW_ICON || this->mode == MODE_RAINBOW_ALERT_SCREEN) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
@@ -903,7 +903,7 @@ namespace esphome
 #endif
           this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
-        this->config_->display->start_clipping(0,0,0,0);
+        this->config_->display->end_clipping();
         
         if (this->mode == MODE_ICON_PROGRESS)
         {
@@ -1043,7 +1043,7 @@ namespace esphome
 
       case MODE_ICON_TEXT_SCREEN:
       case MODE_RAINBOW_ICON_TEXT_SCREEN:
-        this->config_->display->start_clipping(8,0,31,7);
+        this->config_->display->start_clipping(8,0,32,8);
         color_ = (this->mode == MODE_RAINBOW_ICON_TEXT_SCREEN) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
@@ -1056,7 +1056,7 @@ namespace esphome
 #endif
           this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
-        this->config_->display->start_clipping(0,0,0,0);
+        this->config_->display->end_clipping();
         if (this->icon != BLANKICON)
         {
           int32_t x = 0;
