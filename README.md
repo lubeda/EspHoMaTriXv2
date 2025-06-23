@@ -1505,6 +1505,23 @@ Screen identifier allows you to display the same icons on the same screen type w
 ```
 If the screen identifier is specified, then all work on identification of the screen is carried out by it, as well as in functions like `del_screen`, `force_screen` it **will be necessary to specify it** and **not the name of the icon**.
 
+For example, calling one screen with different identifiers:
+
+`icon_name: light|01`
+Show screen with icon `light` and screen_id `01`
+
+`icon_name: light|02`
+Show screen with icon `light` and screen_id `02`
+
+`icon_name: plant|01`
+Replace the icon on the screen (if it is still alive) with the screen_id `01` with the icon `plant`
+
+`icon_name: plant|02`
+Replace the icon on the screen (if it is still alive) with the screen_id `02` with the icon `plant`
+
+`icon_name: plant|03`
+Show screen with icon `plant` and screen_id `03`
+
 ##### icon_text
 
 A common format for specifying output options: `icon|mode#draw_mode`
