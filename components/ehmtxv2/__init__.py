@@ -258,7 +258,7 @@ EHMTX_SCHEMA = cv.Schema({
         CONF_FRAMEINTERVAL, default="192"
     ): cv.templatable(cv.positive_int),
     cv.Optional(CONF_BRIGHTNESS, default=80): cv.templatable(cv.int_range(min=0, max=255)),
-     cv.Optional(
+    cv.Optional(
         CONF_RCINDICATOR, default=False
     ): cv.boolean,
     cv.Optional(
@@ -722,7 +722,7 @@ async def to_code(config):
     cg.add(var.set_show_day_of_week(config[CONF_SHOWDOW]))  
 
     cg.add(var.set_show_seconds(config[CONF_SHOW_SECONDS]))
-
+    
     logging.info(f"[X] Right Top Indicator - Alarm")
     if config[CONF_RCINDICATOR]:
         cg.add_define("EHMTXv2_RCINDICATOR")
@@ -748,7 +748,7 @@ async def to_code(config):
     if config[CONF_FIRE]:
         cg.add_define("USE_Fireplugin")
         logging.info(f"[X] Fire screen")
-    
+
     for conf in config.get(CONF_ON_NEXT_SCREEN, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [(cg.std_string, "icon"), (cg.std_string, "text")], conf)
