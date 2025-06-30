@@ -2,6 +2,7 @@ substitutions:
   devicename: ulanzi
   friendly_name: EspHoMaTriXv2
   board: esp32dev
+  cpu_frequency: 240MHz
   # Pin definition from https://github.com/aptonline/PixelIt_Ulanzi
   battery_pin: GPIO34
   ldr_pin: GPIO35
@@ -74,6 +75,7 @@ esphome:
 
 esp32:
   board: "$board"
+  cpu_frequency: $cpu_frequency
   framework:
     advanced:
       ignore_efuse_custom_mac: true
