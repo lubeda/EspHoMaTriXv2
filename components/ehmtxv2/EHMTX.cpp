@@ -5,7 +5,7 @@
  * @version 0.1
  * @date 2024-06-11
  * 
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c) 2024-2025
  * 
  */
 #include "esphome.h"
@@ -36,7 +36,6 @@ namespace esphome
   EHMTX::EHMTX() : PollingComponent(POLLINGINTERVAL)
   {
     this->show_display = true;
-   
     this->display_indicator = 0;
     this->icon_to_9 = 0;
     this->clock_time = 10;
@@ -65,7 +64,6 @@ namespace esphome
     this->display_gauge = false;
 #endif
 
-
 #ifdef EHMTXv2_USE_VERTICAL_SCROLL
     this->vertical_scroll = false;
 #endif
@@ -89,6 +87,9 @@ namespace esphome
     this->set_adv_clock_color();
 #endif
 
+#ifdef EHMTXv2_MULTICOLOR_TEXT
+    std::vector<std::tuple<Color, std::string, uint16_t>>().swap(this->text_for_draw);
+#endif
   }
 
 /**
@@ -139,7 +140,8 @@ namespace esphome
 
 #ifdef EHMTXv2_RBINDICATOR
 /**
- * @brief display a indicator on the bottom right side* 
+ * @brief display a indicator on the bottom right side
+ * 
  * @param r red
  * @param g green
  * @param b blue
@@ -159,6 +161,7 @@ namespace esphome
     }
   }
 #endif
+
 #ifdef EHMTXv2_LTINDICATOR
 /**
  * @brief display a indicator on the top left side
@@ -209,7 +212,7 @@ namespace esphome
 
 #ifdef EHMTXv2_LBINDICATOR
 /**
- * @brief display a indicator on the bottom left side* @brief display a indicator on the left side
+ * @brief display a indicator on the bottom left side
  * 
  * @param r red
  * @param g green
@@ -230,6 +233,7 @@ namespace esphome
     }
   }
 #endif
+
 #ifdef EHMTXv2_ICINDICATOR
 /**
  * @brief line indicator in the Icons area on the specified screen
@@ -257,8 +261,9 @@ namespace esphome
     }
   }
 #endif
+
 /**
-  * @brief hides the alarm indicator
+ * @brief hides the alarm indicator
  * 
  */
   void EHMTX::hide_alarm()
@@ -281,7 +286,8 @@ namespace esphome
 
 #ifdef EHMTXv2_RBINDICATOR
 /**
- * @brief hides the right bottom indicator* 
+ * @brief hides the right bottom indicator
+ * 
  */
   void EHMTX::hide_rindicator()
   {
@@ -289,17 +295,19 @@ namespace esphome
     ESP_LOGD(TAG, "Hide indicator (bottom right)");
   }
 #endif
+
 #ifdef EHMTXv2_LTINDICATOR
 /**
  * @brief * @brief hides the left top indicator
  * 
  */
-   void EHMTX::hide_ltindicator()
+  void EHMTX::hide_ltindicator()
   {
     this->display_indicator = this->IntToBits(this->display_indicator, 0, 3, 10);
     ESP_LOGD(TAG, "Hide indicator (top left)");
   }
-  #endif
+#endif
+
 #ifdef EHMTXv2_LCINDICATOR
 /**
  * @brief * @brief hides the left center indicator
@@ -323,6 +331,7 @@ namespace esphome
     ESP_LOGD(TAG, "Hide indicator (bottom left)");
   }
 #endif
+ 
 #ifdef EHMTXv2_ICINDICATOR
 /**
  * @brief hides the icon indicator
@@ -330,9 +339,10 @@ namespace esphome
   void EHMTX::hide_icon_indicator()
   {
     this->display_indicator = this->IntToBits(this->display_indicator, 0, 8, 20);
-    ESP_LOGD(TAG, "Hide icon indicator");  
+    ESP_LOGD(TAG, "Hide icon indicator");
   }
 #endif
+
 /**
  * @brief turns display off
  * 
@@ -401,6 +411,7 @@ namespace esphome
     this->weekday_accent = false;
     ESP_LOGD(TAG, "weekday accent off");
   }
+
 /**
  * @brief turns on the display of small days (accent) of the week when brightness is insufficient
  * 
@@ -410,6 +421,7 @@ namespace esphome
     this->weekday_accent = true;
     ESP_LOGD(TAG, "weekday accent on");
   }
+
 /**
  * @brief sets the default color for the line indication the actuall day of week
  * 
@@ -907,6 +919,7 @@ namespace esphome
   }
 
 #ifdef EHMTXv2_GAUGE
+
 #ifndef USE_ESP8266
   void EHMTX::color_gauge(std::string text)
   {
@@ -965,13 +978,6 @@ namespace esphome
   }
 #endif
 
-  void EHMTX::hide_gauge()
-  {
-    this->display_gauge = false;
-    ESP_LOGD(TAG, "hide gauge");
-  }
-
-#endif  // EHMTXv2_GAUGE
 #ifdef USE_ESP8266
   void EHMTX::draw_gauge()
   {
@@ -995,6 +1001,15 @@ namespace esphome
     }
   }
 #endif
+
+  void EHMTX::hide_gauge()
+  {
+    this->display_gauge = false;
+    ESP_LOGD(TAG, "hide gauge");
+  }
+
+#endif  // EHMTXv2_GAUGE
+
   void EHMTX::setup()
   {
     ESP_LOGD(TAG, "Setting up services");
@@ -1002,6 +1017,7 @@ namespace esphome
     register_service(&EHMTX::set_display_on, "display_on");
     register_service(&EHMTX::set_display_off, "display_off");
     register_service(&EHMTX::hold_screen, "hold_screen", {"time"});
+
     register_service(&EHMTX::show_alarm, "show_alarm", {"r", "g", "b", "size"});
     register_service(&EHMTX::hide_alarm, "hide_alarm");
     #ifdef EHMTXv2_RCINDICATOR
@@ -1022,7 +1038,7 @@ namespace esphome
     #endif
     #ifdef EHMTXv2_LBINDICATOR
     register_service(&EHMTX::show_lindicator, "show_lindicator", {"r", "g", "b", "size"});
-register_service(&EHMTX::hide_lindicator, "hide_lindicator");
+    register_service(&EHMTX::hide_lindicator, "hide_lindicator");
     #endif
     #ifdef EHMTXv2_ICINDICATOR
     register_service(&EHMTX::show_icon_indicator, "show_icon_indicator", {"r", "g", "b", "size", "pos", "height"});
@@ -1035,6 +1051,7 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
       register_service(&EHMTX::color_gauge, "color_gauge", {"colors"});
     #endif
     #endif
+
     register_service(&EHMTX::set_today_color, "set_today_color", {"r", "g", "b"});
     register_service(&EHMTX::set_weekday_color, "set_weekday_color", {"r", "g", "b"});
     register_service(&EHMTX::set_clock_color, "set_clock_color", {"r", "g", "b"});
@@ -1084,14 +1101,12 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
 
     register_service(&EHMTX::set_brightness, "brightness", {"value"});
 #ifndef USE_ESP8266
-    
     register_service(&EHMTX::bitmap_screen, "bitmap_screen", {"icon", "lifetime", "screen_time"});
     register_service(&EHMTX::bitmap_small, "bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::rainbow_bitmap_small, "rainbow_bitmap_small", {"icon", "text", "lifetime", "screen_time", "default_font"});
     register_service(&EHMTX::bitmap_stack, "bitmap_stack", {"icons", "lifetime", "screen_time"});
 #endif
 
-    
 #ifdef USE_Fireplugin
     register_service(&EHMTX::fire_screen, "fire_screen", {"lifetime", "screen_time"});
 #endif
@@ -1110,20 +1125,6 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
     register_service(&EHMTX::icon_prognosis_screen_rgb, "icon_prognosis_screen_rgb", {"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font", "r", "g", "b"});
 
     ESP_LOGD(TAG, "Setup and running!");
-  }
-
-  uint32_t EHMTX::IntToBits(uint32_t data, uint32_t newBitValues, unsigned nbits, unsigned startbit)
-  {
-      uint32_t mask = (1UL << nbits) - 1;
-      uint32_t smask = ~(mask << startbit);
-      data = (data & smask) | ((newBitValues & mask) << startbit);
-      return data;
-  }
-
-  uint32_t EHMTX::BitsToInt(uint32_t source, unsigned from, unsigned to) 
-  {
-    unsigned mask = ((1UL << (to - from + 1)) - 1) << from;
-    return (source & mask) >> from;
   }
 
   void EHMTX::set_clock_color(int32_t r, int32_t g, int32_t b)
@@ -1485,6 +1486,13 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
     }
 
     this->queue[this->screen_pointer]->last_time = ts;
+
+    #ifdef EHMTXv2_MULTICOLOR_TEXT
+    if (this->text_for_draw.size() > 0) {
+      std::vector<std::tuple<Color,std::string,uint16_t>>().swap(this->text_for_draw);
+    }
+    #endif
+
     // todo nur bei animationen
     if (this->queue[this->screen_pointer]->mode == MODE_BITMAP_STACK_SCREEN && this->queue[this->screen_pointer]->sbitmap != NULL)
     {
@@ -3080,62 +3088,68 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
       return;
     }
 
-    std::regex regex ("(#[A-Fa-f0-9]{6})|(.+?)");
+    if (this->text_for_draw.size() == 0) {
+      std::regex regex ("(#[A-Fa-f0-9]{6})|(.+?)");
 
-    std::regex_iterator<std::string::iterator> next ( text.begin(), text.end(), regex );
-    std::regex_iterator<std::string::iterator> end;
-  
-    std::vector<std::string> res;
-  
-    std::string iter = "";
-    while (next != end)
-    {
-      std::string part = next->str();
-      if (part.length() == 7)
-      {
-        if (iter.length() > 0)
-        {
-          res.push_back (iter);
-          iter = "";
-        }
-        res.push_back (part);
-      }
-      else 
-      {
-        iter += part;
-      }
-      next++;
-    }
-    if (iter.length() > 0)
-    {
-      res.push_back (iter);
-    }
+      std::regex_iterator<std::string::iterator> next ( text.begin(), text.end(), regex );
+      std::regex_iterator<std::string::iterator> end;
     
-    Color c = color;
-    int32_t x = xpos;
-    std::regex is_color ("^#[A-Fa-f0-9]{6}$");
-    for (int32_t i = 0; i < res.size(); i++)
-    {
-      if (res.at(i).length() > 0)
+      std::vector<std::string> res;
+    
+      std::string iter = "";
+      while (next != end)
       {
-        int32_t r, g, b;
-        if (res.at(i).length() == 7 && std::regex_match(res.at(i), is_color) && sscanf(&res.at(i).c_str()[1], "%02x%02x%02x", &r, &g, &b))
+        std::string part = next->str();
+        if (part.length() == 7)
         {
-          if (r + g + b > 0)
+          if (iter.length() > 0)
           {
-            c = Color(r, g ,b);
+            res.push_back (iter);
+            iter = "";
+          }
+          res.push_back (part);
+        }
+        else 
+        {
+          iter += part;
+        }
+        next++;
+      }
+      if (iter.length() > 0)
+      {
+        res.push_back (iter);
+      }
+      
+      Color c = color;
+      std::regex is_color ("^#[A-Fa-f0-9]{6}$");
+      for (int32_t i = 0; i < res.size(); i++)
+      {
+        if (res.at(i).length() > 0)
+        {
+          int32_t r, g, b;
+          if (res.at(i).length() == 7 && std::regex_match(res.at(i), is_color) && sscanf(&res.at(i).c_str()[1], "%02x%02x%02x", &r, &g, &b))
+          {
+            if (r + g + b > 0)
+            {
+              c = Color(r, g ,b);
+            }
+            else
+            {
+              c = color;
+            }
           }
           else
           {
-            c = color;
+            this->text_for_draw.push_back({c, res.at(i), this->GetTextWidth(font, "%s", res.at(i).c_str())});
           }
         }
-        else
-        {
-          this->display->print(x, ypos, font, c, esphome::display::TextAlign::BASELINE_LEFT, res.at(i).c_str());
-          x += this->GetTextWidth(font, "%s", res.at(i).c_str());
-        }
       }
+    }
+
+    int32_t x = xpos;
+    for(const auto &i : this->text_for_draw) {
+      this->display->print(x, ypos, font, std::get<0>(i), esphome::display::TextAlign::BASELINE_LEFT, std::get<1>(i).c_str());
+      x += std::get<2>(i);
     }
   #else
     this->display->print(xpos, ypos, font, color, esphome::display::TextAlign::BASELINE_LEFT, text.c_str());
@@ -3299,6 +3313,20 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
     return GetTextBounds(font, temp_buffer);
   }
 
+  uint32_t EHMTX::IntToBits(uint32_t data, uint32_t newBitValues, unsigned nbits, unsigned startbit)
+  {
+      uint32_t mask = (1UL << nbits) - 1;
+      uint32_t smask = ~(mask << startbit);
+      data = (data & smask) | ((newBitValues & mask) << startbit);
+      return data;
+  }
+
+  uint32_t EHMTX::BitsToInt(uint32_t source, unsigned from, unsigned to) 
+  {
+    unsigned mask = ((1UL << (to - from + 1)) - 1) << from;
+    return (source & mask) >> from;
+  }
+
   void EHMTX::dump_config()
   {
     ESP_LOGCONFIG(TAG, "EspHoMatriXv2 version: %s", EHMTX_VERSION);
@@ -3344,7 +3372,7 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
     {
       this->display->line(31, 2, 29, 0, this->alarm_color);
     }
-     if (size > 1)
+    if (size > 1)
     {
       this->display->draw_pixel_at(30, 0, this->alarm_color);
       this->display->draw_pixel_at(31, 1, this->alarm_color);
@@ -3354,6 +3382,7 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
       this->display->draw_pixel_at(31, 0, this->alarm_color);
     }
   }
+
 #ifdef EHMTXv2_RCINDICATOR
   void EHMTX::draw_rcindicator()
   {
@@ -3365,15 +3394,15 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
 #ifdef EHMTXv2_RBINDICATOR
   void EHMTX::draw_rindicator()
   {
-      uint8_t size = this->BitsToInt(this->display_indicator, 7, 9);
+    uint8_t size = this->BitsToInt(this->display_indicator, 7, 9);
     if (size > 2)
     {
       this->display->line(31, 5, 29, 7, this->rbindicator_color);
     }
 
-     if (size > 1)
+    if (size > 1)
     {
-        this->display->draw_pixel_at(30, 7, this->rbindicator_color);
+      this->display->draw_pixel_at(30, 7, this->rbindicator_color);
       this->display->draw_pixel_at(31, 6, this->rbindicator_color);
     }
 
@@ -3398,7 +3427,8 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
       this->display->draw_pixel_at(1, 0, this->ltindicator_color);
       this->display->draw_pixel_at(0, 1, this->ltindicator_color);
     }
-        if (size > 0)
+
+    if (size > 0)
     {
       this->display->draw_pixel_at(0, 0, this->ltindicator_color);
     }
@@ -3422,9 +3452,9 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
       this->display->line(0, 5, 2, 7, this->lbindicator_color);
     }
 
-   if (size > 1)
+    if (size > 1)
     {
-   this->display->draw_pixel_at(1, 7, this->lbindicator_color);
+      this->display->draw_pixel_at(1, 7, this->lbindicator_color);
       this->display->draw_pixel_at(0, 6, this->lbindicator_color);
     }
 
@@ -3433,13 +3463,12 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
       this->display->draw_pixel_at(0, 7, this->lbindicator_color);
     }
   }
+#endif
 
-  #endif
-  #ifdef EHMTXv2_ICINDICATOR
+#ifdef EHMTXv2_ICINDICATOR
   void EHMTX::draw_icon_indicator()
   {
-    
-     uint8_t size = this->BitsToInt(this->display_indicator, 20, 27);
+    uint8_t size = this->BitsToInt(this->display_indicator, 20, 27);
     if (size > 0)
     {
       for (auto id : EHMTXv2_CONF_ICON_INDICATOR_SCREENS)
@@ -3452,13 +3481,13 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
           {
             if (this->icon_indicator_height == 1)
             {
-               this->display->line(4 - size / 2, this->icon_indicator_y_pos,
+              this->display->line(4 - size / 2, this->icon_indicator_y_pos,
                                   4 + size / 2, this->icon_indicator_y_pos,
                                   this->icon_indicator_color);
             }
             else
             {
-            this->display->filled_rectangle(4 - size / 2, this->icon_indicator_y_pos,
+              this->display->filled_rectangle(4 - size / 2, this->icon_indicator_y_pos,
                                               size, this->icon_indicator_height,
                                               this->icon_indicator_color);
             }
@@ -3473,7 +3502,7 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
             }
             else
             {
-                this->display->filled_rectangle(4 - size / 2, this->icon_indicator_y_pos,
+              this->display->filled_rectangle(4 - size / 2, this->icon_indicator_y_pos,
                                               size, this->icon_indicator_height,
                                               this->icon_indicator_color);
             }
@@ -3484,6 +3513,7 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
     }
   }
 #endif
+
   void HOT EHMTX::draw()
   {
     if ((this->is_running) && (this->show_display))
@@ -3492,7 +3522,8 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
       {
         this->queue[this->screen_pointer]->draw();
       }
-      #ifdef EHMTXv2_GAUGE
+
+#ifdef EHMTXv2_GAUGE
       if (this->queue[this->screen_pointer]->mode != MODE_FULL_SCREEN &&
           this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN &&
           this->queue[this->screen_pointer]->mode != MODE_ICON_PROGRESS &&
@@ -3500,7 +3531,8 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
       {
         this->draw_gauge();
       }
-      #endif
+#endif
+
 #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
       if (this->queue[this->screen_pointer]->mode != MODE_CLOCK &&
           this->queue[this->screen_pointer]->mode != MODE_DATE &&
@@ -3508,7 +3540,7 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
           this->queue[this->screen_pointer]->mode != MODE_BITMAP_SCREEN)
       {
 #endif
-    #ifdef EHMTXv2_RCINDICATOR
+        #ifdef EHMTXv2_RCINDICATOR
           this->draw_rcindicator();
         #endif
         #ifdef EHMTXv2_RBINDICATOR
@@ -3525,7 +3557,7 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
             )
         {
 #endif
-  #ifdef EHMTXv2_LTINDICATOR
+        #ifdef EHMTXv2_LTINDICATOR
           this->draw_ltindicator();
         #endif
         #ifdef EHMTXv2_LCINDICATOR
@@ -3534,14 +3566,14 @@ register_service(&EHMTX::hide_lindicator, "hide_lindicator");
         #ifdef EHMTXv2_LBINDICATOR
           this->draw_lindicator();
         #endif
+
 #ifndef EHMTXv2_ALWAYS_SHOW_RLINDICATORS
         }
       }
 #endif
 
-      
       this->draw_alarm();
-         #ifdef EHMTXv2_ICINDICATOR
+      #ifdef EHMTXv2_ICINDICATOR
       this->draw_icon_indicator();
       #endif
     }

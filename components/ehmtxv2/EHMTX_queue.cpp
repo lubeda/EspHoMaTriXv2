@@ -218,6 +218,7 @@ namespace esphome
     default:
       break;
     }
+
     #ifdef EHMTXv2_GAUGE
     if (this->config_->display_gauge)
     {
@@ -534,7 +535,7 @@ namespace esphome
 #endif
         if (this->sbitmap != NULL)
         {
-           #ifdef EHMTXv2_GAUGE
+          #ifdef EHMTXv2_GAUGE
           if (this->config_->display_gauge)
           {
             this->config_->display->line(10, this->ypos(), 10, this->ypos() + 7, esphome::display::COLOR_OFF);
@@ -547,7 +548,7 @@ namespace esphome
             }
           }
           else
-              #endif
+          #endif
           {
             this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
             for (uint8_t x = 0; x < 8; x++)
@@ -904,7 +905,7 @@ namespace esphome
           this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
         this->config_->display->end_clipping();
-        
+
         if (this->mode == MODE_ICON_PROGRESS)
         {
           if (this->icon != BLANKICON)
@@ -990,8 +991,8 @@ namespace esphome
             }
             this->config_->display->line(10, this->ypos(), 10, this->ypos() + 7, esphome::display::COLOR_OFF);
           }
-          #endif
           else
+          #endif
           {
             this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
             if (this->icon != BLANKICON)
@@ -1057,6 +1058,7 @@ namespace esphome
           this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
         this->config_->display->end_clipping();
+
         if (this->icon != BLANKICON)
         {
           int32_t x = 0;
