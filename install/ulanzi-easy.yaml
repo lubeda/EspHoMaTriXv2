@@ -111,6 +111,7 @@ logger:
   level: INFO
 
 api:
+  custom_services: true
 
 sensor:
   - platform: sht3xd
@@ -168,12 +169,13 @@ sensor:
 ota:
   - platform: esphome
     password: !secret ota_password
+  - platform: web_server
 
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
 
-web_server:
+web5_server:
 
 i2c:
   sda: $sda_pin

@@ -538,8 +538,7 @@ namespace esphome
     #endif
     }
 
-    const size_t CAPACITY = JSON_ARRAY_SIZE(256);
-    StaticJsonDocument<CAPACITY> doc;
+    JsonDocument doc;
     deserializeJson(doc, logo);
     JsonArray array = doc.as<JsonArray>();
     // extract the values
@@ -587,8 +586,7 @@ namespace esphome
     }
 #endif
 
-    const size_t CAPACITY = JSON_ARRAY_SIZE(256);
-    StaticJsonDocument<CAPACITY> doc;
+    JsonDocument doc;
     deserializeJson(doc, ic);
     JsonArray array = doc.as<JsonArray>();
     // extract the values
@@ -661,8 +659,7 @@ namespace esphome
       screen->sbitmap = new Color[64];
     }
 
-    const size_t CAPACITY = JSON_ARRAY_SIZE(64);
-    StaticJsonDocument<CAPACITY> doc;
+    JsonDocument doc;
     deserializeJson(doc, ic);
     JsonArray array = doc.as<JsonArray>();
     // extract the values
@@ -722,8 +719,7 @@ namespace esphome
       screen->sbitmap = new Color[64];
     }
 
-    const size_t CAPACITY = JSON_ARRAY_SIZE(64);
-    StaticJsonDocument<CAPACITY> doc;
+    JsonDocument doc;
     deserializeJson(doc, ic);
     JsonArray array = doc.as<JsonArray>();
     // extract the values
@@ -924,8 +920,7 @@ namespace esphome
   void EHMTX::color_gauge(std::string text)
   {
     ESP_LOGD(TAG, "color_gauge: %s", text.c_str());
-    const size_t CAPACITY = JSON_ARRAY_SIZE(8);
-    StaticJsonDocument<CAPACITY> doc;
+    JsonDocument doc;
     deserializeJson(doc, text);
     JsonArray array = doc.as<JsonArray>();
     uint8_t i = 0;
@@ -2504,8 +2499,7 @@ namespace esphome
       screen->sbitmap = new Color[64];
     }
 
-    const size_t CAPACITY = JSON_ARRAY_SIZE(72);
-    StaticJsonDocument<CAPACITY> doc;
+    JsonDocument doc;
     deserializeJson(doc, prognosis);
     JsonArray array = doc.as<JsonArray>();
     // extract the 24 color values
