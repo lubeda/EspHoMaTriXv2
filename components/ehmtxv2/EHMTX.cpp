@@ -541,6 +541,9 @@ namespace esphome
     JsonDocument doc;
     deserializeJson(doc, logo);
     JsonArray array = doc.as<JsonArray>();
+    if (array.size() > 256) {
+      return;
+    }
     // extract the values
     uint16_t i = 0;
     for (JsonVariant v : array)
@@ -589,6 +592,9 @@ namespace esphome
     JsonDocument doc;
     deserializeJson(doc, ic);
     JsonArray array = doc.as<JsonArray>();
+    if (array.size() > 256) {
+      return;
+    }
     // extract the values
     uint16_t i = 0;
     for (JsonVariant v : array)
@@ -662,6 +668,9 @@ namespace esphome
     JsonDocument doc;
     deserializeJson(doc, ic);
     JsonArray array = doc.as<JsonArray>();
+    if (array.size() > 64) {
+      return;
+    }
     // extract the values
     uint16_t i = 0;
     for (JsonVariant v : array)
@@ -722,6 +731,9 @@ namespace esphome
     JsonDocument doc;
     deserializeJson(doc, ic);
     JsonArray array = doc.as<JsonArray>();
+    if (array.size() > 64) {
+      return;
+    }
     // extract the values
     uint16_t i = 0;
     for (JsonVariant v : array)
@@ -923,6 +935,9 @@ namespace esphome
     JsonDocument doc;
     deserializeJson(doc, text);
     JsonArray array = doc.as<JsonArray>();
+    if (array.size() > 8) {
+      return;
+    }
     uint8_t i = 0;
     for (JsonVariant v : array)
     {
@@ -2502,6 +2517,9 @@ namespace esphome
     JsonDocument doc;
     deserializeJson(doc, prognosis);
     JsonArray array = doc.as<JsonArray>();
+    if (array.size() > 72) {
+      return;
+    }
     // extract the 24 color values
     uint8_t red = 0;
     uint8_t gre = 0;
