@@ -23,7 +23,11 @@ Each esphome release is packed with new features and suprises (breaking changes)
 **Which are:**
 - [Branch 2025.7.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.7.1) for esphome 2025.4.0- (some 1fixes "empty queue")
 - [Branch 2025.6.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.6.1)
-.....
+- [Branch 2025.6.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.6.0) for esphome 2025.6.0- (some fixes and PRs from andrewjswan)
+- [Branch 2025.5.2](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.5.2) for esphome 2025.4.0- (some fixes "empty queue")
+- [Branch 2025.5.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.5.1) for esphome 2025.4.0- 
+- [Branch 2025.2.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.1) for esphome 2025.2.0- (optimized handling of transparent icons)
+- [Branch 2025.2.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.0) for esphome 2025.2.0-
 - [Branch 2024.12.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2024.12.1) for esphome 2024.12.0-...
 
 For ehmtx use the newest version tag by manually editing the ref tag in the external_componets section in your yaml.
