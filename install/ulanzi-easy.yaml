@@ -175,7 +175,7 @@ wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
 
-web5_server:
+web_server:
 
 i2c:
   sda: $sda_pin
