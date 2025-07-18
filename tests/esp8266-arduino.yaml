@@ -33,12 +33,14 @@ logger:
   level: WARN
 
 api:
+  custom_services: true
 
 sensor:
       
 ota:
   - platform: esphome
     password: !secret ota_password
+  - platform: web_server
 
 wifi:
   ssid: !secret wifi_ssid
