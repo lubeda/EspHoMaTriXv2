@@ -1664,7 +1664,7 @@ namespace esphome
         uint8_t current_step = ((b - 50) / 205) * (EHMTXv2_BLEND_STEPS - EHMTXv2_BLEND_STEPS / 2) + EHMTXv2_BLEND_STEPS / 2;
         if (this->ticks_ <= current_step)
         {
-          float br = lerp((float)this->ticks_ / current_step, 0, (float)b / 255);
+          float br = std::lerp(0, (float)b / 255, (float)this->ticks_ / current_step);
           this->display->get_light()->set_correction(br, br, br);
         }
       }
