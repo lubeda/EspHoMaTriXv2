@@ -19,7 +19,7 @@ from urllib.parse import urlparse
 
 _LOGGER = logging.getLogger(__name__)
 
-DEPENDENCIES = ["display", "light", "api"]
+DEPENDENCIES = ["display", "light"]
 AUTO_LOAD = ["ehmtxv2", "json", "image", "animation"]
 MAXFRAMES = 110
 MAXICONS = 100

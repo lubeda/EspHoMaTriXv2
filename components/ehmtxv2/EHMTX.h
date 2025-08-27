@@ -35,7 +35,7 @@ const uint8_t TEXTSCROLLSTART = 8;
 const uint8_t TEXTSTARTOFFSET = (32 - 8);
 
 const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2025.7.1";
+static const char *const EHMTX_VERSION = "2025.8.1";
 static const char *const TAG = "EHMTXv2";
 
 enum show_mode : uint8_t
@@ -83,7 +83,11 @@ namespace esphome
   class EHMTXShowDisplayTrigger;
   class EHMTXNightModeTrigger;
 
+#if defined(USE_API)
   class EHMTX : public PollingComponent, public api::CustomAPIDevice
+#else
+  class EHMTX : public PollingComponent
+#endif
   {
   protected:
     float get_setup_priority() const override { return esphome::setup_priority::LATE; }
