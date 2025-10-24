@@ -24,6 +24,9 @@ jobs:
           - file: tests/esp32-idf-features.yaml
             name: esp32-idf-features
             manifest_filename: esp32-idf-features-manifest.json
+          - file: tests/esp32-idf-noapi.yaml
+            name: esp32-idf-noapi
+            manifest_filename: esp32-idf-noapi-manifest.json
       fail-fast: false
     steps:
       - name: Checkout source code
