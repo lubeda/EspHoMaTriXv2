@@ -1022,6 +1022,7 @@ namespace esphome
 
   void EHMTX::setup()
   {
+#ifdef USE_API_SERVICES
     ESP_LOGD(TAG, "Setting up services");
     register_service(&EHMTX::get_status, "get_status");
     register_service(&EHMTX::set_display_on, "display_on");
@@ -1133,6 +1134,7 @@ namespace esphome
 
     register_service(&EHMTX::icon_prognosis_screen, "icon_prognosis_screen", {"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font"});
     register_service(&EHMTX::icon_prognosis_screen_rgb, "icon_prognosis_screen_rgb", {"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+#endif
 
     ESP_LOGD(TAG, "Setup and running!");
   }

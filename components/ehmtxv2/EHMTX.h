@@ -83,7 +83,11 @@ namespace esphome
   class EHMTXShowDisplayTrigger;
   class EHMTXNightModeTrigger;
 
+#if defined(USE_API)
   class EHMTX : public PollingComponent, public api::CustomAPIDevice
+#else
+  class EHMTX : public PollingComponent
+#endif
   {
   protected:
     float get_setup_priority() const override { return esphome::setup_priority::LATE; }
