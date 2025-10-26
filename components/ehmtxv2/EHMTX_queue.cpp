@@ -647,7 +647,6 @@ namespace esphome
 
       case MODE_ICON_CLOCK:
       case MODE_ICON_DATE:
-        
         if (this->config_->clock->now().is_valid()) // valid time
         {
           color_ = this->text_color;
@@ -737,7 +736,6 @@ namespace esphome
               this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
             }
           }
-          
           this->config_->draw_day_of_week(this->ypos(), true);
 
           if (this->icon_name.find("day") != std::string::npos || this->icon_name.find("weekday") != std::string::npos)
