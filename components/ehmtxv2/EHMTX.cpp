@@ -1800,10 +1800,10 @@ namespace esphome
     }
     ESP_LOGI(TAG, "status time format: %s", EHMTXv2_TIME_FORMAT);
     ESP_LOGI(TAG, "status date format: %s", EHMTXv2_DATE_FORMAT);
-    ESP_LOGI(TAG, "status display %s", this->show_display ? F("on") : F("off"));
-    ESP_LOGI(TAG, "status night mode %s", this->night_mode ? F("on") : F("off"));
-    ESP_LOGI(TAG, "status weekday accent %s", this->weekday_accent ? F("on") : F("off"));
-    ESP_LOGI(TAG, "status replace time and date %s", this->replace_time_date_active ? F("on") : F("off"));
+    ESP_LOGI(TAG, "status display %s", this->show_display ? ESPHOME_F("on") : ESPHOME_F("off"));
+    ESP_LOGI(TAG, "status night mode %s", this->night_mode ? ESPHOME_F("on") : ESPHOME_F("off"));
+    ESP_LOGI(TAG, "status weekday accent %s", this->weekday_accent ? ESPHOME_F("on") : ESPHOME_F("off"));
+    ESP_LOGI(TAG, "status replace time and date %s", this->replace_time_date_active ? ESPHOME_F("on") : ESPHOME_F("off"));
 
     this->queue_status();
   }
@@ -1835,7 +1835,7 @@ namespace esphome
   void EHMTX::set_replace_time_date_active(bool b)
   {
     this->replace_time_date_active = b;
-    ESP_LOGI(TAG, "replace_time_date %s", b ? F("on") : F("off"));
+    ESP_LOGI(TAG, "replace_time_date %s", b ? ESPHOME_F("on") : ESPHOME_F("off"));
   }
 
   std::string EHMTX::replace_time_date(std::string time_date) // Replace Time Date Strings / Trip5
@@ -2621,13 +2621,13 @@ namespace esphome
   void EHMTX::set_show_seconds(bool b)
   {
     this->show_seconds = b;
-    ESP_LOGI(TAG, "%sshow seconds", b ? F("") : F("don't "));
+    ESP_LOGI(TAG, "%sshow seconds", b ? ESPHOME_F("") : ESPHOME_F("don't "));
   }
 
   void EHMTX::set_show_day_of_week(bool b)
   {
     this->show_day_of_week = b;
-    ESP_LOGI(TAG, "%sshow day of week", b ? F("") : F("don't "));
+    ESP_LOGI(TAG, "%sshow day of week", b ? ESPHOME_F("") : ESPHOME_F("don't "));
   }
 
   void EHMTX::set_brightness(int32_t value)
@@ -3360,12 +3360,12 @@ namespace esphome
 #ifdef EHMTXv2_BLEND_STEPS
     ESP_LOGCONFIG(TAG, "Fade in activated: %d steps", EHMTXv2_BLEND_STEPS);
 #endif
-    ESP_LOGCONFIG(TAG, "Weekstart: %s", EHMTXv2_WEEK_START ? F("Monday") : F("Sunday"));
+    ESP_LOGCONFIG(TAG, "Weekstart: %s", EHMTXv2_WEEK_START ? ESPHOME_F("Monday") : ESPHOME_F("Sunday"));
     ESP_LOGCONFIG(TAG, "Weekdays: %s Count: %d", EHMTXv2_WEEKDAYTEXT, this->weekday_char_count);
-    ESP_LOGCONFIG(TAG, "Display: %s", this->show_display ? F("On") : F("Off"));
-    ESP_LOGCONFIG(TAG, "Night mode: %s", this->night_mode ? F("On") : F("Off"));
-    ESP_LOGCONFIG(TAG, "Weekday accent: %s", this->weekday_accent ? F("On") : F("Off"));
-    ESP_LOGCONFIG(TAG, "Replace Time and Date: %s", this->replace_time_date_active ? F("On") : F("Off"));
+    ESP_LOGCONFIG(TAG, "Display: %s", this->show_display ? ESPHOME_F("On") : ESPHOME_F("Off"));
+    ESP_LOGCONFIG(TAG, "Night mode: %s", this->night_mode ? ESPHOME_F("On") : ESPHOME_F("Off"));
+    ESP_LOGCONFIG(TAG, "Weekday accent: %s", this->weekday_accent ? ESPHOME_F("On") : ESPHOME_F("Off"));
+    ESP_LOGCONFIG(TAG, "Replace Time and Date: %s", this->replace_time_date_active ? ESPHOME_F("On") : ESPHOME_F("Off"));
     if (this->replace_time_date_active)
     {
       ESP_LOGCONFIG(TAG, "Replace from: %s", EHMTXv2_REPLACE_TIME_DATE_FROM);

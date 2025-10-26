@@ -560,7 +560,7 @@ async def to_code(config):
 
     if config[CONF_HTML]:
         try:
-            htmlfn = str(CORE.config_path.with_suffix(".html"))
+            htmlfn = str(CORE.config_path).replace(".yaml","") + ".html"
             with open(htmlfn, 'w') as f:
                 f.truncate()
                 f.write(html_string)
