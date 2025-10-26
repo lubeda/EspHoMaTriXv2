@@ -1,45 +1,71 @@
 name: Build tests
 
 on:
+  workflow_call:
   workflow_dispatch:
   push:
   pull_request:
 
 jobs:
+  configuration:
+    name: Build tests list
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - id: set-matrix
+        run: echo "matrix=$(ls *.yaml | grep -v "secrets" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+        working-directory: ${{ github.workspace }}/tests
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
   build-stable:
-    name: Build stable ${{ matrix.firmware.name }}
+    name: Build stable ${{ matrix.config-file }}
+    needs: configuration
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        firmware:
-          - file: tests/esp32-arduino.yaml
-            name: esp32-arduino
-            manifest_filename: esp32-arduino-manifest.json
-          - file: tests/esp32-idf.yaml
-            name: esp32-idf
-            manifest_filename: esp32-idf-manifest.json
-          - file: tests/esp8266-arduino.yaml
-            name: esp8266-arduino
-            manifest_filename: esp8266-arduino-manifest.json
-          - file: tests/esp32-idf-features.yaml
-            name: esp32-idf-features
-            manifest_filename: esp32-idf-features-manifest.json
-          - file: tests/esp32-idf-noapi.yaml
-            name: esp32-idf-noapi
-            manifest_filename: esp32-idf-noapi-manifest.json
+        config-file: ${{ fromJson(needs.configuration.outputs.matrix) }}
       fail-fast: false
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v4
-      - name: Build firmware (latest)
-        uses: esphome/build-action@v6
+        uses: actions/checkout@v5
+      - name: Build firmware (stable)
+        uses: esphome/build-action@v7
         id: esphome-build
         with:
-          yaml-file: ${{ matrix.firmware.file }}
-      - name: Build firmware (dev)
-        uses: esphome/build-action@v6
-        id: esphome-build-dev
-        with:
-          yaml-file: ${{ matrix.firmware.file }}
-          version: dev
+          yaml-file: tests/${{ matrix.config-file }}
+          version: latest
 
+  build-dev:
+    name: Build dev ${{ matrix.config-file }}
+    needs:
+      - configuration
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config-file: ${{ fromJson(needs.configuration.outputs.matrix) }}
+      fail-fast: false
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v5
+      - name: Build firmware (dev)
+        uses: esphome/build-action@v7
+        id: esphome-build
+        with:
+          yaml-file: tests/${{ matrix.config-file }}
+          version: latest
+
+  ci-status:
+    name: Status
+    runs-on: ubuntu-latest
+    needs:
+      - build-stable
+      - build-dev
+    if: always()
+    steps:
+      - name: Success
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Failure
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
