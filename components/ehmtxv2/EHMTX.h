@@ -2,6 +2,7 @@
 #define EHMTX_H
 #include "esphome.h"
 #include "esphome/components/time/real_time_clock.h"
+#include "esphome/components/web_server_base/web_server_base.h"
 
 #if defined USE_Fireplugin 
   #if defined CONFIG_IDF_TARGET_ESP32 || defined CONFIG_IDF_TARGET_ESP32C3 || defined CONFIG_IDF_TARGET_ESP32S3

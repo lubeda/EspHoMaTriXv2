@@ -20,7 +20,7 @@ from urllib.parse import urlparse
 _LOGGER = logging.getLogger(__name__)
 
 DEPENDENCIES = ["display", "light"]
-AUTO_LOAD = ["ehmtxv2", "json", "image", "animation"]
+AUTO_LOAD = ["ehmtxv2", "json", "image", "animation", "web_server_base"]
 MAXFRAMES = 110
 MAXICONS = 100
 ICONWIDTH = 8
