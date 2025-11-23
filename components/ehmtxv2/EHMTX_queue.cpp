@@ -793,7 +793,14 @@ namespace esphome
               // To the center, without leading 0
               case 5:
                 x_left = (l_width < 5) ? 5 - l_width : 0;
-                x_right = 4;
+                if (this->config_->icon_to_9 == 1 || this->config_->icon_to_9 == 3)
+                {
+                  x_right = 5;
+                }
+                else
+                {
+                  x_right = 4;
+                }
                 break;
               // Left to center, Right to edge
               case 2:
