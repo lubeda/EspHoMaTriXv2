@@ -1022,7 +1022,7 @@ namespace esphome
 
   void EHMTX::setup()
   {
-#ifdef USE_API_SERVICES
+#if defined(USE_API_SERVICES) || defined(USE_API_USER_DEFINED_ACTIONS)
     ESP_LOGD(TAG, "Setting up services");
     register_service(&EHMTX::get_status, "get_status");
     register_service(&EHMTX::set_display_on, "display_on");
