@@ -59,7 +59,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: "2025.10.3"
+      ref: "2025.12.0"
     refresh: 600s
     components: [ ehmtxv2 ]
 
@@ -68,7 +68,7 @@ esphome:
   name: $devicename
   project:
     name: "Ulanzi.EHMTXv2"
-    version: "2025.10.3"
+    version: "2025.12.0"
   on_boot:
     then:
       - ds1307.read_time:

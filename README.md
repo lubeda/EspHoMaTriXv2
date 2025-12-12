@@ -21,7 +21,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: 2025.10.3
+      ref: 2025.12.0
     refresh: 60s 
     components: [ ehmtxv2 ]   
 ```
@@ -1871,6 +1871,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[mik-at](https://github.com/mik-at)** fixing typos
 - **[DT-art1](https://github.com/DT-art1)** preparing for esphome 2025.5.0
 - **[genehand](https://github.com/genehand)** for the speed optimization
+- **[skgsergio](https://github.com/skgsergio)** preparing 2025.12.0
 - **Everybody** who has fun by using this software
 - **Everybody** who found bugs/issues and reported them!
 
