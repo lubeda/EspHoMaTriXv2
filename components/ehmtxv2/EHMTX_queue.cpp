@@ -198,11 +198,21 @@ namespace esphome
     case MODE_ICON_SCREEN:
     case MODE_ICON_CLOCK:
     case MODE_ICON_DATE:
-    case MODE_ALERT_SCREEN:
-    case MODE_RAINBOW_ALERT_SCREEN:
     case MODE_ICON_PROGRESS:
     case MODE_PROGNOSIS_SCREEN:
       startx = 8;
+      break;
+    case MODE_ALERT_SCREEN:
+    case MODE_RAINBOW_ALERT_SCREEN:
+      // Support full-width text when icon_name is "none" or empty
+      if (this->icon_name == "none" || this->icon_name.empty())
+      {
+        startx = 0;
+      }
+      else
+      {
+        startx = 8;
+      }
       break;
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
@@ -891,7 +901,16 @@ namespace esphome
       case MODE_RAINBOW_ICON:
       case MODE_ICON_PROGRESS:
       case MODE_PROGNOSIS_SCREEN:
-        this->config_->display->start_clipping(8,0,32,8);
+        // For alert screens with "none" or empty icon, use full-width clipping
+        if ((this->mode == MODE_ALERT_SCREEN || this->mode == MODE_RAINBOW_ALERT_SCREEN) &&
+            (this->icon_name == "none" || this->icon_name.empty()))
+        {
+          this->config_->display->start_clipping(0,0,32,8);
+        }
+        else
+        {
+          this->config_->display->start_clipping(8,0,32,8);
+        }
         color_ = (this->mode == MODE_RAINBOW_ICON || this->mode == MODE_RAINBOW_ALERT_SCREEN) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
@@ -970,50 +989,59 @@ namespace esphome
         }
         else
         {
-          #ifdef EHMTXv2_GAUGE
-          if (this->config_->display_gauge)
+          // Skip icon area rendering for full-width alert screens
+          if ((this->mode == MODE_ALERT_SCREEN || this->mode == MODE_RAINBOW_ALERT_SCREEN) &&
+              (this->icon_name == "none" || this->icon_name.empty()))
           {
-            if (this->icon != BLANKICON)
-            {
-              if (this->icon == SOLIDICON)
-              {
-                this->config_->display->filled_rectangle(2, this->ypos(), 8, 8, this->config_->solid_color);
-              }
-              else if (this->icon == CALENDARICON)
-              {
-                this->config_->display->filled_rectangle(2, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
-                this->config_->display->filled_rectangle(2, this->ypos(), 8, 2, this->config_->calendar_color);
-              }
-              else
-              {
-                this->config_->display->image(2, this->ypos(), this->config_->icons[this->icon]);
-              }
-            }
-            this->config_->display->line(10, this->ypos(), 10, this->ypos() + 7, esphome::display::COLOR_OFF);
+            // Full-width mode: no icon or separator line
           }
           else
-          #endif
           {
-            this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
-            if (this->icon != BLANKICON)
+            #ifdef EHMTXv2_GAUGE
+            if (this->config_->display_gauge)
             {
-              if (this->icon == SOLIDICON)
+              if (this->icon != BLANKICON)
               {
-                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color);
+                if (this->icon == SOLIDICON)
+                {
+                  this->config_->display->filled_rectangle(2, this->ypos(), 8, 8, this->config_->solid_color);
+                }
+                else if (this->icon == CALENDARICON)
+                {
+                  this->config_->display->filled_rectangle(2, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
+                  this->config_->display->filled_rectangle(2, this->ypos(), 8, 2, this->config_->calendar_color);
+                }
+                else
+                {
+                  this->config_->display->image(2, this->ypos(), this->config_->icons[this->icon]);
+                }
               }
-              else if (this->icon == CALENDARICON)
+              this->config_->display->line(10, this->ypos(), 10, this->ypos() + 7, esphome::display::COLOR_OFF);
+            }
+            else
+            #endif
+            {
+              this->config_->display->line(8, this->ypos(), 8, this->ypos() + 7, esphome::display::COLOR_OFF);
+              if (this->icon != BLANKICON)
               {
-                this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
-                this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color);
-              }
-              else
-              {
-                this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+                if (this->icon == SOLIDICON)
+                {
+                  this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, this->config_->solid_color);
+                }
+                else if (this->icon == CALENDARICON)
+                {
+                  this->config_->display->filled_rectangle(0, this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
+                  this->config_->display->filled_rectangle(0, this->ypos(), 8, 2, this->config_->calendar_color);
+                }
+                else
+                {
+                  this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+                }
               }
             }
           }
         }
-        
+
         break;
 
       case MODE_TEXT_PROGRESS:
@@ -1280,8 +1308,6 @@ namespace esphome
     case MODE_BITMAP_SMALL:
     case MODE_RAINBOW_BITMAP_SMALL:
     case MODE_ICON_SCREEN:
-    case MODE_ALERT_SCREEN:
-    case MODE_RAINBOW_ALERT_SCREEN:
     case MODE_ICON_PROGRESS:
     case MODE_PROGNOSIS_SCREEN:
       startx = 8;
@@ -1294,6 +1320,46 @@ namespace esphome
         max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
         display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVAL);
         this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
+      }
+      break;
+    case MODE_ALERT_SCREEN:
+    case MODE_RAINBOW_ALERT_SCREEN:
+      // Support full-width text when icon_name is "none" or empty
+      if (this->icon_name == "none" || this->icon_name.empty())
+      {
+        // Full-width: same behavior as MODE_TEXT_SCREEN
+        startx = 0;
+#ifdef EHMTXv2_SCROLL_SMALL_TEXT
+        max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+        display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVAL);
+        this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
+#else
+        if (this->pixels_ < 32)
+        {
+          this->screen_time_ = requested_time;
+        }
+        else
+        {
+          max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+          display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVAL);
+          this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
+        }
+#endif
+      }
+      else
+      {
+        // With icon: original behavior
+        startx = 8;
+        if (this->pixels_ < 23)
+        {
+          this->screen_time_ = requested_time;
+        }
+        else
+        {
+          max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
+          display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVAL);
+          this->screen_time_ = (display_duration > requested_time) ? display_duration : requested_time;
+        }
       }
       break;
     case MODE_ICON_TEXT_SCREEN:

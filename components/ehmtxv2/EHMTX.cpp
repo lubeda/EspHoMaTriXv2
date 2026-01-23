@@ -1952,15 +1952,26 @@ namespace esphome
 
   void EHMTX::alert_screen(std::string iconname, std::string text, int32_t screen_time, bool default_font, int32_t r, int32_t g, int32_t b)
   {
-    uint8_t icon = this->find_icon(iconname.c_str());
+    uint8_t icon;
 
-    if (icon == MAXICONS)
+    // Support "none" or empty string for full-width text (no icon)
+    if (iconname == "none" || iconname.empty())
     {
-      ESP_LOGW(TAG, "icon %d/%s not found => default: 0", icon, iconname.c_str());
-      icon = 0;
-      for (auto *t : on_icon_error_triggers_)
+      icon = BLANKICON;
+      ESP_LOGD(TAG, "alert_screen: no icon requested, using full-width text");
+    }
+    else
+    {
+      icon = this->find_icon(iconname.c_str());
+
+      if (icon == MAXICONS)
       {
-        t->process(iconname);
+        ESP_LOGW(TAG, "icon %d/%s not found => default: 0", icon, iconname.c_str());
+        icon = 0;
+        for (auto *t : on_icon_error_triggers_)
+        {
+          t->process(iconname);
+        }
       }
     }
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_ALERT_SCREEN);
@@ -1987,15 +1998,26 @@ namespace esphome
 
   void EHMTX::rainbow_alert_screen(std::string iconname, std::string text, int32_t screen_time, bool default_font)
   {
-    uint8_t icon = this->find_icon(iconname.c_str());
+    uint8_t icon;
 
-    if (icon == MAXICONS)
+    // Support "none" or empty string for full-width text (no icon)
+    if (iconname == "none" || iconname.empty())
     {
-      ESP_LOGW(TAG, "icon %d/%s not found => default: 0", icon, iconname.c_str());
-      icon = 0;
-      for (auto *t : on_icon_error_triggers_)
+      icon = BLANKICON;
+      ESP_LOGD(TAG, "rainbow_alert_screen: no icon requested, using full-width text");
+    }
+    else
+    {
+      icon = this->find_icon(iconname.c_str());
+
+      if (icon == MAXICONS)
       {
-        t->process(iconname);
+        ESP_LOGW(TAG, "icon %d/%s not found => default: 0", icon, iconname.c_str());
+        icon = 0;
+        for (auto *t : on_icon_error_triggers_)
+        {
+          t->process(iconname);
+        }
       }
     }
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_RAINBOW_ALERT_SCREEN);
