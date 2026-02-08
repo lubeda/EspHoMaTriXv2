@@ -2,7 +2,7 @@
 
 **Skill-level:** all
 
-Due to limitations of the display there are only some font useful here are some examples.
+Due to limitations of the display, there are only some fonts that are useful. Here are some examples.
 
 ## EHMTXv2.ttf
 

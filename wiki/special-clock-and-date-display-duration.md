@@ -1,6 +1,8 @@
 # Introduction
 
-I'm using EspHoMaTriXv2 on a Ulanzi TC001. I want to display the time for 55 seconds and the date for 5 seconds in a loop. I don't understand, how I can configure the display times. I tried clock_interval: 55 but it doesn't seem to help.
+I'm using EspHoMaTriXv2 on an Ulanzi TC001. I want to display the time for 55 seconds and the date for 5 seconds in a 
+loop. I don't understand how I can configure the display times. I tried `clock_interval: 55` but it doesn't seem to 
+help.
 
 What's the correct way?
 
@@ -61,6 +63,5 @@ mode: single
 icon: mdi:clock-digital
 ```
 
-This deletes the default date and clock display and fills the loop with a 55 sec clock and a 5 sec date screen. The lifetime is one day, so the script must run once a day or on boot.
-
-This is also possible in the esphome YAML, with lambdas.
+This deletes the default date and clock display and fills the loop with a 55 second clock and a 5 second date screen.
+The lifetime is one day, so the script must run once a day or on boot.

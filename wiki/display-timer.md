@@ -6,7 +6,7 @@ Set up a timer helper named *eier_timer*
 
 ## step 1: **home assistant automation:**
 
-triggered by the timer start, the timer display is refreshed every second
+Triggered by the timer start, the timer display is refreshed every second
 
 ```yaml
 alias: Display Timer on ulanzi

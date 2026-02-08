@@ -2,12 +2,11 @@
 
 **Skill-level:** medium
 
-Show weather state with icons that match the weather conditions.
+Show the weather state with icons that match the weather conditions.
 
 ## step 1: add icons to **ulanzi.yaml**
 
 ```yaml
-......
 ehmtx:
   icons:
     - id: weather_clear_night
@@ -44,7 +43,6 @@ ehmtx:
       lameid: 15618
     - id: weather_cloudy_night
       lameid: 12195
-
 ```
 
 ## Step 2: enter **home assistant automation:**
