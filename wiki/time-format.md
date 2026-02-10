@@ -1,10 +1,11 @@
-# introduction
+# Introduction
 
 **Skill-level:** low
 
-In the ehmtxv2: section of your yaml, you can change the format that the date and time are displayed.
+In the ehmtxv2: section of your YAML, you can change the format that the date and time are displayed.
 
-There are some helpful hints on the [EspHome site](https://esphome.io/components/time/?highlight=strftime#strftime) but there are some undocumented ones, too. EspHome only uses a subset of [strftime](https://strftime.org/) but there are still some good tricks available.
+There are some helpful hints on the [EspHome site](https://esphome.io/components/time/?highlight=strftime#strftime) but there are some undocumented ones, too. EspHome only uses a
+subset of [strftime](https://strftime.org/) but there are still some good tricks available.
 
 ## Date formats
 
