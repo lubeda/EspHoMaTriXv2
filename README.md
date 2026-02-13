@@ -1872,6 +1872,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[DT-art1](https://github.com/DT-art1)** preparing for esphome 2025.5.0
 - **[genehand](https://github.com/genehand)** for the speed optimization
 - **[skgsergio](https://github.com/skgsergio)** preparing 2025.12.0
+- **[Nathanator](https://github.com/Nathanator)** for improving the wiki
 - **Everybody** who has fun by using this software
 - **Everybody** who found bugs/issues and reported them!
 
