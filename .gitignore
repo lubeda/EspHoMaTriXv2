@@ -31,3 +31,5 @@ docs/
 .vs/
 /.esphome/
 /secrets.yaml
+CLAUDE.md
+.claude/settings.local.json

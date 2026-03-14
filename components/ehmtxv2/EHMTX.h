@@ -486,8 +486,9 @@ namespace esphome
 #endif
 
     EHMTX_queue(EHMTX *config);
-
+#ifdef USE_Fireplugin
     Color heatColor(uint8_t temperature);
+#endif
     void status();
 
     void draw();
