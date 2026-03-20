@@ -1,35 +1,97 @@
-components/ehmtx/__init__ copy._py
-components/ehmtx/__pycache__/__init__.cpython-39.pyc
-venv
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS
+.DS_Store
+Thumbs.db
+
+# ESPHome specific
 .esphome/
 _icons/
 _fonts/
-esphome.ps1
-dev_*.yaml
-ehmtx8266.yaml
-info.de.md
-components/ehmtx/select/__pycache__/__init__.cpython-39.pyc
-ehmtx8266-rgb565.yaml
 icons.html
-components/ehmtx/__init__ copy.py
-ehmtx8266-rgb565.yaml.html
-ehmtx8266-rgb565-font.yaml
-components/ehmtx/EHMTX_icons._cpp
-.vscode/settings.json
-ehmtx8266-select.yaml
-svganimtest.html
+*.html
+
+# Development / Testing files
+dev_*.yaml
+ehmtx*.yaml
+!ehmtxv2.yaml  # Keep main config if exists
 servicetest
-.DS_Store
-components/ehmtxv2/animation.py
 downloadawtrixicons.ps1
-ltr1.png
-ltr2.png
-ltr3.png
-8x32 iMAGE.xcf
+esphome.ps1
+ltr*.png
+8x32\ iMAGE.xcf
+svganimtest.html
+
+# Documentation
 docs/
-.vscode/c_cpp_properties.json
-.vs/
+
+# Miscellaneous
+*.tmp
+*.temp
+*.log
+*.bak
+*.swp
+*~
+# Local secrets (critical - never commit)
+secrets.yaml
 /.esphome/
 /secrets.yaml
-CLAUDE.md
-.claude/settings.local.json
