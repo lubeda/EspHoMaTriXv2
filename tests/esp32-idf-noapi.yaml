@@ -85,16 +85,13 @@ i2c:
 light:
   - platform: esp32_rmt_led_strip
     id: ehmtx_light
-    type: GRB
-    internal: true
-    variant: WS2812
+    rgb_order: GRB
     pin: $matrix_pin
     num_leds: 256
-    color_correct: [30%, 30%, 30%]
-    gamma_correct: 2.0
+    chipset: ws2812
     name: "$devicename Light"
     restore_mode: ALWAYS_OFF
-    
+      
 time:
   - platform: sntp
     on_time_sync:
