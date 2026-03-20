@@ -640,7 +640,7 @@ async def to_code(config):
     if config[CONF_TIME_FORMAT_BIG]:
         cg.add_define("EHMTXv2_TIME_FORMAT_BIG",config[CONF_TIME_FORMAT_BIG])
     else:
-        cg.add_define("EHMTXv2_TIME_FORMAT_BIG",config[EHMTXv2_TIME_FORMAT])
+        cg.add_define("EHMTXv2_TIME_FORMAT_BIG",config[CONF_TIME_FORMAT])
 
     if config[CONF_DATE_FORMAT_BIG]:
         cg.add_define("EHMTXv2_DATE_FORMAT_BIG",config[CONF_DATE_FORMAT_BIG])

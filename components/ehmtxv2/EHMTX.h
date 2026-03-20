@@ -260,7 +260,6 @@ namespace esphome
     uint8_t find_last_clock();
     bool string_has_ending(std::string const &fullString, std::string const &ending);
     void draw_day_of_week(int32_t ypos = 0, bool small = false);
-    void show_all_icons();
     float get_tick();
     void tick_next_screen(float ts);
     void tick();
@@ -492,8 +491,6 @@ namespace esphome
     void status();
 
     void draw();
-    bool isfree();
-    bool update_slot(uint8_t _icon);
     void update_screen();
     void hold_slot(uint8_t _sec);
     void calc_scroll_time(std::string text, uint16_t screen_time);
