@@ -30,7 +30,8 @@ esphome:
 esp32:
   board: esp32dev
   cpu_frequency: 240MHz
-
+  framework:
+    type: arduino
 font:
   - file: ehmtx.ttf
     size: 16

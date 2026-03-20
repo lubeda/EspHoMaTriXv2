@@ -30,6 +30,8 @@ esphome:
 esp32:
   board: esp32dev
   cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
 
 font:
   - file: ehmtx.ttf
@@ -81,7 +83,7 @@ i2c:
   id: i2cbus
 
 light:
-  - platform: neopixelbus
+  - platform: esp32_rmt_led_strip
     id: ehmtx_light
     type: GRB
     internal: true
