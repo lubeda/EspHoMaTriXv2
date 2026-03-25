@@ -77,7 +77,8 @@ namespace esphome::ehmtx
     MODE_BITMAP_STACK_SCREEN = 23,
     MODE_TEXT_PROGRESS = 24,
     MODE_PROGNOSIS_SCREEN = 25,
-    MODE_RAINBOW_ALERT_SCREEN = 26
+    MODE_RAINBOW_ALERT_SCREEN = 26,
+    MODE_ALERT_TEXT_SCREEN = 27
   };
 
   class EHMTX_queue;
@@ -381,6 +382,7 @@ namespace esphome::ehmtx
     void icon_clock(std::string icon, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
     void icon_date(std::string icon, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
     void text_screen(std::string text, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
+    void alert_text_screen(std::string text, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
     void clock_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
     void date_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true, int32_t r = C_RED, int32_t g = C_GREEN, int32_t b = C_BLUE);
     void blank_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME);

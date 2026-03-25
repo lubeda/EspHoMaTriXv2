@@ -451,6 +451,7 @@ Shows text in different colors, `Default Color Text` in the default color `#FFFF
 |MODE_TEXT_PROGRESS| 24|
 |MODE_PROGNOSIS_SCREEN| 25|
 |MODE_RAINBOW_ALERT_SCREEN| 26|
+|MODE_ALERT_TEXT_SCREEN| 27|
 
 ## More details, for curious users
 
@@ -538,6 +539,7 @@ You can call this from, e.g., the developer tools service. [![Open your Home Ass
 
   text_screen {"text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
   rainbow_text_screen {"text", "lifetime", "screen_time", "default_font"}
+  alert_text_screen {"text", "screen_time", "default_font", "r", "g", "b"}
 
   clock_screen {"lifetime", "screen_time", "default_font", "r", "g", "b"}
 
@@ -1104,6 +1106,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`rainbow_icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color|
 |`text_screen`|"text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified text|
 |`rainbow_text_screen`|"text", "lifetime", "screen_time", "default_font"|show the specified text in rainbow colors|
+|`alert_text_screen`|"text", "screen_time", "default_font"|show the specified text, screen forced and lifetime = screen_time|
 |`clock_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the clock|
 |`rainbow_clock_screen`|"lifetime", "screen_time", "default_font"|show the clock in rainbow color|
 |`blank_screen`|"lifetime", "screen_time"|"show" an empty screen|
