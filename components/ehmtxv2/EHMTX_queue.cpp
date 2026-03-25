@@ -3,9 +3,8 @@
 #include <regex>
 #endif
 
-namespace esphome
+namespace esphome::ehmtx
 {
-
 #ifdef USE_Fireplugin
   const size_t m_heatSize = 8 * 32; /**< Number of heat temperatures */
   uint8_t *m_heat = new (std::nothrow) uint8_t[m_heatSize];
@@ -1345,4 +1344,4 @@ namespace esphome
 
     ESP_LOGD(TAG, "calc_scroll_time: mode: %d icons count: %d pixels %d calculated: %.1f defined: %d max_steps: %d", this->mode, icon_count, this->pixels_, this->screen_time_ / 1000.0, screen_time, this->scroll_reset);
   }
-}
+}  // namespace esphome::ehmtx
