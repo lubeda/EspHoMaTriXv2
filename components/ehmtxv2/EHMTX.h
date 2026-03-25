@@ -36,7 +36,7 @@ namespace esphome::ehmtx
   const uint8_t TEXTSTARTOFFSET = (32 - 8);
   
   const uint16_t POLLINGINTERVAL = 250;
-  static const char *const EHMTX_VERSION = "2025.12.0";
+  static const char *const EHMTX_VERSION = "2026.3.0";
   static const char *const TAG = "EHMTXv2";
   
   enum show_mode : uint8_t
