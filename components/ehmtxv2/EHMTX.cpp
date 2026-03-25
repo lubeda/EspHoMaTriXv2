@@ -11,7 +11,9 @@
 #include "EHMTX.h"
 
 #include "esphome/core/defines.h"
+#ifdef USE_API
 #include "esphome/components/api/custom_api_device.h"
+#endif
 
 #include <sstream>
 #include <vector>

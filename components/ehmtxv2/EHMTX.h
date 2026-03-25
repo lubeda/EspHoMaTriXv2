@@ -3,7 +3,9 @@
 #include "esphome/core/defines.h"
 #include "esphome/core/color.h"
 #include "esphome/components/addressable_light/addressable_light_display.h"
+#ifdef USE_API
 #include "esphome/components/api/custom_api_device.h"
+#endif
 #include "esphome/components/animation/animation.h"
 #include "esphome/components/image/image.h"
 #include "esphome/components/time/real_time_clock.h"
