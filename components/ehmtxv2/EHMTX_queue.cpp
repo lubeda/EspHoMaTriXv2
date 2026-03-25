@@ -159,6 +159,9 @@ namespace esphome::ehmtx
     case MODE_RAINBOW_ICON_TEXT_SCREEN:
       ESP_LOGD(TAG, "queue: rainbow icon text screen: \"%s\" text: %s for: %.1f sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_ / 1000.0);
       break;
+    case MODE_ALERT_TEXT_SCREEN:
+      ESP_LOGD(TAG, "queue: alert text text: \"%s\" for: %.1f sec", this->text.c_str(), this->screen_time_ / 1000.0);
+      break;
     case MODE_FIRE:
       ESP_LOGD(TAG, "queue: fire for: %.1f sec", this->screen_time_ / 1000.0);
       break;
@@ -205,6 +208,7 @@ namespace esphome::ehmtx
       break;
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
+    case MODE_ALERT_TEXT_SCREEN:
       // no correction
       break;
     case MODE_ICON_TEXT_SCREEN:
@@ -1094,6 +1098,7 @@ namespace esphome::ehmtx
 
       case MODE_TEXT_SCREEN:
       case MODE_RAINBOW_TEXT:
+      case MODE_ALERT_TEXT_SCREEN:
         color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
@@ -1258,6 +1263,7 @@ namespace esphome::ehmtx
     {
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
+    case MODE_ALERT_TEXT_SCREEN:
 #ifdef EHMTXv2_SCROLL_SMALL_TEXT
       max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
       display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVAL);
