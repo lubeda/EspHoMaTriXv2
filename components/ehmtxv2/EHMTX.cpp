@@ -27,7 +27,7 @@
   #endif
 #endif
 
-namespace esphome
+namespace esphome::ehmtx
 {
   /**
    * @brief Construct a new EHMTX::EHMTX object
@@ -3638,4 +3638,4 @@ namespace esphome
   {
     this->trigger(state);
   }
-}
+}  // namespace esphome::ehmtx

@@ -1,5 +1,5 @@
-#ifndef EHMTX_H
-#define EHMTX_H
+#pragma once
+
 #include "esphome.h"
 #include "esphome/components/time/real_time_clock.h"
 #include "esphome/components/web_server_base/web_server_base.h"
@@ -11,65 +11,65 @@
   #endif
 #endif
 
-const uint8_t MAXQUEUE = 24;
-const uint8_t C_RED = 240; // default
-const uint8_t C_BLUE = 240;
-const uint8_t C_GREEN = 240;
-const uint8_t CD_RED = 100; // dim
-const uint8_t CD_BLUE = 100;
-const uint8_t CD_GREEN = 100;
-const uint8_t CA_RED = 200; // alarm
-const uint8_t CA_BLUE = 50;
-const uint8_t CA_GREEN = 50;
-const uint8_t CG_GREY = 50;
-const uint8_t C_BLACK = 0;
-
-const uint8_t D_LIFETIME = 5;
-const uint8_t D_SCREEN_TIME = 10;
-
-const uint8_t BLANKICON = MAXICONS + 1;
-const uint8_t SOLIDICON = MAXICONS + 3;
-const uint8_t CALENDARICON = MAXICONS + 5;
-const uint8_t TEXTSCROLLSTART = 8;
-const uint8_t TEXTSTARTOFFSET = (32 - 8);
-
-const uint16_t POLLINGINTERVAL = 250;
-static const char *const EHMTX_VERSION = "2025.12.0";
-static const char *const TAG = "EHMTXv2";
-
-enum show_mode : uint8_t
+namespace esphome::ehmtx
 {
-  MODE_EMPTY = 0,
-  MODE_BLANK = 1,
-  MODE_CLOCK = 2,
-  MODE_DATE = 3,
-  MODE_FULL_SCREEN = 4,
-  MODE_ICON_SCREEN = 5,
-  MODE_TEXT_SCREEN = 6,
-  MODE_RAINBOW_ICON = 7,
-  MODE_RAINBOW_TEXT = 8,
-  MODE_RAINBOW_CLOCK = 9,
-  MODE_RAINBOW_DATE = 10,
-  MODE_BITMAP_SCREEN = 11,
-  MODE_BITMAP_SMALL = 12,
-  MODE_COLOR = 13,
-  MODE_FIRE = 14,
-  MODE_ICON_CLOCK = 15,
-  MODE_ALERT_SCREEN = 16,
-  MODE_GRAPH_SCREEN = 17,
-  MODE_ICON_DATE = 18,
-  MODE_ICON_PROGRESS = 19,
-  MODE_RAINBOW_BITMAP_SMALL = 20,
-  MODE_ICON_TEXT_SCREEN = 21,
-  MODE_RAINBOW_ICON_TEXT_SCREEN = 22,
-  MODE_BITMAP_STACK_SCREEN = 23,
-  MODE_TEXT_PROGRESS = 24,
-  MODE_PROGNOSIS_SCREEN = 25,
-  MODE_RAINBOW_ALERT_SCREEN = 26
-};
+  const uint8_t MAXQUEUE = 24;
+  const uint8_t C_RED = 240; // default
+  const uint8_t C_BLUE = 240;
+  const uint8_t C_GREEN = 240;
+  const uint8_t CD_RED = 100; // dim
+  const uint8_t CD_BLUE = 100;
+  const uint8_t CD_GREEN = 100;
+  const uint8_t CA_RED = 200; // alarm
+  const uint8_t CA_BLUE = 50;
+  const uint8_t CA_GREEN = 50;
+  const uint8_t CG_GREY = 50;
+  const uint8_t C_BLACK = 0;
+  
+  const uint8_t D_LIFETIME = 5;
+  const uint8_t D_SCREEN_TIME = 10;
+  
+  const uint8_t BLANKICON = MAXICONS + 1;
+  const uint8_t SOLIDICON = MAXICONS + 3;
+  const uint8_t CALENDARICON = MAXICONS + 5;
+  const uint8_t TEXTSCROLLSTART = 8;
+  const uint8_t TEXTSTARTOFFSET = (32 - 8);
+  
+  const uint16_t POLLINGINTERVAL = 250;
+  static const char *const EHMTX_VERSION = "2026.3.0";
+  static const char *const TAG = "EHMTXv2";
+  
+  enum show_mode : uint8_t
+  {
+    MODE_EMPTY = 0,
+    MODE_BLANK = 1,
+    MODE_CLOCK = 2,
+    MODE_DATE = 3,
+    MODE_FULL_SCREEN = 4,
+    MODE_ICON_SCREEN = 5,
+    MODE_TEXT_SCREEN = 6,
+    MODE_RAINBOW_ICON = 7,
+    MODE_RAINBOW_TEXT = 8,
+    MODE_RAINBOW_CLOCK = 9,
+    MODE_RAINBOW_DATE = 10,
+    MODE_BITMAP_SCREEN = 11,
+    MODE_BITMAP_SMALL = 12,
+    MODE_COLOR = 13,
+    MODE_FIRE = 14,
+    MODE_ICON_CLOCK = 15,
+    MODE_ALERT_SCREEN = 16,
+    MODE_GRAPH_SCREEN = 17,
+    MODE_ICON_DATE = 18,
+    MODE_ICON_PROGRESS = 19,
+    MODE_RAINBOW_BITMAP_SMALL = 20,
+    MODE_ICON_TEXT_SCREEN = 21,
+    MODE_RAINBOW_ICON_TEXT_SCREEN = 22,
+    MODE_BITMAP_STACK_SCREEN = 23,
+    MODE_TEXT_PROGRESS = 24,
+    MODE_PROGNOSIS_SCREEN = 25,
+    MODE_RAINBOW_ALERT_SCREEN = 26
+  };
 
-namespace esphome
-{
   class EHMTX_queue;
   class EHMTX_Icon;
   class EHMTXNextScreenTrigger;
@@ -90,6 +90,7 @@ namespace esphome
   {
   protected:
     float get_setup_priority() const override { return esphome::setup_priority::LATE; }
+
     uint8_t brightness_ = 0;
     uint8_t target_brightness_ = 0;
     uint32_t boot_anim = 0;
@@ -105,6 +106,7 @@ namespace esphome
     std::vector<EHMTXAddScreenTrigger *> on_add_screen_triggers_;
     std::vector<EHMTXShowDisplayTrigger *> on_show_display_triggers_;
     std::vector<EHMTXNightModeTrigger *> on_night_mode_triggers_;
+
     EHMTX_queue *find_icon_queue_element(uint8_t icon);
     EHMTX_queue *find_mode_queue_element(uint8_t mode);
     EHMTX_queue *find_mode_icon_queue_element(uint8_t mode, std::string name);
@@ -114,9 +116,9 @@ namespace esphome
     void setup() override;
     EHMTX();
 
-#ifdef USE_Fireplugin
+  #ifdef USE_Fireplugin
     void fire_screen( int32_t lifetime, int32_t screen_time);
-#endif    
+  #endif    
     uint8_t hue_ = 0;
     void dump_config();
     bool info_font = true;
@@ -132,6 +134,7 @@ namespace esphome
     bool info_date_font = true;
     int8_t info_date_y_offset = 0;
   #endif
+
 #ifdef USE_ESP32
     PROGMEM Color text_color, alarm_color, today_color, weekday_color, rainbow_color, clock_color, info_lcolor, info_rcolor, solid_color, calendar_color;
   #ifdef EHMTXv2_RCINDICATOR
@@ -203,6 +206,7 @@ namespace esphome
     Color icon_indicator_color;
   #endif
 #endif
+
     display::BaseFont *default_font;
     display::BaseFont *special_font;
     uint8_t ticks_per_second=62;
@@ -228,6 +232,7 @@ namespace esphome
     EHMTX_queue *queue[MAXQUEUE];
     addressable_light::AddressableLightDisplay *display;
     esphome::time::RealTimeClock *clock;
+
     #ifdef USE_GRAPH
       void graph_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME);
       void icon_graph_screen(std::string icon, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME);
@@ -563,6 +568,7 @@ namespace esphome
     explicit EHMTXNightModeTrigger(EHMTX *parent) { parent->add_on_night_mode_trigger(this); }
     void process(bool);
   };
+
 /**
  * @brief Class for icon handling and type/animation control
  * 
@@ -601,6 +607,4 @@ namespace esphome
     void next_frame();
     bool reverse;
   };
-}
-
-#endif
+}  // namespace esphome::ehmtx
