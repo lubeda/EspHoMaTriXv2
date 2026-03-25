@@ -1099,7 +1099,7 @@ namespace esphome::ehmtx
 
     register_service(&EHMTX::text_screen, "text_screen", {"text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::rainbow_text_screen, "rainbow_text_screen", {"text", "lifetime", "screen_time", "default_font"});
-    register_service(&EHMTX::alert_text_screen, "text_screen", {"text", "screen_time", "default_font", "r", "g", "b"});
+    register_service(&EHMTX::alert_text_screen, "alert_text_screen", {"text", "screen_time", "default_font", "r", "g", "b"});
 
     register_service(&EHMTX::clock_screen, "clock_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
 
