@@ -34,7 +34,7 @@ Use the `ref` parameter to select the right version. **But** when there are brea
 
 ![sample image](./images/sample.png)
 
-You can control it with home assistant using service calls or by using lambda with esphome.
+You can control it with Home Assistant using service calls or by using lambda with ESPHome.
 
 ### How to install
 
@@ -58,7 +58,7 @@ The base file is configured to show a clock with the day of the month over a cal
 Then, you can add screens to a queue and all these screens are displayed one after another.
 
 ![timing](./images/timingv2.png)
-Each screen can display different information or animation or text, even in rainbow color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the time screen is displayed.
+Each screen can display different information or an animation or text, even in rainbow color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the time screen is displayed.
 
 Some screens can show additional [display elements](#display-elements):
 
@@ -68,9 +68,9 @@ The `alarm` is in the upper-right corner (red)
 The `rindicator` is in the lower-right corner (yellow)
 The `lindicator` is in the lower-left corner (yellow)
 
-You can [add](#normal-icon-screen)/[remove](#removing-a-screen-from-the-queue)/[emphasize](#emphasizing-a-specific-screen) screens and toggle elements from home assistant with service-calls or from esphome via lambdas in your YAML (see [API reference](#public-functionsservices)).
+You can [add](#normal-icon-screen)/[remove](#removing-a-screen-from-the-queue)/[emphasize](#emphasizing-a-specific-screen) screens and toggle elements from Home Assistant with service-calls or from ESPHome via lambdas in your YAML (see [API reference](#public-functionsservices)).
 
-There are some preinstalled [icons](https://raw.githubusercontent.com/lubeda/EspHoMaTriXv2/2024.1.0/resources/default_icons.html) in the YAML, so you can easily start showing information on your display with home assistant service calls.
+There are some preinstalled [icons](https://raw.githubusercontent.com/lubeda/EspHoMaTriXv2/2024.1.0/resources/default_icons.html) in the YAML, so you can easily start showing information on your display with Home Assistant service calls.
 
 #### Screen types
 
@@ -84,7 +84,7 @@ The example below shows the icon "solar" `icon_name` with the scrolling text `te
 
 ![sample](images/icon_screen.png)
 
-Example home assistant service call:
+Example Home Assistant service call:
 
 ```yaml
 service: esphome.ulanzi_icon_screen
@@ -121,7 +121,7 @@ For funny colors, there is also a service: `esphome.ulanzi_rainbow_alert_screen`
 
 This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disappears from the queue. The text color changes automatically. The display decides when to display this screen depending on the queue.
 
-example home assistant service call:
+Example Home Assistant service call:
 
 ```yaml
 service: esphome.ulanzi_rainbow_icon_screen
@@ -476,7 +476,7 @@ You have also to copy the file 1pixel.gif from the **install**ation folder to th
 Also, there might be [breaking changes](#breaking-changes) due to a redesign of EspHoMaTriXv2.
 
 > [!TIP]
-> It is highly recommended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESO8266 device** so some features had to be removed for these boards (Example: bitmap_screen).
+> It is highly recommended to use an **ESP32 device**. There are conditions where the RAM size is too limited in an **ESP8266 device** so some features had to be removed for these boards (Example: bitmap_screen).
 
 ### API 
 
@@ -864,7 +864,7 @@ display:
 
 The light component is used by the `addressable_light` component and referenced by ID under `addressable_light_id:`.
 
-To use the light component directly from home assistant, add the sample lambdas```on_turn_on``` and ```on_turn_off``` to the light component.
+To use the light component directly from Home Assistant, add the sample lambdas```on_turn_on``` and ```on_turn_off``` to the light component.
 
 ***Sample***
 
@@ -881,7 +881,7 @@ light:
          id(ehmtx_display)->set_enabled(true);
 ```
 
-To hide the light component in home assistant use: `internal: true`
+To hide the light component in Home Assistant use: `internal: true`
 
 ```yaml
 light:
@@ -893,7 +893,7 @@ light:
 
 #### Time component
 
-Since it is a clock, you need a time component, e.g., [home assistant](https://esphome.io/components/time/homeassistant.html). It is referenced by its ID under `time_component:` The display shows `!t!` until the time source is synchronized and valid.
+Since it is a clock, you need a time component, e.g., [Home Assistant](https://esphome.io/components/time/homeassistant.html). It is referenced by its ID under `time_component:` The display shows `!t!` until the time source is synchronized and valid.
 
 ##### ehmtxv2 component
 
@@ -1070,7 +1070,7 @@ See [icon details](#icons-and-animations)
 
 ## Control your display
 
-Numerous features are accessible with services from home assistant and lambdas that you can use in your YAML.
+Numerous features are accessible with services from Home Assistant and lambdas that you can use in your YAML.
 
 ### Public functions/services
   
@@ -1223,7 +1223,7 @@ Experienced programmers can use these public methods:
 
 ### Local triggers
 
-To use the display without home assistant automations, you may use the [advanced functionality](#change-configuration-during-runtime) with triggers. The triggers can be fired by sensors, time or by the ehmtxv2 component.
+To use the display without Home Assistant automations, you may use the [advanced functionality](#change-configuration-during-runtime) with triggers. The triggers can be fired by sensors, time or by the ehmtxv2 component.
 
 #### on_empty_queue
 
@@ -1323,7 +1323,7 @@ ehmtxv2:
 
 ##### Send an event to Home Assistant
 
-To send data back to home assistant, you can use events.
+To send data back to Home Assistant, you can use events.
 
 ```yaml
 ehmtxv2:
@@ -1587,7 +1587,7 @@ max: 10
 
 ## Tips
 
-### Display sensor precision after home assistant 2023.3.0
+### Display sensor precision after Home Assistant 2023.3.0
 
 See [templating](https://www.home-assistant.io/docs/configuration/templating/#states) for possibilities to optimize the output
 e.g.
@@ -1835,7 +1835,7 @@ See these English discussions:
 [Share your projects](https://community.home-assistant.io/t/esphomatrix-a-simple-clock-status-display/425325)
 [ESPHOME](https://community.home-assistant.io/t/a-simple-diy-status-display-with-an-8x32-rgb-led/379051)
 
-It was also mentioned in the blog [Building the Open Home](https://building.open-home.io/local-control-is-the-only-way/) and in the home assistant [livestream](https://youtu.be/IGnCGDaXR0M?t=6267)
+It was also mentioned in the blog [Building the Open Home](https://building.open-home.io/local-control-is-the-only-way/) and in the Home Assistant [livestream](https://youtu.be/IGnCGDaXR0M?t=6267)
 
 Or in German:
 [Showroom](https://community.simon42.com/t/8x32-pixel-uhr-mit-homeassistant-anbindung/1076)
