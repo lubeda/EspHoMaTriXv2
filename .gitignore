@@ -81,9 +81,6 @@ ltr*.png
 8x32\ iMAGE.xcf
 svganimtest.html
 
-# Documentation
-docs/
-
 # Miscellaneous
 *.tmp
 *.temp
