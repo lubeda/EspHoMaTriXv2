@@ -36,6 +36,8 @@ Use the `ref` parameter to select the right version. **But** when there are brea
 
 You can control it with Home Assistant using service calls or by using lambda with ESPHome.
 
+For a quick start, see the [Quick Start Guide](./docs/quickstart.md).
+
 ### How to install
 
 For starters, I assume you use an Ulanzi TC001 pixel clock. For tinkerers and people that want more, read the [For experienced user](#for-experienced-users) part.
