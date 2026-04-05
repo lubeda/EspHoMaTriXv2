@@ -1,5 +1,8 @@
 # EspHoMaTriXv2 Overview
 
+[donation-badge]:https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white
+[donation-url]: https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU
+
 ![Home Assistant](https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 [![Build](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/build.yaml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/build.yaml)
