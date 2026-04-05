@@ -26,7 +26,7 @@ external_components:
     components: [ ehmtxv2 ]   
 ```
 
-Use the `ref` parameter to select the right version. **But** when there are breaking changes in esphome you have to expect breaking changes in EspHoMaTriX too (at least some funnny workarounds)
+Use the `ref` parameter to select the right version. **But** when there are breaking changes in ESPHome you have to expect breaking changes in EspHoMaTriX too (at least some funny workarounds)
 
 ## Introduction
 
@@ -40,7 +40,7 @@ You can control it with Home Assistant using service calls or by using lambda wi
 
 For starters, I assume you use an Ulanzi TC001 pixel clock. For tinkerers and people that want more, read the [For experienced user](#for-experienced-users) part.
 
-1. Copy all two files (ulanzi-easy.yaml, MatrixChunky6.ttf) from the `install` folder to your esphome folder.
+1. Copy all two files (ulanzi-easy.yaml, MatrixChunky6.ttf) from the `install` folder to your ESPHome folder.
 2. Define your secret settings (OTA password, Wi-Fi settings) in the secrets.yaml file or with the ESPHome UI.
 3. Define the weekdays variable for your language (see [parameters](#parameters-reference)).
 4. Install it via USB and the device should boot.
@@ -358,7 +358,7 @@ ehmtxv2:
 
 **special_font** (required, ID): ID of the special font, you can reuse your default font, but occasionally, it's nice to have a special font to minimize scrolling
 
-**week_start_monday** (optional, boolen): default Monday is first day of week, false => Sunday
+**week_start_monday** (optional, boolean): default Monday is first day of week, false => Sunday
 
 **weekdays** (optional, string, default: "SUMOTUWETHFRSA"): Abbreviations of the days of the week, starting from Sunday, from *7 to 14* characters.
 
@@ -466,12 +466,12 @@ There are some “RGB-matrices” status displays/clocks out there, the commerci
 - [Pixelix](https://github.com/BlueAndi/esp-rgb-led-matrix) controlled via REST API or Websocket
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of AWTRIX, optimized for the Ulanzi TC001 hardware
 
-All the various solutions have their pros and cons. I tried some and used AWTRIX for a long time, but I found it lacking in many ways (in my opinion), so I started work on an esphome.io variant. Targeted for an optimized and extensible Home Assistant integration without paid blueprints, MQTT broker requirement, or the need to upload files to the ESP board.
+All the various solutions have their pros and cons. I tried some and used AWTRIX for a long time, but I found it lacking in many ways (in my opinion), so I started work on an ESPHome variant. Targeted for an optimized and extensible Home Assistant integration without paid blueprints, MQTT broker requirement, or the need to upload files to the ESP board.
 
 > [!WARNING]
-> Some updates of [esphome](https://esphome.io) will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
+> Some updates of [ESPHome](https://esphome.io) will interfere with EspHoMaTriXv2, like the update of ESPHome to 2023.7.0. It made a change to all YAML files necessary.
 
-You have also to copy the file 1pixel.gif from the **install**ation folder to the esphome directory with your YAML.
+You have also to copy the file 1pixel.gif from the **install**ation folder to the ESPHome directory with your YAML.
 
 Also, there might be [breaking changes](#breaking-changes) due to a redesign of EspHoMaTriXv2.
 
@@ -580,7 +580,7 @@ You can call this from, e.g., the developer tools service. [![Open your Home Ass
 
 #### Lambda
 
-You can use the above functions also in [lambdas](https://esphome.io/guides/automations.html?highlight=lambda#lambda-action) in your esphome YAML.
+You can use the above functions also in [lambdas](https://esphome.io/guides/automations.html?highlight=lambda#lambda-action) in your ESPHome YAML.
 
 all parameters have a default value.
 
@@ -766,11 +766,11 @@ void hide_gauge();
 
 #### Installation of **EspHoMaTriXv2** custom component
 
-**EspHoMaTriXv2** is a custom component, you have to include it in your YAML configuration. To always use the newest features, you should use the repo, to use a stable version, you copy a working version to your esphome installation.
+**EspHoMaTriXv2** is a custom component, you have to include it in your YAML configuration. To always use the newest features, you should use the repo, to use a stable version, you copy a working version to your ESPHome installation.
 
 ##### Use of local copy
 
-If you download the components-folder from the repo and install it in your esphome you have a stable installation. But if there are new features, you won't see them. If needed, customize the YAML to your folder structure.
+If you download the components-folder from the repo and install it in your ESPHome you have a stable installation. But if there are new features, you won't see them. If needed, customize the YAML to your folder structure.
 
 ```yaml
 external_components:
@@ -790,8 +790,8 @@ external_components:
       url: https://github.com/lubeda/EspHoMaTriXv2
       ref: stable # optional select a special branch or tag
 ```
->[tipp]
->Use the `ref` parameter to stay on the feature set you know. Using the `main` or other version will cause problems with breakting changes. But in case of esphome is breaking something i will always only fix the latest version.!
+>[tip]
+>Use the `ref` parameter to stay on the feature set you know. Using the `main` or other version will cause problems with breaking changes. But in case of ESPHome is breaking something i will always only fix the latest version.!
 
 #### Addressable_light component
 
@@ -1076,7 +1076,7 @@ Numerous features are accessible with services from Home Assistant and lambdas t
   
 |service|parameter|result|
 |---|---|---|
-|`get_status`|none|write some status information to the esphome logs|
+|`get_status`|none|write some status information to the ESPHome logs|
 |`display_on`|none|turn display off|
 |`display_off`|none|turn display on|
 |`hold_screen`|none|show the screen that is currently displayed for the number of seconds longer|
@@ -1265,7 +1265,7 @@ There is a trigger available to do some local magic. The trigger ```on_add_scree
 
 See the examples:
 
-##### Write information to esphome log
+##### Write information to ESPHome log
 
 ```yaml
 ehmtxv2:
@@ -1310,7 +1310,7 @@ The trigger ```on_next_screen``` is triggered every time a new screen is display
 
 See the examples:
 
-##### Write information to esphome log
+##### Write information to ESPHome log
 
 ```yaml
 ehmtxv2:
@@ -1827,7 +1827,7 @@ See this German tutorial video with information on setting up your display [RGB-
 
 Another German tutorial video focused on the Ulanzi [Smarte Pixel Clock über Home Assistant steuern - Entitäten / Icons und mehr in der Ulanzi](https://www.youtube.com/watch?v=LgaT0mNbl34)
 
-See this [nice article](https://blakadder.com/esphome-pixel-clock/) about EsphoMaTrix on a Ulanzi TC001 from [blakadder](https://github.com/blakadder).
+See this [nice article](https://blakadder.com/esphome-pixel-clock/) about EspHoMaTriX on a Ulanzi TC001 from [blakadder](https://github.com/blakadder).
 
 Short video on Instagram [@blak_adder](https://www.insbuiltagram.com/reel/CpYVByRIaSI)
 
@@ -1872,7 +1872,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[fthiery](https://github.com/fthiery)** for improving documentation
 - **[pznamenskii](https://github.com/pznamenskii)** for improving documentation
 - **[mik-at](https://github.com/mik-at)** fixing typos
-- **[DT-art1](https://github.com/DT-art1)** preparing for esphome 2025.5.0
+- **[DT-art1](https://github.com/DT-art1)** preparing for ESPHome 2025.5.0
 - **[genehand](https://github.com/genehand)** for the speed optimization
 - **[skgsergio](https://github.com/skgsergio)** preparing 2025.12.0
 - **[Nathanator](https://github.com/Nathanator)** for improving the wiki
