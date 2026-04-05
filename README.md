@@ -14,6 +14,11 @@
 
 Each ESPHome release is packed with new features and surprises (breaking changes), so it is hard to stay up to date for me. Each user can decide which version of ESPHome he uses. So there is not one combination of ESPHome, ehmtx and yaml that fits all.
 
+## Documentation
+
+- [Overview](./overview.md)
+- [Wiki](./wiki)
+
 ## So ehmtx is prone to breaking on every ESPHome update.
 
 **My suggestion is:**
