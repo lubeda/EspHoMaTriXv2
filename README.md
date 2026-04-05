@@ -12,25 +12,25 @@
 
 # Important
 
-Each esphome release is packed with new features and suprises (breaking changes), so it is hard to stay up to date for me. Each user can decide which version of esphome he uses. So there is not one combination of esphome, ehmtx and yaml that fits all.
+Each ESPHome release is packed with new features and surprises (breaking changes), so it is hard to stay up to date for me. Each user can decide which version of ESPHome he uses. So there is not one combination of ESPHome, ehmtx and yaml that fits all.
 
-## So ehmtx is prone to breaking on every esphome update.
+## So ehmtx is prone to breaking on every ESPHome update.
 
 **My suggestion is:**
 
-**Keep esphome up to date with the latest official version!**
+**Keep ESPHome up to date with the latest official version!**
 
 **Which are:**
-- [Branch 2025.12.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.12.0) for esphome 2025.12.0- (some internal details)
-- [Branch 2025.10.3](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.10.3) for esphome 2025.10.0- (fixed path problem)
-- [Branch 2025.7.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.7.1) for esphome 2025.4.0- (some fixes "empty queue")
+- [Branch 2025.12.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.12.0) for ESPHome 2025.12.0- (some internal details)
+- [Branch 2025.10.3](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.10.3) for ESPHome 2025.10.0- (fixed path problem)
+- [Branch 2025.7.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.7.1) for ESPHome 2025.4.0- (some fixes "empty queue")
 - [Branch 2025.6.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.6.1)
-- [Branch 2025.6.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.6.0) for esphome 2025.6.0- (some fixes and PRs from andrewjswan)
-- [Branch 2025.5.2](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.5.2) for esphome 2025.4.0- (some fixes "empty queue")
-- [Branch 2025.5.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.5.1) for esphome 2025.4.0- 
-- [Branch 2025.2.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.1) for esphome 2025.2.0- (optimized handling of transparent icons)
-- [Branch 2025.2.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.0) for esphome 2025.2.0-
-- [Branch 2024.12.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2024.12.1) for esphome 2024.12.0-...
+- [Branch 2025.6.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.6.0) for ESPHome 2025.6.0- (some fixes and PRs from andrewjswan)
+- [Branch 2025.5.2](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.5.2) for ESPHome 2025.4.0- (some fixes "empty queue")
+- [Branch 2025.5.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.5.1) for ESPHome 2025.4.0- 
+- [Branch 2025.2.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.1) for ESPHome 2025.2.0- (optimized handling of transparent icons)
+- [Branch 2025.2.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.2.0) for ESPHome 2025.2.0-
+- [Branch 2024.12.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2024.12.1) for ESPHome 2024.12.0-...
 
 For ehmtx use the newest version tag by manually editing the ref tag in the external_componets section in your yaml.
 Only change your selected ehmtx version if there are compile errors. But expect manual changes to your yaml or even your automations.
@@ -41,7 +41,7 @@ The details to each EspHoMaTriX version are on the branch pages
 external_components:
   - source:
       #type: local
-      #path: EsphoMaTrix/components # e.g. /config/esphome/components
+      #path: EspHoMaTriX/components # e.g. /config/esphome/components
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
       ref: 2025.7.1
@@ -51,11 +51,11 @@ external_components:
 
 ### Features
 
-Based on a 8x32 RGB matrix, it displays a clock, the date and up to 24 other 'screens' provided by Home Assistant. Each screen (value/text) can be associated with a 8x8 bit RGB icon or GIF animation (see [installation](#installation-of-esphomatrixv2-custom-component)). The values/text can be updated or deleted from the display queue. Each screen has a lifetime, if not refreshed in its lifetime, it will disappear. Even 8x32 GIF animations are possible. You can control nearly everything of the component.
+Based on a 8x32 RGB matrix, it displays a clock, the date and up to 24 other 'screens' provided by Home Assistant. Each screen (value/text) can be associated with a 8x8 bit RGB icon or GIF animation (see [installation](#installation-of-esphtmatrixv2-custom-component)). The values/text can be updated or deleted from the display queue. Each screen has a lifetime, if not refreshed in its lifetime, it will disappear. Even 8x32 GIF animations are possible. You can control nearly everything of the component.
 
 ### Advice
 
-It is highly recommended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESP8266 device** so some of the features had to be removed for these boards (Example: bitmap_screen).
+It is highly recommended to use an **ESP32 device**. There are conditions where the RAM size is too limited in an **ESP8266 device** so some of the features had to be removed for these boards (Example: bitmap_screen).
 
 ## EspHoMaTriX in the media
 
@@ -63,7 +63,7 @@ See this German tutorial video with information on setting up your display [RGB-
 
 Another german tutorial video focused on the Ulanzi [Smarte Pixel Clock über Home Assistant steuern - Entitäten / Icons und mehr in der Ulanzi](https://www.youtube.com/watch?v=LgaT0mNbl34)
 
-See this [nice article](https://blakadder.com/esphome-pixel-clock/) about EsphoMaTrix on a Ulanzi TC001 from [blakadder](https://github.com/blakadder).
+See this [nice article](https://blakadder.com/esphome-pixel-clock/) about EspHoMaTriX on a Ulanzi TC001 from [blakadder](https://github.com/blakadder).
 
 Short video on Instagram [@blak_adder](https://www.insbuiltagram.com/reel/CpYVByRIaSI)
 
@@ -71,7 +71,7 @@ See these english discussions:
 [Share your projects](https://community.home-assistant.io/t/esphomatrix-a-simple-clock-status-display/425325)
 [ESPHOME](https://community.home-assistant.io/t/a-simple-diy-status-display-with-an-8x32-rgb-led/379051)
 
-It was also mentioned in the blog [Building the Open Home](https://building.open-home.io/local-control-is-the-only-way/) and in the home assistant [livestream](https://youtu.be/IGnCGDaXR0M?t=6267)
+It was also mentioned in the blog [Building the Open Home](https://building.open-home.io/local-control-is-the-only-way/) and in the Home Assistant [livestream](https://youtu.be/IGnCGDaXR0M?t=6267)
 
 Or in German:
 [Showroom](https://community.simon42.com/t/8x32-pixel-uhr-mit-homeassistant-anbindung/1076)
