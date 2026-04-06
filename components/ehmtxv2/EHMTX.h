@@ -20,8 +20,6 @@
 
 namespace esphome::ehmtx
 {
-  #define INF -5.0
-
   const uint8_t MAXQUEUE = 24;
   const uint8_t C_RED = 240; // default
   const uint8_t C_BLUE = 240;
