@@ -1144,7 +1144,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 - **icon_name**: the id of the icon to show, as defined in the YAML file (or pseudo-icon `blank` - empty icon, `solid` - solid icon, `calendar` - calendar icon), it is also possible to set the arbitrary [screen identifier](#screen_id), for example `icon_name|screen_id`
 - **icons**: the list of id of the icon to show, as defined in the YAML file, like: icon1,icon2.
 - **text**: a text message to display
-- **lifetime**: how long does this screen stay in the queue (minutes), `-5` for Infinity.
+- **lifetime**: how long does this screen stay in the queue (minutes), any negative for Infinity.
 - **screen_time**: how long is this screen display in the loop (seconds). For short text without scrolling it is shown the defined time, longer text is scrolled at least `scroll_count` times.
 - **default_font**: use the default font (true) or the special font (false)
 - **progress**: can take a value from -100 to 100, the color of the progress bar is calculated automatically, if no colors are specified in the function `set_progressbar_color`, then if the progress is in the range `0..100`, then `from red to green`, if in the range `-100..0`, then from `green to red`.
