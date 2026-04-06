@@ -623,7 +623,7 @@ namespace esphome::ehmtx
     screen->text = "";
     screen->mode = MODE_BITMAP_SCREEN;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -668,7 +668,7 @@ namespace esphome::ehmtx
     screen->mode = MODE_BITMAP_SMALL;
     screen->default_font = default_font;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -735,7 +735,7 @@ namespace esphome::ehmtx
     screen->mode = MODE_RAINBOW_BITMAP_SMALL;
     screen->default_font = default_font;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -871,7 +871,7 @@ namespace esphome::ehmtx
     screen->progress = (id == "two") ? 1 : 0; // 0 - one side scroll (right to left), 1 - two side (outside to center) if supported
     screen->default_font = false;
     screen->calc_scroll_time(screen->icon, screen_time);
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2073,7 +2073,7 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2100,7 +2100,7 @@ namespace esphome::ehmtx
     screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100
                                                                   : progress;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2144,7 +2144,7 @@ namespace esphome::ehmtx
     screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100
                                                                   : progress;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2192,7 +2192,7 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2233,7 +2233,7 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2275,7 +2275,7 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2307,7 +2307,7 @@ namespace esphome::ehmtx
     screen->pixels_ = 0;
     screen->scroll_reset = 32;
 #endif
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2323,7 +2323,7 @@ namespace esphome::ehmtx
     screen->mode = MODE_RAINBOW_DATE;
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2340,7 +2340,7 @@ namespace esphome::ehmtx
     EHMTX_queue *screen = this->find_free_queue_element();
     screen->mode = MODE_BLANK;
     screen->screen_time_ = showtime * 1000.0;
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2358,7 +2358,7 @@ namespace esphome::ehmtx
     screen->mode = MODE_COLOR;
     screen->screen_time_ = showtime * 1000.0;
     screen->text_color = Color(r, g, b);
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2379,7 +2379,7 @@ namespace esphome::ehmtx
     screen->text_color = Color(r, g, b);
     screen->mode = MODE_TEXT_SCREEN;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2395,7 +2395,7 @@ namespace esphome::ehmtx
     screen->default_font = default_font;
     screen->mode = MODE_RAINBOW_TEXT;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2427,7 +2427,7 @@ namespace esphome::ehmtx
     screen->mode = MODE_FIRE;
     screen->icon = 0;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2464,7 +2464,7 @@ namespace esphome::ehmtx
     screen->icon = icon;
     screen->icon_name = iconname;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2489,7 +2489,7 @@ namespace esphome::ehmtx
     screen->mode = MODE_CLOCK;
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2511,7 +2511,7 @@ namespace esphome::ehmtx
     screen->mode = MODE_DATE;
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2548,7 +2548,7 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2585,7 +2585,7 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2629,7 +2629,7 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2809,7 +2809,7 @@ namespace esphome::ehmtx
     screen->mode = MODE_GRAPH_SCREEN;
     screen->icon = MAXICONS;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
@@ -2850,7 +2850,7 @@ namespace esphome::ehmtx
     screen->icon = icon;
     screen->icon_name = iconname;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime == INF) {
+    if (lifetime < 0) {
       screen->endtime = INFINITY;
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
