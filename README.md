@@ -26,7 +26,7 @@ external_components:
     components: [ ehmtxv2 ]   
 ```
 
-Use the `ref` parameter to select the right version. **But** when there are breaking changes in esphome you have to expect breaking changes in EspHoMaTriX too (at least some funnny workarounds)
+Use the `ref` parameter to select the right version. **But** when there are breaking changes in ESPHome you have to expect breaking changes in EspHoMaTriX too (at least some funny workarounds)
 
 ## Introduction
 
@@ -34,13 +34,15 @@ Use the `ref` parameter to select the right version. **But** when there are brea
 
 ![sample image](./images/sample.png)
 
-You can control it with home assistant using service calls or by using lambda with esphome.
+You can control it with Home Assistant using service calls or by using lambda with ESPHome.
+
+For a quick start, see the [Quick Start Guide](./docs/quickstart.md).
 
 ### How to install
 
 For starters, I assume you use an Ulanzi TC001 pixel clock. For tinkerers and people that want more, read the [For experienced user](#for-experienced-users) part.
 
-1. Copy all two files (ulanzi-easy.yaml, MatrixChunky6.ttf) from the `install` folder to your esphome folder.
+1. Copy all two files (ulanzi-easy.yaml, MatrixChunky6.ttf) from the `install` folder to your ESPHome folder.
 2. Define your secret settings (OTA password, Wi-Fi settings) in the secrets.yaml file or with the ESPHome UI.
 3. Define the weekdays variable for your language (see [parameters](#parameters-reference)).
 4. Install it via USB and the device should boot.
@@ -58,7 +60,7 @@ The base file is configured to show a clock with the day of the month over a cal
 Then, you can add screens to a queue and all these screens are displayed one after another.
 
 ![timing](./images/timingv2.png)
-Each screen can display different information or animation or text, even in rainbow color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the time screen is displayed.
+Each screen can display different information or an animation or text, even in rainbow color. They all have a lifetime, if a screen isn't refreshed during its lifetime it will be removed from the queue. If there is nothing left in the queue, the time screen is displayed.
 
 Some screens can show additional [display elements](#display-elements):
 
@@ -68,9 +70,9 @@ The `alarm` is in the upper-right corner (red)
 The `rindicator` is in the lower-right corner (yellow)
 The `lindicator` is in the lower-left corner (yellow)
 
-You can [add](#normal-icon-screen)/[remove](#removing-a-screen-from-the-queue)/[emphasize](#emphasizing-a-specific-screen) screens and toggle elements from home assistant with service-calls or from esphome via lambdas in your YAML (see [API reference](#public-functionsservices)).
+You can [add](#normal-icon-screen)/[remove](#removing-a-screen-from-the-queue)/[emphasize](#emphasizing-a-specific-screen) screens and toggle elements from Home Assistant with service-calls or from ESPHome via lambdas in your YAML (see [API reference](#public-functionsservices)).
 
-There are some preinstalled [icons](https://raw.githubusercontent.com/lubeda/EspHoMaTriXv2/2024.1.0/resources/default_icons.html) in the YAML, so you can easily start showing information on your display with home assistant service calls.
+There are some preinstalled [icons](https://raw.githubusercontent.com/lubeda/EspHoMaTriXv2/2024.1.0/resources/default_icons.html) in the YAML, so you can easily start showing information on your display with Home Assistant service calls.
 
 #### Screen types
 
@@ -84,7 +86,7 @@ The example below shows the icon "solar" `icon_name` with the scrolling text `te
 
 ![sample](images/icon_screen.png)
 
-Example home assistant service call:
+Example Home Assistant service call:
 
 ```yaml
 service: esphome.ulanzi_icon_screen
@@ -121,7 +123,7 @@ For funny colors, there is also a service: `esphome.ulanzi_rainbow_alert_screen`
 
 This shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue, after 2 minutes `lifetime` it disappears from the queue. The text color changes automatically. The display decides when to display this screen depending on the queue.
 
-example home assistant service call:
+Example Home Assistant service call:
 
 ```yaml
 service: esphome.ulanzi_rainbow_icon_screen
@@ -363,7 +365,7 @@ ehmtxv2:
 
 **special_font** (required, ID): ID of the special font, you can reuse your default font, but occasionally, it's nice to have a special font to minimize scrolling
 
-**week_start_monday** (optional, boolen): default Monday is first day of week, false => Sunday
+**week_start_monday** (optional, boolean): default Monday is first day of week, false => Sunday
 
 **weekdays** (optional, string, default: "SUMOTUWETHFRSA"): Abbreviations of the days of the week, starting from Sunday, from *7 to 14* characters.
 
@@ -456,6 +458,7 @@ Shows text in different colors, `Default Color Text` in the default color `#FFFF
 |MODE_TEXT_PROGRESS| 24|
 |MODE_PROGNOSIS_SCREEN| 25|
 |MODE_RAINBOW_ALERT_SCREEN| 26|
+|MODE_ALERT_TEXT_SCREEN| 27|
 
 ## More details, for curious users
 
@@ -470,17 +473,17 @@ There are some “RGB-matrices” status displays/clocks out there, the commerci
 - [Pixelix](https://github.com/BlueAndi/esp-rgb-led-matrix) controlled via REST API or Websocket
 - [AWTRIX-Light](https://github.com/Blueforcer/awtrix-light) From the developer of AWTRIX, optimized for the Ulanzi TC001 hardware
 
-All the various solutions have their pros and cons. I tried some and used AWTRIX for a long time, but I found it lacking in many ways (in my opinion), so I started work on an esphome.io variant. Targeted for an optimized and extensible Home Assistant integration without paid blueprints, MQTT broker requirement, or the need to upload files to the ESP board.
+All the various solutions have their pros and cons. I tried some and used AWTRIX for a long time, but I found it lacking in many ways (in my opinion), so I started work on an ESPHome variant. Targeted for an optimized and extensible Home Assistant integration without paid blueprints, MQTT broker requirement, or the need to upload files to the ESP board.
 
 > [!WARNING]
-> Some updates of [esphome](https://esphome.io) will interfere with EspHoMaTriXv2, like the update of esphome to 2023.7.0. It made a change to all YAML files necessary.
+> Some updates of [ESPHome](https://esphome.io) will interfere with EspHoMaTriXv2, like the update of ESPHome to 2023.7.0. It made a change to all YAML files necessary.
 
-You have also to copy the file 1pixel.gif from the **install**ation folder to the esphome directory with your YAML.
+You have also to copy the file 1pixel.gif from the **install**ation folder to the ESPHome directory with your YAML.
 
 Also, there might be [breaking changes](#breaking-changes) due to a redesign of EspHoMaTriXv2.
 
 > [!TIP]
-> It is highly recommended to use an **ESP32 device**. There are conditions where the RAM size is too limited in a **ESO8266 device** so some features had to be removed for these boards (Example: bitmap_screen).
+> It is highly recommended to use an **ESP32 device**. There are conditions where the RAM size is too limited in an **ESP8266 device** so some features had to be removed for these boards (Example: bitmap_screen).
 
 ### API 
 
@@ -543,6 +546,7 @@ You can call this from, e.g., the developer tools service. [![Open your Home Ass
 
   text_screen {"text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
   rainbow_text_screen {"text", "lifetime", "screen_time", "default_font"}
+  alert_text_screen {"text", "screen_time", "default_font", "r", "g", "b"}
 
   clock_screen {"lifetime", "screen_time", "default_font", "r", "g", "b"}
 
@@ -583,7 +587,7 @@ You can call this from, e.g., the developer tools service. [![Open your Home Ass
 
 #### Lambda
 
-You can use the above functions also in [lambdas](https://esphome.io/guides/automations.html?highlight=lambda#lambda-action) in your esphome YAML.
+You can use the above functions also in [lambdas](https://esphome.io/guides/automations.html?highlight=lambda#lambda-action) in your ESPHome YAML.
 
 all parameters have a default value.
 
@@ -769,11 +773,11 @@ void hide_gauge();
 
 #### Installation of **EspHoMaTriXv2** custom component
 
-**EspHoMaTriXv2** is a custom component, you have to include it in your YAML configuration. To always use the newest features, you should use the repo, to use a stable version, you copy a working version to your esphome installation.
+**EspHoMaTriXv2** is a custom component, you have to include it in your YAML configuration. To always use the newest features, you should use the repo, to use a stable version, you copy a working version to your ESPHome installation.
 
 ##### Use of local copy
 
-If you download the components-folder from the repo and install it in your esphome you have a stable installation. But if there are new features, you won't see them. If needed, customize the YAML to your folder structure.
+If you download the components-folder from the repo and install it in your ESPHome you have a stable installation. But if there are new features, you won't see them. If needed, customize the YAML to your folder structure.
 
 ```yaml
 external_components:
@@ -793,8 +797,8 @@ external_components:
       url: https://github.com/lubeda/EspHoMaTriXv2
       ref: stable # optional select a special branch or tag
 ```
->[tipp]
->Use the `ref` parameter to stay on the feature set you know. Using the `main` or other version will cause problems with breakting changes. But in case of esphome is breaking something i will always only fix the latest version.!
+>[tip]
+>Use the `ref` parameter to stay on the feature set you know. Using the `main` or other version will cause problems with breaking changes. But in case of ESPHome is breaking something i will always only fix the latest version.!
 
 #### Addressable_light component
 
@@ -867,7 +871,7 @@ display:
 
 The light component is used by the `addressable_light` component and referenced by ID under `addressable_light_id:`.
 
-To use the light component directly from home assistant, add the sample lambdas```on_turn_on``` and ```on_turn_off``` to the light component.
+To use the light component directly from Home Assistant, add the sample lambdas```on_turn_on``` and ```on_turn_off``` to the light component.
 
 ***Sample***
 
@@ -884,7 +888,7 @@ light:
          id(ehmtx_display)->set_enabled(true);
 ```
 
-To hide the light component in home assistant use: `internal: true`
+To hide the light component in Home Assistant use: `internal: true`
 
 ```yaml
 light:
@@ -896,7 +900,7 @@ light:
 
 #### Time component
 
-Since it is a clock, you need a time component, e.g., [home assistant](https://esphome.io/components/time/homeassistant.html). It is referenced by its ID under `time_component:` The display shows `!t!` until the time source is synchronized and valid.
+Since it is a clock, you need a time component, e.g., [Home Assistant](https://esphome.io/components/time/homeassistant.html). It is referenced by its ID under `time_component:` The display shows `!t!` until the time source is synchronized and valid.
 
 ##### ehmtxv2 component
 
@@ -1073,13 +1077,13 @@ See [icon details](#icons-and-animations)
 
 ## Control your display
 
-Numerous features are accessible with services from home assistant and lambdas that you can use in your YAML.
+Numerous features are accessible with services from Home Assistant and lambdas that you can use in your YAML.
 
 ### Public functions/services
   
 |service|parameter|result|
 |---|---|---|
-|`get_status`|none|write some status information to the esphome logs|
+|`get_status`|none|write some status information to the ESPHome logs|
 |`display_on`|none|turn display off|
 |`display_off`|none|turn display on|
 |`hold_screen`|none|show the screen that is currently displayed for the number of seconds longer|
@@ -1109,6 +1113,7 @@ Numerous features are accessible with services from home assistant and lambdas t
 |`rainbow_icon_screen`|"icon_name", "text", "lifetime", "screen_time", "default_font"|show the specified icon with text in rainbow color|
 |`text_screen`|"text", "lifetime", "screen_time", "default_font", "r", "g", "b"|show the specified text|
 |`rainbow_text_screen`|"text", "lifetime", "screen_time", "default_font"|show the specified text in rainbow colors|
+|`alert_text_screen`|"text", "screen_time", "default_font"|show the specified text, screen forced and lifetime = screen_time|
 |`clock_screen`|"lifetime", "screen_time", "default_font", "r", "g", "b"|show the clock|
 |`rainbow_clock_screen`|"lifetime", "screen_time", "default_font"|show the clock in rainbow color|
 |`blank_screen`|"lifetime", "screen_time"|"show" an empty screen|
@@ -1225,7 +1230,7 @@ Experienced programmers can use these public methods:
 
 ### Local triggers
 
-To use the display without home assistant automations, you may use the [advanced functionality](#change-configuration-during-runtime) with triggers. The triggers can be fired by sensors, time or by the ehmtxv2 component.
+To use the display without Home Assistant automations, you may use the [advanced functionality](#change-configuration-during-runtime) with triggers. The triggers can be fired by sensors, time or by the ehmtxv2 component.
 
 #### on_empty_queue
 
@@ -1267,7 +1272,7 @@ There is a trigger available to do some local magic. The trigger ```on_add_scree
 
 See the examples:
 
-##### Write information to esphome log
+##### Write information to ESPHome log
 
 ```yaml
 ehmtxv2:
@@ -1312,7 +1317,7 @@ The trigger ```on_next_screen``` is triggered every time a new screen is display
 
 See the examples:
 
-##### Write information to esphome log
+##### Write information to ESPHome log
 
 ```yaml
 ehmtxv2:
@@ -1325,7 +1330,7 @@ ehmtxv2:
 
 ##### Send an event to Home Assistant
 
-To send data back to home assistant, you can use events.
+To send data back to Home Assistant, you can use events.
 
 ```yaml
 ehmtxv2:
@@ -1589,7 +1594,7 @@ max: 10
 
 ## Tips
 
-### Display sensor precision after home assistant 2023.3.0
+### Display sensor precision after Home Assistant 2023.3.0
 
 See [templating](https://www.home-assistant.io/docs/configuration/templating/#states) for possibilities to optimize the output
 e.g.
@@ -1829,7 +1834,7 @@ See this German tutorial video with information on setting up your display [RGB-
 
 Another German tutorial video focused on the Ulanzi [Smarte Pixel Clock über Home Assistant steuern - Entitäten / Icons und mehr in der Ulanzi](https://www.youtube.com/watch?v=LgaT0mNbl34)
 
-See this [nice article](https://blakadder.com/esphome-pixel-clock/) about EsphoMaTrix on a Ulanzi TC001 from [blakadder](https://github.com/blakadder).
+See this [nice article](https://blakadder.com/esphome-pixel-clock/) about EspHoMaTriX on a Ulanzi TC001 from [blakadder](https://github.com/blakadder).
 
 Short video on Instagram [@blak_adder](https://www.insbuiltagram.com/reel/CpYVByRIaSI)
 
@@ -1837,7 +1842,7 @@ See these English discussions:
 [Share your projects](https://community.home-assistant.io/t/esphomatrix-a-simple-clock-status-display/425325)
 [ESPHOME](https://community.home-assistant.io/t/a-simple-diy-status-display-with-an-8x32-rgb-led/379051)
 
-It was also mentioned in the blog [Building the Open Home](https://building.open-home.io/local-control-is-the-only-way/) and in the home assistant [livestream](https://youtu.be/IGnCGDaXR0M?t=6267)
+It was also mentioned in the blog [Building the Open Home](https://building.open-home.io/local-control-is-the-only-way/) and in the Home Assistant [livestream](https://youtu.be/IGnCGDaXR0M?t=6267)
 
 Or in German:
 [Showroom](https://community.simon42.com/t/8x32-pixel-uhr-mit-homeassistant-anbindung/1076)
@@ -1874,7 +1879,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, use at your own risk!
 - **[fthiery](https://github.com/fthiery)** for improving documentation
 - **[pznamenskii](https://github.com/pznamenskii)** for improving documentation
 - **[mik-at](https://github.com/mik-at)** fixing typos
-- **[DT-art1](https://github.com/DT-art1)** preparing for esphome 2025.5.0
+- **[DT-art1](https://github.com/DT-art1)** preparing for ESPHome 2025.5.0
 - **[genehand](https://github.com/genehand)** for the speed optimization
 - **[skgsergio](https://github.com/skgsergio)** preparing 2025.12.0
 - **[Nathanator](https://github.com/Nathanator)** for improving the wiki

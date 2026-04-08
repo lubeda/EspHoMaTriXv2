@@ -3,9 +3,8 @@
 #include <regex>
 #endif
 
-namespace esphome
+namespace esphome::ehmtx
 {
-
 #ifdef USE_Fireplugin
   const size_t m_heatSize = 8 * 32; /**< Number of heat temperatures */
   uint8_t *m_heat = new (std::nothrow) uint8_t[m_heatSize];
@@ -160,6 +159,9 @@ namespace esphome
     case MODE_RAINBOW_ICON_TEXT_SCREEN:
       ESP_LOGD(TAG, "queue: rainbow icon text screen: \"%s\" text: %s for: %.1f sec", this->icon_name.c_str(), this->text.c_str(), this->screen_time_ / 1000.0);
       break;
+    case MODE_ALERT_TEXT_SCREEN:
+      ESP_LOGD(TAG, "queue: alert text text: \"%s\" for: %.1f sec", this->text.c_str(), this->screen_time_ / 1000.0);
+      break;
     case MODE_FIRE:
       ESP_LOGD(TAG, "queue: fire for: %.1f sec", this->screen_time_ / 1000.0);
       break;
@@ -206,6 +208,7 @@ namespace esphome
       break;
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
+    case MODE_ALERT_TEXT_SCREEN:
       // no correction
       break;
     case MODE_ICON_TEXT_SCREEN:
@@ -1095,6 +1098,7 @@ namespace esphome
 
       case MODE_TEXT_SCREEN:
       case MODE_RAINBOW_TEXT:
+      case MODE_ALERT_TEXT_SCREEN:
         color_ = (this->mode == MODE_RAINBOW_TEXT) ? this->config_->rainbow_color : this->text_color;
 #ifdef EHMTXv2_USE_RTL
         this->config_->display->print(this->xpos() + xoffset, this->ypos() + yoffset, font, color_, esphome::display::TextAlign::BASELINE_RIGHT,
@@ -1259,6 +1263,7 @@ namespace esphome
     {
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
+    case MODE_ALERT_TEXT_SCREEN:
 #ifdef EHMTXv2_SCROLL_SMALL_TEXT
       max_steps = EHMTXv2_SCROLL_COUNT * (width - startx) + EHMTXv2_SCROLL_COUNT * this->pixels_;
       display_duration = static_cast<float>(max_steps * EHMTXv2_SCROLL_INTERVAL);
@@ -1345,4 +1350,4 @@ namespace esphome
 
     ESP_LOGD(TAG, "calc_scroll_time: mode: %d icons count: %d pixels %d calculated: %.1f defined: %d max_steps: %d", this->mode, icon_count, this->pixels_, this->screen_time_ / 1000.0, screen_time, this->scroll_reset);
   }
-}
+}  // namespace esphome::ehmtx

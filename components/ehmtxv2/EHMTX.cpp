@@ -27,7 +27,7 @@
   #endif
 #endif
 
-namespace esphome
+namespace esphome::ehmtx
 {
   /**
    * @brief Construct a new EHMTX::EHMTX object
@@ -1099,6 +1099,7 @@ namespace esphome
 
     register_service(&EHMTX::text_screen, "text_screen", {"text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
     register_service(&EHMTX::rainbow_text_screen, "rainbow_text_screen", {"text", "lifetime", "screen_time", "default_font"});
+    register_service(&EHMTX::alert_text_screen, "alert_text_screen", {"text", "screen_time", "default_font", "r", "g", "b"});
 
     register_service(&EHMTX::clock_screen, "clock_screen", {"lifetime", "screen_time", "default_font", "r", "g", "b"});
 
@@ -1406,6 +1407,9 @@ namespace esphome
               case MODE_TEXT_SCREEN:
                 infotext = "text";
                 break;
+              case MODE_ALERT_TEXT_SCREEN:
+                infotext = "alert";
+                break;
               case MODE_BITMAP_SMALL:
               case MODE_RAINBOW_BITMAP_SMALL:
                 infotext = ("bitmap small: " + this->queue[i]->icon_name).c_str();
@@ -1577,6 +1581,9 @@ namespace esphome
         case MODE_RAINBOW_TEXT:
         case MODE_TEXT_SCREEN:
           infotext = "text";
+          break;
+        case MODE_ALERT_TEXT_SCREEN:
+          infotext = "alert";
           break;
         case MODE_BITMAP_SMALL:
         case MODE_RAINBOW_BITMAP_SMALL:
@@ -2310,6 +2317,7 @@ namespace esphome
     screen->mode = MODE_TEXT_SCREEN;
     screen->calc_scroll_time(text, screen_time);
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    ESP_LOGD(TAG, "text screen: text: %s screen_time: %d", text.c_str(), screen_time);
     screen->status();
   }
 
@@ -2321,7 +2329,24 @@ namespace esphome
     screen->mode = MODE_RAINBOW_TEXT;
     screen->calc_scroll_time(text, screen_time);
     screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    ESP_LOGD(TAG, "rainbow text screen: text: %s screen_time: %d", text.c_str(), screen_time);
     screen->status();
+  }
+
+  void EHMTX::alert_text_screen(std::string text, int32_t screen_time, bool default_font, int32_t r, int32_t g, int32_t b)
+  {
+    EHMTX_queue *screen = this->find_mode_queue_element(MODE_ALERT_TEXT_SCREEN);
+
+    screen->text = text;
+    screen->default_font = default_font;
+    screen->text_color = Color(r, g, b);
+    screen->mode = MODE_ALERT_TEXT_SCREEN;
+    screen->calc_scroll_time(text, screen_time);
+    screen->endtime = this->get_tick() + screen->screen_time_;
+    ESP_LOGD(TAG, "alert text screen: text: %s screen_time: %d", text.c_str(), screen_time);
+    screen->status();
+
+    force_screen("", MODE_ALERT_TEXT_SCREEN);
   }
 
 #ifdef USE_Fireplugin
@@ -3638,4 +3663,4 @@ namespace esphome
   {
     this->trigger(state);
   }
-}
+}  // namespace esphome::ehmtx

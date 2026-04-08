@@ -42,7 +42,7 @@ def rgb565_888(v565):
     r = (((v565)&0xF800) >> 8)
     return (r,g,b)
 
-ehmtx_ns = cg.esphome_ns.namespace("esphome")
+ehmtx_ns = cg.esphome_ns.namespace("ehmtx")
 EHMTX_ = ehmtx_ns.class_("EHMTX", cg.Component)
 Icons_ = ehmtx_ns.class_("EHMTX_Icon")
 
