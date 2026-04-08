@@ -237,7 +237,12 @@ data:
 
 ### Icons and Animations
 
-Download and install all needed icons (.jpg/.png) and animations (.GIF) under the `ehmtxv2:` key. All icons have to be 8x8 or 8x32 pixels in size. If necessary, you can scale them with the option `resize: 8x8` or `resize: 32x8`. Pro user should use gimp.
+Download and install all needed icons (.jpg/.png) and animations (.GIF) under the `ehmtxv2:` key. All icons have to be 8x8 or 8x32 pixels in size. If necessary, you can scale them with the option `resize: 8x8` or `resize: 32x8`. 
+
+> [!TIP]
+> To easily convert your own images into the required RGB565 format for use in your YAML, you can use the built-in [EHMTX Bitmap Converter](./resources/bitmap-convert.html) tool. Just open it in your browser!
+
+Pro user should use gimp.
 
 You can also specify a URL to directly download the image file. The URLs will only be downloaded once at compile time, so there is no additional traffic on the hosting website.
 
@@ -649,7 +654,7 @@ void icon_clock(std::string iconname, int lifetime, int screen_time, bool defaul
 > [!WARNING]
 > This feature is only available on ESP32 platform !!!
 
-For 8x32 images as text. You can generate these images with, e.g., [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator) or just open [bitmap-convert.html](./resources/bitmap-convert.html) (in the resources-folder) in your browser and select the images you want. For good results, the images should have a ratio of 4x1 or 1x1 to look good on your display. For better results, you could add black borders as needed to your image.
+For 8x32 images as text. You can generate these images with, e.g., [Pixel Bitmap Creator (8x32)](https://pixelit.bastelbunker.de/PixelCreator) or just open the [EHMTX Bitmap Converter](./resources/bitmap-convert.html) (in the resources-folder) in your browser and select the images you want. This tool will automatically scale and convert your images into the correct RGB565 format for the `bitmap_screen` service.
 
 ##### Service via API
 

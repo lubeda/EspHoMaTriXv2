@@ -1,52 +1,343 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>EHMTX scale bitmap tool</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EHMTX Bitmap Converter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        #output {
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: rgba(22, 27, 34, 0.8);
+            --accent-color: #238636;
+            --accent-hover: #2ea043;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --success: #3fb950;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(35, 134, 54, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(35, 134, 54, 0.05) 0%, transparent 40%);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            max-width: 800px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #a5a5a5 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        main {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .upload-section {
+            background: var(--card-bg);
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+        }
+
+        .upload-section:hover, .upload-section.dragover {
+            border-color: var(--accent-color);
+            background: rgba(35, 134, 54, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .btn-upload {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: background 0.2s;
+        }
+
+        .btn-upload:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-container {
+            background: #000;
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 140px;
+            border: 1px solid rgba(255,255,255,0.05);
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(35, 134, 54, 0.1) 0%, transparent 70%);
         }
 
         .scaled-image {
-            border: 1px solid black;
-            margin: 5px;
-            transform: scale(4);
-            transform-origin: top left;
+            image-rendering: pixelated;
+            box-shadow: 0 0 15px rgba(255,255,255,0.05);
+            max-width: 100%;
+            transition: transform 0.2s ease;
         }
 
-        canvas {
-            display: none; /* Hide the original canvas elements */
+        .scaled-image:hover {
+            filter: drop-shadow(0 0 5px var(--accent-color));
         }
+
+        /* Customize scale for each */
+        .preview-32x8 .scaled-image { transform: scale(4); }
+        .preview-8x8 .scaled-image { transform: scale(8); }
+
+        .code-block {
+            background: #010409;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            max-height: 150px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: var(--text-primary);
+        }
+
+        .copy-btn {
+            background: var(--border-color);
+            border: none;
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            align-self: flex-start;
+        }
+
+        .copy-btn:hover {
+            background: #3d444d;
+        }
+
+        .copy-btn.success {
+            background: var(--success);
+            color: white;
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            z-index: 1000;
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        canvas { display: none; }
     </style>
 </head>
 <body>
-    <H1>EHMTX Bitmap Converter</H1>
-    <input type="file" id="fileInput" accept="image/*">
-    <H2>Result</H2>
-    <div id="output"></div>
+    <header>
+        <h1>EHMTX Bitmap Converter</h1>
+        <p class="subtitle">Convert any image to RGB565 arrays for your LED matrix displays</p>
+    </header>
+
+    <main>
+        <div class="upload-section" id="dropZone">
+            <span class="upload-icon">🖼️</span>
+            <p>Drag and drop your image here, or click to browse</p>
+            <span class="btn-upload">Select Image</span>
+            <input type="file" id="fileInput" accept="image/*">
+        </div>
+
+        <div class="results-grid" id="results" style="display: none;">
+            <!-- 32x8 Card -->
+            <div class="card">
+                <h2>32 x 8 <small>Full Screen</small></h2>
+                <div class="preview-container preview-32x8">
+                    <img id="img32x8" class="scaled-image" alt="32x8 preview">
+                </div>
+                <div class="code-block">
+                    <pre id="code32x8"></pre>
+                </div>
+                <button class="copy-btn" onclick="copyCode('code32x8', this)">
+                    <span>📋 Copy Array</span>
+                </button>
+            </div>
+
+            <!-- 8x8 Card -->
+            <div class="card">
+                <h2>8 x 8 <small>Icon / Small Bitmap</small></h2>
+                <div class="preview-container preview-8x8">
+                    <img id="img8x8" class="scaled-image" alt="8x8 preview">
+                </div>
+                <div class="code-block">
+                    <pre id="code8x8"></pre>
+                </div>
+                <button class="copy-btn" onclick="copyCode('code8x8', this)">
+                    <span>📋 Copy Array</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast">Copied to clipboard!</div>
 
     <script>
-        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const results = document.getElementById('results');
 
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        // Drag and drop handlers
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleFile(file);
+            }
+        });
 
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
             const reader = new FileReader();
             reader.onload = function (e) {
                 const image = new Image();
                 image.onload = function () {
-                    const scaledImage1 = scaleImage(image, 32, 8);
-                    const scaledImage2 = scaleImage(image, 8, 8);
-                    const rgb565Array1 = convertToRGB565Array(scaledImage1);
-                    const rgb565Array2 = convertToRGB565Array(scaledImage2);
-
-                    displayImages(scaledImage1, scaledImage2, rgb565Array1, rgb565Array2);
+                    processImage(image);
                 };
                 image.src = e.target.result;
             };
             reader.readAsDataURL(file);
+        }
+
+        function processImage(image) {
+            // Show results section
+            results.style.display = 'grid';
+            
+            // Process 32x8
+            const scaled32x8 = scaleImage(image, 32, 8);
+            const array32x8 = convertToRGB565Array(scaled32x8);
+            document.getElementById('img32x8').src = scaled32x8.toDataURL();
+            document.getElementById('code32x8').textContent = '[' + array32x8.join(', ') + ']';
+
+            // Process 8x8
+            const scaled8x8 = scaleImage(image, 8, 8);
+            const array8x8 = convertToRGB565Array(scaled8x8);
+            document.getElementById('img8x8').src = scaled8x8.toDataURL();
+            document.getElementById('code8x8').textContent = '[' + array8x8.join(', ') + ']';
+            
+            // Scroll to results
+            results.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function scaleImage(image, width, height) {
@@ -54,13 +345,14 @@
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = false; // Keep it pixelated
             ctx.drawImage(image, 0, 0, width, height);
             return canvas;
         }
 
-        function convertToRGB565Array(image) {
-            const ctx = image.getContext('2d');
-            const imageData = ctx.getImageData(0, 0, image.width, image.height).data;
+        function convertToRGB565Array(canvas) {
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
             const rgb565Array = [];
 
             for (let i = 0; i < imageData.length; i += 4) {
@@ -70,77 +362,26 @@
                 const rgb565 = (r << 11) | (g << 5) | b;
                 rgb565Array.push(rgb565);
             }
-
             return rgb565Array;
         }
 
-        function displayImages(image1, image2, rgb565Array1, rgb565Array2) {
-            const outputDiv = document.getElementById('output');
-            outputDiv.innerHTML = '';
-
-            const canvas1 = document.createElement('canvas');
-            canvas1.width = image1.width;
-            canvas1.height = image1.height;
-            const ctx1 = canvas1.getContext('2d');
-            ctx1.drawImage(image1, 0, 0);
-            outputDiv.appendChild(canvas1);
-
-            const paragraph1 = document.createElement('p');
-            paragraph1.textContent = '32 x 8 bitmap:';
-            outputDiv.appendChild(paragraph1);
-
-            const pre1 = document.createElement('pre');
-            pre1.textContent = '[' + rgb565Array1.join(', ') + ']';
-            paragraph1.appendChild(pre1);
-
-            const scaledImage1 = document.createElement('img');
-            scaledImage1.src = canvas1.toDataURL();
-            scaledImage1.classList.add('scaled-image');
-            outputDiv.appendChild(scaledImage1);
-
-            const copyButton1 = document.createElement('button');
-            copyButton1.textContent = 'copy bitmap screen';
-            copyButton1.addEventListener('click', function () {
-                copyToClipboard('[' + rgb565Array1.join(', ') + ']');
+        function copyCode(elementId, btn) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+                btn.classList.add('success');
+                btn.querySelector('span').textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.classList.remove('success');
+                    btn.querySelector('span').textContent = '📋 Copy Array';
+                }, 2000);
             });
-            paragraph1.appendChild(copyButton1);
-
-            const canvas2 = document.createElement('canvas');
-            canvas2.width = image2.width;
-            canvas2.height = image2.height;
-            const ctx2 = canvas2.getContext('2d');
-            ctx2.drawImage(image2, 0, 0);
-            outputDiv.appendChild(canvas2);
-
-            const paragraph2 = document.createElement('p');
-            paragraph2.textContent = '8x8 small bitmap';
-            outputDiv.appendChild(paragraph2);
-
-            const pre2 = document.createElement('pre');
-            pre2.textContent = '[' + rgb565Array2.join(', ') + ']';
-            paragraph2.appendChild(pre2);
-
-            const scaledImage2 = document.createElement('img');
-            scaledImage2.src = canvas2.toDataURL();
-            scaledImage2.classList.add('scaled-image');
-            outputDiv.appendChild(scaledImage2);
-
-            const copyButton2 = document.createElement('button');
-            copyButton2.textContent = 'copy bitmap screen';
-            copyButton2.addEventListener('click', function () {
-                copyToClipboard('[' + rgb565Array2.join(', ') + ']');
-            });
-            paragraph2.appendChild(copyButton2);
         }
 
-        function copyToClipboard(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            alert('Copied to clipboard:\n' + text);
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
         }
     </script>
 </body>
