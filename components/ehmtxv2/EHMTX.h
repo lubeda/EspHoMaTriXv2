@@ -404,7 +404,10 @@ namespace esphome::ehmtx
     void rainbow_text_screen(std::string text, int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_clock_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true);
     void rainbow_date_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true);
+    void trigger_add_screen(std::string text, uint8_t mode);
     void del_screen(std::string icon, int32_t mode = MODE_ICON_SCREEN);
+    void set_screen_endtime(EHMTX_queue *screen, int32_t lifetime);
+
 
     void draw_alarm();
   #ifdef EHMTXv2_RCINDICATOR
@@ -503,6 +506,7 @@ namespace esphome::ehmtx
 #ifdef USE_Fireplugin
     Color heatColor(uint8_t temperature);
 #endif
+    void reset_vertical_scroll();
     void status();
 
     void draw();

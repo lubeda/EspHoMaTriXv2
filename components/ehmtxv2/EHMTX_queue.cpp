@@ -92,6 +92,15 @@ namespace esphome::ehmtx
     this->progressbar_back_color = esphome::display::COLOR_OFF;
   }
 
+
+  void EHMTX_queue::reset_vertical_scroll()
+  {
+#ifdef EHMTXv2_USE_VERTICAL_SCROLL
+    this->pixels_ = 0;
+    this->scroll_reset = 32;
+#endif
+  }
+
   void EHMTX_queue::status()
   {
     switch (this->mode)

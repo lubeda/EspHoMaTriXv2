@@ -623,28 +623,15 @@ namespace esphome::ehmtx
     screen->text = "";
     screen->mode = MODE_BITMAP_SCREEN;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-#ifdef EHMTXv2_USE_VERTICAL_SCROLL
-    screen->pixels_ = 0;
-    screen->scroll_reset = 32;
-#endif
+    this->set_screen_endtime(screen, lifetime);
+    screen->reset_vertical_scroll();
     if (id == "")
     {
-      for (auto *t : on_add_screen_triggers_)
-      {
-        t->process("bitmap", (uint8_t)screen->mode);
-      }
+      this->trigger_add_screen("bitmap", (uint8_t)screen->mode);
     }
     else
     {
-      for (auto *t : on_add_screen_triggers_)
-      {
-        t->process("bitmap: " + id, (uint8_t)screen->mode);
-      }
+      this->trigger_add_screen("bitmap: " + id, (uint8_t)screen->mode);
     }
     ESP_LOGD(TAG, "bitmap screen: lifetime: %d screen_time: %d", lifetime, screen_time);
     screen->status();
@@ -668,11 +655,7 @@ namespace esphome::ehmtx
     screen->mode = MODE_BITMAP_SMALL;
     screen->default_font = default_font;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
+    this->set_screen_endtime(screen, lifetime);
 
     if (screen->sbitmap == NULL)
     {
@@ -701,18 +684,12 @@ namespace esphome::ehmtx
 
     if (id == "")
     {
-      for (auto *t : on_add_screen_triggers_)
-      {
-        t->process("bitmap small", (uint8_t)screen->mode);
-      }
+      this->trigger_add_screen("bitmap small", (uint8_t)screen->mode);
       ESP_LOGD(TAG, "small bitmap screen: text: %s lifetime: %d screen_time: %d", text.c_str(), lifetime, screen_time);
     }
     else
     {
-      for (auto *t : on_add_screen_triggers_)
-      {
-        t->process("bitmap small: " + id, (uint8_t)screen->mode);
-      }
+      this->trigger_add_screen("bitmap small: " + id, (uint8_t)screen->mode);
       ESP_LOGD(TAG, "small bitmap screen: id: %s text: %s lifetime: %d screen_time: %d", id.c_str(), text.c_str(), lifetime, screen_time);
     }
     screen->status();
@@ -735,11 +712,7 @@ namespace esphome::ehmtx
     screen->mode = MODE_RAINBOW_BITMAP_SMALL;
     screen->default_font = default_font;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
+    this->set_screen_endtime(screen, lifetime);
 
     if (screen->sbitmap == NULL)
     {
@@ -768,18 +741,12 @@ namespace esphome::ehmtx
 
     if (id == "")
     {
-      for (auto *t : on_add_screen_triggers_)
-      {
-        t->process("bitmap small", (uint8_t)screen->mode);
-      }
+      this->trigger_add_screen("bitmap small", (uint8_t)screen->mode);
       ESP_LOGD(TAG, "small bitmap rainbow screen: text: %s lifetime: %d screen_time: %d", text.c_str(), lifetime, screen_time);
     }
     else
     {
-      for (auto *t : on_add_screen_triggers_)
-      {
-        t->process("bitmap small: " + id, (uint8_t)screen->mode);
-      }
+      this->trigger_add_screen("bitmap small: " + id, (uint8_t)screen->mode);
       ESP_LOGD(TAG, "small bitmap rainbow screen: id: %s text: %s lifetime: %d screen_time: %d", id.c_str(), text.c_str(), lifetime, screen_time);
     }
     screen->status();
@@ -871,15 +838,8 @@ namespace esphome::ehmtx
     screen->progress = (id == "two") ? 1 : 0; // 0 - one side scroll (right to left), 1 - two side (outside to center) if supported
     screen->default_font = false;
     screen->calc_scroll_time(screen->icon, screen_time);
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->text, (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, lifetime);
+    this->trigger_add_screen(screen->text, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "bitmap stack: has %d icons from: [%s] screen_time: %d", screen->icon, icons.c_str(), screen_time);
     screen->status();
   }
@@ -2003,11 +1963,8 @@ namespace esphome::ehmtx
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
     // time needed for scrolling
-    screen->endtime = this->get_tick() + screen->screen_time_;
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, 0);
+    this->trigger_add_screen(screen->icon_name, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "alert screen icon: %d iconname: %s text: %s screen_time: %d", icon, iconname.c_str(), text.c_str(), screen_time);
     screen->status();
 
@@ -2037,11 +1994,8 @@ namespace esphome::ehmtx
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
     // time needed for scrolling
-    screen->endtime = this->get_tick() + screen->screen_time_;
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, 0);
+    this->trigger_add_screen(screen->icon_name, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "alert screen rainbow icon: %d iconname: %s text: %s screen_time: %d", icon, iconname.c_str(), text.c_str(), screen_time);
     screen->status();
 
@@ -2073,16 +2027,9 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
+    this->set_screen_endtime(screen, lifetime);
 
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
-    }
+    this->trigger_add_screen(screen->icon_name, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "icon screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -2100,19 +2047,9 @@ namespace esphome::ehmtx
     screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100
                                                                   : progress;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-#ifdef EHMTXv2_USE_VERTICAL_SCROLL
-    screen->pixels_ = 0;
-    screen->scroll_reset = 32;
-#endif
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, lifetime);
+    screen->reset_vertical_scroll();
+    this->trigger_add_screen(screen->icon_name, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "text progress screen text: %s value: %s progress %d lifetime: %d screen_time: %d", text.c_str(), value.c_str(), progress, lifetime, screen_time);
     screen->status();
   }
@@ -2144,15 +2081,8 @@ namespace esphome::ehmtx
     screen->progress = (progress > 100) ? 100 : (progress < -100) ? -100
                                                                   : progress;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, lifetime);
+    this->trigger_add_screen(screen->icon_name, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "icon progress screen icon: %d iconname: %s text: %s progress %d lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), progress, lifetime, screen_time);
     screen->status();
   }
@@ -2192,19 +2122,9 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-#ifdef EHMTXv2_USE_VERTICAL_SCROLL
-    screen->pixels_ = 0;
-    screen->scroll_reset = 32;
-#endif
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, lifetime);
+    screen->reset_vertical_scroll();
+    this->trigger_add_screen(screen->icon_name, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "icon clock icon: %d iconname: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -2233,19 +2153,9 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-#ifdef EHMTXv2_USE_VERTICAL_SCROLL
-    screen->pixels_ = 0;
-    screen->scroll_reset = 32;
-#endif
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, lifetime);
+    screen->reset_vertical_scroll();
+    this->trigger_add_screen(screen->icon_name, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "icon date icon: %d iconname: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -2275,15 +2185,8 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, lifetime);
+    this->trigger_add_screen(screen->icon_name, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "rainbow icon screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -2303,15 +2206,8 @@ namespace esphome::ehmtx
     {
       screen->screen_time_ = EHMTXv2_CLOCK_INTERVAL * 1000.0 - 2000.0;
     }
-#ifdef EHMTXv2_USE_VERTICAL_SCROLL
-    screen->pixels_ = 0;
-    screen->scroll_reset = 32;
-#endif
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
+    screen->reset_vertical_scroll();
+    this->set_screen_endtime(screen, lifetime);
     screen->status();
   }
 
@@ -2323,15 +2219,8 @@ namespace esphome::ehmtx
     screen->mode = MODE_RAINBOW_DATE;
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-#ifdef EHMTXv2_USE_VERTICAL_SCROLL
-    screen->pixels_ = 0;
-    screen->scroll_reset = 32;
-#endif
+    this->set_screen_endtime(screen, lifetime);
+    screen->reset_vertical_scroll();
     screen->status();
   }
 
@@ -2340,15 +2229,8 @@ namespace esphome::ehmtx
     EHMTX_queue *screen = this->find_free_queue_element();
     screen->mode = MODE_BLANK;
     screen->screen_time_ = showtime * 1000.0;
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process("blank", (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, lifetime);
+    this->trigger_add_screen("blank", (uint8_t)screen->mode);
     screen->status();
   }
 
@@ -2358,15 +2240,8 @@ namespace esphome::ehmtx
     screen->mode = MODE_COLOR;
     screen->screen_time_ = showtime * 1000.0;
     screen->text_color = Color(r, g, b);
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process("color", (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, lifetime);
+    this->trigger_add_screen("color", (uint8_t)screen->mode);
     screen->status();
   }
 
@@ -2379,11 +2254,7 @@ namespace esphome::ehmtx
     screen->text_color = Color(r, g, b);
     screen->mode = MODE_TEXT_SCREEN;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
+    this->set_screen_endtime(screen, lifetime);
     ESP_LOGD(TAG, "text screen: text: %s screen_time: %d", text.c_str(), screen_time);
     screen->status();
   }
@@ -2395,11 +2266,7 @@ namespace esphome::ehmtx
     screen->default_font = default_font;
     screen->mode = MODE_RAINBOW_TEXT;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
+    this->set_screen_endtime(screen, lifetime);
     ESP_LOGD(TAG, "rainbow text screen: text: %s screen_time: %d", text.c_str(), screen_time);
     screen->status();
   }
@@ -2413,7 +2280,7 @@ namespace esphome::ehmtx
     screen->text_color = Color(r, g, b);
     screen->mode = MODE_ALERT_TEXT_SCREEN;
     screen->calc_scroll_time(text, screen_time);
-    screen->endtime = this->get_tick() + screen->screen_time_;
+    this->set_screen_endtime(screen, 0);
     ESP_LOGD(TAG, "alert text screen: text: %s screen_time: %d", text.c_str(), screen_time);
     screen->status();
 
@@ -2427,19 +2294,9 @@ namespace esphome::ehmtx
     screen->mode = MODE_FIRE;
     screen->icon = 0;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-#ifdef EHMTXv2_USE_VERTICAL_SCROLL
-    screen->pixels_ = 0;
-    screen->scroll_reset = 32;
-#endif
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process("Fire", (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, lifetime);
+    screen->reset_vertical_scroll();
+    this->trigger_add_screen("Fire", (uint8_t)screen->mode);
     ESP_LOGD(TAG, "fire screen: lifetime: %d screen_time:%d ", lifetime, screen_time);
     screen->status();
   }
@@ -2464,19 +2321,9 @@ namespace esphome::ehmtx
     screen->icon = icon;
     screen->icon_name = iconname;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-#ifdef EHMTXv2_USE_VERTICAL_SCROLL
-    screen->pixels_ = 0;
-    screen->scroll_reset = 32;
-#endif
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, lifetime);
+    screen->reset_vertical_scroll();
+    this->trigger_add_screen(screen->icon_name, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "full screen: icon: %d iconname: %s lifetime: %d screen_time:%d ", icon, iconname.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -2489,15 +2336,8 @@ namespace esphome::ehmtx
     screen->mode = MODE_CLOCK;
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-#ifdef EHMTXv2_USE_VERTICAL_SCROLL
-    screen->pixels_ = 0;
-    screen->scroll_reset = 32;
-#endif
+    this->set_screen_endtime(screen, lifetime);
+    screen->reset_vertical_scroll();
     screen->status();
   }
 
@@ -2511,15 +2351,8 @@ namespace esphome::ehmtx
     screen->mode = MODE_DATE;
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-#ifdef EHMTXv2_USE_VERTICAL_SCROLL
-    screen->pixels_ = 0;
-    screen->scroll_reset = 32;
-#endif
+    this->set_screen_endtime(screen, lifetime);
+    screen->reset_vertical_scroll();
     screen->status();
   }
 
@@ -2548,15 +2381,8 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, lifetime);
+    this->trigger_add_screen(screen->icon_name, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "icon text screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -2585,15 +2411,8 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
-    }
+    this->set_screen_endtime(screen, lifetime);
+    this->trigger_add_screen(screen->icon_name, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "rainbow icon text screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -2629,11 +2448,7 @@ namespace esphome::ehmtx
     screen->icon_name = id;
     screen->icon = icon;
     screen->calc_scroll_time(text, screen_time);
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
+    this->set_screen_endtime(screen, lifetime);
 
     if (screen->sbitmap == NULL)
     {
@@ -2677,10 +2492,7 @@ namespace esphome::ehmtx
       screen->text_color = screen->sbitmap[0];
     }
 
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process(screen->icon_name, (uint8_t)screen->mode);
-    }
+    this->trigger_add_screen(screen->icon_name, (uint8_t)screen->mode);
     ESP_LOGD(TAG, "icon prognosis screen prognosis: %s", prognosis.c_str());
     ESP_LOGD(TAG, "icon prognosis screen icon: %d iconname: %s text: %s prognosis: %d lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), static_cast<uint8_t>(i / 3), lifetime, screen_time);
     screen->status();
@@ -2809,23 +2621,13 @@ namespace esphome::ehmtx
     screen->mode = MODE_GRAPH_SCREEN;
     screen->icon = MAXICONS;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-#ifdef EHMTXv2_USE_VERTICAL_SCROLL
-    screen->pixels_ = 0;
-    screen->scroll_reset = 32;
-#endif
+    this->set_screen_endtime(screen, lifetime);
+    screen->reset_vertical_scroll();
 
     this->graph->set_height(8);
     this->graph->set_width(32);
 
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process("graph", (uint8_t)screen->mode);
-    }
+    this->trigger_add_screen("graph", (uint8_t)screen->mode);
     screen->status();
   }
 
@@ -2850,23 +2652,13 @@ namespace esphome::ehmtx
     screen->icon = icon;
     screen->icon_name = iconname;
     screen->screen_time_ = screen_time * 1000.0;
-    if (lifetime < 0) {
-      screen->endtime = INFINITY;
-    } else {
-      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
-    }
-#ifdef EHMTXv2_USE_VERTICAL_SCROLL
-    screen->pixels_ = 0;
-    screen->scroll_reset = 32;
-#endif
+    this->set_screen_endtime(screen, lifetime);
+    screen->reset_vertical_scroll();
 
     this->graph->set_height(8);
     this->graph->set_width(24);
 
-    for (auto *t : on_add_screen_triggers_)
-    {
-      t->process("graph", (uint8_t)screen->mode);
-    }
+    this->trigger_add_screen("graph", (uint8_t)screen->mode);
     ESP_LOGD(TAG, "graph screen with icon: icon: %d iconname: %s lifetime: %d screen_time:%d ", icon, iconname.c_str(), lifetime, screen_time);
     screen->status();
   }
@@ -3769,5 +3561,20 @@ namespace esphome::ehmtx
   void EHMTXNightModeTrigger::process(bool state)
   {
     this->trigger(state);
+  }
+  void EHMTX::set_screen_endtime(EHMTX_queue *screen, int32_t lifetime) {
+    if (lifetime < 0) {
+      screen->endtime = INFINITY;
+    } else {
+      screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
+    }
+  }
+
+  void EHMTX::trigger_add_screen(std::string text, uint8_t mode)
+  {
+    for (auto *t : on_add_screen_triggers_)
+    {
+      t->process(text, mode);
+    }
   }
 }  // namespace esphome::ehmtx
