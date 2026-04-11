@@ -1,4 +1,4 @@
-#include "esphome.h"
+#include "EHMTX.h"
 
 namespace esphome::ehmtx
 {

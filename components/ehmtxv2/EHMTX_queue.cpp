@@ -1,4 +1,7 @@
-#include "esphome.h"
+#include "EHMTX.h"
+
+#include "esphome/core/defines.h"
+
 #ifdef EHMTXv2_MULTICOLOR_TEXT
 #include <regex>
 #endif
