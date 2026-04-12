@@ -92,3 +92,11 @@ svganimtest.html
 secrets.yaml
 /.esphome/
 /secrets.yaml
+
+# AI Stuff
+.agents/
+.claude/
+.gemini/
+.antigravity/
+
+
