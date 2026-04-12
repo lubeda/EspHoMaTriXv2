@@ -1,21 +1,27 @@
-from argparse import Namespace
-import logging
 import io
 import json
-import requests
+import logging
 import os
+import requests
+from urllib.parse import urlparse
 
-from esphome import core, automation
-from esphome.components import display, font, time, graph
+from esphome import automation, core
+from esphome import codegen as cg
+from esphome import config_validation as cv
+from esphome.components import display, font, graph, time
 import esphome.components.image as espImage
-import esphome.config_validation as cv
-import esphome.codegen as cg
-from esphome.const import CONF_BLUE, CONF_GREEN, CONF_RED, CONF_RESIZE, CONF_FILE, CONF_ID, CONF_BRIGHTNESS, CONF_RAW_DATA_ID,  CONF_TIME, CONF_TRIGGER_ID
+from esphome.components.image import CONF_ALPHA_CHANNEL, IMAGE_TYPE
+from esphome.const import (
+    CONF_BRIGHTNESS,
+    CONF_FILE,
+    CONF_ID,
+    CONF_RAW_DATA_ID,
+    CONF_RESIZE,
+    CONF_TIME,
+    CONF_TRIGGER_ID,
+)
 from esphome.core import CORE, HexInt
 from esphome.cpp_generator import RawExpression
-from esphome.components.image import CONF_ALPHA_CHANNEL, IMAGE_TYPE
-
-from urllib.parse import urlparse
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -29,9 +35,7 @@ SVG_ICONSTART = '<svg width="80px" height="80px" viewBox="0 0 80 80">'
 SVG_FULL_SCREEN_START = '<svg width="320px" height="80px" viewBox="0 0 320 80">'
 SVG_END = "</svg>"
 
-logging.warning(f"")
-logging.warning(f"Please check the documentation and wiki https://github.com/lubeda/EspHoMaTriXv2")
-logging.warning(f"")
+logging.warning("Please check the documentation and wiki https://github.com/lubeda/EspHoMaTriXv2")
 
 def rgb565_svg(x,y, r,g,b,a):
     return f"<rect style=\"fill:rgb({(r << 3) | (r >> 2)},{(g << 2) | (g >> 4)},{(b << 3) | (b >> 2)});fill-opacity:{(a / 255)};\" x=\"{x*10}\" y=\"{y*10}\" width=\"10\" height=\"10\"/>"
@@ -438,7 +442,7 @@ async def to_code(config):
 
     logging.info(f"Preparing icons, this may take some seconds.")
 
-    html_string = F"<html><head><title>{CORE.config_path}</title></head>"
+    html_string = f"<html><head><title>{CORE.config_path}</title></head>"
     html_string += '''\
     <style>
     svg { padding-top: 2x; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; }
@@ -476,7 +480,7 @@ async def to_code(config):
             else:
                 duration = conf[CONF_FRAMEDURATION]
 
-            yaml_string += F"\"{conf[CONF_ID]}\","
+            yaml_string += f"\"{conf[CONF_ID]}\","
 
             dither = Image.Dither.NONE
             transparency = CONF_ALPHA_CHANNEL
@@ -520,7 +524,7 @@ async def to_code(config):
             )
             cg.add(var.add_icon(RawExpression(str(conf[CONF_ID]))))
 
-            html_string += F"<br/>Icon: <b>{conf[CONF_ID]}</b>&nbsp;-&nbsp;({duration} ms):<br/><br/>"
+            html_string += f"<br/>Icon: <b>{conf[CONF_ID]}</b>&nbsp;-&nbsp;({duration} ms):<br/><br/>"
             html_string += f"<div id={conf[CONF_ID]}>"
             pos = 0 
             for frameIndex in range(frames):
