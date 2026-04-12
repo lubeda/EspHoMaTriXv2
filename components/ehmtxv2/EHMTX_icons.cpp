@@ -25,7 +25,7 @@ namespace esphome::ehmtx
       }
       else
       {
-        if (this->get_current_frame() == 1) // this->get_animation_frame_count())
+        if (this->get_current_frame() == 1)
         {
           this->counting_up = true;
         }

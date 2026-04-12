@@ -21,9 +21,6 @@
 #include <string>
 #include <regex>
 
-// #define USE_ESP32
-// #define EHMTXv2_ADV_BOOT
-// #define EHMTXv2_ADV_BOOT_MODE_0
 
 #ifdef USE_ESP32
   #ifdef EHMTXv2_ADV_BOOT
@@ -304,7 +301,7 @@ namespace esphome::ehmtx
 
 #ifdef EHMTXv2_LTINDICATOR
 /**
- * @brief * @brief hides the left top indicator
+ * @brief hides the left top indicator
  * 
  */
   void EHMTX::hide_ltindicator()
@@ -316,7 +313,7 @@ namespace esphome::ehmtx
 
 #ifdef EHMTXv2_LCINDICATOR
 /**
- * @brief * @brief hides the left center indicator
+ * @brief hides the left center indicator
  * 
  */
   void EHMTX::hide_lcindicator()
@@ -328,7 +325,7 @@ namespace esphome::ehmtx
 
 #ifdef EHMTXv2_LBINDICATOR
 /**
- * @brief * @brief hides the left bottom indicator
+ * @brief hides the left bottom indicator
  * 
  */
   void EHMTX::hide_lindicator()
@@ -550,7 +547,6 @@ namespace esphome::ehmtx
     if (array.size() > 256) {
       return;
     }
-    // extract the values
     uint16_t i = 0;
     for (JsonVariant v : array)
     {
@@ -601,7 +597,6 @@ namespace esphome::ehmtx
     if (array.size() > 256) {
       return;
     }
-    // extract the values
     uint16_t i = 0;
     for (JsonVariant v : array)
     {
@@ -668,7 +663,6 @@ namespace esphome::ehmtx
     if (array.size() > 64) {
       return;
     }
-    // extract the values
     uint16_t i = 0;
     for (JsonVariant v : array)
     {
@@ -725,7 +719,6 @@ namespace esphome::ehmtx
     if (array.size() > 64) {
       return;
     }
-    // extract the values
     uint16_t i = 0;
     for (JsonVariant v : array)
     {
@@ -818,7 +811,7 @@ namespace esphome::ehmtx
       }
       else
       {
-        screen->sbitmap[real_count] = Color(127, 255, icon, 5); // int16_t 32767 = uint8_t(127,255)
+        screen->sbitmap[real_count] = Color(127, 255, icon, 5);
         real_count++;
       }
     }
@@ -1187,8 +1180,6 @@ namespace esphome::ehmtx
         }
       }
     }
-    else
-    {
     }
   }
 
@@ -1278,9 +1269,6 @@ namespace esphome::ehmtx
       hit = 0;
       ESP_LOGD(TAG, "oldest queue element is first: %d/%d", hit, queue_count);
     }
-    else
-    {
-        // Queue is empty
     }
     this->queue[hit]->status();
 
@@ -1491,7 +1479,7 @@ namespace esphome::ehmtx
     }
     #endif
 
-    // todo nur bei animationen
+
     if (this->queue[this->screen_pointer]->mode == MODE_BITMAP_STACK_SCREEN && this->queue[this->screen_pointer]->sbitmap != NULL)
     {
       for (uint8_t i = 0; i < this->queue[this->screen_pointer]->icon; i++)
@@ -1506,7 +1494,7 @@ namespace esphome::ehmtx
       this->icons[this->queue[this->screen_pointer]->icon]->set_frame(0);
     }
     this->next_action_time = this->queue[this->screen_pointer]->last_time + this->queue[this->screen_pointer]->screen_time_;
-    // Todo switch for Triggers
+
     if (this->queue[this->screen_pointer]->mode == MODE_CLOCK)
     {
       for (auto *t : on_next_clock_triggers_)
@@ -1632,7 +1620,7 @@ namespace esphome::ehmtx
         }
         else
         {
-          this->next_action_time = ts + 15000 ; // come back in 15 Seconds
+          this->next_action_time = ts + 15000 ;
           for (auto *t : on_empty_queue_triggers_)
           {
               ESP_LOGD(TAG, "on_empty_queue trigger");
@@ -1647,7 +1635,7 @@ namespace esphome::ehmtx
         }
       }
 
-      // blend handling
+
 #ifdef EHMTXv2_BLEND_STEPS
       if ((this->ticks_ <= EHMTXv2_BLEND_STEPS) && (this->brightness_ >= 50) && (this->queue_count() > 1))
       {
@@ -1827,7 +1815,7 @@ namespace esphome::ehmtx
     ESP_LOGI(TAG, "replace_time_date %s", b ? ESPHOME_F("on") : ESPHOME_F("off"));
   }
 
-  std::string EHMTX::replace_time_date(std::string time_date) // Replace Time Date Strings / Trip5
+  std::string EHMTX::replace_time_date(std::string time_date)
   {
     std::string replace_from_string = EHMTXv2_REPLACE_TIME_DATE_FROM;
     std::string replace_to_string = EHMTXv2_REPLACE_TIME_DATE_TO;
@@ -2461,7 +2449,7 @@ namespace esphome::ehmtx
     if (array.size() > 72) {
       return;
     }
-    // extract the 24 color values
+
     uint8_t red = 0;
     uint8_t gre = 0;
     uint8_t blu = 0;
@@ -2677,7 +2665,7 @@ namespace esphome::ehmtx
   {
     if (this->show_day_of_week)
     {
-      auto dow = this->clock->now().day_of_week - 1; // SUN = 0
+      auto dow = this->clock->now().day_of_week - 1;
 
       Color accent_color = esphome::display::COLOR_OFF;
       if (this->weekday_accent && this->brightness_ < 50)
@@ -2788,7 +2776,7 @@ namespace esphome::ehmtx
       {
         if (output.find("%") != std::string::npos)
         {
-          if (this->replace_time_date_active && output == "%p") // check for replace active
+          if (this->replace_time_date_active && output == "%p")
           {
             output = this->clock->now().strftime(output);
             output = this->replace_time_date(output);
@@ -2800,7 +2788,7 @@ namespace esphome::ehmtx
           else
           {
   #ifdef EHMTXv2_FLIP_FLOP
-            if (output == "%I" && h > 12) // check for 12-hour clock
+            if (output == "%I" && h > 12)
             {
               h = h - 12; // Switch to 12-hour clock
             }
@@ -2838,7 +2826,7 @@ namespace esphome::ehmtx
           bool step = false;
           uint8_t y = ystep / EHMTXv2_FLIP_FLOP_SPEED;
 
-          if (i == 0) // Hours
+          if (i == 0)
           {
             if (h != hours)
             {
@@ -2868,7 +2856,7 @@ namespace esphome::ehmtx
               this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%s", parts.at(i).c_str());
             }
           }
-          else if (i == 2) // Minutes
+          else if (i == 2)
           {
             if (m != minutes)
             {
@@ -2898,7 +2886,7 @@ namespace esphome::ehmtx
               this->display->printf(x, ypos, font, c_, display::TextAlign::BASELINE_LEFT, "%s", parts.at(i).c_str());
             }
           }
-          else if (i == 4) // Seconds
+          else if (i == 4)
           {
             if (s != seconds)
             {
@@ -2976,7 +2964,7 @@ namespace esphome::ehmtx
       {
         if (output.find("%") != std::string::npos)
         {
-          if (this->replace_time_date_active && (output == "%a" || output == "%A" || output == "%b" || output == "%B")) // check for replace active
+          if (this->replace_time_date_active && (output == "%a" || output == "%A" || output == "%b" || output == "%B"))
           {
             output = this->clock->now().strftime(output);
             output = this->replace_time_date(output);
@@ -3207,10 +3195,10 @@ namespace esphome::ehmtx
 
   int32_t EHMTX::GetTextBounds(esphome::display::BaseFont *font, const char *buffer)
   {
-    int x = 0;      // A pointer to store the returned x coordinate of the upper left corner in.
-    int y = 0;      // A pointer to store the returned y coordinate of the upper left corner in.
-    int width = 0;  // A pointer to store the returned text width in.
-    int height = 0; // A pointer to store the returned text height in.
+    int x = 0;
+    int y = 0;
+    int width = 0;
+    int height = 0;
     this->display->get_text_bounds(0, 0, buffer, font, esphome::display::TextAlign::TOP_LEFT, &x, &y, &width, &height);
     return width;
   }

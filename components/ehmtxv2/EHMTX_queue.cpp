@@ -45,21 +45,20 @@ namespace esphome::ehmtx
     uint8_t t192 = static_cast<uint32_t>(temperature) * 191U / 255U;
 
     /* Calculate a value that ramps up from zero to 255 in each 'third' of the scale. */
-    uint8_t heatRamp = t192 & 0x3fU; /* 0..63 */
+    uint8_t heatRamp = t192 & 0x3fU;
 
-    /* Scale up to 0..252 */
     heatRamp <<= 2;
 
-    /* Now figure out which third of the spectrum we're in. */
+
     if (t192 & 0x80U)
     {
       /* We're in the hottest third */
-      heatColor = Color(255U, 255U, heatRamp); /* Ramp up blue */
+      heatColor = Color(255U, 255U, heatRamp);
     }
     else if (t192 & 0x40U)
     {
       /* We're in the middle third */
-      heatColor = Color(255U, heatRamp, 0U); /* No blue */
+      heatColor = Color(255U, heatRamp, 0U);
     }
     else
     {
@@ -194,7 +193,6 @@ namespace esphome::ehmtx
 #endif
 
     default:
-      // Queue not initialized
       break;
     }
   }
@@ -221,7 +219,6 @@ namespace esphome::ehmtx
     case MODE_TEXT_SCREEN:
     case MODE_RAINBOW_TEXT:
     case MODE_ALERT_TEXT_SCREEN:
-      // no correction
       break;
     case MODE_ICON_TEXT_SCREEN:
     case MODE_RAINBOW_ICON_TEXT_SCREEN:
@@ -580,7 +577,7 @@ namespace esphome::ehmtx
 
       case MODE_RAINBOW_CLOCK:
       case MODE_CLOCK:
-        if (this->config_->clock->now().is_valid()) // valid time
+        if (this->config_->clock->now().is_valid())
         {
           color_ = (this->mode == MODE_RAINBOW_CLOCK) ? this->config_->rainbow_color : this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
@@ -588,7 +585,7 @@ namespace esphome::ehmtx
           if (!this->config_->draw_clock(EHMTXv2_TIME_FORMAT_BIG, font, color_, xoffset + 15, this->ypos() + yoffset))
           {
 #endif
-            if (this->config_->replace_time_date_active) // check for replace active
+            if (this->config_->replace_time_date_active)
             {
               std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
               time_new = this->config_->replace_time_date(time_new);
@@ -627,7 +624,7 @@ namespace esphome::ehmtx
           if (!this->config_->draw_date(EHMTXv2_DATE_FORMAT_BIG, font, color_, xoffset + 15, this->ypos() + yoffset))
           {
 #endif
-            if (this->config_->replace_time_date_active) // check for replace active
+            if (this->config_->replace_time_date_active)
             {
               std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
               time_new = this->config_->replace_time_date(time_new);
@@ -662,7 +659,7 @@ namespace esphome::ehmtx
 
       case MODE_ICON_CLOCK:
       case MODE_ICON_DATE:
-        if (this->config_->clock->now().is_valid()) // valid time
+        if (this->config_->clock->now().is_valid())
         {
           color_ = this->text_color;
           time_t ts = this->config_->clock->now().timestamp;
@@ -674,7 +671,7 @@ namespace esphome::ehmtx
             if (!this->config_->draw_clock(EHMTXv2_TIME_FORMAT, font, color_, xoffset + offset, this->ypos() + yoffset))
             {
 #endif
-              if (this->config_->replace_time_date_active) // check for replace active
+              if (this->config_->replace_time_date_active)
               {
                 std::string time_new = this->config_->clock->now().strftime(EHMTXv2_TIME_FORMAT).c_str();
                 time_new = this->config_->replace_time_date(time_new);
@@ -695,7 +692,7 @@ namespace esphome::ehmtx
             if (!this->config_->draw_date(EHMTXv2_DATE_FORMAT, font, color_, xoffset + offset, this->ypos() + yoffset))
             {
 #endif
-              if (this->config_->replace_time_date_active) // check for replace active
+              if (this->config_->replace_time_date_active)
               {
                 std::string time_new = this->config_->clock->now().strftime(EHMTXv2_DATE_FORMAT).c_str();
                 time_new = this->config_->replace_time_date(time_new);
@@ -794,28 +791,22 @@ namespace esphome::ehmtx
             {
               uint8_t d = this->config_->clock->now().day_of_month;
 
-              // The symbol consists of a visible part, and an empty area to the right with a width of one point.
+
               uint8_t l_width = this->config_->GetTextWidth(info_font, "%d", (int32_t) (d / 10 % 10));
               uint8_t r_width = this->config_->GetTextWidth(info_font, "%d", (int32_t) (d % 10));
               switch (mode)
               {
-              // To the center
               case 1:
-              // To the center, the left one is a pixel higher.
               case 3:
-              // To the center, the right one is a pixel higher.
               case 4:
-              // To the center, without leading 0
               case 5:
                 x_left = (l_width < 5) ? 5 - l_width : 0;
                 x_right = 4;
                 break;
-              // Left to center, Right to edge
               case 2:
                 x_left = (l_width < 5) ? 5 - l_width : 0;
                 x_right = x_right - r_width;
                 break;
-              // To the edges
               default:
                 x_right = x_right - r_width;
                 break;
@@ -838,7 +829,7 @@ namespace esphome::ehmtx
                 this->config_->display->printf(x_right, this->ypos() + yoffset + i_y_offset - (mode != 4 ? 0 : 1), info_font, i_rcolor, display::TextAlign::BASELINE_LEFT, "%d", d % 10);
               }
             }
-            else // if (this->icon_name.rfind("weekday", 0) == 0)
+            else
             {
               uint8_t wd = this->config_->clock->now().day_of_week;
 
@@ -847,27 +838,22 @@ namespace esphome::ehmtx
                 std::string left = this->config_->GetWeekdayChar((wd - 1) * 2);
                 std::string right = this->config_->GetWeekdayChar((wd - 1) * 2 + 1);
 
-                // The symbol consists of a visible part, and an empty area to the right with a width of one point.
+
                 uint8_t l_width = this->config_->GetTextWidth(info_font, "%s", left.c_str());
                 uint8_t r_width = this->config_->GetTextWidth(info_font, "%s", right.c_str());
 
                 switch (mode)
                 {
-                // To the center
                 case 1:
-                // To the center, the left one is a pixel higher.
                 case 3:
-                // To the center, the right one is a pixel higher.
                 case 4:
                   x_left = (l_width < 5) ? 5 - l_width : 0;
                   x_right = 4;
                   break;
-                // Left to center, Right to edge
                 case 2:
                   x_left = (l_width < 5) ? 5 - l_width : 0;
                   x_right = x_right - r_width;
                   break;
-                // To the edges
                 default:
                   x_right = x_right - r_width;
                   break;
@@ -879,7 +865,7 @@ namespace esphome::ehmtx
               {
                 std::string weekday = this->config_->GetWeekdayChar(wd - 1);
 
-                // The symbol consists of a visible part, and an empty area to the right with a width of one point.
+
                 uint8_t c_width = this->config_->GetTextWidth(info_font, "%s", weekday.c_str());
                 if (this->config_->icon_to_9 == 3)
                 {
@@ -1241,9 +1227,9 @@ namespace esphome::ehmtx
     ESP_LOGD(TAG, "hold for %d secs", _sec);
   }
 
-  // TODO void EHMTX_queue::set_mode_icon()
 
-  // Screen Text, Screen time in seconds
+
+
   void EHMTX_queue::calc_scroll_time(std::string text, uint16_t screen_time)
   {
     int x, y, w, h;
@@ -1335,7 +1321,7 @@ namespace esphome::ehmtx
     ESP_LOGD(TAG, "calc_scroll_time: mode: %d text: \"%s\" pixels %d calculated: %.1f defined: %d max_steps: %d", this->mode, text.c_str(), this->pixels_, this->screen_time_ / 1000.0, screen_time, this->scroll_reset);
   }
 
-  // Icons count, Screen time in seconds
+
   void EHMTX_queue::calc_scroll_time(uint8_t icon_count, uint16_t screen_time)
   {
     float display_duration;

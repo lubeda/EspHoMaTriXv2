@@ -111,22 +111,35 @@ done
 
 ### Python Style (__init__.py)
 
-#### Formatting
-- Indentation: 4 spaces (standard Python)
-- Line length: Aim for <= 88 characters (Black style)
-- Imports: 
-  - Standard library first
-  - Third-party (PIL, requests) second
-  - ESPHome modules last
-  - Each import grouped and sorted alphabetically within group
-- Use `from esphome import ...` for ESPHome imports
+#### Formatting & Standards
+- **Compliance**: Follow **PEP 8** (code style) and **PEP 257** (docstrings) strictly.
+- **Formatter**: Use **Ruff** for linting and automatic formatting.
+- **Indentation**: 4 spaces (standard Python).
+- **Line length**: Aim for <= 88 characters (standard for Ruff/Black).
+- **Strings**: Prefer **f-strings** for string formatting.
+- **Imports**: 
+  - Standard library first.
+  - Third-party (PIL, requests) second.
+  - ESPHome modules last.
+  - Each import grouped and sorted alphabetically within group.
+- Use `from esphome import ...` for ESPHome imports.
 
 #### Naming
-- Variables and functions: `snake_case`
-- Constants: `UPPER_SNAKE_CASE`
-- Classes: `PascalCase`
+- Variables and functions: `snake_case`.
+- Constants: `UPPER_SNAKE_CASE` (order list/dict contents alphabetically).
+- Classes: `PascalCase`.
 
-#### Error Handling
+#### Type Hinting & Docstrings
+- **Type Hints**: Use Python type annotations for all function/method signatures to improve clarity and catch bugs.
+- **Docstrings**: Use **Google Style** for docstrings. Omit type information in docstrings if already present in the signature.
+- **File Headers**: Every file should start with a docstring describing its purpose.
+
+#### Asynchronous Programming
+- **Async-First**: ESPHome's integration with Home Assistant relies on non-blocking code.
+- Avoid blocking calls (like `time.sleep` or synchronous I/O) in the main loop.
+- Use `asyncio` patterns where possible when interacting with external services.
+
+#### Error Handling & Logging
 - Use `try`/`except` for specific exceptions:
   ```python
   try:
@@ -134,16 +147,19 @@ done
   except SpecificError as e:
       raise core.EsphomeError(f"Context: {e}")
   ```
-- Avoid bare `except:` clauses
-- Log warnings with `logging.warning()` for recoverable issues
-- Use `logging.info()` for non-error status updates
+- Avoid bare `except:` clauses.
+- **Logging**: 
+  - Use `_LOGGER.debug`, `_LOGGER.info`, etc.
+  - Do **not** include the platform or component name in log messages (added automatically).
+  - Log messages should **not** end with a period.
+  - Use `logging.warning()` for recoverable issues in Python logic.
 
 #### ESPHome-Specific
-- Use `cv.` for config validation (from `esphome.config_validation`)
-- Use `cg.` for code generation (from `esphome.codegen`)
-- Access config values via `config[CONF_KEY]`
-- Use `CORE.relative_config_path(path)` for file paths
-- Register triggers with `automation.build_automation()`
+- Use `cv.` for config validation (from `esphome.config_validation`).
+- Use `cg.` for code generation (from `esphome.codegen`).
+- Access config values via `config[CONF_KEY]`.
+- Use `CORE.relative_config_path(path)` for file paths.
+- Register triggers with `automation.build_automation()`.
 
 ## 3. Repository-Specific Practices
 
