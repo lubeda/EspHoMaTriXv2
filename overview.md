@@ -19,16 +19,6 @@
 
 ## Quick Start
 
-```yaml
-external_components:
-  - source:
-      type: git
-      url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: 2025.12.0
-    refresh: 60s
-    components: [ ehmtxv2 ]
-```
-
 ## Version Compatibility
 
 | Branch | ESPHome Version |
@@ -53,5 +43,5 @@ external_components:
 
 ## Documentation
 
-- [Full README](./README.md)
+- [Full README](https://github.com/lubeda/EspHoMaTriXv2/blob/2025.12.0/README.md)
 - [Wiki](./wiki)

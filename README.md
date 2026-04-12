@@ -49,7 +49,7 @@ external_components:
       #path: EspHoMaTriX/components # e.g. /config/esphome/components
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: 2025.7.1
+      ref: 2025.12.0
     refresh: 60s 
     components: [ ehmtxv2 ]   
 ```
