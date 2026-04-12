@@ -242,7 +242,7 @@ data:
 Download and install all needed icons (.jpg/.png) and animations (.GIF) under the `ehmtxv2:` key. All icons have to be 8x8 or 8x32 pixels in size. If necessary, you can scale them with the option `resize: 8x8` or `resize: 32x8`. 
 
 > [!TIP]
-> To easily convert your own images into the required RGB565 format for use in your YAML, you can use the built-in [EHMTX Bitmap Converter](./resources/bitmap-convert.html) tool. Just open it in your browser!
+> To easily convert your own images into the required RGB565 format for use in your YAML, you can use the built-in [EHMTX Bitmap Converter](https://github.com/lubeda/EspHoMaTriXv2/blob/2025.12.0/resources/bitmap-convert.html) tool. Just open it in your browser!
 
 Pro user should use gimp.
 
