@@ -5,25 +5,6 @@
 ### Building Firmware
 The project uses ESPHome for building firmware. Test configurations are in the `tests/` directory.
 
-#### Build a specific test
-```bash
-esphome build tests/<test-name>.yaml
-```
-Example:
-```bash
-esphome build tests/esp32-idf.yaml
-```
-
-#### Build and upload to device
-```bash
-esphome run tests/<test-name>.yaml
-```
-
-#### Clean build artifacts
-```bash
-esphome clean tests/<test-name>.yaml
-```
-
 ### Linting
 There are no automated linters configured in the repository. However, follow these guidelines:
 

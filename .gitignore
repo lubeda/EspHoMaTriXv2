@@ -98,5 +98,10 @@ secrets.yaml
 .claude/
 .gemini/
 .antigravity/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+ANTIGRAVITY.md
+
 
 
