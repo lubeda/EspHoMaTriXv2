@@ -1,6 +1,11 @@
 # Changelog
 
 
+## 2025.12.0
+- @andrewjswan Added infinity lifetime for screens
+
+## Sorry i missed to take care of the changes :sadface:
+
 ## 2025.5.2
 - @DT-art1 Avoid blank screen for 15 seconds after empty queue.
 - @DT-art1 & @andrewjswan optimisation for esp-idf
