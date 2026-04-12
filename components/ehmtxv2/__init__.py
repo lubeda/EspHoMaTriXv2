@@ -632,15 +632,8 @@ async def to_code(config):
     cg.add_define("EHMTXv2_TIME_FORMAT",config[CONF_TIME_FORMAT])
     cg.add_define("EHMTXv2_DATE_FORMAT",config[CONF_DATE_FORMAT])
 
-    if config[CONF_TIME_FORMAT_BIG]:
-        cg.add_define("EHMTXv2_TIME_FORMAT_BIG",config[CONF_TIME_FORMAT_BIG])
-    else:
-        cg.add_define("EHMTXv2_TIME_FORMAT_BIG",config[CONF_TIME_FORMAT])
-
-    if config[CONF_DATE_FORMAT_BIG]:
-        cg.add_define("EHMTXv2_DATE_FORMAT_BIG",config[CONF_DATE_FORMAT_BIG])
-    else:
-        cg.add_define("EHMTXv2_DATE_FORMAT_BIG",config[CONF_DATE_FORMAT])
+    cg.add_define("EHMTXv2_TIME_FORMAT_BIG", config.get(CONF_TIME_FORMAT_BIG) or config[CONF_TIME_FORMAT])
+    cg.add_define("EHMTXv2_DATE_FORMAT_BIG", config.get(CONF_DATE_FORMAT_BIG) or config[CONF_DATE_FORMAT])
     
     if config[CONF_RAINBOWSHIMMER]:
         cg.add_define("EHMTXv2_RAINBOW_SHIMMER")
@@ -683,30 +676,9 @@ async def to_code(config):
         cg.add_define("EHMTXv2_ADV_BOOT")         
         logging.info(f"[X] Advanced boot")
       
-        if config[CONF_BOOTLOGOMODE] == 0:
-            cg.add_define("EHMTXv2_ADV_BOOT_MODE_0")
-            logging.info(f"[X] Advanced boot mode 0")
-        if config[CONF_BOOTLOGOMODE] == 1:
-            cg.add_define("EHMTXv2_ADV_BOOT_MODE_1")
-            logging.info(f"[X] Advanced boot mode 1")
-        if config[CONF_BOOTLOGOMODE] == 2:
-            cg.add_define("EHMTXv2_ADV_BOOT_MODE_2")
-            logging.info(f"[X] Advanced boot mode 2")
-        if config[CONF_BOOTLOGOMODE] == 3:
-            cg.add_define("EHMTXv2_ADV_BOOT_MODE_3")
-            logging.info(f"[X] Advanced boot mode 3")
-        if config[CONF_BOOTLOGOMODE] == 4:
-            cg.add_define("EHMTXv2_ADV_BOOT_MODE_4")
-            logging.info(f"[X] Advanced boot mode 4")
-        if config[CONF_BOOTLOGOMODE] == 5:
-            cg.add_define("EHMTXv2_ADV_BOOT_MODE_5")
-            logging.info(f"[X] Advanced boot mode 5")
-        if config[CONF_BOOTLOGOMODE] == 6:
-            cg.add_define("EHMTXv2_ADV_BOOT_MODE_6")
-            logging.info(f"[X] Advanced boot mode 6")
-        if config[CONF_BOOTLOGOMODE] == 7:
-            cg.add_define("EHMTXv2_ADV_BOOT_MODE_7")
-            logging.info(f"[X] Advanced boot mode 7")
+        mode = config[CONF_BOOTLOGOMODE]
+        cg.add_define(f"EHMTXv2_ADV_BOOT_MODE_{mode}")
+        logging.info(f"[X] Advanced boot mode {mode}")
     
     if config[CONF_NIGHT_MODE_SCREENS]:
         cg.add_define("EHMTXv2_CONF_NIGHT_MODE_SCREENS",config[CONF_NIGHT_MODE_SCREENS])
