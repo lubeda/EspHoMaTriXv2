@@ -361,13 +361,78 @@ CODEOWNERS = ["@lubeda"]
 
 async def to_code(config):
 
-    from PIL import Image, ImageSequence
+    from PIL import Image
 
-    def openImageFile(path):
+    def open_image(path):
         try:
             return Image.open(path)
         except Exception as e:
-            raise core.EsphomeError(f" ICONS: Could not load image file {path}: {e}")
+            raise core.EsphomeError(f"ICONS: Could not load image file {path}: {e}")
+
+    def load_icon(conf, cache_enabled):
+        if CONF_FILE in conf:
+            path = CORE.relative_config_path(conf[CONF_FILE])
+            return open_image(path), path
+
+        if CONF_LAMEID in conf:
+            lameid = conf[CONF_LAMEID]
+            cache_path = CORE.relative_config_path(f".cache/icons/lameid/{lameid}")
+            if cache_enabled and os.path.isfile(cache_path):
+                logging.info(f"ICONS: Load {lameid} from cache.")
+                return open_image(cache_path), cache_path
+            
+            url = f"https://developer.lametric.com/content/apps/icon_thumbs/{lameid}"
+            try:
+                r = requests.get(url, headers={"Cache-Control": "no-cache"}, timeout=4.0)
+                r.raise_for_status()
+            except Exception as e:
+                raise core.EsphomeError(f"ICONS: Could not download LaMetric icon {lameid}: {e}")
+            
+            image = Image.open(io.BytesIO(r.content))
+            if cache_enabled:
+                os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+                with open(cache_path, "wb") as f:
+                    f.write(r.content)
+                logging.info(f"ICONS: Save {lameid} to cache.")
+            return image, cache_path
+
+        if CONF_URL in conf:
+            url = conf[CONF_URL]
+            cache_path = CORE.relative_config_path(f".cache/icons/url/{os.path.basename(urlparse(url).path)}")
+            if cache_enabled and os.path.isfile(cache_path):
+                logging.info(f"ICONS: Load {url} from cache.")
+                return open_image(cache_path), cache_path
+            
+            try:
+                r = requests.get(url, headers={"Cache-Control": "no-cache"}, timeout=4.0)
+                r.raise_for_status()
+            except Exception as e:
+                raise core.EsphomeError(f"ICONS: Could not download icon from {url}: {e}")
+            
+            image = Image.open(io.BytesIO(r.content))
+            if cache_enabled:
+                os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+                with open(cache_path, "wb") as f:
+                    f.write(r.content)
+                logging.info(f"ICONS: Save {url} to cache.")
+            return image, cache_path
+
+        if CONF_RGB565ARRAY in conf:
+            data = list(json.loads(conf[CONF_RGB565ARRAY]))
+            if len(data) == 64:
+                image = Image.new("RGB", [8, 8])
+                for y in range(8):
+                    for x in range(8):
+                        image.putpixel((x, y), rgb565_888(data[x + y * 8]))
+                return image, "RGB565_8x8"
+            if len(data) == 256:
+                image = Image.new("RGB", [32, 8])
+                for y in range(8):
+                    for x in range(32):
+                        image.putpixel((x, y), rgb565_888(data[x + y * 32]))
+                return image, "RGB565_32x8"
+        
+        raise core.EsphomeError(f"ICONS: No valid image source for {conf[CONF_ID]}")
 
     var = cg.new_Pvariable(config[CONF_ID])
 
@@ -385,72 +450,7 @@ async def to_code(config):
 
     yaml_string= ""
     for conf in config[CONF_ICONS]:
-        if CONF_FILE in conf:
-            path = CORE.relative_config_path(conf[CONF_FILE])
-            try:
-                image = openImageFile(path)
-            except Exception as e:
-                raise core.EsphomeError(f" ICONS: Could not load image file {path}: {e}")
-
-        elif CONF_LAMEID in conf:
-            path = CORE.relative_config_path(".cache/icons/lameid/" + conf[CONF_LAMEID])
-            if config[CONF_CACHE] and os.path.isfile(path):
-                try:
-                    image = openImageFile(path)
-                    logging.info(f" ICONS: Load {conf[CONF_LAMEID]} from cache.")
-                except Exception as e:
-                    raise core.EsphomeError(f" ICONS: Could not load image file {path}: {e}")
-            else:
-                r = requests.get("https://developer.lametric.com/content/apps/icon_thumbs/" + conf[CONF_LAMEID],
-                                 headers = {"Cache-Control": "no-cache, no-store, must-revalidate", "Pragma": "no-cache"},
-                                 timeout=4.0)
-                if r.status_code != requests.codes.ok:
-                    raise core.EsphomeError(f" ICONS: Could not download image file {conf[CONF_LAMEID]}: {conf[CONF_ID]}")
-                image = Image.open(io.BytesIO(r.content))
-
-                if config[CONF_CACHE]:
-                    os.makedirs(os.path.dirname(path), exist_ok=True)
-                    f = open(path,"wb")
-                    f.write(r.content) 
-                    f.close()
-                    logging.info(f" ICONS: Save {conf[CONF_LAMEID]} to cache.")
-
-        elif CONF_URL in conf:
-            a = urlparse(conf[CONF_URL])
-            path = CORE.relative_config_path(".cache/icons/url/" + os.path.basename(a.path))
-            if config[CONF_CACHE] and os.path.isfile(path):
-                try:
-                    image = openImageFile(path)
-                    logging.info(f" ICONS: Load {conf[CONF_URL]} from cache.")
-                except Exception as e:
-                    raise core.EsphomeError(f" ICONS: Could not load image file {path}: {e}")
-            else:
-                r = requests.get(conf[CONF_URL], 
-                                 headers = {"Cache-Control": "no-cache, no-store, must-revalidate", "Pragma": "no-cache"},
-                                 timeout=4.0)
-                if r.status_code != requests.codes.ok:
-                    raise core.EsphomeError(f" ICONS: Could not download image file {conf[CONF_URL]}: {conf[CONF_ID]}")
-                image = Image.open(io.BytesIO(r.content))
-
-                if config[CONF_CACHE]:
-                    os.makedirs(os.path.dirname(path), exist_ok=True)
-                    f = open(path,"wb")
-                    f.write(r.content) 
-                    f.close()
-                    logging.info(f" ICONS: Save {conf[CONF_URL]} to cache.")
-
-        elif CONF_RGB565ARRAY in conf:
-            r = list(json.loads(conf[CONF_RGB565ARRAY]))
-            if len(r) == 64:
-                image = Image.new("RGB",[8,8])
-                for y in range(0,8):
-                   for x in range(0,8):
-                        image.putpixel((x,y),rgb565_888(r[x+y*8]))
-            elif len(r) == 256:
-                image = Image.new("RGB",[32,8])
-                for y in range(0,8):
-                    for x in range(0,32):
-                        image.putpixel((x,y),rgb565_888(r[x+y*32]))
+        image, path = load_icon(conf, config[CONF_CACHE])
 
         width, height = image.size
 
@@ -554,15 +554,13 @@ async def to_code(config):
     html_string += "</body></html>"
 
     if config[CONF_HTML]:
+        htmlfn = str(CORE.config_path).replace(".yaml", "") + ".html"
         try:
-            htmlfn = str(CORE.config_path).replace(".yaml","") + ".html"
-            with open(htmlfn, 'w') as f:
-                f.truncate()
+            with open(htmlfn, "w") as f:
                 f.write(html_string)
-                f.close()
-                logging.info(f"EsphoMaTrix: wrote html-file with icon preview: {htmlfn}")
-        except:
-            logging.warning(f"EsphoMaTrix: Error writing HTML file: {htmlfn}")    
+            logging.info(f"EsphoMaTrix: wrote html-file with icon preview: {htmlfn}")
+        except Exception as e:
+            logging.warning(f"EsphoMaTrix: Error writing HTML file {htmlfn}: {e}")
 
     logging.info("List of icons for e.g. blueprint:\n\n\r["+yaml_string+"]\n")
 
