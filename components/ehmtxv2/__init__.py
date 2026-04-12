@@ -302,11 +302,6 @@ EHMTX_SCHEMA = cv.Schema({
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(AddScreenTrigger),
         }
     ),
-    cv.Optional(CONF_ON_NEXT_SCREEN): automation.validate_automation(
-        {
-            cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(NextScreenTrigger),
-        }
-    ),
     cv.Optional(CONF_ON_NEXT_CLOCK): automation.validate_automation(
         {
             cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(NextClockTrigger),
