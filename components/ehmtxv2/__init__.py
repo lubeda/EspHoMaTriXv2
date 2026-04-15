@@ -10,7 +10,7 @@ from esphome import codegen as cg
 from esphome import config_validation as cv
 from esphome.components import display, font, graph, time
 import esphome.components.image as espImage
-from esphome.components.image import CONF_ALPHA_CHANNEL, IMAGE_TYPE
+from esphome.components.image import CONF_CHROMA_KEY, IMAGE_TYPE
 from esphome.const import (
     CONF_BRIGHTNESS,
     CONF_FILE,
@@ -483,7 +483,15 @@ async def to_code(config):
             yaml_string += f"\"{conf[CONF_ID]}\","
 
             dither = Image.Dither.NONE
-            transparency = CONF_ALPHA_CHANNEL
+            # Use CHROMA_KEY instead of ALPHA_CHANNEL: on ESPHome 2026.4.0 the
+            # appended-alpha layout is incompatible with Animation frame indexing
+            # (Animation::update_data_start_ advances by w*h*2 per frame, ignoring
+            # the alpha block). Chroma-key stores the transparent-pixel marker
+            # inline (0x0020), so each frame is exactly w*h*2 bytes and the C++
+            # Animation class can index into it correctly on every ESPHome
+            # version. 8x8 pixel-art icons use binary transparency anyway —
+            # fixes issue #331.
+            transparency = CONF_CHROMA_KEY
             invert_alpha = False
 
             total_rows = height * frames
@@ -494,6 +502,12 @@ async def to_code(config):
                 dither,
                 invert_alpha,
             )
+            # ESPHome 2026.4.0 flipped the default RGB565 byte order to little-
+            # endian, but the C++ Image::get_rgb565_pixel_ decoder still reads
+            # big-endian. set_big_endian exists on every ESPHome release that
+            # supports EHMTXv2; no-op on <2026.4.0 where BE was already default.
+            if hasattr(encoder, "set_big_endian"):
+                encoder.set_big_endian(True)
             for frame_index in range(frames):
                 image.seek(frame_index)
                 pixels = encoder.convert(image.resize((width, height)), path).getdata()
