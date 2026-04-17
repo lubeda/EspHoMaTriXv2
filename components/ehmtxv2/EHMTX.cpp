@@ -923,7 +923,7 @@ namespace esphome::ehmtx
 
     for (uint8_t i = 0; i < this->icon_count; i++)
     {
-      if (strcmp(this->icons[i]->name.c_str(), name.c_str()) == 0)
+      if (this->icons[i]->name == name)
       {
         ESP_LOGD(TAG, "icon: %s found id: %d", name.c_str(), i);
         return i;
@@ -938,7 +938,7 @@ namespace esphome::ehmtx
   {
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
-      if (strcmp(this->queue[i]->icon_name.c_str(), name.c_str()) == 0)
+      if (this->queue[i]->icon_name == name)
       {
         ESP_LOGD(TAG, "find icon in queue: icon: %s at position %d", name.c_str(), i);
         return i;
@@ -1250,7 +1250,7 @@ namespace esphome::ehmtx
 #endif
             (mode == MODE_PROGNOSIS_SCREEN))
         {
-          if (strcmp(this->queue[i]->icon_name.c_str(), icon_name.c_str()) != 0)
+          if (this->queue[i]->icon_name != icon_name)
           {
             force = false;
           }
@@ -1941,7 +1941,7 @@ namespace esphome::ehmtx
               force = false;
             }
           }
-          else if (strcmp(this->queue[i]->icon_name.c_str(), id.c_str()) != 0)
+          else if (this->queue[i]->icon_name != id)
           {
             force = false;
           }
@@ -2728,7 +2728,7 @@ namespace esphome::ehmtx
   {
     for (size_t i = 0; i < MAXQUEUE; i++)
     {
-      if (this->queue[i]->mode == mode && strcmp(this->queue[i]->icon_name.c_str(), name.c_str()) == 0)
+      if (this->queue[i]->mode == mode && this->queue[i]->icon_name == name)
       {
         ESP_LOGD(TAG, "find screen: found by mode %d icon %s", i, name.c_str());
         return this->queue[i];
