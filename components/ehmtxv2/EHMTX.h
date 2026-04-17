@@ -264,13 +264,13 @@ namespace esphome::ehmtx
     void remove_expired_queue_element();
     uint8_t find_oldest_queue_element();
     uint8_t queue_count();
-    uint8_t find_icon_in_queue(std::string);
+    uint8_t find_icon_in_queue(const std::string &name);
     void force_screen(std::string name, int32_t mode = MODE_ICON_SCREEN);
     void add_icon(EHMTX_Icon *icon);
     bool show_display = false;
     bool night_mode = false;
     bool weekday_accent = false;
-    uint8_t find_icon(std::string name);
+    uint8_t find_icon(const std::string &name);
     uint8_t find_last_clock();
     bool string_has_ending(std::string const &fullString, std::string const &ending);
     void draw_day_of_week(int32_t ypos = 0, bool small = false);

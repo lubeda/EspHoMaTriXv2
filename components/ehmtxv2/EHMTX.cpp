@@ -904,7 +904,7 @@ namespace esphome::ehmtx
   }
 #endif
 
-  uint8_t EHMTX::find_icon(std::string name)
+  uint8_t EHMTX::find_icon(const std::string &name)
   {
     if (name == "blank")
     {
@@ -934,7 +934,7 @@ namespace esphome::ehmtx
     return MAXICONS;
   }
 
-  uint8_t EHMTX::find_icon_in_queue(std::string name)
+  uint8_t EHMTX::find_icon_in_queue(const std::string &name)
   {
     for (uint8_t i = 0; i < MAXQUEUE; i++)
     {
