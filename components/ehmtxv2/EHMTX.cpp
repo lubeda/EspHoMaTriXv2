@@ -535,7 +535,7 @@ namespace esphome::ehmtx
       return;
     }
 
-    if (this->boot_logo == NULL)
+    if (this->boot_logo == nullptr)
     {
     #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_1
       this->boot_logo = new Color[256];
@@ -589,7 +589,7 @@ namespace esphome::ehmtx
 #endif
 
 #ifdef EHMTXv2_ADV_BITMAP
-    if (screen->bitmap == NULL)
+    if (screen->bitmap == nullptr)
     {
       screen->bitmap = new Color[256];
     }
@@ -674,7 +674,7 @@ namespace esphome::ehmtx
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     }
 
-    if (screen->sbitmap == NULL)
+    if (screen->sbitmap == nullptr)
     {
       screen->sbitmap = new Color[64];
     }
@@ -741,7 +741,7 @@ namespace esphome::ehmtx
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     }
 
-    if (screen->sbitmap == NULL)
+    if (screen->sbitmap == nullptr)
     {
       screen->sbitmap = new Color[64];
     }
@@ -831,7 +831,7 @@ namespace esphome::ehmtx
     }
 
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_BITMAP_STACK_SCREEN);
-    if (screen->sbitmap == NULL)
+    if (screen->sbitmap == nullptr)
     {
       screen->sbitmap = new Color[64];
     }
@@ -1449,7 +1449,7 @@ namespace esphome::ehmtx
             }
           }
           this->queue[i]->mode = MODE_EMPTY;
-          if (this->queue[i]->sbitmap != NULL)
+          if (this->queue[i]->sbitmap != nullptr)
           {
             delete[] this->queue[i]->sbitmap;
             this->queue[i]->sbitmap = nullptr;
@@ -1529,7 +1529,7 @@ namespace esphome::ehmtx
     #endif
 
     // todo nur bei animationen
-    if (this->queue[this->screen_pointer]->mode == MODE_BITMAP_STACK_SCREEN && this->queue[this->screen_pointer]->sbitmap != NULL)
+    if (this->queue[this->screen_pointer]->mode == MODE_BITMAP_STACK_SCREEN && this->queue[this->screen_pointer]->sbitmap != nullptr)
     {
       for (uint8_t i = 0; i < this->queue[this->screen_pointer]->icon; i++)
       {
@@ -1712,7 +1712,7 @@ namespace esphome::ehmtx
     {
 #ifdef USE_ESP32
   #ifdef EHMTXv2_ADV_BOOT
-      if (this->boot_logo != NULL)
+      if (this->boot_logo != nullptr)
       {
     #if defined EHMTXv2_ADV_BOOT_MODE_0 || defined EHMTXv2_ADV_BOOT_MODE_2 || defined EHMTXv2_ADV_BOOT_MODE_4 || defined EHMTXv2_ADV_BOOT_MODE_6 || defined EHMTXv2_ADV_BOOT_MODE_7
       #if defined EHMTXv2_ADV_BOOT_MODE_6 || defined EHMTXv2_ADV_BOOT_MODE_7
@@ -1953,13 +1953,13 @@ namespace esphome::ehmtx
           this->queue[i]->mode = MODE_EMPTY;
           this->queue[i]->endtime = 0.0;
           this->queue[i]->last_time = 0.0;
-          if (this->queue[i]->sbitmap != NULL)
+          if (this->queue[i]->sbitmap != nullptr)
           {
             delete[] this->queue[i]->sbitmap;
             this->queue[i]->sbitmap = nullptr;
           }
 #ifdef EHMTXv2_ADV_BITMAP
-          if (this->queue[i]->bitmap != NULL)
+          if (this->queue[i]->bitmap != nullptr)
           {
             delete[] this->queue[i]->bitmap;
             this->queue[i]->bitmap = nullptr;
@@ -2630,7 +2630,7 @@ namespace esphome::ehmtx
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     }
 
-    if (screen->sbitmap == NULL)
+    if (screen->sbitmap == nullptr)
     {
       screen->sbitmap = new Color[64];
     }
@@ -3332,7 +3332,7 @@ namespace esphome::ehmtx
     std::string text_char = "";
     int32_t pos = 0;
 
-    for (int32_t i = 0; i < strlen(text.c_str());)
+    for (int32_t i = 0; i < (int32_t)text.size();)
     {
       text_char = text_char + text[i];
       if (text[i] & 0x80)
@@ -3377,7 +3377,7 @@ namespace esphome::ehmtx
   {
     int32_t count = 0;
   
-    for (int32_t i = 0; i < strlen(text.c_str());)
+    for (int32_t i = 0; i < (int32_t)text.size();)
     {
       if(text[i] & 0x80) 
       {

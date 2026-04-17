@@ -403,7 +403,7 @@ namespace esphome::ehmtx
 
   void EHMTX_queue::update_screen()
   {
-    if (this->mode == MODE_BITMAP_STACK_SCREEN && this->sbitmap != NULL)
+    if (this->mode == MODE_BITMAP_STACK_SCREEN && this->sbitmap != nullptr)
     {
       uint32_t average_frame_duration = 0;
       for (uint8_t i = 0; i < this->icon; i++)
@@ -456,7 +456,7 @@ namespace esphome::ehmtx
       case MODE_BITMAP_SCREEN:
 #ifndef USE_ESP8266
 #ifdef EHMTXv2_ADV_BITMAP
-        if (this->bitmap != NULL)
+        if (this->bitmap != nullptr)
         {
           std::size_t pos = icon_name.find("#");
           if (pos != std::string::npos)
@@ -539,7 +539,7 @@ namespace esphome::ehmtx
 #endif
           this->config_->draw_text(this->text, font, color_, this->xpos() + xoffset, this->ypos() + yoffset);
 #endif
-        if (this->sbitmap != NULL)
+        if (this->sbitmap != nullptr)
         {
           #ifdef EHMTXv2_GAUGE
           if (this->config_->display_gauge)
@@ -963,7 +963,7 @@ namespace esphome::ehmtx
             }
           }
 
-          if (this->sbitmap != NULL)
+          if (this->sbitmap != nullptr)
           {
             for (uint8_t x = 0; x < 24; x++)
             {
@@ -1115,7 +1115,7 @@ namespace esphome::ehmtx
 
       case MODE_BITMAP_STACK_SCREEN:
 #ifndef USE_ESP8266
-        if (this->sbitmap != NULL)
+        if (this->sbitmap != nullptr)
         {
           for (uint8_t i = 0; i < this->icon; i++)
           {
