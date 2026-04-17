@@ -1227,9 +1227,6 @@ namespace esphome::ehmtx
         }
       }
     }
-    else
-    {
-    }
   }
 
   void EHMTX::force_screen(std::string icon_name, int32_t mode)
