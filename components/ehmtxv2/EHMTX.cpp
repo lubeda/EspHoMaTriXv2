@@ -491,19 +491,13 @@ namespace esphome::ehmtx
  */
   std::string get_icon_name(std::string iconname, char delim = '|')
   {
-    std::stringstream stream(iconname);
-    std::string icon;
-    std::vector<std::string> tokens;
-
-    while (std::getline(stream, icon, delim))
+    size_t start = 0;
+    while ((start = iconname.find_first_not_of(delim, start)) != std::string::npos)
     {
-      if (!icon.empty())
-      {
-        tokens.push_back(icon);
-      }
+      size_t end = iconname.find(delim, start);
+      return iconname.substr(start, end - start);
     }
-
-    return (tokens.size() > 0) ? tokens[0] : "";
+    return "";
   }
 
   std::string get_screen_id(std::string iconname, char delim = '|')
