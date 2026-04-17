@@ -26,6 +26,7 @@ Each ESPHome release is packed with new features and surprises (breaking changes
 **Keep ESPHome up to date with the latest official version!**
 
 **Which are:**
+- [Branch 2026.4.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2026.4.0) for ESPHome 2026.4.0-
 - [Branch 2025.12.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.12.0) for ESPHome 2025.12.0- (some internal details)
 - [Branch 2025.10.3](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.10.3) for ESPHome 2025.10.0- (fixed path problem)
 - [Branch 2025.7.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.7.1) for ESPHome 2025.4.0- (some fixes "empty queue")
@@ -49,7 +50,7 @@ external_components:
       #path: EspHoMaTriX/components # e.g. /config/esphome/components
       type: git
       url: https://github.com/lubeda/EspHoMaTriXv2
-      ref: 2025.12.0
+      ref: 2026.4.0
     refresh: 60s 
     components: [ ehmtxv2 ]   
 ```

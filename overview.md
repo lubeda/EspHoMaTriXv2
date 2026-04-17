@@ -23,6 +23,7 @@
 
 | Branch | ESPHome Version |
 |--------|-----------------|
+| 2026.4.0 | 2026.4.0+ |
 | 2025.12.0 | 2025.12.0+ |
 | 2025.10.3 | 2025.10.0+ |
 | 2025.7.1 | 2025.4.0+ |
@@ -43,5 +44,5 @@
 
 ## Documentation
 
-- [Full README](https://github.com/lubeda/EspHoMaTriXv2/blob/2025.12.0/README.md)
+- [Full README](https://github.com/lubeda/EspHoMaTriXv2/blob/2026.4.0/README.md)
 - [Wiki](./wiki)
