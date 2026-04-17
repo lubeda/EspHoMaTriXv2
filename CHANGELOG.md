@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026.4.0
+- @weirded & @andrewjswan fixed transparent animations
+
+## 2025.12.0
+- @andrewjswan INF screentime
+
 
 ## 2025.5.2
 - @DT-art1 Avoid blank screen for 15 seconds after empty queue.
