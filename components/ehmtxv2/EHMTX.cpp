@@ -230,7 +230,7 @@ namespace esphome::ehmtx
     if (size > 0)
     {
       this->lbindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
-      this->display_indicator = this->IntToBits(this->display_indicator, size % 4, 3, 17);;
+      this->display_indicator = this->IntToBits(this->display_indicator, size % 4, 3, 17);
       ESP_LOGD(TAG, "Show indicator (bottom left) size: %d r: %d g: %d b: %d", size % 4, r, g, b);
     }
     else
