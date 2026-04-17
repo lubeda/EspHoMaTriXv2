@@ -1812,7 +1812,6 @@ namespace esphome::ehmtx
 
   void EHMTX::get_status()
   {
-    time_t ts = this->clock->now().timestamp;
     ESP_LOGI(TAG, "status time: %d.%d.%d %02d:%02d", this->clock->now().day_of_month,
              this->clock->now().month, this->clock->now().year,
              this->clock->now().hour, this->clock->now().minute);
@@ -1828,7 +1827,6 @@ namespace esphome::ehmtx
       ESP_LOGI(TAG, "screenpointer at max");
     }
     ESP_LOGI(TAG, "status time format: %s", EHMTXv2_TIME_FORMAT);
-    ESP_LOGI(TAG, "status date format: %s", EHMTXv2_DATE_FORMAT);
     ESP_LOGI(TAG, "status display %s", this->show_display ? ESPHOME_F("on") : ESPHOME_F("off"));
     ESP_LOGI(TAG, "status night mode %s", this->night_mode ? ESPHOME_F("on") : ESPHOME_F("off"));
     ESP_LOGI(TAG, "status weekday accent %s", this->weekday_accent ? ESPHOME_F("on") : ESPHOME_F("off"));
