@@ -574,7 +574,6 @@ namespace esphome::ehmtx
         if (this->config_->clock->now().is_valid()) // valid time
         {
           color_ = (this->mode == MODE_RAINBOW_CLOCK) ? this->config_->rainbow_color : this->text_color;
-          time_t ts = this->config_->clock->now().timestamp;
 #ifdef EHMTXv2_ADV_CLOCK
           if (!this->config_->draw_clock(EHMTXv2_TIME_FORMAT_BIG, font, color_, xoffset + 15, this->ypos() + yoffset))
           {
@@ -613,7 +612,6 @@ namespace esphome::ehmtx
         if (this->config_->clock->now().is_valid())
         {
           color_ = (this->mode == MODE_RAINBOW_DATE) ? this->config_->rainbow_color : this->text_color;
-          time_t ts = this->config_->clock->now().timestamp;
 #ifdef EHMTXv2_ADV_CLOCK
           if (!this->config_->draw_date(EHMTXv2_DATE_FORMAT_BIG, font, color_, xoffset + 15, this->ypos() + yoffset))
           {
@@ -656,7 +654,6 @@ namespace esphome::ehmtx
         if (this->config_->clock->now().is_valid()) // valid time
         {
           color_ = this->text_color;
-          time_t ts = this->config_->clock->now().timestamp;
           uint8_t offset = (this->config_->icon_to_9 == 3) ? 21 : 20;
 
           if (this->mode == MODE_ICON_CLOCK)
