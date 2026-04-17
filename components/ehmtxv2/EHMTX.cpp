@@ -3421,28 +3421,28 @@ namespace esphome::ehmtx
   int32_t EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char *formatting, const char raw_char)
   {
     char temp_buffer[80];
-    sprintf(temp_buffer, formatting, raw_char);
+    snprintf(temp_buffer, sizeof(temp_buffer), formatting, raw_char);
     return GetTextBounds(font, temp_buffer);
   }
 
   int32_t EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char *formatting, const char *raw_text)
   {
     char temp_buffer[80];
-    sprintf(temp_buffer, formatting, raw_text);
+    snprintf(temp_buffer, sizeof(temp_buffer), formatting, raw_text);
     return GetTextBounds(font, temp_buffer);
   }
 
   int32_t EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char *formatting, const int32_t raw_int)
   {
     char temp_buffer[80];
-    sprintf(temp_buffer, formatting, raw_int);
+    snprintf(temp_buffer, sizeof(temp_buffer), formatting, raw_int);
     return GetTextBounds(font, temp_buffer);
   }
 
   int32_t EHMTX::GetTextWidth(esphome::display::BaseFont *font, const char *formatting, const float raw_float)
   {
     char temp_buffer[80];
-    sprintf(temp_buffer, formatting, raw_float);
+    snprintf(temp_buffer, sizeof(temp_buffer), formatting, raw_float);
     return GetTextBounds(font, temp_buffer);
   }
 
