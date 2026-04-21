@@ -44,7 +44,7 @@ namespace esphome::ehmtx
   
   const uint16_t POLLINGINTERVAL = 250;
 
-  static const char *const EHMTX_VERSION = "2026.4.0";
+  static const char *const EHMTX_VERSION = "2026.4.1";
   static const char *const TAG = "EHMTXv2";
   
   enum show_mode : uint8_t
