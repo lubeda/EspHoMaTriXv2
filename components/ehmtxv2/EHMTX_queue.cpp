@@ -284,7 +284,7 @@ namespace esphome::ehmtx
   int32_t EHMTX_queue::xpos(uint8_t item)
   {
     uint8_t width = 32;
-    int32_t result = width - this->config_->scroll_step + item * 9;
+    int32_t result = width - this->config_->scroll_step + item * ICON_STRIDE;
 
     if (this->icon < 5)
     {

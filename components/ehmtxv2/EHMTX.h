@@ -41,6 +41,7 @@ namespace esphome::ehmtx
   const uint8_t CALENDARICON = MAXICONS + 5;
   const uint8_t TEXTSCROLLSTART = 8;
   const uint8_t TEXTSTARTOFFSET = (32 - 8);
+  const uint8_t ICON_STRIDE = TEXTSCROLLSTART + 1; // icon width (8px) + 1px gap
   
   const uint16_t POLLINGINTERVAL = 250;
 

@@ -476,7 +476,7 @@ async def to_code(config):
             if (conf[CONF_FRAMEDURATION] == 0):
                 try:
                     duration = image.info['duration']
-                except:
+                except KeyError:
                     duration = config[CONF_FRAMEINTERVAL]
             else:
                 duration = conf[CONF_FRAMEDURATION]
@@ -608,11 +608,12 @@ async def to_code(config):
     cg.add_define("EHMTXv2_REPLACE_TIME_DATE_FROM",config[CONF_REPLACE_TIME_DATE_FROM])
 
     if config[CONF_REPLACE_TIME_DATE_FROM] and config[CONF_REPLACE_TIME_DATE_TO]:
-        if (len(config[CONF_REPLACE_TIME_DATE_FROM].split())) != (len(config[CONF_REPLACE_TIME_DATE_TO].split())):
+        from_parts = config[CONF_REPLACE_TIME_DATE_FROM].split()
+        if len(from_parts) != len(config[CONF_REPLACE_TIME_DATE_TO].split()):
             logging.warning(f"replace_time_date_from: and replace_time_date_to: do not have matching pairs! (not using replacements)\n\r")
             cg.add(var.set_replace_time_date_active(False))
         else:
-            if (len(config[CONF_REPLACE_TIME_DATE_FROM].split())) > 50:
+            if len(from_parts) > 50:
                 logging.warning(f"replace_time_date_from: and replace_time_date_to: exceeds 30! (not using replacements)\n\r")
                 cg.add(var.set_replace_time_date_active(False))
             else:
