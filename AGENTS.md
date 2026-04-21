@@ -115,19 +115,6 @@ done
 - For unrecoverable errors in setup, consider `ESP_LOGE` and halt execution
 - Validate inputs in public methods (e.g., check for null pointers, valid ranges)
 
-#### Comments
-- Use Doxygen-style comments for public APIs:
-  ```cpp
-  /**
-   * @brief Brief description
-   * 
-   * @param param Description
-   * @return Return value description
-   */
-  ```
-- Avoid obvious comments; explain why, not what
-- Keep comments updated when code changes
-
 ### Python Style (__init__.py)
 
 #### Formatting
