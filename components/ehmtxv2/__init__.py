@@ -448,14 +448,10 @@ async def to_code(config):
             r = list(json.loads(conf[CONF_RGB565ARRAY]))
             if len(r) == 64:
                 image = Image.new("RGB",[8,8])
-                for y in range(0,8):
-                   for x in range(0,8):
-                        image.putpixel((x,y),rgb565_888(r[x+y*8]))
+                image.putdata([rgb565_888(v) for v in r])
             elif len(r) == 256:
                 image = Image.new("RGB",[32,8])
-                for y in range(0,8):
-                    for x in range(0,32):
-                        image.putpixel((x,y),rgb565_888(r[x+y*32]))
+                image.putdata([rgb565_888(v) for v in r])
 
         width, height = image.size
 
