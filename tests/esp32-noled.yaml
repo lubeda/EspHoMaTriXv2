@@ -9,7 +9,7 @@ external_components:
   - source:
       type: local
       path: ../components
-    components: [ ehmtxv2 ]   
+  #  components: [ ehmtxv2 ]   
 
 esphome:
   comment: "M5 from LuBeDa"
@@ -111,12 +111,19 @@ i2c:
      scl: GPIO22
      scan: True
 
+axp192:
+  id: axp
+  address: 0x34
+  update_interval: 60s
+
+
 display:
-  - platform: st7789  
+  - platform: st7789v  
     id: ehmtx_display
-    model: T-DISPLAY
+    model: TTGO_TDISPLAY_135X240
     eightbitcolor: true 
-    bus_mode: single
+    #power_supply: 3.3V
+    #bus_mode: single
     cs_pin: GPIO5
     dc_pin: GPIO23
     reset_pin: GPIO18

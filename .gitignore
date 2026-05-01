@@ -100,3 +100,5 @@ docs/esp_hsv_color.cpp
 components/firmware.bin
 components/firmware.factory.bin
 components/firmware.ota.bin
+components/axp192/*
+tests/.gitignore
