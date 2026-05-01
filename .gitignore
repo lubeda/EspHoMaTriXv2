@@ -80,6 +80,8 @@ esphome.ps1
 ltr*.png
 8x32\ iMAGE.xcf
 svganimtest.html
+.devcontainer/
+
 
 # Miscellaneous
 *.tmp
