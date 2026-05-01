@@ -8,8 +8,7 @@ substitutions:
 external_components:
   - source:
       type: local
-      path: M5StickC/components # e.g. /config/esphome/components
-    refresh: 60s 
+      path: ../components
     components: [ ehmtxv2 ]   
 
 esphome:
@@ -72,39 +71,13 @@ logger:
 api:
   custom_services: true
 
-text_sensor:
-  - platform: homeassistant
-    id: current_icon
-    entity_id: weather.datteln
-    filters:
-      - prepend: "weather_"
-      #- substitute: 
-      #  - "clear-night -> weather_clear_night"
-      #  - "sunny -> weather_sunny" 
-      #  - "rainy -> weather_rainy"
-      #  - "cloudy -> weather_cloudy"
-      #  - "fog-> weather_fog"
-      #  - "lightingrainy -> weather_lightingrainy"
-      #  - "partlycloudy -> weather_partlycloudy"
-      #  - "pouring -> weather_pouring"
-      #  - "snowy -> weather_snowy"
-    on_value:
-      then:
-        - lambda:
-              if (x == "weather_snowy-rainy") {
-                x = "weather_snowy_rainy";
-              }
-              if (x =="weather_clear-night") {
-                x = "weather_clear_night";
-              }
-              id(rgb8x32).icon_clock(x,24,10,false);
 ota:
-  password: !secret ota_password
+  password: "go.home"
   platform: esphome
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+  ssid: LB6490
+  password: "1330972413321581"
   enable_btm: True
   enable_rrm: True
   min_auth_mode: WPA2
@@ -139,32 +112,24 @@ i2c:
      scan: True
 
 display:
-  - platform:  st7789v
+  - platform: st7789  
     id: ehmtx_display
-    model: TTGO TDisplay 135x240
+    model: T-DISPLAY
+    eightbitcolor: true 
+    bus_mode: single
     cs_pin: GPIO5
     dc_pin: GPIO23
     reset_pin: GPIO18
     rotation: 270
-
-i2s_audio:
-  id: bus_i2s
-  i2s_lrclk_pin: G26
-  i2s_bclk_pin: G0
-
-microphone:
-  - platform: i2s_audio
-    i2s_din_pin: GPIO34
-    i2s_audio_id: bus_i2s
-    adc_type: external
-    pdm: true
-    id: micro
-
-remote_transmitter:
-  - pin:
-      number: GPIO9
-    carrier_duty_percent: 50%
-    id: internal
+    #device_height: 80
+    #device_width: 160
+    #row_start: 0
+    #col_start: 0
+    auto_clear_enabled: true
+    lambda: |-
+      it.line(0, 0, 135,135);
+      id(rgb8x32)->tick();
+      id(rgb8x32)->draw();
 
 time:
   - platform: homeassistant
@@ -172,8 +137,6 @@ time:
 
 ehmtxv2:
   id: rgb8x32
-  icons2html: true
-  iconscache: true
   matrix_component: ehmtx_display
   time_component: ehmtx_time
   time_format: "%H:%M"
@@ -186,7 +149,7 @@ ehmtxv2:
   clock_interval: 80
   flip_flop_clock: true
   blend_steps: 20
-  brightness: 35
+  brightness: 100
   vertical_scroll: false
   multicolor_text: true
   rainbow_shimmer: true
@@ -194,16 +157,25 @@ ehmtxv2:
   default_font_yoffset: 8
   special_font_id: special_font
   special_font_yoffset: 7
-  boot_logo: "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]" 
-  boot_logo_mode: 0
   icons: 
-    !include library/ehmtx_icons.yaml
-  
-  # on_next_screen:
+    - id: error
+      lameid: 40530
+    - id: home_assistant
+      lameid: 47693
+    - id: temperature
+      lameid: 2056
+    - id: lightbulb
+      lameid: 1762
+    - id: music
+      lameid: 45625
+    - id: phone
+      lameid: 1232
+    - id: car
+      lameid: 2819
+    - id: sleep8x32
+      url: https://user-images.githubusercontent.com/16407309/224850723-634c9b2d-55d9-44f2-9f93-765c0485b090.gif 
   on_empty_queue:
     then:
-       - homeassistant.event:
-           event: esphome.ehmtx_empty_queue
-       - lambda: |-  
-           id(rgb8x32).set_infotext_color(20,20,20,20,20,20,false,1);
-           id(rgb8x32).icon_clock("emptycal|day#0",1440,10,false);
+      lambda: |-
+        id(rgb8x32)->clock_screen(10,10);
+        id(rgb8x32)->date_screen(10,5);

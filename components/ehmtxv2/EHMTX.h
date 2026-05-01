@@ -2,7 +2,6 @@
 
 #include "esphome/core/defines.h"
 #include "esphome/core/color.h"
-#include "esphome/components/addressable_light/addressable_light_display.h"
 #ifdef USE_API
 #include "esphome/components/api/custom_api_device.h"
 #endif
@@ -267,7 +266,7 @@ namespace esphome::ehmtx
     uint16_t scroll_step;
 
     EHMTX_queue *queue[MAXQUEUE];
-    addressable_light::AddressableLightDisplay *display;
+    display::Display *display;
     esphome::time::RealTimeClock *clock;
 
     #ifdef USE_GRAPH
@@ -310,7 +309,7 @@ namespace esphome::ehmtx
     void queue_status();
     void skip_screen();
     void hold_screen(int32_t t = 30);
-    void set_display(addressable_light::AddressableLightDisplay *disp);
+    void set_display(display::Display *disp);
     void set_clock_time(uint16_t t = 10);
     void set_show_day_of_week(bool b=true);
     void set_show_seconds(bool b=false);

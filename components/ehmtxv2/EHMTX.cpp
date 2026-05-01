@@ -1696,7 +1696,8 @@ namespace esphome::ehmtx
         if (this->ticks_ <= current_step)
         {
           float br = std::lerp(0, (float)b / 255, (float)this->ticks_ / current_step);
-          this->display->get_light()->set_correction(br, br, br);
+          // TODO
+          // this->display->get_light()->set_correction(br, br, br);
         }
       }
       else
@@ -1706,7 +1707,8 @@ namespace esphome::ehmtx
         {
           this->brightness_ = this->brightness_ + (this->target_brightness_ < this->brightness_ ? -1 : 1);
           float br = (float)this->brightness_ / (float)255;
-          this->display->get_light()->set_correction(br, br, br);
+          // TODO
+          // this->display->get_light()->set_correction(br, br, br);
         }
       }
       this->ticks_++;
@@ -2782,7 +2784,7 @@ namespace esphome::ehmtx
     this->clock_time = t;
   }
 
-  void EHMTX::set_display(addressable_light::AddressableLightDisplay *disp)
+  void EHMTX::set_display(display::Display *disp)
   {
     this->display = disp;
     this->show_display = true;
