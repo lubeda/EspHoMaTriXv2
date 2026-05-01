@@ -81,7 +81,7 @@ ltr*.png
 8x32\ iMAGE.xcf
 svganimtest.html
 .devcontainer/
-
+.claude/
 
 # Miscellaneous
 *.tmp
@@ -94,3 +94,4 @@ svganimtest.html
 secrets.yaml
 /.esphome/
 /secrets.yaml
+
