@@ -937,7 +937,7 @@ namespace esphome::ehmtx
           {
             if (this->progressbar_color == esphome::display::COLOR_OFF)
             {
-              color_ = esphome::light::ESPHSVColor(this->progress * 96 / 100 + (this->progress < 0 ? 96 : 0), 255, 240).to_rgb();
+              color_ = HSVColor(this->progress * 96 / 100 + (this->progress < 0 ? 96 : 0), 255, 240).to_rgb();
             }
             else
             {
@@ -1032,7 +1032,7 @@ namespace esphome::ehmtx
         {
           if (this->progressbar_color == esphome::display::COLOR_OFF)
           {
-            color_ = esphome::light::ESPHSVColor(this->progress * 120 / 100 + (this->progress < 0 ? 120 : 0), 255, 240).to_rgb();
+            color_ = HSVColor(this->progress * 120 / 100 + (this->progress < 0 ? 120 : 0), 255, 240).to_rgb();
           }
           else
           {

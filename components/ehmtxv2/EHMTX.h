@@ -47,7 +47,34 @@ namespace esphome::ehmtx
 
   static const char *const EHMTX_VERSION = "2026.4.1";
   static const char *const TAG = "EHMTXv2";
-  
+
+  struct HSVColor {
+    uint8_t hue;
+    uint8_t saturation;
+    uint8_t value;
+
+    HSVColor() : hue(0), saturation(0), value(0) {}
+    HSVColor(uint8_t h, uint8_t s, uint8_t v) : hue(h), saturation(s), value(v) {}
+
+    esphome::Color to_rgb() const {
+      if (saturation == 0)
+        return esphome::Color(value, value, value);
+      uint8_t region = hue / 43;
+      uint8_t remainder = (hue - region * 43) * 6;
+      uint8_t p = (value * (255 - saturation)) >> 8;
+      uint8_t q = (value * (255 - ((saturation * remainder) >> 8))) >> 8;
+      uint8_t t = (value * (255 - ((saturation * (255 - remainder)) >> 8))) >> 8;
+      switch (region) {
+        case 0:  return esphome::Color(value, t, p);
+        case 1:  return esphome::Color(q, value, p);
+        case 2:  return esphome::Color(p, value, t);
+        case 3:  return esphome::Color(p, q, value);
+        case 4:  return esphome::Color(t, p, value);
+        default: return esphome::Color(value, p, q);
+      }
+    }
+  };
+
   enum show_mode : uint8_t
   {
     MODE_EMPTY = 0,

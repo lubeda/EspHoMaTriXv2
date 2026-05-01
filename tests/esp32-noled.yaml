@@ -1,0 +1,209 @@
+# https://devices.esphome.io/devices/M5Stack-M5StickC-PLUS
+substitutions:
+  devicename: m5stick
+  friendly_name: m5strick
+  board: m5stick-c
+  timing: 16ms
+
+external_components:
+  - source:
+      type: local
+      path: M5StickC/components # e.g. /config/esphome/components
+    refresh: 60s 
+    components: [ ehmtxv2 ]   
+
+esphome:
+  comment: "M5 from LuBeDa"
+  name: $devicename 
+  platformio_options:
+    upload_speed: 115200
+  project:
+    name: "M5 Stick.EHMTXv2"
+    version: "2.0.0"
+
+esp32:
+  board: "$board"
+  framework:
+    type: esp-idf
+    version: recommended
+    
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO37
+      inverted: true
+    name: ${devicename} Button A
+    on_press:
+      then:
+        - light.turn_on: led1
+    on_release:
+      then:
+        - light.turn_off: led1
+
+  - platform: gpio
+    pin:
+      number: GPIO39
+      inverted: true
+    name: ${devicename} Button B
+    on_press:
+      then:
+        - light.turn_on: led1
+    on_release:
+      then:
+        - light.turn_off: led1
+
+
+font:
+  - file: "https://raw.githubusercontent.com/trip5/Matrix-Fonts/refs/heads/main/6-series/MatrixChunky6.ttf"
+    id: special_font
+    glyphs:  |-
+      ! "#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]_abcdefghijklmnopqrstuvwxyzöäüÖÄÜ°{|}€~
+
+  - file: "https://raw.githubusercontent.com/trip5/Matrix-Fonts/refs/heads/main/8-series/MatrixChunky8.ttf"
+    id: default_font
+    glyphs:  |-
+      ! "#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyzöäüÖÄÜ°{|}¨¸€~
+      
+logger:
+  level: DEBUG
+  logs:
+    graph: error
+
+api:
+  custom_services: true
+
+text_sensor:
+  - platform: homeassistant
+    id: current_icon
+    entity_id: weather.datteln
+    filters:
+      - prepend: "weather_"
+      #- substitute: 
+      #  - "clear-night -> weather_clear_night"
+      #  - "sunny -> weather_sunny" 
+      #  - "rainy -> weather_rainy"
+      #  - "cloudy -> weather_cloudy"
+      #  - "fog-> weather_fog"
+      #  - "lightingrainy -> weather_lightingrainy"
+      #  - "partlycloudy -> weather_partlycloudy"
+      #  - "pouring -> weather_pouring"
+      #  - "snowy -> weather_snowy"
+    on_value:
+      then:
+        - lambda:
+              if (x == "weather_snowy-rainy") {
+                x = "weather_snowy_rainy";
+              }
+              if (x =="weather_clear-night") {
+                x = "weather_clear_night";
+              }
+              id(rgb8x32).icon_clock(x,24,10,false);
+ota:
+  password: !secret ota_password
+  platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  enable_btm: True
+  enable_rrm: True
+  min_auth_mode: WPA2
+  fast_connect: True
+
+light:
+  - platform: monochromatic
+    output:  builtin_led
+    name: ${devicename} Led
+    id: led1
+
+color:
+  - id: graph_color
+    red: 100%
+    green: 20%
+    blue: 25%
+
+output:
+  - platform: ledc
+    pin: GPIO10
+    inverted: true
+    id: builtin_led
+
+spi:
+  clk_pin: GPIO13
+  mosi_pin: GPIO15
+
+i2c:
+   - id: bus_a
+     sda: GPIO21
+     scl: GPIO22
+     scan: True
+
+display:
+  - platform:  st7789v
+    id: ehmtx_display
+    model: TTGO TDisplay 135x240
+    cs_pin: GPIO5
+    dc_pin: GPIO23
+    reset_pin: GPIO18
+    rotation: 270
+
+i2s_audio:
+  id: bus_i2s
+  i2s_lrclk_pin: G26
+  i2s_bclk_pin: G0
+
+microphone:
+  - platform: i2s_audio
+    i2s_din_pin: GPIO34
+    i2s_audio_id: bus_i2s
+    adc_type: external
+    pdm: true
+    id: micro
+
+remote_transmitter:
+  - pin:
+      number: GPIO9
+    carrier_duty_percent: 50%
+    id: internal
+
+time:
+  - platform: homeassistant
+    id: ehmtx_time
+
+ehmtxv2:
+  id: rgb8x32
+  icons2html: true
+  iconscache: true
+  matrix_component: ehmtx_display
+  time_component: ehmtx_time
+  time_format: "%H:%M"
+  date_format: "%d.%m."
+  show_seconds: false
+  show_dow: true
+  advanced_clock: true
+  right_center_indicator: false
+  left_center_indicator: false
+  clock_interval: 80
+  flip_flop_clock: true
+  blend_steps: 20
+  brightness: 35
+  vertical_scroll: false
+  multicolor_text: true
+  rainbow_shimmer: true
+  default_font_id: default_font
+  default_font_yoffset: 8
+  special_font_id: special_font
+  special_font_yoffset: 7
+  boot_logo: "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,63519,63519,63519,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63519,0,0,0,0,2016,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,0,63488,0,63488,0,0,0,63519,0,0,0,0,2016,2016,0,0,0,65514,0,65514,0,0,0,31,0,0,0,64512,0,0,64512,0,63488,63488,0,63488,63488,0,0,63519,63519,63519,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,31,31,31,0,0,0,64512,64512,0,0,63488,63488,63488,63488,63488,0,0,63519,0,0,0,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,31,0,0,0,0,64512,64512,0,0,0,63488,63488,63488,0,0,0,63519,63519,63519,63519,0,2016,0,2016,0,65514,0,65514,0,65514,0,0,0,31,31,0,64512,0,0,64512,0,0,0,63488,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]" 
+  boot_logo_mode: 0
+  icons: 
+    !include library/ehmtx_icons.yaml
+  
+  # on_next_screen:
+  on_empty_queue:
+    then:
+       - homeassistant.event:
+           event: esphome.ehmtx_empty_queue
+       - lambda: |-  
+           id(rgb8x32).set_infotext_color(20,20,20,20,20,20,false,1);
+           id(rgb8x32).icon_clock("emptycal|day#0",1440,10,false);
