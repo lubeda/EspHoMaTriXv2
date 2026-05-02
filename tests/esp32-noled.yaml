@@ -132,11 +132,11 @@ display:
     #device_width: 160
     #row_start: 0
     #col_start: 0
-    auto_clear_enabled: true
+    #auto_clear_enabled: true
     lambda: |-
-      it.line(0, 0, 135,135);
       id(rgb8x32)->tick();
       id(rgb8x32)->draw();
+    
 
 time:
   - platform: homeassistant
