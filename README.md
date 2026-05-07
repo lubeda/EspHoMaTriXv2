@@ -1842,6 +1842,8 @@ See these English discussions:
 [Share your projects](https://community.home-assistant.io/t/esphomatrix-a-simple-clock-status-display/425325)
 [ESPHOME](https://community.home-assistant.io/t/a-simple-diy-status-display-with-an-8x32-rgb-led/379051)
 
+[Pixel Clock](https://andrewjswan.github.io/pixel-clock/) by @andrewjswan is a great companion resource with additional information and blueprints for EspHoMaTriXv2.
+
 It was also mentioned in the blog [Building the Open Home](https://building.open-home.io/local-control-is-the-only-way/) and in the Home Assistant [livestream](https://youtu.be/IGnCGDaXR0M?t=6267)
 
 Or in German:
