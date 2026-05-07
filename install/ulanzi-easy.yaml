@@ -77,6 +77,7 @@ esp32:
   board: "$board"
   cpu_frequency: $cpu_frequency
   framework:
+    type: arduino
     advanced:
       ignore_efuse_custom_mac: true
 
