@@ -517,7 +517,7 @@ namespace esphome::ehmtx
             }
             else
             {
-              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]->get_animation());
             }
           }
         }
@@ -648,7 +648,7 @@ namespace esphome::ehmtx
         break;
 
       case MODE_FULL_SCREEN:
-        this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+        this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]->get_animation());
         break;
 
       case MODE_ICON_CLOCK:
@@ -737,9 +737,9 @@ namespace esphome::ehmtx
                   (this->mode == MODE_ICON_DATE && this->config_->icon_to_9 == 2) ||
                   (this->config_->icon_to_9 == 3))
               {
-                this->config_->display->image(1, this->ypos(), this->config_->icons[this->icon]);
+                this->config_->display->image(1, this->ypos(), this->config_->icons[this->icon]->get_animation());
               }
-              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]->get_animation());
             }
           }
           this->config_->draw_day_of_week(this->ypos(), true);
@@ -928,7 +928,7 @@ namespace esphome::ehmtx
             }
             else
             {
-              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]->get_animation());
             }
           }
 
@@ -962,7 +962,7 @@ namespace esphome::ehmtx
             }
             else
             {
-              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+              this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]->get_animation());
             }
           }
 
@@ -992,7 +992,7 @@ namespace esphome::ehmtx
               }
               else
               {
-                this->config_->display->image(2, this->ypos(), this->config_->icons[this->icon]);
+                this->config_->display->image(2, this->ypos(), this->config_->icons[this->icon]->get_animation());
               }
             }
             this->config_->display->line(10, this->ypos(), 10, this->ypos() + 7, esphome::display::COLOR_OFF);
@@ -1014,7 +1014,7 @@ namespace esphome::ehmtx
               }
               else
               {
-                this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]);
+                this->config_->display->image(0, this->ypos(), this->config_->icons[this->icon]->get_animation());
               }
             }
           }
@@ -1094,7 +1094,7 @@ namespace esphome::ehmtx
           }
           else
           {
-            this->config_->display->image(x, this->ypos(), this->config_->icons[this->icon]);
+            this->config_->display->image(x, this->ypos(), this->config_->icons[this->icon]->get_animation());
           }
         }
         break;
@@ -1135,7 +1135,7 @@ namespace esphome::ehmtx
               }
               else
               {
-                this->config_->display->image(this->xpos(i), this->ypos(i), this->config_->icons[this->sbitmap[i].b]);
+                this->config_->display->image(this->xpos(i), this->ypos(i), this->config_->icons[this->sbitmap[i].b]->get_animation());
               }
             }
           }

@@ -45,7 +45,7 @@ namespace esphome::ehmtx
   
   const uint16_t POLLINGINTERVAL = 250;
 
-  static const char *const EHMTX_VERSION = "2026.4.1";
+  static const char *const EHMTX_VERSION = "2026.7.1";
   static const char *const TAG = "EHMTXv2";
   
   enum show_mode : uint8_t
@@ -93,9 +93,9 @@ namespace esphome::ehmtx
   class EHMTXNightModeTrigger;
 
 #if defined(USE_API)
-  class EHMTX : public PollingComponent, public api::CustomAPIDevice
+  class EHMTX final : public PollingComponent, public api::CustomAPIDevice
 #else
-  class EHMTX : public PollingComponent
+  class EHMTX final : public PollingComponent
 #endif
   {
   protected:
@@ -584,14 +584,18 @@ namespace esphome::ehmtx
  * @brief Class for icon handling and type/animation control
  * 
  */
-  class EHMTX_Icon : public animation::Animation
-  {
+  class EHMTX_Icon {
   protected:
   /**
    * @brief for pinppong display of animations
    * 
    */
     bool counting_up;
+
+  /**
+   * @brief Nested object of the original ESPHome animation
+   */
+    esphome::animation::Animation *animation_{nullptr};
 
   public:
   /**
@@ -608,6 +612,13 @@ namespace esphome::ehmtx
    * @param transparency
    */
     EHMTX_Icon(const uint8_t *data_start, int32_t width, int32_t height, uint32_t animation_frame_count, esphome::image::ImageType type, std::string icon_name, bool revers, uint16_t frame_duration, esphome::image::Transparency transparency);
+
+    // Destructor to free memory
+    ~EHMTX_Icon() {
+      if (this->animation_ != nullptr)
+        delete this->animation_;
+    }
+
 #ifdef USE_ESP32
     PROGMEM std::string name;
 #endif
@@ -617,5 +628,12 @@ namespace esphome::ehmtx
     uint16_t frame_duration;
     void next_frame();
     bool reverse;
+
+  /**
+   * @brief Getter method to retrieve the original animation object
+   */
+    esphome::animation::Animation* get_animation() {
+      return this->animation_;
+    }
   };
 }  // namespace esphome::ehmtx
