@@ -92,9 +92,9 @@ namespace esphome::ehmtx
   class EHMTXNightModeTrigger;
 
 #if defined(USE_API)
-  class EHMTX : public PollingComponent, public api::CustomAPIDevice
+  class EHMTX final : public PollingComponent, public api::CustomAPIDevice
 #else
-  class EHMTX : public PollingComponent
+  class EHMTX final : public PollingComponent
 #endif
   {
   protected:
