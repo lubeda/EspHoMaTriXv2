@@ -112,7 +112,7 @@ namespace esphome::ehmtx
     {
       this->alarm_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
       this->display_indicator = this->IntToBits(this->display_indicator, size % 4, 3, 0);
-      ESP_LOGD(TAG, "Show alarm (top right) size: %d color r: %d g: %d b: %d", size % 4, r, g, b);
+      ESP_LOGD(TAG, "Show alarm (top right) size: %d color r: %d g: %d b: %d", (int) (size % 4), (int) r, (int) g, (int) b);
     }
     else
     {
@@ -135,7 +135,7 @@ namespace esphome::ehmtx
     {
       this->rcindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
       this->display_indicator = this->IntToBits(this->display_indicator, size % 5, 4, 3);
-      ESP_LOGD(TAG, "Show indicator (center right) size: %d r: %d g: %d b: %d", size % 5, r, g, b);
+      ESP_LOGD(TAG, "Show indicator (center right) size: %d r: %d g: %d b: %d", (int) (size % 5), (int) r, (int) g, (int) b);
     }
     else
     {
@@ -159,7 +159,7 @@ namespace esphome::ehmtx
     {
       this->rbindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
       this->display_indicator = this->IntToBits(this->display_indicator, size % 4, 3, 7);
-      ESP_LOGD(TAG, "Show indicator (bottom right) size: %d r: %d g: %d b: %d", size % 4, r, g, b);
+      ESP_LOGD(TAG, "Show indicator (bottom right) size: %d r: %d g: %d b: %d", (int) (size % 4), (int) r, (int) g, (int) b);
     }
     else
     {
@@ -183,7 +183,7 @@ namespace esphome::ehmtx
     {
       this->ltindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
       this->display_indicator = this->IntToBits(this->display_indicator, size % 4, 3, 10);
-      ESP_LOGD(TAG, "Show indicator (top left) size: %d r: %d g: %d b: %d", size % 4, r, g, b);
+      ESP_LOGD(TAG, "Show indicator (top left) size: %d r: %d g: %d b: %d", (int) (size % 4), (int) r, (int) g, (int) b);
     }
     else
     {
@@ -207,7 +207,7 @@ namespace esphome::ehmtx
     {
       this->lcindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
       this->display_indicator = this->IntToBits(this->display_indicator, size % 5, 4, 14);
-      ESP_LOGD(TAG, "Show indicator (center left) size: %d r: %d g: %d b: %d", size % 5, r, g, b);
+      ESP_LOGD(TAG, "Show indicator (center left) size: %d r: %d g: %d b: %d", (int) (size % 5), (int) r, (int) g, (int) b);
     }
     else
     {
@@ -231,7 +231,7 @@ namespace esphome::ehmtx
     {
       this->lbindicator_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
       this->display_indicator = this->IntToBits(this->display_indicator, size % 4, 3, 17);
-      ESP_LOGD(TAG, "Show indicator (bottom left) size: %d r: %d g: %d b: %d", size % 4, r, g, b);
+      ESP_LOGD(TAG, "Show indicator (bottom left) size: %d r: %d g: %d b: %d", (int) (size % 4), (int) r, (int) g, (int) b);
     }
     else
     {
@@ -259,7 +259,7 @@ namespace esphome::ehmtx
       this->display_indicator = this->IntToBits(this->display_indicator, size % 11, 8, 20);
       this->icon_indicator_height = height;
       this->icon_indicator_y_pos = pos;
-      ESP_LOGD(TAG, "Show icon_indicator size: %d height: %d r: %d g: %d b: %d pos: %d", size % 11, height, r, g, b, pos);
+      ESP_LOGD(TAG, "Show icon_indicator size: %d height: %d r: %d g: %d b: %d pos: %d", (int) (size % 11), (int) height, (int) r, (int) g, (int) b, (int) pos);
     }
     else
     {
@@ -438,7 +438,7 @@ namespace esphome::ehmtx
   void EHMTX::set_today_color(int32_t r, int32_t g, int32_t b)
   {
     this->today_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
-    ESP_LOGD(TAG, "default today color r: %d g: %d b: %d", r, g, b);
+    ESP_LOGD(TAG, "default today color r: %d g: %d b: %d", (int) r, (int) g, (int) b);
   }
 
 /**
@@ -451,7 +451,7 @@ namespace esphome::ehmtx
   void EHMTX::set_weekday_color(int32_t r, int32_t g, int32_t b)
   {
     this->weekday_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
-    ESP_LOGD(TAG, "default weekday color: %d g: %d b: %d", r, g, b);
+    ESP_LOGD(TAG, "default weekday color: %d g: %d b: %d", (int) r, (int) g, (int) b);
   }
 /**
  * @brief some mode look better with wider icons
@@ -461,7 +461,7 @@ namespace esphome::ehmtx
   void EHMTX::expand_icon_to_9(int32_t mode)
   {
     this->icon_to_9 = mode;
-    ESP_LOGD(TAG, "icon expanded to 9 mode: %d", mode);
+    ESP_LOGD(TAG, "icon expanded to 9 mode: %d", (int) mode);
   }
 /**
  * @brief helper to check trailing chars for behavior selection
@@ -646,7 +646,7 @@ namespace esphome::ehmtx
         t->process("bitmap: " + id, (uint8_t)screen->mode);
       }
     }
-    ESP_LOGD(TAG, "bitmap screen: lifetime: %d screen_time: %d", lifetime, screen_time);
+    ESP_LOGD(TAG, "bitmap screen: lifetime: %d screen_time: %d", (int) lifetime, (int) screen_time);
     screen->status();
   }
 
@@ -705,7 +705,7 @@ namespace esphome::ehmtx
       {
         t->process("bitmap small", (uint8_t)screen->mode);
       }
-      ESP_LOGD(TAG, "small bitmap screen: text: %s lifetime: %d screen_time: %d", text.c_str(), lifetime, screen_time);
+      ESP_LOGD(TAG, "small bitmap screen: text: %s lifetime: %d screen_time: %d", text.c_str(), (int) lifetime, (int) screen_time);
     }
     else
     {
@@ -713,7 +713,7 @@ namespace esphome::ehmtx
       {
         t->process("bitmap small: " + id, (uint8_t)screen->mode);
       }
-      ESP_LOGD(TAG, "small bitmap screen: id: %s text: %s lifetime: %d screen_time: %d", id.c_str(), text.c_str(), lifetime, screen_time);
+      ESP_LOGD(TAG, "small bitmap screen: id: %s text: %s lifetime: %d screen_time: %d", id.c_str(), text.c_str(), (int) lifetime, (int) screen_time);
     }
     screen->status();
   }
@@ -772,7 +772,7 @@ namespace esphome::ehmtx
       {
         t->process("bitmap small", (uint8_t)screen->mode);
       }
-      ESP_LOGD(TAG, "small bitmap rainbow screen: text: %s lifetime: %d screen_time: %d", text.c_str(), lifetime, screen_time);
+      ESP_LOGD(TAG, "small bitmap rainbow screen: text: %s lifetime: %d screen_time: %d", text.c_str(), (int) lifetime, (int) screen_time);
     }
     else
     {
@@ -780,7 +780,7 @@ namespace esphome::ehmtx
       {
         t->process("bitmap small: " + id, (uint8_t)screen->mode);
       }
-      ESP_LOGD(TAG, "small bitmap rainbow screen: id: %s text: %s lifetime: %d screen_time: %d", id.c_str(), text.c_str(), lifetime, screen_time);
+      ESP_LOGD(TAG, "small bitmap rainbow screen: id: %s text: %s lifetime: %d screen_time: %d", id.c_str(), text.c_str(), (int) lifetime, (int) screen_time);
     }
     screen->status();
   }
@@ -880,7 +880,7 @@ namespace esphome::ehmtx
     {
       t->process(screen->text, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "bitmap stack: has %d icons from: [%s] screen_time: %d", screen->icon, icons.c_str(), screen_time);
+    ESP_LOGD(TAG, "bitmap stack: has %d icons from: [%s] screen_time: %d", screen->icon, icons.c_str(), (int) screen_time);
     screen->status();
   }
 #endif
@@ -1176,13 +1176,13 @@ namespace esphome::ehmtx
         this->queue[i]->text_color = this->clock_color;
       }
     }
-    ESP_LOGD(TAG, "default clock color r: %d g: %d b: %d", r, g, b);
+    ESP_LOGD(TAG, "default clock color r: %d g: %d b: %d", (int) r, (int) g, (int) b);
   }
 
   void EHMTX::set_text_color(int32_t r, int32_t g, int32_t b)
   {
     this->text_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
-    ESP_LOGD(TAG, "default text color r: %d g: %d b: %d", r, g, b);
+    ESP_LOGD(TAG, "default text color r: %d g: %d b: %d", (int) r, (int) g, (int) b);
   }
 
   void EHMTX::set_infotext_color(int32_t lr, int32_t lg, int32_t lb, int32_t rr, int32_t rg, int32_t rb, bool df, int32_t y_offset)
@@ -1191,7 +1191,7 @@ namespace esphome::ehmtx
     this->info_rcolor = Color((uint8_t)rr, (uint8_t)rg, (uint8_t)rb);
     this->info_font = df;
     this->info_y_offset = y_offset;
-    ESP_LOGD(TAG, "info text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", lr, lg, lb, rr, rg, rb, y_offset);
+    ESP_LOGD(TAG, "info text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", (int) lr, (int) lg, (int) lb, (int) rr, (int) rg, (int) rb, (int) y_offset);
 #ifdef EHMTXv2_ADV_CLOCK
     this->set_clock_infotext_color(lr, lg, lb, rr, rg, rb, df, y_offset);
     this->set_date_infotext_color(lr, lg, lb, rr, rg, rb, df, y_offset);
@@ -1201,13 +1201,13 @@ namespace esphome::ehmtx
   void EHMTX::set_solid_color(int32_t r, int32_t g, int32_t b)
   {
     this->solid_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
-    ESP_LOGD(TAG, "solid icon color r: %d g: %d b: %d", r, g, b);
+    ESP_LOGD(TAG, "solid icon color r: %d g: %d b: %d", (int) r, (int) g, (int) b);
   }
 
   void EHMTX::set_calendar_color(int32_t r, int32_t g, int32_t b)
   {
     this->calendar_color = Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
-    ESP_LOGD(TAG, "calendar icon color r: %d g: %d b: %d", r, g, b);
+    ESP_LOGD(TAG, "calendar icon color r: %d g: %d b: %d", (int) r, (int) g, (int) b);
   }
 
   void EHMTX::update() // called from polling component
@@ -1268,7 +1268,7 @@ namespace esphome::ehmtx
           {
             this->queue[i]->endtime = this->next_action_time + this->queue[i]->screen_time_;
           }
-          ESP_LOGW(TAG, "force_screen: icon %s in mode %d", icon_name.c_str(), mode);
+          ESP_LOGW(TAG, "force_screen: icon %s in mode %d", icon_name.c_str(), (int) mode);
         }
       }
     }
@@ -1917,7 +1917,7 @@ namespace esphome::ehmtx
         bool force = true;
         std::string ic = get_icon_name(icon_name);
         std::string id = icon_name.find("|") != std::string::npos ? get_screen_id(icon_name) : ic;
-        ESP_LOGD(TAG, "del_screen: %s -> icon: %s id: %s in position: %s mode: %d", icon_name.c_str(), ic.c_str(), id.c_str(), this->queue[i]->icon_name.c_str(), mode);
+        ESP_LOGD(TAG, "del_screen: %s -> icon: %s id: %s in position: %s mode: %d", icon_name.c_str(), ic.c_str(), id.c_str(), this->queue[i]->icon_name.c_str(), (int) mode);
 
         if ((mode == MODE_ICON_SCREEN) ||
             (mode == MODE_ICON_CLOCK) ||
@@ -2006,7 +2006,7 @@ namespace esphome::ehmtx
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "alert screen icon: %d iconname: %s text: %s screen_time: %d", icon, iconname.c_str(), text.c_str(), screen_time);
+    ESP_LOGD(TAG, "alert screen icon: %d iconname: %s text: %s screen_time: %d", icon, iconname.c_str(), text.c_str(), (int) screen_time);
     screen->status();
 
     force_screen(iconname, MODE_ALERT_SCREEN);
@@ -2040,7 +2040,7 @@ namespace esphome::ehmtx
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "alert screen rainbow icon: %d iconname: %s text: %s screen_time: %d", icon, iconname.c_str(), text.c_str(), screen_time);
+    ESP_LOGD(TAG, "alert screen rainbow icon: %d iconname: %s text: %s screen_time: %d", icon, iconname.c_str(), text.c_str(), (int) screen_time);
     screen->status();
 
     force_screen(iconname, MODE_RAINBOW_ALERT_SCREEN);
@@ -2081,7 +2081,7 @@ namespace esphome::ehmtx
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "icon screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
+    ESP_LOGD(TAG, "icon screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), (int) lifetime, (int) screen_time);
     screen->status();
   }
 
@@ -2111,7 +2111,7 @@ namespace esphome::ehmtx
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "text progress screen text: %s value: %s progress %d lifetime: %d screen_time: %d", text.c_str(), value.c_str(), progress, lifetime, screen_time);
+    ESP_LOGD(TAG, "text progress screen text: %s value: %s progress %d lifetime: %d screen_time: %d", text.c_str(), value.c_str(), (int) progress, (int) lifetime, (int) screen_time);
     screen->status();
   }
 
@@ -2151,7 +2151,7 @@ namespace esphome::ehmtx
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "icon progress screen icon: %d iconname: %s text: %s progress %d lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), progress, lifetime, screen_time);
+    ESP_LOGD(TAG, "icon progress screen icon: %d iconname: %s text: %s progress %d lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), (int) progress, (int) lifetime, (int) screen_time);
     screen->status();
   }
 
@@ -2162,7 +2162,7 @@ namespace esphome::ehmtx
     screen->progressbar_color = (r + g + b == C_BLACK) ? esphome::display::COLOR_OFF : Color((uint8_t)r, (uint8_t)g, (uint8_t)b);
     screen->progressbar_back_color = (bg_r + bg_g + bg_b == C_BLACK) ? esphome::display::COLOR_OFF : Color((uint8_t)bg_r, (uint8_t)bg_g, (uint8_t)bg_b);
 
-    ESP_LOGD(TAG, "progress screen mode: %d iconname: %s color progressbar: r: %d g: %d b: %d background: r: %d g: %d b: %d", mode, iconname.c_str(), r, g, b, bg_r, bg_g, bg_b);
+    ESP_LOGD(TAG, "progress screen mode: %d iconname: %s color progressbar: r: %d g: %d b: %d background: r: %d g: %d b: %d", (int) mode, iconname.c_str(), (int) r, (int) g, (int) b, (int) bg_r, (int) bg_g, (int) bg_b);
     screen->status();
   }
 
@@ -2203,7 +2203,7 @@ namespace esphome::ehmtx
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "icon clock icon: %d iconname: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), lifetime, screen_time);
+    ESP_LOGD(TAG, "icon clock icon: %d iconname: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), (int) lifetime, (int) screen_time);
     screen->status();
   }
 
@@ -2244,7 +2244,7 @@ namespace esphome::ehmtx
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "icon date icon: %d iconname: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), lifetime, screen_time);
+    ESP_LOGD(TAG, "icon date icon: %d iconname: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), (int) lifetime, (int) screen_time);
     screen->status();
   }
 
@@ -2282,7 +2282,7 @@ namespace esphome::ehmtx
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "rainbow icon screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
+    ESP_LOGD(TAG, "rainbow icon screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), (int) lifetime, (int) screen_time);
     screen->status();
   }
 
@@ -2290,7 +2290,7 @@ namespace esphome::ehmtx
   {
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_RAINBOW_CLOCK);
 
-    ESP_LOGD(TAG, "rainbow_clock_screen lifetime: %d screen_time: %d", lifetime, screen_time);
+    ESP_LOGD(TAG, "rainbow_clock_screen lifetime: %d screen_time: %d", (int) lifetime, (int) screen_time);
     screen->mode = MODE_RAINBOW_CLOCK;
     screen->default_font = default_font;
     if (EHMTXv2_CLOCK_INTERVAL == 0 || (EHMTXv2_CLOCK_INTERVAL * 1000.0 > screen_time * 1000.0))
@@ -2315,7 +2315,7 @@ namespace esphome::ehmtx
 
   void EHMTX::rainbow_date_screen(int32_t lifetime, int32_t screen_time, bool default_font)
   {
-    ESP_LOGD(TAG, "rainbow_date_screen lifetime: %d screen_time: %d", lifetime, screen_time);
+    ESP_LOGD(TAG, "rainbow_date_screen lifetime: %d screen_time: %d", (int) lifetime, (int) screen_time);
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_RAINBOW_DATE);
 
     screen->mode = MODE_RAINBOW_DATE;
@@ -2382,7 +2382,7 @@ namespace esphome::ehmtx
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     }
-    ESP_LOGD(TAG, "text screen: text: %s screen_time: %d", text.c_str(), screen_time);
+    ESP_LOGD(TAG, "text screen: text: %s screen_time: %d", text.c_str(), (int) screen_time);
     screen->status();
   }
 
@@ -2398,7 +2398,7 @@ namespace esphome::ehmtx
     } else {
       screen->endtime = this->get_tick() + (lifetime > 0 ? lifetime * 60000.0 : screen->screen_time_);
     }
-    ESP_LOGD(TAG, "rainbow text screen: text: %s screen_time: %d", text.c_str(), screen_time);
+    ESP_LOGD(TAG, "rainbow text screen: text: %s screen_time: %d", text.c_str(), (int) screen_time);
     screen->status();
   }
 
@@ -2412,7 +2412,7 @@ namespace esphome::ehmtx
     screen->mode = MODE_ALERT_TEXT_SCREEN;
     screen->calc_scroll_time(text, screen_time);
     screen->endtime = this->get_tick() + screen->screen_time_;
-    ESP_LOGD(TAG, "alert text screen: text: %s screen_time: %d", text.c_str(), screen_time);
+    ESP_LOGD(TAG, "alert text screen: text: %s screen_time: %d", text.c_str(), (int) screen_time);
     screen->status();
 
     force_screen("", MODE_ALERT_TEXT_SCREEN);
@@ -2438,7 +2438,7 @@ namespace esphome::ehmtx
     {
       t->process("Fire", (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "fire screen: lifetime: %d screen_time:%d ", lifetime, screen_time);
+    ESP_LOGD(TAG, "fire screen: lifetime: %d screen_time:%d ", (int) lifetime, (int) screen_time);
     screen->status();
   }
 #endif
@@ -2475,7 +2475,7 @@ namespace esphome::ehmtx
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "full screen: icon: %d iconname: %s lifetime: %d screen_time:%d ", icon, iconname.c_str(), lifetime, screen_time);
+    ESP_LOGD(TAG, "full screen: icon: %d iconname: %s lifetime: %d screen_time:%d ", icon, iconname.c_str(), (int) lifetime, (int) screen_time);
     screen->status();
   }
 
@@ -2483,7 +2483,7 @@ namespace esphome::ehmtx
   {
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_CLOCK);
     screen->text_color = Color(r, g, b);
-    ESP_LOGD(TAG, "clock_screen_color lifetime: %d screen_time: %d red: %d green: %d blue: %d", lifetime, screen_time, r, g, b);
+    ESP_LOGD(TAG, "clock_screen_color lifetime: %d screen_time: %d red: %d green: %d blue: %d", (int) lifetime, (int) screen_time, (int) r, (int) g, (int) b);
     screen->mode = MODE_CLOCK;
     screen->default_font = default_font;
     screen->screen_time_ = screen_time * 1000.0;
@@ -2501,7 +2501,7 @@ namespace esphome::ehmtx
 
   void EHMTX::date_screen(int32_t lifetime, int32_t screen_time, bool default_font, int32_t r, int32_t g, int32_t b)
   {
-    ESP_LOGD(TAG, "date_screen lifetime: %d screen_time: %d red: %d green: %d blue: %d", lifetime, screen_time, r, g, b);
+    ESP_LOGD(TAG, "date_screen lifetime: %d screen_time: %d red: %d green: %d blue: %d", (int) lifetime, (int) screen_time, (int) r, (int) g, (int) b);
     EHMTX_queue *screen = this->find_free_queue_element();
 
     screen->text_color = Color(r, g, b);
@@ -2555,7 +2555,7 @@ namespace esphome::ehmtx
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "icon text screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
+    ESP_LOGD(TAG, "icon text screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), (int) lifetime, (int) screen_time);
     screen->status();
   }
 
@@ -2592,7 +2592,7 @@ namespace esphome::ehmtx
     {
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "rainbow icon text screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), lifetime, screen_time);
+    ESP_LOGD(TAG, "rainbow icon text screen icon: %d iconname: %s text: %s lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), (int) lifetime, (int) screen_time);
     screen->status();
   }
 
@@ -2680,7 +2680,7 @@ namespace esphome::ehmtx
       t->process(screen->icon_name, (uint8_t)screen->mode);
     }
     ESP_LOGD(TAG, "icon prognosis screen prognosis: %s", prognosis.c_str());
-    ESP_LOGD(TAG, "icon prognosis screen icon: %d iconname: %s text: %s prognosis: %d lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), static_cast<uint8_t>(i / 3), lifetime, screen_time);
+    ESP_LOGD(TAG, "icon prognosis screen icon: %d iconname: %s text: %s prognosis: %d lifetime: %d screen_time: %d", icon, iconname.c_str(), text.c_str(), static_cast<uint8_t>(i / 3), (int) lifetime, (int) screen_time);
     screen->status();
   }
 
@@ -2758,7 +2758,7 @@ namespace esphome::ehmtx
     {
       this->target_brightness_ = value;
       float br = (float)value / (float)255;
-      ESP_LOGI(TAG, "set_brightness %d => %.2f %%", value, 100 * br);
+      ESP_LOGI(TAG, "set_brightness %d => %.2f %%", (int) value, 100 * br);
     }
   }
 
@@ -2800,7 +2800,7 @@ namespace esphome::ehmtx
 
   void EHMTX::graph_screen(int32_t lifetime, int32_t screen_time)
   {
-    ESP_LOGD(TAG, "graph screen: lifetime: %d screen_time: %d", lifetime, screen_time);
+    ESP_LOGD(TAG, "graph screen: lifetime: %d screen_time: %d", (int) lifetime, (int) screen_time);
 
     EHMTX_queue *screen = this->find_mode_queue_element(MODE_GRAPH_SCREEN);
 
@@ -2865,7 +2865,7 @@ namespace esphome::ehmtx
     {
       t->process("graph", (uint8_t)screen->mode);
     }
-    ESP_LOGD(TAG, "graph screen with icon: icon: %d iconname: %s lifetime: %d screen_time:%d ", icon, iconname.c_str(), lifetime, screen_time);
+    ESP_LOGD(TAG, "graph screen with icon: icon: %d iconname: %s lifetime: %d screen_time:%d ", icon, iconname.c_str(), (int) lifetime, (int) screen_time);
     screen->status();
   }
 
@@ -2942,7 +2942,7 @@ namespace esphome::ehmtx
     this->info_clock_rcolor = Color((uint8_t)rr, (uint8_t)rg, (uint8_t)rb);
     this->info_clock_font = df;
     this->info_clock_y_offset = y_offset;
-    ESP_LOGD(TAG, "info clock text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", lr, lg, lb, rr, rg, rb, y_offset);
+    ESP_LOGD(TAG, "info clock text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", (int) lr, (int) lg, (int) lb, (int) rr, (int) rg, (int) rb, (int) y_offset);
   }
 
   void EHMTX::set_date_infotext_color(int32_t lr, int32_t lg, int32_t lb, int32_t rr, int32_t rg, int32_t rb, bool df, int32_t y_offset)
@@ -2951,7 +2951,7 @@ namespace esphome::ehmtx
     this->info_date_rcolor = Color((uint8_t)rr, (uint8_t)rg, (uint8_t)rb);
     this->info_date_font = df;
     this->info_date_y_offset = y_offset;
-    ESP_LOGD(TAG, "info date text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", lr, lg, lb, rr, rg, rb, y_offset);
+    ESP_LOGD(TAG, "info date text color left: r: %d g: %d b: %d right: r: %d g: %d b: %d y_offset %d", (int) lr, (int) lg, (int) lb, (int) rr, (int) rg, (int) rb, (int) y_offset);
   }
 
   void EHMTX::set_adv_clock_color(int32_t hr, int32_t hg, int32_t hb, int32_t mr, int32_t mg, int32_t mb, int32_t sr, int32_t sg, int32_t sb)
@@ -2959,7 +2959,7 @@ namespace esphome::ehmtx
     this->hour_color = Color((uint8_t)hr, (uint8_t)hg, (uint8_t)hb);
     this->minutes_color = Color((uint8_t)mr, (uint8_t)mg, (uint8_t)mb);
     this->spacer_color = Color((uint8_t)sr, (uint8_t)sg, (uint8_t)sb);
-    ESP_LOGD(TAG, "advanced clock color hour: r: %d g: %d b: %d minutes: r: %d g: %d b: %d spacer: r: %d g: %d b: %d", hr, hg, hb, mr, mg, mb, sr, sg, sb);
+    ESP_LOGD(TAG, "advanced clock color hour: r: %d g: %d b: %d minutes: r: %d g: %d b: %d spacer: r: %d g: %d b: %d", (int) hr, (int) hg, (int) hb, (int) mr, (int) mg, (int) mb, (int) sr, (int) sg, (int) sb);
   }
 
   bool EHMTX::draw_clock(std::string format, esphome::display::BaseFont *font, Color color, int32_t xpos, int32_t ypos)
