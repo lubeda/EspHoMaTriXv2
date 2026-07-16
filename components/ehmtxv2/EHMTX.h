@@ -583,14 +583,18 @@ namespace esphome::ehmtx
  * @brief Class for icon handling and type/animation control
  * 
  */
-  class EHMTX_Icon : public animation::Animation
-  {
+  class EHMTX_Icon {
   protected:
   /**
    * @brief for pinppong display of animations
    * 
    */
     bool counting_up;
+
+  /**
+   * @brief Nested object of the original ESPHome animation
+   */
+    esphome::animation::Animation *animation_{nullptr};
 
   public:
   /**
@@ -607,6 +611,13 @@ namespace esphome::ehmtx
    * @param transparency
    */
     EHMTX_Icon(const uint8_t *data_start, int32_t width, int32_t height, uint32_t animation_frame_count, esphome::image::ImageType type, std::string icon_name, bool revers, uint16_t frame_duration, esphome::image::Transparency transparency);
+
+    // Destructor to free memory
+    ~EHMTX_Icon() {
+      if (this->animation_ != nullptr)
+        delete this->animation_;
+    }
+
 #ifdef USE_ESP32
     PROGMEM std::string name;
 #endif
@@ -616,5 +627,12 @@ namespace esphome::ehmtx
     uint16_t frame_duration;
     void next_frame();
     bool reverse;
+
+  /**
+   * @brief Getter method to retrieve the original animation object
+   */
+    esphome::animation::Animation* get_animation() {
+      return this->animation_;
+    }
   };
 }  // namespace esphome::ehmtx
