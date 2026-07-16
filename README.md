@@ -14,6 +14,8 @@
 
 Each ESPHome release is packed with new features and surprises (breaking changes), so it is hard to stay up to date for me. Each user can decide which version of ESPHome he uses. So there is not one combination of ESPHome, ehmtx and yaml that fits all.
 
+Now, since the neopixel library isn't maintaind anymore, there will be a breaking change and maybe the esp8266 will not be supported any more. i will see
+
 ## Documentation
 
 - [Overview](./overview.md)
@@ -26,6 +28,7 @@ Each ESPHome release is packed with new features and surprises (breaking changes
 **Keep ESPHome up to date with the latest official version!**
 
 **Which are:**
+- [Branch 2026.7.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2026.7.1) for ESPHome 2026.7.0-
 - [Branch 2026.4.1](https://github.com/lubeda/EspHoMaTriXv2/tree/2026.4.1) for ESPHome 2026.4.1-
 - [Branch 2025.12.0](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.12.0) for ESPHome 2025.12.0- (some internal details)
 - [Branch 2025.10.3](https://github.com/lubeda/EspHoMaTriXv2/tree/2025.10.3) for ESPHome 2025.10.0- (fixed path problem)
