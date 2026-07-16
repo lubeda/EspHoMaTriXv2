@@ -524,7 +524,7 @@ async def to_code(config):
                 duration,
                 trans_value,
             )
-            cg.add(var.add_icon(RawExpression(f"{str(conf[CONF_ID])}->get_animation()")))
+            cg.add(var.add_icon(RawExpression(str(conf[CONF_ID]))))
 
             html_string += F"<br/>Icon: <b>{conf[CONF_ID]}</b>&nbsp;-&nbsp;({duration} ms):<br/><br/>"
             html_string += f"<div id={conf[CONF_ID]}>"
