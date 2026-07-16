@@ -1536,14 +1536,14 @@ namespace esphome::ehmtx
     {
       for (uint8_t i = 0; i < this->queue[this->screen_pointer]->icon; i++)
       {
-        this->icons[this->queue[this->screen_pointer]->sbitmap[i].b]->set_frame(0);
+        this->icons[this->queue[this->screen_pointer]->sbitmap[i].b]->get_animation()->set_frame(0);
         this->queue[this->screen_pointer]->sbitmap[i] = Color(127, 255, this->queue[this->screen_pointer]->sbitmap[i].b, 5);
         this->queue[this->screen_pointer]->default_font = false;
       }
     }
     else if (this->queue[this->screen_pointer]->icon < this->icon_count)
     {
-      this->icons[this->queue[this->screen_pointer]->icon]->set_frame(0);
+      this->icons[this->queue[this->screen_pointer]->icon]->get_animation()->set_frame(0);
     }
     this->next_action_time = this->queue[this->screen_pointer]->last_time + this->queue[this->screen_pointer]->screen_time_;
     // Todo switch for Triggers
