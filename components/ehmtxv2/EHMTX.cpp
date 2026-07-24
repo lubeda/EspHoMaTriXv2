@@ -1315,14 +1315,53 @@ namespace esphome::ehmtx
     }
     else if (queue_count > 0)
     {
-      hit = 0;
-      ESP_LOGD(TAG, "oldest queue element is first: %d/%d", hit, queue_count);
+      // Fallback: no slot passed the endtime/last_time check above (e.g. all
+      // eligible screens just expired in this tick). Previously this forced
+      // hit = 0, even if slot 0 was MODE_EMPTY or filtered out by night_mode -
+      // that showed up as an "empty" screen. Scan for the first slot that is
+      // actually eligible instead.
+      for (size_t i = 0; i < MAXQUEUE; i++)
+      {
+        if (this->queue[i]->mode == MODE_EMPTY)
+        {
+          continue;
+        }
+
+        if (this->night_mode)
+        {
+          bool skip = true;
+          for (auto id : EHMTXv2_CONF_NIGHT_MODE_SCREENS)
+          {
+            if (this->queue[i]->mode == id)
+            {
+              skip = false;
+            }
+          }
+          if (skip)
+          {
+            continue;
+          }
+        }
+
+        hit = i;
+        break;
+      }
+      ESP_LOGD(TAG, "oldest queue element fallback: %d/%d", hit, queue_count);
     }
     else
     {
-        // Queue is empty
+        // Queue is really empty
     }
-    this->queue[hit]->status();
+
+    // hit can still be MAXQUEUE here (queue genuinely empty, or every
+    // remaining slot got filtered out by night_mode). queue[] only has
+    // MAXQUEUE elements (indices 0..MAXQUEUE-1), so queue[MAXQUEUE] is an
+    // out-of-bounds access - this used to run unconditionally below and is
+    // the most likely cause of the sporadic memory corruption / stuck queue.
+    if (hit != MAXQUEUE)
+    {
+      this->queue[hit]->status();
+    }
 
     return hit;
   }
