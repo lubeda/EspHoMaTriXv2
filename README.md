@@ -60,6 +60,10 @@ The base file is configured to show a clock with the day of the month over a cal
 
 ![sample](images/icon_clock.png)
 
+Or use animated icons as you like
+
+![icon clock with animation](images/icon_clock.gif)
+
 Then, you can add screens to a queue and all these screens are displayed one after another.
 
 ![timing](./images/timingv2.png)
