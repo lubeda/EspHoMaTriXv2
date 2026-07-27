@@ -35,7 +35,7 @@ Use the `ref` parameter to select the right version. **But** when there are brea
 
 **EspHoMaTriXv2** is a flexible, highly customizable DIY LED Matrix display, built with a 8×32 RGB LED panel and implemented with [esphome.io](https://esphome.io)
 
-![sample image](./images/sample.png)
+![sample animation](./images/sample1.gif)
 
 You can control it with Home Assistant using service calls or by using lambda with ESPHome.
 
