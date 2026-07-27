@@ -8,6 +8,9 @@
 [![Donate][donation-badge]][donation-url]
 [![Publish wiki](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/wiki.yaml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/wiki.yaml)
 [![Build](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml)
+![GitHub contributors](https://img.shields.io/github/contributors/lubeda/EspHoMaTriXv2)
+![GitHub last commit](https://img.shields.io/github/last-commit/lubeda/EspHoMaTriXv2)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/lubeda/EspHoMaTriXv2)
 
 > [!TIP]
 > If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me 🙏 !
