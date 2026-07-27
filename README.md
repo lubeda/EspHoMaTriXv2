@@ -87,7 +87,7 @@ This is the regular screen, designed to show an icon and text aside.
 
 The example below shows the icon "solar" `icon_name` with the scrolling text `text` "sun is shining" for 10 seconds `screen_time` in a queue with all the other screens in the queue; after 2 minutes of `lifetime` it disappears from the queue. The text color (`r`,`g`,`b`) is specified with RGB values. The display decides when to display this screen depending on the queue. 
 
-![sample](images/icon_screen.png)
+![sample](images/halloween.gif)
 
 Example Home Assistant service call:
 
@@ -95,13 +95,13 @@ Example Home Assistant service call:
 service: esphome.ulanzi_icon_screen
 data:
   default_font: true
-  icon_name: solar
-  text: sun is shining
+  icon_name: pumkin
+  text: Halloween
   lifetime: 2
   screen_time: 10
-  r: 200
-  g: 200
-  b: 200
+  r: 255
+  g: 165
+  b: 0
 ```
 
 ##### Alert icon screen
