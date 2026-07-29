@@ -3,8 +3,6 @@
 [donation-badge]:https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white
 [donation-url]: https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU
 
-![Home Assistant](https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white)
-![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 [![Donate][donation-badge]][donation-url]
 [![Build](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml/badge.svg)](https://github.com/lubeda/EspHoMaTriXv2/actions/workflows/main.yml)
 ![GitHub contributors](https://img.shields.io/github/contributors/lubeda/EspHoMaTriXv2)
