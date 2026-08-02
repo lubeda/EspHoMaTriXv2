@@ -39,6 +39,10 @@ namespace esphome::ehmtx
   const uint8_t BLANKICON = MAXICONS + 1;
   const uint8_t SOLIDICON = MAXICONS + 3;
   const uint8_t CALENDARICON = MAXICONS + 5;
+
+  // blank/solid/calendar are sentinels beyond the icons[] array, they must never index it
+  inline bool is_pseudo_icon(uint8_t icon) { return icon >= MAXICONS; }
+
   const uint8_t TEXTSCROLLSTART = 8;
   const uint8_t TEXTSTARTOFFSET = (32 - 8);
   const uint8_t ICON_STRIDE = TEXTSCROLLSTART + 1; // icon width (8px) + 1px gap

@@ -1575,8 +1575,12 @@ namespace esphome::ehmtx
     {
       for (uint8_t i = 0; i < this->queue[this->screen_pointer]->icon; i++)
       {
-        this->icons[this->queue[this->screen_pointer]->sbitmap[i].b]->get_animation()->set_frame(0);
-        this->queue[this->screen_pointer]->sbitmap[i] = Color(127, 255, this->queue[this->screen_pointer]->sbitmap[i].b, 5);
+        uint8_t icon = this->queue[this->screen_pointer]->sbitmap[i].b;
+        if (!is_pseudo_icon(icon))
+        {
+          this->icons[icon]->get_animation()->set_frame(0);
+        }
+        this->queue[this->screen_pointer]->sbitmap[i] = Color(127, 255, icon, 5);
         this->queue[this->screen_pointer]->default_font = false;
       }
     }
