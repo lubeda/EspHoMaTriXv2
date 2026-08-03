@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026.7.1
+- fixed crash in `bitmap_stack` when the icons list contains the pseudo-icons `blank`, `solid` or `calendar`
+
 ## 2026.4.1
 - @weirded & @andrewjswan fixed transparent animations
 - @clfberlin & @andrewjswan byteorder

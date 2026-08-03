@@ -406,19 +406,32 @@ namespace esphome::ehmtx
     if (this->mode == MODE_BITMAP_STACK_SCREEN && this->sbitmap != NULL)
     {
       uint32_t average_frame_duration = 0;
+      uint8_t animated_count = 0;
       for (uint8_t i = 0; i < this->icon; i++)
       {
-        average_frame_duration += this->config_->icons[this->sbitmap[i].b]->frame_duration;
-      }
-      average_frame_duration = average_frame_duration / this->icon;
-
-      if (millis() - this->config_->last_anim_time >= average_frame_duration)
-      {
-        for (uint8_t i = 0; i < this->icon; i++)
+        if (!is_pseudo_icon(this->sbitmap[i].b))
         {
-          this->config_->icons[this->sbitmap[i].b]->next_frame();
+          average_frame_duration += this->config_->icons[this->sbitmap[i].b]->frame_duration;
+          animated_count++;
         }
-        this->config_->last_anim_time = millis();
+      }
+
+      // a stack of pure pseudo icons (blank/solid/calendar) has nothing to animate
+      if (animated_count > 0)
+      {
+        average_frame_duration = average_frame_duration / animated_count;
+
+        if (millis() - this->config_->last_anim_time >= average_frame_duration)
+        {
+          for (uint8_t i = 0; i < this->icon; i++)
+          {
+            if (!is_pseudo_icon(this->sbitmap[i].b))
+            {
+              this->config_->icons[this->sbitmap[i].b]->next_frame();
+            }
+          }
+          this->config_->last_anim_time = millis();
+        }
       }
     }
     else if (this->icon < this->config_->icon_count)
@@ -1122,20 +1135,21 @@ namespace esphome::ehmtx
         {
           for (uint8_t i = 0; i < this->icon; i++)
           {
-            if (this->sbitmap[i].b != BLANKICON)
+            uint8_t icon = this->sbitmap[i].b;
+            if (icon != BLANKICON)
             {
-              if (this->icon == SOLIDICON)
+              if (icon == SOLIDICON)
               {
                 this->config_->display->filled_rectangle(this->xpos(i), this->ypos(i), 8, 8, this->config_->solid_color);
               }
-              else if (this->icon == CALENDARICON)
+              else if (icon == CALENDARICON)
               {
-                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
-                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(), 8, 2, this->config_->calendar_color);
+                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(i), 8, 8, Color(C_RED, C_GREEN, C_BLUE));
+                this->config_->display->filled_rectangle(this->xpos(i), this->ypos(i), 8, 2, this->config_->calendar_color);
               }
-              else
+              else if (!is_pseudo_icon(icon))
               {
-                this->config_->display->image(this->xpos(i), this->ypos(i), this->config_->icons[this->sbitmap[i].b]->get_animation());
+                this->config_->display->image(this->xpos(i), this->ypos(i), this->config_->icons[icon]->get_animation());
               }
             }
           }
