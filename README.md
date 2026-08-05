@@ -208,7 +208,7 @@ These were only static examples, in your automations you can customize a lot mor
 
 #### Removing a screen from the queue
 
-If you added e.g. an icon screen (`MODE_ICON_SCREEN` which is 5, see [modes](modes)) with icon `power`, just call:
+If you added e.g. an icon screen (`MODE_ICON_SCREEN` which is 5, see [modes](#modes)) with icon `power`, just call:
 
 ```yaml
 service: esphome.ulanzi_del_screen
