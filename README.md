@@ -611,6 +611,23 @@ With `compact_services: true` four bundled dispatcher services are registered **
 
 Unknown selector values are logged as a warning.
 
+**Home Assistant script template:** with `icons2html: true` and `compact_services: true` the generated HTML file (e.g. `ulanzi.html` next to your YAML) starts with a ready-to-use template of four scripts (`<device>_screen`, `<device>_queue`, `<device>_color`, `<device>_device`). They have UI selectors (icon list generated from your icons, color picker) and always pass every required parameter. Copy the block into your `scripts.yaml` (or include it via `script: !include ...`). Only the features enabled in your config (fire screen, indicators) are offered.
+
+```yaml
+action: script.ulanzi_screen
+data: {type: fire, lifetime: 3, screen_time: 30}
+```
+
+```yaml
+action: script.ulanzi_screen
+data: {type: icon, icon: home_assistant, text: "Hallo", color: [0, 255, 0]}
+```
+
+```yaml
+action: script.ulanzi_device
+data: {cmd: brightness, value: 120}
+```
+
 Example:
 
 ```yaml

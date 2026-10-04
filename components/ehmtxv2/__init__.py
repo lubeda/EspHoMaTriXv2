@@ -2,6 +2,7 @@ from argparse import Namespace
 import logging
 import io
 import json
+import html
 import requests
 import os
 
@@ -35,6 +36,140 @@ logging.warning(f"")
 
 def rgb565_svg(x,y, r,g,b,a):
     return f"<rect style=\"fill:rgb({(r << 3) | (r >> 2)},{(g << 2) | (g >> 4)},{(b << 3) | (b >> 2)});fill-opacity:{(a / 255)};\" x=\"{x*10}\" y=\"{y*10}\" width=\"10\" height=\"10\"/>"
+
+def _yaml_list(values, indent):
+    pad = " " * indent
+    return "\n".join(f'{pad}- "{v}"' for v in values)
+
+def ha_scripts_yaml(device, icon_ids, config):
+    """Home Assistant script template for the compact services (shown in icons2html)."""
+    screen_types = ["icon", "icon_text", "text", "alert", "alert_text", "rainbow_icon",
+                    "rainbow_text", "rainbow_alert", "clock", "date", "icon_clock", "icon_date",
+                    "full", "blank", "color", "bitmap", "bitmap_small", "bitmap_stack"]
+    if config[CONF_FIRE]:
+        screen_types.append("fire")
+    device_cmds = ["on", "off", "night_on", "night_off", "brightness", "status", "alarm",
+                   "alarm_off"]
+    for key, name in ((CONF_RBINDICATOR, "rindicator"), (CONF_LBINDICATOR, "lindicator"),
+                      (CONF_RCINDICATOR, "rcindicator"), (CONF_LCINDICATOR, "lcindicator"),
+                      (CONF_LTINDICATOR, "ltindicator")):
+        if config[key]:
+            device_cmds += [name, name + "_off"]
+
+    rgb = ('        r: "{{ (color | default([255, 255, 255]))[0] | int }}"\n'
+           '        g: "{{ (color | default([255, 255, 255]))[1] | int }}"\n'
+           '        b: "{{ (color | default([255, 255, 255]))[2] | int }}"\n')
+    color_field = ('    color:\n'
+                   '      name: Farbe\n'
+                   '      default: [255, 255, 255]\n'
+                   '      selector:\n'
+                   '        color_rgb:\n')
+
+    def select_field(key, name, options, default, custom=False):
+        s = (f'    {key}:\n'
+             f'      name: "{name}"\n'
+             f'      default: "{default}"\n'
+             f'      selector:\n'
+             f'        select:\n')
+        if custom:
+            s += '          custom_value: true\n          sort: true\n'
+        return s + '          options:\n' + _yaml_list(options, 12) + '\n'
+
+    def number_field(key, name, default, lo, hi, unit=None):
+        s = (f'    {key}:\n'
+             f'      name: "{name}"\n'
+             f'      default: {default}\n'
+             f'      selector:\n'
+             f'        number:\n'
+             f'          min: {lo}\n'
+             f'          max: {hi}\n'
+             f'          mode: box\n')
+        if unit:
+            s += f'          unit_of_measurement: {unit}\n'
+        return s
+
+    icon_field = select_field("icon", "Icon", icon_ids, "", custom=True)
+
+    out = "# Home Assistant scripts for the EHMTXv2 compact services (compact_services: true)\n"
+    out += "# Copy into scripts.yaml\n\n"
+
+    out += (f'{device}_screen:\n'
+            f'  alias: "{device}: Screen anzeigen"\n'
+            f'  description: "Zeigt einen Screen über esphome.{device}_screen an."\n'
+            f'  mode: queued\n'
+            f'  fields:\n')
+    out += select_field("type", "Typ", screen_types, "icon")
+    out += icon_field
+    out += ('    text:\n'
+            '      name: Text\n'
+            '      default: ""\n'
+            '      selector:\n'
+            '        text:\n')
+    out += number_field("lifetime", "Lebensdauer", 5, 0, 1440, "min")
+    out += number_field("screen_time", "Anzeigedauer", 10, 1, 3600, "s")
+    out += ('    default_font:\n'
+            '      name: Standardschrift\n'
+            '      default: true\n'
+            '      selector:\n'
+            '        boolean:\n')
+    out += color_field
+    out += (f'  sequence:\n'
+            f'    - action: esphome.{device}_screen\n'
+            f'      data:\n'
+            '        type: "{{ type | default(\'icon\') }}"\n'
+            '        icon: "{{ icon | default(\'\') }}"\n'
+            '        text: "{{ text | default(\'\') }}"\n'
+            '        lifetime: "{{ lifetime | default(5) | int }}"\n'
+            '        screen_time: "{{ screen_time | default(10) | int }}"\n'
+            '        default_font: "{{ default_font | default(true) | bool }}"\n')
+    out += rgb + "\n"
+
+    out += (f'{device}_queue:\n'
+            f'  alias: "{device}: Queue steuern"\n'
+            f'  description: "Screens löschen, nach vorne holen oder anhalten (esphome.{device}_queue)."\n'
+            f'  mode: queued\n'
+            f'  fields:\n')
+    out += select_field("cmd", "Befehl", ["del", "force", "hold"], "del")
+    out += icon_field
+    out += number_field("mode", "Modus", 5, 0, 30)
+    out += number_field("value", "Wert (hold: Sekunden)", 30, 0, 3600, "s")
+    out += (f'  sequence:\n'
+            f'    - action: esphome.{device}_queue\n'
+            f'      data:\n'
+            '        cmd: "{{ cmd | default(\'del\') }}"\n'
+            '        icon: "{{ icon | default(\'\') }}"\n'
+            '        mode: "{{ mode | default(5) | int }}"\n'
+            '        value: "{{ value | default(30) | int }}"\n\n')
+
+    out += (f'{device}_color:\n'
+            f'  alias: "{device}: Farbe setzen"\n'
+            f'  description: "Setzt eine Standardfarbe (esphome.{device}_color)."\n'
+            f'  mode: queued\n'
+            f'  fields:\n')
+    out += select_field("target", "Ziel",
+                        ["clock", "text", "today", "weekday", "solid", "calendar"], "clock")
+    out += color_field
+    out += (f'  sequence:\n'
+            f'    - action: esphome.{device}_color\n'
+            f'      data:\n'
+            '        target: "{{ target | default(\'clock\') }}"\n')
+    out += rgb + "\n"
+
+    out += (f'{device}_device:\n'
+            f'  alias: "{device}: Gerät steuern"\n'
+            f'  description: "Display, Nachtmodus, Helligkeit, Alarm und Indikatoren (esphome.{device}_device)."\n'
+            f'  mode: queued\n'
+            f'  fields:\n')
+    out += select_field("cmd", "Befehl", device_cmds, "on")
+    out += number_field("value", "Wert (Helligkeit / Größe)", 0, 0, 255)
+    out += color_field
+    out += (f'  sequence:\n'
+            f'    - action: esphome.{device}_device\n'
+            f'      data:\n'
+            '        cmd: "{{ cmd | default(\'on\') }}"\n'
+            '        value: "{{ value | default(0) | int }}"\n')
+    out += rgb
+    return out
 
 def rgb565_888(v565):
     b = (((v565)&0x001F) << 3)
@@ -382,13 +517,16 @@ async def to_code(config):
 
     logging.info(f"Preparing icons, this may take some seconds.")
 
-    html_string = F"<html><head><title>{CORE.config_path}</title></head>"
-    html_string += '''\
+    html_head = F"<html><head><title>{CORE.config_path}</title></head>"
+    html_head += '''\
     <style>
     svg { padding-top: 2x; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; }
     body { background-color: black; color: white; }
+    pre { color: #ddd; background-color: #222; padding: 8px; font-family: monospace; }
     </style><body>\
 '''
+    html_string = ""
+    icon_ids = []
 
     cg.add_define("MAXICONS", MAXICONS)
 
@@ -482,6 +620,7 @@ async def to_code(config):
                 duration = conf[CONF_FRAMEDURATION]
 
             yaml_string += F"\"{conf[CONF_ID]}\","
+            icon_ids.append(str(conf[CONF_ID]))
 
             dither = Image.Dither.NONE
             transparency = CONF_CHROMA_KEY
@@ -558,6 +697,17 @@ async def to_code(config):
                 html_string += SVG_END
             html_string += f"</div>"
     html_string += "</body></html>"
+
+    if config[CONF_COMPACT_SERVICES]:
+        scripts = ha_scripts_yaml(CORE.name.replace("-", "_"), sorted(set(icon_ids)), config)
+        html_head += "<h2>Home Assistant Scripts</h2>"
+        html_head += ("<button onclick=\"navigator.clipboard.writeText("
+                      "document.getElementById('ha_scripts').innerText)\">Kopieren</button>")
+        html_head += f"<pre id=\"ha_scripts\">{html.escape(scripts)}</pre><hr/>"
+    else:
+        html_head += ("<p>Set <b>compact_services: true</b> to get a Home Assistant "
+                      "script template here.</p><hr/>")
+    html_string = html_head + html_string
 
     if config[CONF_HTML]:
         try:
