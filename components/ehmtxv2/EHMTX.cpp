@@ -1157,6 +1157,8 @@ namespace esphome::ehmtx
 
     register_service(&EHMTX::icon_prognosis_screen, "icon_prognosis_screen", {"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font"});
     register_service(&EHMTX::icon_prognosis_screen_rgb, "icon_prognosis_screen_rgb", {"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+#else
+    ESP_LOGW(TAG, "API services disabled - no Home Assistant actions registered (set api: custom_services: true)");
 #endif
 
     ESP_LOGD(TAG, "Setup and running!");
@@ -3536,6 +3538,11 @@ namespace esphome::ehmtx
 #endif
 #ifdef EHMTXv2_BLEND_STEPS
     ESP_LOGCONFIG(TAG, "Fade in activated: %d steps", EHMTXv2_BLEND_STEPS);
+#endif
+#if defined(USE_API_SERVICES) || defined(USE_API_USER_DEFINED_ACTIONS)
+    ESP_LOGCONFIG(TAG, "API services: registered");
+#else
+    ESP_LOGCONFIG(TAG, "API services: disabled");
 #endif
     ESP_LOGCONFIG(TAG, "Weekstart: %s", EHMTXv2_WEEK_START ? ESPHOME_F("Monday") : ESPHOME_F("Sunday"));
     ESP_LOGCONFIG(TAG, "Weekdays: %s Count: %d", EHMTXv2_WEEKDAYTEXT, this->weekday_char_count);
