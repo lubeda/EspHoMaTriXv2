@@ -60,7 +60,7 @@ def ha_scripts_yaml(device, icon_ids, config):
            '        g: "{{ (color | default([255, 255, 255]))[1] | int }}"\n'
            '        b: "{{ (color | default([255, 255, 255]))[2] | int }}"\n')
     color_field = ('    color:\n'
-                   '      name: Farbe\n'
+                   '      name: Color\n'
                    '      default: [255, 255, 255]\n'
                    '      selector:\n'
                    '        color_rgb:\n')
@@ -95,26 +95,26 @@ def ha_scripts_yaml(device, icon_ids, config):
     out += "# Copy into scripts.yaml\n\n"
 
     out += (f'{device}_screen:\n'
-            f'  alias: "{device}: Screen anzeigen"\n'
-            f'  description: "Zeigt einen Screen über esphome.{device}_screen an."\n'
+            f'  alias: "{device}: Show screen"\n'
+            f'  description: "Shows a screen via esphome.{device}_screen."\n'
             f'  mode: queued\n'
             f'  fields:\n')
-    out += select_field("type", "Typ", screen_types, "icon", desc=(
-        "Nicht benötigte Felder werden ignoriert. alert*: ohne Lebensdauer, "
-        "rainbow*: ohne Farbe. Übersicht siehe icons2html-Seite."))
+    out += select_field("type", "Type", screen_types, "icon", desc=(
+        "Unused fields are ignored. alert*: no lifetime, "
+        "rainbow*: no color. See the icons2html page for an overview."))
     out += select_field("icon", "Icon", icon_ids, "", custom=True, desc=(
-        "Icon-Name (icon*, alert, rainbow_icon/alert, full). bitmap: [256 RGB565-Werte], "
-        "bitmap_small: [64 RGB565-Werte], bitmap_stack: icon1,icon2,..."))
+        "Icon name (icon*, alert, rainbow_icon/alert, full). bitmap: [256 RGB565 values], "
+        "bitmap_small: [64 RGB565 values], bitmap_stack: icon1,icon2,..."))
     out += ('    text:\n'
             '      name: Text\n'
-            '      description: "Für icon, icon_text, text, alert*, rainbow*, bitmap_small."\n'
+            '      description: "Used by icon, icon_text, text, alert*, rainbow*, bitmap_small."\n'
             '      default: ""\n'
             '      selector:\n'
             '        text:\n')
-    out += number_field("lifetime", "Lebensdauer", 5, 0, 1440, "min")
-    out += number_field("screen_time", "Anzeigedauer", 10, 1, 3600, "s")
+    out += number_field("lifetime", "Lifetime", 5, 0, 1440, "min")
+    out += number_field("screen_time", "Screen time", 10, 1, 3600, "s")
     out += ('    default_font:\n'
-            '      name: Standardschrift\n'
+            '      name: Default font\n'
             '      default: true\n'
             '      selector:\n'
             '        boolean:\n')
@@ -131,14 +131,14 @@ def ha_scripts_yaml(device, icon_ids, config):
     out += rgb + "\n"
 
     out += (f'{device}_queue:\n'
-            f'  alias: "{device}: Queue steuern"\n'
-            f'  description: "Screens löschen, nach vorne holen oder anhalten (esphome.{device}_queue)."\n'
+            f'  alias: "{device}: Control queue"\n'
+            f'  description: "Delete, force or hold screens (esphome.{device}_queue)."\n'
             f'  mode: queued\n'
             f'  fields:\n')
-    out += select_field("cmd", "Befehl", ["del", "force", "hold"], "del")
+    out += select_field("cmd", "Command", ["del", "force", "hold"], "del")
     out += icon_field
-    out += number_field("mode", "Modus", 5, 0, 30)
-    out += number_field("value", "Wert (hold: Sekunden)", 30, 0, 3600, "s")
+    out += number_field("mode", "Mode", 5, 0, 30)
+    out += number_field("value", "Value (hold: seconds)", 30, 0, 3600, "s")
     out += (f'  sequence:\n'
             f'    - action: esphome.{device}_queue\n'
             f'      data:\n'
@@ -148,11 +148,11 @@ def ha_scripts_yaml(device, icon_ids, config):
             '        value: "{{ value | default(30) | int }}"\n\n')
 
     out += (f'{device}_color:\n'
-            f'  alias: "{device}: Farbe setzen"\n'
-            f'  description: "Setzt eine Standardfarbe (esphome.{device}_color)."\n'
+            f'  alias: "{device}: Set color"\n'
+            f'  description: "Sets a default color (esphome.{device}_color)."\n'
             f'  mode: queued\n'
             f'  fields:\n')
-    out += select_field("target", "Ziel",
+    out += select_field("target", "Target",
                         ["clock", "text", "today", "weekday", "solid", "calendar"], "clock")
     out += color_field
     out += (f'  sequence:\n'
@@ -162,12 +162,12 @@ def ha_scripts_yaml(device, icon_ids, config):
     out += rgb + "\n"
 
     out += (f'{device}_device:\n'
-            f'  alias: "{device}: Gerät steuern"\n'
-            f'  description: "Display, Nachtmodus, Helligkeit, Alarm und Indikatoren (esphome.{device}_device)."\n'
+            f'  alias: "{device}: Control device"\n'
+            f'  description: "Display, night mode, brightness, alarm and indicators (esphome.{device}_device)."\n'
             f'  mode: queued\n'
             f'  fields:\n')
-    out += select_field("cmd", "Befehl", device_cmds, "on")
-    out += number_field("value", "Wert (Helligkeit / Größe)", 0, 0, 255)
+    out += select_field("cmd", "Command", device_cmds, "on")
+    out += number_field("value", "Value (brightness / size)", 0, 0, 255)
     out += color_field
     out += (f'  sequence:\n'
             f'    - action: esphome.{device}_device\n'
@@ -181,29 +181,29 @@ def screen_help_html(fire):
     """Help table for the screen script: which field each type uses."""
     I, T, L, S, F, C = "icon", "text", "lifetime", "screen_time", "default_font", "color"
     rows = [
-        ("icon", "Icon + Text", {I: "Icon", T: "Text", L: 1, S: 1, F: 1, C: 1}),
-        ("icon_text", "Icon + Text (Text ab Rand)", {I: "Icon", T: "Text", L: 1, S: 1, F: 1, C: 1}),
-        ("text", "Nur Text", {T: "Text", L: 1, S: 1, F: 1, C: 1}),
-        ("alert", "Sofort anzeigen, Icon + Text", {I: "Icon", T: "Text", S: 1, F: 1, C: 1}),
-        ("alert_text", "Sofort anzeigen, nur Text", {T: "Text", S: 1, F: 1, C: 1}),
-        ("rainbow_icon", "Icon + Regenbogentext", {I: "Icon", T: "Text", L: 1, S: 1, F: 1}),
-        ("rainbow_text", "Regenbogentext", {T: "Text", L: 1, S: 1, F: 1}),
-        ("rainbow_alert", "Sofort, Icon + Regenbogentext", {I: "Icon", T: "Text", S: 1, F: 1}),
-        ("clock", "Uhrzeit", {L: 1, S: 1, F: 1, C: 1}),
-        ("date", "Datum", {L: 1, S: 1, F: 1, C: 1}),
-        ("icon_clock", "Icon + Uhrzeit", {I: "Icon", L: 1, S: 1, F: 1, C: 1}),
-        ("icon_date", "Icon + Datum", {I: "Icon", L: 1, S: 1, F: 1, C: 1}),
-        ("full", "8×32 Vollbild-Icon", {I: "8×32 Icon", L: 1, S: 1}),
-        ("blank", "Leerer Screen", {L: 1, S: 1}),
-        ("color", "Einfarbige Fläche", {L: 1, S: 1, C: 1}),
-        ("bitmap", "8×32 Bitmap", {I: "[256 RGB565-Werte]", L: 1, S: 1}),
-        ("bitmap_small", "8×8 Bitmap + Text", {I: "[64 RGB565-Werte]", T: "Text", L: 1, S: 1, F: 1, C: 1}),
-        ("bitmap_stack", "Mehrere Icons nebeneinander", {I: "icon1,icon2,…", L: 1, S: 1}),
+        ("icon", "Icon + text", {I: "Icon", T: "Text", L: 1, S: 1, F: 1, C: 1}),
+        ("icon_text", "Icon + text (text starts at left edge)", {I: "Icon", T: "Text", L: 1, S: 1, F: 1, C: 1}),
+        ("text", "Text only", {T: "Text", L: 1, S: 1, F: 1, C: 1}),
+        ("alert", "Shown immediately, icon + text", {I: "Icon", T: "Text", S: 1, F: 1, C: 1}),
+        ("alert_text", "Shown immediately, text only", {T: "Text", S: 1, F: 1, C: 1}),
+        ("rainbow_icon", "Icon + rainbow text", {I: "Icon", T: "Text", L: 1, S: 1, F: 1}),
+        ("rainbow_text", "Rainbow text", {T: "Text", L: 1, S: 1, F: 1}),
+        ("rainbow_alert", "Shown immediately, icon + rainbow text", {I: "Icon", T: "Text", S: 1, F: 1}),
+        ("clock", "Clock", {L: 1, S: 1, F: 1, C: 1}),
+        ("date", "Date", {L: 1, S: 1, F: 1, C: 1}),
+        ("icon_clock", "Icon + clock", {I: "Icon", L: 1, S: 1, F: 1, C: 1}),
+        ("icon_date", "Icon + date", {I: "Icon", L: 1, S: 1, F: 1, C: 1}),
+        ("full", "8×32 full-screen icon", {I: "8×32 Icon", L: 1, S: 1}),
+        ("blank", "Blank screen", {L: 1, S: 1}),
+        ("color", "Solid color", {L: 1, S: 1, C: 1}),
+        ("bitmap", "8×32 Bitmap", {I: "[256 RGB565 values]", L: 1, S: 1}),
+        ("bitmap_small", "8×8 Bitmap + Text", {I: "[64 RGB565 values]", T: "Text", L: 1, S: 1, F: 1, C: 1}),
+        ("bitmap_stack", "Several icons side by side", {I: "icon1,icon2,…", L: 1, S: 1}),
     ]
     if fire:
-        rows.append(("fire", "Feuer-Animation", {L: 1, S: 1}))
+        rows.append(("fire", "Fire animation", {L: 1, S: 1}))
     cols = [I, T, L, S, F, C]
-    out = ("<table class=\"help\"><tr><th>type</th><th>Beschreibung</th>"
+    out = ("<table class=\"help\"><tr><th>type</th><th>Description</th>"
            + "".join(f"<th>{c}</th>" for c in cols) + "</tr>")
     for name, desc, used in rows:
         out += f"<tr><td><b>{name}</b></td><td>{html.escape(desc)}</td>"
@@ -213,9 +213,9 @@ def screen_help_html(fire):
             out += f"<td class=\"{'on' if v else 'off'}\">{cell}</td>"
         out += "</tr>"
     out += "</table>"
-    out += ("<p><b>lifetime</b> in Minuten, <b>screen_time</b> in Sekunden. "
-            "Nicht benötigte Felder werden ignoriert. Alert-Typen haben keine lifetime, "
-            "rainbow-Typen keine Farbe.</p>")
+    out += ("<p><b>lifetime</b> in minutes, <b>screen_time</b> in seconds. "
+            "Unused fields are ignored. Alert types have no lifetime, "
+            "rainbow types have no color.</p>")
     return out
 
 def rgb565_888(v565):
@@ -753,11 +753,11 @@ async def to_code(config):
 
     if config[CONF_COMPACT_SERVICES]:
         scripts = ha_scripts_yaml(CORE.name.replace("-", "_"), sorted(set(icon_ids)), config)
-        html_head += "<details><summary>Hilfe: Felder je Screen-Typ (script.*_screen)</summary>"
+        html_head += "<details><summary>Help: fields per screen type (script.*_screen)</summary>"
         html_head += screen_help_html(config[CONF_FIRE]) + "</details>"
         html_head += "<details><summary>Home Assistant Scripts</summary>"
         html_head += ("<button onclick=\"navigator.clipboard.writeText("
-                      "document.getElementById('ha_scripts').innerText)\">Kopieren</button>")
+                      "document.getElementById('ha_scripts').innerText)\">Copy</button>")
         html_head += f"<pre id=\"ha_scripts\">{html.escape(scripts)}</pre></details><hr/>"
     else:
         html_head += ("<p>Set <b>compact_services: true</b> to get a Home Assistant "
