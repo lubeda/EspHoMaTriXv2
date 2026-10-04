@@ -1206,11 +1206,9 @@ namespace esphome::ehmtx
     else if (type == "color")
       this->color_screen(lifetime, screen_time, r, g, b);
     else if (type == "bitmap")
-      this->bitmap_screen(icon, lifetime, screen_time);
-    else if (type == "bitmap_small")
-      this->bitmap_small(icon, text, lifetime, screen_time, default_font, r, g, b);
+      this->bitmap_screen(text, lifetime, screen_time);
     else if (type == "bitmap_stack")
-      this->bitmap_stack(icon, lifetime, screen_time);
+      this->bitmap_stack(text, lifetime, screen_time);
 #ifdef USE_Fireplugin
     else if (type == "fire")
       this->fire_screen(lifetime, screen_time);

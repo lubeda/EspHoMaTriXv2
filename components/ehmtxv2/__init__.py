@@ -41,34 +41,67 @@ def _yaml_list(values, indent):
     pad = " " * indent
     return "\n".join(f'{pad}- "{v}"' for v in values)
 
+def screen_type_rows(fire):
+    """Screen types of the compact screen service and the fields each one uses."""
+    I, T, L, S, F, C = "icon", "text", "lifetime", "screen_time", "default_font", "color"
+    rows = [
+        ("icon", "Icon + text", {I: "Icon", T: "Text", L: 1, S: 1, F: 1, C: 1}),
+        ("icon_text", "Icon + text (text starts at left edge)",
+         {I: "Icon", T: "Text", L: 1, S: 1, F: 1, C: 1}),
+        ("text", "Text only", {T: "Text", L: 1, S: 1, F: 1, C: 1}),
+        ("alert", "Shown immediately, icon + text", {I: "Icon", T: "Text", S: 1, F: 1, C: 1}),
+        ("alert_text", "Shown immediately, text only", {T: "Text", S: 1, F: 1, C: 1}),
+        ("rainbow_icon", "Icon + rainbow text", {I: "Icon", T: "Text", L: 1, S: 1, F: 1}),
+        ("rainbow_text", "Rainbow text", {T: "Text", L: 1, S: 1, F: 1}),
+        ("rainbow_alert", "Shown immediately, icon + rainbow text",
+         {I: "Icon", T: "Text", S: 1, F: 1}),
+        ("clock", "Clock", {L: 1, S: 1, F: 1, C: 1}),
+        ("date", "Date", {L: 1, S: 1, F: 1, C: 1}),
+        ("icon_clock", "Icon + clock", {I: "Icon", L: 1, S: 1, F: 1, C: 1}),
+        ("icon_date", "Icon + date", {I: "Icon", L: 1, S: 1, F: 1, C: 1}),
+        ("full", "8×32 full-screen icon", {I: "8×32 Icon", L: 1, S: 1}),
+        ("blank", "Blank screen", {L: 1, S: 1}),
+        ("color", "Solid color", {L: 1, S: 1, C: 1}),
+        ("bitmap", "8×32 Bitmap", {T: "[256 RGB565 values]", L: 1, S: 1}),
+        ("bitmap_stack", "Several icons side by side", {T: "icon1,icon2,…", L: 1, S: 1}),
+    ]
+    if fire:
+        rows.append(("fire", "Fire animation", {L: 1, S: 1}))
+    return [I, T, L, S, F, C], rows
+
+def _yaml_block(lines, indent):
+    pad = " " * indent
+    return "|\n" + "\n".join(pad + line for line in lines) + "\n"
+
 def ha_scripts_yaml(device, icon_ids, config):
     """Home Assistant script template for the compact services (shown in icons2html)."""
-    screen_types = ["icon", "icon_text", "text", "alert", "alert_text", "rainbow_icon",
-                    "rainbow_text", "rainbow_alert", "clock", "date", "icon_clock", "icon_date",
-                    "full", "blank", "color", "bitmap", "bitmap_small", "bitmap_stack"]
-    if config[CONF_FIRE]:
-        screen_types.append("fire")
+    cols, type_rows = screen_type_rows(config[CONF_FIRE])
+    screen_types = [name for name, _, _ in type_rows]
     device_cmds = ["on", "off", "night_on", "night_off", "brightness", "status", "alarm",
                    "alarm_off"]
+    indicators = []
     for key, name in ((CONF_RBINDICATOR, "rindicator"), (CONF_LBINDICATOR, "lindicator"),
                       (CONF_RCINDICATOR, "rcindicator"), (CONF_LCINDICATOR, "lcindicator"),
                       (CONF_LTINDICATOR, "ltindicator")):
         if config[key]:
             device_cmds += [name, name + "_off"]
+            indicators.append(name)
 
     rgb = ('        r: "{{ (color | default([255, 255, 255]))[0] | int }}"\n'
            '        g: "{{ (color | default([255, 255, 255]))[1] | int }}"\n'
            '        b: "{{ (color | default([255, 255, 255]))[2] | int }}"\n')
-    color_field = ('    color:\n'
-                   '      name: Color\n'
-                   '      default: [255, 255, 255]\n'
-                   '      selector:\n'
-                   '        color_rgb:\n')
 
-    def select_field(key, name, options, default, custom=False, desc=None):
-        s = f'    {key}:\n      name: "{name}"\n'
-        if desc:
-            s += f'      description: "{desc}"\n'
+    def head(key, name, desc):
+        return f'    {key}:\n      name: "{name}"\n      description: "{desc}"\n'
+
+    def color_field(desc):
+        return (head("color", "Color", desc) +
+                '      default: [255, 255, 255]\n'
+                '      selector:\n'
+                '        color_rgb:\n')
+
+    def select_field(key, name, options, default, desc, custom=False):
+        s = head(key, name, desc)
         s += (f'      default: "{default}"\n'
               f'      selector:\n'
               f'        select:\n')
@@ -76,49 +109,61 @@ def ha_scripts_yaml(device, icon_ids, config):
             s += '          custom_value: true\n          sort: true\n'
         return s + '          options:\n' + _yaml_list(options, 12) + '\n'
 
-    def number_field(key, name, default, lo, hi, unit=None):
-        s = (f'    {key}:\n'
-             f'      name: "{name}"\n'
-             f'      default: {default}\n'
-             f'      selector:\n'
-             f'        number:\n'
-             f'          min: {lo}\n'
-             f'          max: {hi}\n'
-             f'          mode: box\n')
+    def number_field(key, name, default, lo, hi, desc, unit=None):
+        s = head(key, name, desc)
+        s += (f'      default: {default}\n'
+              f'      selector:\n'
+              f'        number:\n'
+              f'          min: {lo}\n'
+              f'          max: {hi}\n'
+              f'          mode: box\n')
         if unit:
             s += f'          unit_of_measurement: {unit}\n'
         return s
 
-    icon_field = select_field("icon", "Icon", icon_ids, "", custom=True)
+    def script_head(key, alias, desc_lines):
+        return (f'{device}_{key}:\n'
+                f'  alias: "{device}: {alias}"\n'
+                f'  description: ' + _yaml_block(desc_lines, 4) +
+                f'  mode: queued\n'
+                f'  fields:\n')
 
     out = "# Home Assistant scripts for the EHMTXv2 compact services (compact_services: true)\n"
     out += "# Copy into scripts.yaml\n\n"
 
-    out += (f'{device}_screen:\n'
-            f'  alias: "{device}: Show screen"\n'
-            f'  description: "Shows a screen via esphome.{device}_screen."\n'
-            f'  mode: queued\n'
-            f'  fields:\n')
-    out += select_field("type", "Type", screen_types, "icon", desc=(
-        "Unused fields are ignored. alert*: no lifetime, "
-        "rainbow*: no color. See the icons2html page for an overview."))
-    out += select_field("icon", "Icon", icon_ids, "", custom=True, desc=(
-        "Icon name (icon*, alert, rainbow_icon/alert, full). bitmap: [256 RGB565 values], "
-        "bitmap_small: [64 RGB565 values], bitmap_stack: icon1,icon2,..."))
-    out += ('    text:\n'
-            '      name: Text\n'
-            '      description: "Used by icon, icon_text, text, alert*, rainbow*, bitmap_small."\n'
+    # screen
+    help_lines = [f"Shows a screen via esphome.{device}_screen.",
+                  "Fields used per type (all other fields are ignored):"]
+    for name, desc, used in type_rows:
+        fields = ", ".join(c if used[c] in (1, "Icon", "Text") else f"{c}={used[c]}"
+                           for c in cols if used.get(c))
+        help_lines.append(f"- {name}: {desc} ({fields})")
+    out += script_head("screen", "Show screen", help_lines)
+    out += select_field("type", "Type", screen_types, "icon",
+                        "Kind of screen. See the script description for the fields each type uses.")
+    out += select_field("icon", "Icon", icon_ids, "",
+                        "Single icon name (pseudo icons blank, solid, calendar allowed; "
+                        "icon|screen_id sets a screen id). Used by icon, icon_text, icon_clock, "
+                        "icon_date, alert, rainbow_icon, rainbow_alert and full.", custom=True)
+    out += (head("text", "Text",
+                 "Text to show. For bitmap: JSON list of 256 RGB565 values. "
+                 "For bitmap_stack: comma separated icon names, e.g. home,sun,rain.") +
             '      default: ""\n'
             '      selector:\n'
             '        text:\n')
-    out += number_field("lifetime", "Lifetime", 5, 0, 1440, "min")
-    out += number_field("screen_time", "Screen time", 10, 1, 3600, "s")
-    out += ('    default_font:\n'
-            '      name: Default font\n'
+    out += number_field("lifetime", "Lifetime", 5, 0, 1440,
+                        "Minutes the screen stays in the queue. 0 = removed after it was "
+                        "shown once. Not used by alert types.", "min")
+    out += number_field("screen_time", "Screen time", 10, 1, 3600,
+                        "Seconds the screen is shown each time it comes up. Long texts are "
+                        "shown until they have scrolled through.", "s")
+    out += (head("default_font", "Default font",
+                 "On = default font, off = special font (both set in the ESPHome config).") +
             '      default: true\n'
             '      selector:\n'
             '        boolean:\n')
-    out += color_field
+    out += color_field("Text color, or the fill color for type color. "
+                       "Ignored by rainbow types, full, blank, bitmap, bitmap_stack and fire.")
     out += (f'  sequence:\n'
             f'    - action: esphome.{device}_screen\n'
             f'      data:\n'
@@ -130,15 +175,23 @@ def ha_scripts_yaml(device, icon_ids, config):
             '        default_font: "{{ default_font | default(true) | bool }}"\n')
     out += rgb + "\n"
 
-    out += (f'{device}_queue:\n'
-            f'  alias: "{device}: Control queue"\n'
-            f'  description: "Delete, force or hold screens (esphome.{device}_queue)."\n'
-            f'  mode: queued\n'
-            f'  fields:\n')
-    out += select_field("cmd", "Command", ["del", "force", "hold"], "del")
-    out += icon_field
-    out += number_field("mode", "Mode", 5, 0, 30)
-    out += number_field("value", "Value (hold: seconds)", 30, 0, 3600, "s")
+    # queue
+    out += script_head("queue", "Control queue", [
+        f"Manages the screen queue via esphome.{device}_queue.",
+        "- del: remove the screens of the given mode and icon",
+        "- force: show the screen of the given mode and icon next",
+        "- hold: keep the current screen for value seconds"])
+    out += select_field("cmd", "Command", ["del", "force", "hold"], "del",
+                        "del = remove screen, force = show next, hold = keep current screen.")
+    out += select_field("icon", "Icon", icon_ids, "",
+                        "Icon name (or screen id) for del and force. "
+                        "A trailing * matches by prefix, * alone matches all screens of the mode.", custom=True)
+    out += number_field("mode", "Mode", 5, 0, 30,
+                        "Screen mode for del and force, e.g. 2 = clock, 3 = date, "
+                        "5 = icon screen (default), 6 = text, 13 = color, 15 = icon_clock, "
+                        "16 = alert, 23 = bitmap_stack.")
+    out += number_field("value", "Value", 30, 0, 3600,
+                        "Seconds for hold (0 = 30 s). Ignored by del and force.", "s")
     out += (f'  sequence:\n'
             f'    - action: esphome.{device}_queue\n'
             f'      data:\n'
@@ -147,28 +200,43 @@ def ha_scripts_yaml(device, icon_ids, config):
             '        mode: "{{ mode | default(5) | int }}"\n'
             '        value: "{{ value | default(30) | int }}"\n\n')
 
-    out += (f'{device}_color:\n'
-            f'  alias: "{device}: Set color"\n'
-            f'  description: "Sets a default color (esphome.{device}_color)."\n'
-            f'  mode: queued\n'
-            f'  fields:\n')
+    # color
+    out += script_head("color", "Set color", [
+        f"Sets a default color via esphome.{device}_color.",
+        "- clock: clock and date screens (also icon_clock / icon_date)",
+        "- text: default text color",
+        "- today / weekday: day of week bar, current day and the other days",
+        "- solid: pseudo icon solid",
+        "- calendar: header of the pseudo icon calendar"])
     out += select_field("target", "Target",
-                        ["clock", "text", "today", "weekday", "solid", "calendar"], "clock")
-    out += color_field
+                        ["clock", "text", "today", "weekday", "solid", "calendar"], "clock",
+                        "Which default color to change.")
+    out += color_field("The new color.")
     out += (f'  sequence:\n'
             f'    - action: esphome.{device}_color\n'
             f'      data:\n'
             '        target: "{{ target | default(\'clock\') }}"\n')
     out += rgb + "\n"
 
-    out += (f'{device}_device:\n'
-            f'  alias: "{device}: Control device"\n'
-            f'  description: "Display, night mode, brightness, alarm and indicators (esphome.{device}_device)."\n'
-            f'  mode: queued\n'
-            f'  fields:\n')
-    out += select_field("cmd", "Command", device_cmds, "on")
-    out += number_field("value", "Value (brightness / size)", 0, 0, 255)
-    out += color_field
+    # device
+    device_help = [
+        f"Controls the display via esphome.{device}_device.",
+        "- on / off: display on or off",
+        "- night_on / night_off: night mode",
+        "- brightness: set brightness to value (0-255)",
+        "- status: log the current status",
+        "- alarm: show alarm corner in color, value = size (0 = 2)",
+        "- alarm_off: hide alarm"]
+    if indicators:
+        device_help.append(f"- {' / '.join(indicators)}: show indicator in color, "
+                           "value = size (0 = 3); *_off hides it")
+    out += script_head("device", "Control device", device_help)
+    out += select_field("cmd", "Command", device_cmds, "on",
+                        "What to do. See the script description.")
+    out += number_field("value", "Value", 0, 0, 255,
+                        "brightness: 0-255. alarm / indicators: size in pixels "
+                        "(0 = default). Ignored by the other commands.")
+    out += color_field("Color for alarm and indicators. Ignored by the other commands.")
     out += (f'  sequence:\n'
             f'    - action: esphome.{device}_device\n'
             f'      data:\n'
@@ -179,30 +247,7 @@ def ha_scripts_yaml(device, icon_ids, config):
 
 def screen_help_html(fire):
     """Help table for the screen script: which field each type uses."""
-    I, T, L, S, F, C = "icon", "text", "lifetime", "screen_time", "default_font", "color"
-    rows = [
-        ("icon", "Icon + text", {I: "Icon", T: "Text", L: 1, S: 1, F: 1, C: 1}),
-        ("icon_text", "Icon + text (text starts at left edge)", {I: "Icon", T: "Text", L: 1, S: 1, F: 1, C: 1}),
-        ("text", "Text only", {T: "Text", L: 1, S: 1, F: 1, C: 1}),
-        ("alert", "Shown immediately, icon + text", {I: "Icon", T: "Text", S: 1, F: 1, C: 1}),
-        ("alert_text", "Shown immediately, text only", {T: "Text", S: 1, F: 1, C: 1}),
-        ("rainbow_icon", "Icon + rainbow text", {I: "Icon", T: "Text", L: 1, S: 1, F: 1}),
-        ("rainbow_text", "Rainbow text", {T: "Text", L: 1, S: 1, F: 1}),
-        ("rainbow_alert", "Shown immediately, icon + rainbow text", {I: "Icon", T: "Text", S: 1, F: 1}),
-        ("clock", "Clock", {L: 1, S: 1, F: 1, C: 1}),
-        ("date", "Date", {L: 1, S: 1, F: 1, C: 1}),
-        ("icon_clock", "Icon + clock", {I: "Icon", L: 1, S: 1, F: 1, C: 1}),
-        ("icon_date", "Icon + date", {I: "Icon", L: 1, S: 1, F: 1, C: 1}),
-        ("full", "8×32 full-screen icon", {I: "8×32 Icon", L: 1, S: 1}),
-        ("blank", "Blank screen", {L: 1, S: 1}),
-        ("color", "Solid color", {L: 1, S: 1, C: 1}),
-        ("bitmap", "8×32 Bitmap", {I: "[256 RGB565 values]", L: 1, S: 1}),
-        ("bitmap_small", "8×8 Bitmap + Text", {I: "[64 RGB565 values]", T: "Text", L: 1, S: 1, F: 1, C: 1}),
-        ("bitmap_stack", "Several icons side by side", {I: "icon1,icon2,…", L: 1, S: 1}),
-    ]
-    if fire:
-        rows.append(("fire", "Fire animation", {L: 1, S: 1}))
-    cols = [I, T, L, S, F, C]
+    cols, rows = screen_type_rows(fire)
     out = ("<table class=\"help\"><tr><th>type</th><th>Description</th>"
            + "".join(f"<th>{c}</th>" for c in cols) + "</tr>")
     for name, desc, used in rows:
