@@ -26,6 +26,13 @@ namespace esphome::ehmtx
   static const uint8_t SPARKING = 120U;
 
   /**
+   * Step interval (ms): How often the fire simulation advances.
+   * Higher => slower flames. Rendering still happens every frame.
+   */
+  static const uint32_t FIRE_INTERVAL = 80U;
+  static uint32_t fire_last_step = 0U;
+
+  /**
    * Approximates a 'black body radiation' spectrum for a given 'heat' level.
    * This is useful for animations of 'fire'.
    * Heat is specified as an arbitrary scale from 0 (cool) to 255 (hot).
@@ -1172,62 +1179,71 @@ namespace esphome::ehmtx
       {
         int16_t x = 0;
         int16_t y = 0;
+        bool fire_step = (millis() - fire_last_step) >= FIRE_INTERVAL;
+
+        if (fire_step)
+        {
+          fire_last_step = millis();
+        }
 
         for (x = 0; x < 32; ++x)
         {
-          /* Step 1) Cool down every cell a little bit */
-          for (y = 0; y < 8; ++y)
+          if (fire_step)
           {
-            uint8_t coolDownTemperature = fire_random(0, ((COOLING * 10U) / 8)) + 2U;
-            uint32_t heatPos = x + y * 32;
+            /* Step 1) Cool down every cell a little bit */
+            for (y = 0; y < 8; ++y)
+            {
+              uint8_t coolDownTemperature = fire_random(0, ((COOLING * 10U) / 8)) + 2U;
+              uint32_t heatPos = x + y * 32;
 
-            if (coolDownTemperature >= m_heat[heatPos])
-            {
-              m_heat[heatPos] = 0U;
-            }
-            else
-            {
-              m_heat[heatPos] -= coolDownTemperature;
-            }
-          }
-
-          /* Step 2) Heat from each cell drifts 'up' and diffuses a little bit */
-          for (y = 0; y < (8 - 1U); ++y)
-          {
-            uint16_t diffusHeat = 0U;
-
-            if ((8 - 2U) > y)
-            {
-              diffusHeat += m_heat[x + (y + 1) * 32];
-              diffusHeat += m_heat[x + (y + 1) * 32];
-              diffusHeat += m_heat[x + (y + 2) * 32];
-              diffusHeat /= 3U;
-            }
-            else
-            {
-              diffusHeat += m_heat[x + (y + 0) * 32];
-              diffusHeat += m_heat[x + (y + 0) * 32];
-              diffusHeat += m_heat[x + (y + 1) * 32];
-              diffusHeat /= 3U;
+              if (coolDownTemperature >= m_heat[heatPos])
+              {
+                m_heat[heatPos] = 0U;
+              }
+              else
+              {
+                m_heat[heatPos] -= coolDownTemperature;
+              }
             }
 
-            m_heat[x + y * 32] = diffusHeat;
-          }
-
-          /* Step 3) Randomly ignite new 'sparks' of heat near the bottom */
-          if (fire_random(0, 255) < SPARKING)
-          {
-            uint8_t randValue = fire_random(160, 255);
-            uint32_t heatPos = x + (8 - 1U) * 32;
-            uint16_t heat = m_heat[heatPos] + randValue;
-
-            if (UINT8_MAX < heat)
+            /* Step 2) Heat from each cell drifts 'up' and diffuses a little bit */
+            for (y = 0; y < (8 - 1U); ++y)
             {
-              m_heat[heatPos] = 255U;
+              uint16_t diffusHeat = 0U;
+
+              if ((8 - 2U) > y)
+              {
+                diffusHeat += m_heat[x + (y + 1) * 32];
+                diffusHeat += m_heat[x + (y + 1) * 32];
+                diffusHeat += m_heat[x + (y + 2) * 32];
+                diffusHeat /= 3U;
+              }
+              else
+              {
+                diffusHeat += m_heat[x + (y + 0) * 32];
+                diffusHeat += m_heat[x + (y + 0) * 32];
+                diffusHeat += m_heat[x + (y + 1) * 32];
+                diffusHeat /= 3U;
+              }
+
+              m_heat[x + y * 32] = diffusHeat;
             }
-            else
+
+            /* Step 3) Randomly ignite new 'sparks' of heat near the bottom */
+            if (fire_random(0, 255) < SPARKING)
             {
-              m_heat[heatPos] = heat;
+              uint8_t randValue = fire_random(160, 255);
+              uint32_t heatPos = x + (8 - 1U) * 32;
+              uint16_t heat = m_heat[heatPos] + randValue;
+
+              if (UINT8_MAX < heat)
+              {
+                m_heat[heatPos] = 255U;
+              }
+              else
+              {
+                m_heat[heatPos] = heat;
+              }
             }
           }
 
