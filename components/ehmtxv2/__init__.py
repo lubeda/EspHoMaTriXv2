@@ -222,6 +222,7 @@ def ha_scripts_yaml(device, icon_ids, config):
 def screen_help_html(fire):
     """Help table for the screen script: which field each type uses."""
     cols, rows = screen_type_rows(fire)
+    rows = sorted(rows, key=lambda row: row[0])
     out = ("<table class=\"help\"><tr><th>type</th><th>Description</th>"
            + "".join(f"<th>{c}</th>" for c in cols) + "</tr>")
     for name, desc, used in rows:
