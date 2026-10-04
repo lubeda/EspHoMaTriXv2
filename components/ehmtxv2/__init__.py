@@ -610,7 +610,7 @@ async def to_code(config):
     <a href="https://github.com/lubeda/EspHoMaTriXv2/issues">Issues</a>
     </div>\
 '''
-    html_string = ""
+    icon_previews = []
     icon_ids = []
 
     cg.add_define("MAXICONS", MAXICONS)
@@ -750,8 +750,8 @@ async def to_code(config):
             )
             cg.add(var.add_icon(RawExpression(str(conf[CONF_ID]))))
 
-            html_string += F"<br/>Icon: <b>{conf[CONF_ID]}</b>&nbsp;-&nbsp;({duration} ms):<br/><br/>"
-            html_string += f"<div id={conf[CONF_ID]}>"
+            icon_html = F"<br/>Icon: <b>{conf[CONF_ID]}</b>&nbsp;-&nbsp;({duration} ms):<br/><br/>"
+            icon_html += f"<div id={conf[CONF_ID]}>"
             pos = 0 
             for frameIndex in range(frames):
                 image.seek(frameIndex)
@@ -764,9 +764,9 @@ async def to_code(config):
                 
                 # width, height = image.size
                 if width == 8:  
-                    html_string += SVG_ICONSTART
+                    icon_html += SVG_ICONSTART
                 else:
-                    html_string += SVG_FULL_SCREEN_START
+                    icon_html += SVG_FULL_SCREEN_START
                 i = 0
                 for pix in pixels:
                     r, g, b, a = pix
@@ -778,10 +778,11 @@ async def to_code(config):
                     y = i // width
                     i += 1
 
-                    html_string += rgb565_svg(x,y, r,g,b,a)
-                html_string += SVG_END
-            html_string += f"</div>"
-    html_string += "</body></html>"
+                    icon_html += rgb565_svg(x,y, r,g,b,a)
+                icon_html += SVG_END
+            icon_html += f"</div>"
+            icon_previews.append((str(conf[CONF_ID]), icon_html))
+    html_string = "".join(h for _, h in sorted(icon_previews)) + "</body></html>"
 
     if config[CONF_COMPACT_SERVICES]:
         scripts = ha_scripts_yaml(CORE.name.replace("-", "_"), sorted(set(icon_ids)), config)
