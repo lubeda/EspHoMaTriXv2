@@ -434,6 +434,8 @@ Shows text in different colors, `Default Color Text` in the default color `#FFFF
 
 **compact_services** (optional, boolean, default: false): Additionally registers four bundled dispatcher services (`screen`, `queue`, `color`, `device`). The regular services stay available. See [Compact services](#compact-services).
 
+**export_script** (optional, boolean, default: false): With `compact_services: true`, writes the Home Assistant script template to *filename*-script.yaml next to your YAML (e.g. `ulanzi-script.yaml`). Independent of `icons2html`.
+
 #### Modes
 
 |mode|value|
@@ -611,7 +613,7 @@ With `compact_services: true` four bundled dispatcher services are registered **
 
 Unknown selector values are logged as a warning.
 
-**Home Assistant script template:** with `icons2html: true` and `compact_services: true` the generated HTML file (e.g. `ulanzi.html` next to your YAML) starts with a ready-to-use template of four scripts (`<device>_screen`, `<device>_queue`, `<device>_color`, `<device>_device`). They have UI selectors (icon list generated from your icons, color picker) and always pass every required parameter. Copy the block into your `scripts.yaml` (or include it via `script: !include ...`). Only the features enabled in your config (fire screen, indicators) are offered. Both the script block and a help table (which fields each `type` of the screen script uses) are collapsible sections in the HTML page.
+**Home Assistant script template:** with `icons2html: true` and `compact_services: true` the generated HTML file (e.g. `ulanzi.html` next to your YAML) starts with a ready-to-use template of four scripts (`<device>_screen`, `<device>_queue`, `<device>_color`, `<device>_device`). They have UI selectors (icon list generated from your icons, color picker) and always pass every required parameter. Copy the block into your `scripts.yaml` (or include it via `script: !include ...`). Only the features enabled in your config (fire screen, indicators) are offered. Both the script block and a help table (which fields each `type` of the screen script uses) are collapsible sections in the HTML page. With `export_script: true` the same scripts are also written to `<filename>-script.yaml`, e.g. for `script: !include ulanzi-script.yaml`.
 
 ```yaml
 action: script.ulanzi_screen
@@ -1124,6 +1126,8 @@ Each pixel is output depending on the bit that is set in its value byte, for exa
 **fire_screen** (optional, boolean, default: true): Controls the ability to use the fire screen.
 
 **compact_services** (optional, boolean, default: false): Additionally registers four bundled dispatcher services (`screen`, `queue`, `color`, `device`). The regular services stay available. See [Compact services](#compact-services).
+
+**export_script** (optional, boolean, default: false): With `compact_services: true`, writes the Home Assistant script template to *filename*-script.yaml next to your YAML (e.g. `ulanzi-script.yaml`). Independent of `icons2html`.
 
 ***Example output:***
 ![icon preview](./images/icons_preview.png)

@@ -69,23 +69,17 @@ def screen_type_rows(fire):
         rows.append(("fire", "Fire animation", {L: 1, S: 1}))
     return [I, T, L, S, F, C], rows
 
-def _yaml_block(lines, indent):
-    pad = " " * indent
-    return "|\n" + "\n".join(pad + line if line else "" for line in lines) + "\n"
-
 def ha_scripts_yaml(device, icon_ids, config):
     """Home Assistant script template for the compact services (shown in icons2html)."""
-    cols, type_rows = screen_type_rows(config[CONF_FIRE])
+    _, type_rows = screen_type_rows(config[CONF_FIRE])
     screen_types = [name for name, _, _ in type_rows]
     device_cmds = ["on", "off", "night_on", "night_off", "brightness", "status", "alarm",
                    "alarm_off"]
-    indicators = []
     for key, name in ((CONF_RBINDICATOR, "rindicator"), (CONF_LBINDICATOR, "lindicator"),
                       (CONF_RCINDICATOR, "rcindicator"), (CONF_LCINDICATOR, "lcindicator"),
                       (CONF_LTINDICATOR, "ltindicator")):
         if config[key]:
             device_cmds += [name, name + "_off"]
-            indicators.append(name)
 
     rgb = ('        r: "{{ (color | default([255, 255, 255]))[0] | int }}"\n'
            '        g: "{{ (color | default([255, 255, 255]))[1] | int }}"\n'
@@ -121,14 +115,10 @@ def ha_scripts_yaml(device, icon_ids, config):
             s += f'          unit_of_measurement: {unit}\n'
         return s
 
-    def md_table(header, rows):
-        lines = ["| " + " | ".join(header) + " |", "|" + "---|" * len(header)]
-        return lines + ["| " + " | ".join(row) + " |" for row in rows]
-
-    def script_head(key, alias, desc_lines):
+    def script_head(key, alias, desc):
         return (f'{device}_{key}:\n'
                 f'  alias: "{device}: {alias}"\n'
-                f'  description: ' + _yaml_block(desc_lines, 4) +
+                f'  description: "{desc}"\n'
                 f'  mode: queued\n'
                 f'  fields:\n')
 
@@ -136,16 +126,10 @@ def ha_scripts_yaml(device, icon_ids, config):
     out += "# Copy into scripts.yaml\n\n"
 
     # screen
-    help_lines = [f"Shows a screen via esphome.{device}_screen.",
-                  "Fields used per type (all other fields are ignored):", ""]
-    help_lines += md_table(
-        ["type", "description"] + cols,
-        [[name, desc] + ["✓" if used.get(c) in (1, "Icon", "Text") else used.get(c, "–")
-                         for c in cols]
-         for name, desc, used in type_rows])
-    out += script_head("screen", "Show screen", help_lines)
-    out += select_field("type", "Type", screen_types, "icon",
-                        "Kind of screen. See the script description for the fields each type uses.")
+    out += script_head("screen", "Show screen",
+                       f"Shows a screen via esphome.{device}_screen. Each type uses only some "
+                       "fields, the others are ignored (see the help on the icons2html page).")
+    out += select_field("type", "Type", screen_types, "icon", "Kind of screen.")
     out += select_field("icon", "Icon", icon_ids, "",
                         "Single icon name (pseudo icons blank, solid, calendar allowed; "
                         "icon|screen_id sets a screen id). Used by icon, icon_text, icon_clock, "
@@ -181,12 +165,9 @@ def ha_scripts_yaml(device, icon_ids, config):
     out += rgb + "\n"
 
     # queue
-    out += script_head("queue", "Control queue", [
-        f"Manages the screen queue via esphome.{device}_queue.", ""] + md_table(
-        ["cmd", "action", "uses"],
-        [["del", "remove the screens of the given mode and icon", "icon, mode"],
-         ["force", "show the screen of the given mode and icon next", "icon, mode"],
-         ["hold", "keep the current screen", "value (seconds)"]]))
+    out += script_head("queue", "Control queue",
+                       f"Deletes or forces screens by mode and icon, or holds the current "
+                       f"screen (esphome.{device}_queue).")
     out += select_field("cmd", "Command", ["del", "force", "hold"], "del",
                         "del = remove screen, force = show next, hold = keep current screen.")
     out += select_field("icon", "Icon", icon_ids, "",
@@ -207,15 +188,9 @@ def ha_scripts_yaml(device, icon_ids, config):
             '        value: "{{ value | default(30) | int }}"\n\n')
 
     # color
-    out += script_head("color", "Set color", [
-        f"Sets a default color via esphome.{device}_color.", ""] + md_table(
-        ["target", "colors"],
-        [["clock", "clock and date screens (also icon_clock / icon_date)"],
-         ["text", "default text color"],
-         ["today", "day of week bar: current day"],
-         ["weekday", "day of week bar: the other days"],
-         ["solid", "pseudo icon solid"],
-         ["calendar", "header of the pseudo icon calendar"]]))
+    out += script_head("color", "Set color",
+                       f"Sets a default color, e.g. of the clock or the text "
+                       f"(esphome.{device}_color).")
     out += select_field("target", "Target",
                         ["clock", "text", "today", "weekday", "solid", "calendar"], "clock",
                         "Which default color to change.")
@@ -227,21 +202,11 @@ def ha_scripts_yaml(device, icon_ids, config):
     out += rgb + "\n"
 
     # device
-    device_rows = [
-        ["on / off", "display on or off", "–"],
-        ["night_on / night_off", "night mode on or off", "–"],
-        ["brightness", "set brightness", "value (0-255)"],
-        ["status", "log the current status", "–"],
-        ["alarm", "show alarm corner", "color, value = size (0 = 2)"],
-        ["alarm_off", "hide alarm", "–"]]
-    for name in indicators:
-        device_rows += [[name, "show indicator", "color, value = size (0 = 3)"],
-                        [name + "_off", "hide indicator", "–"]]
-    out += script_head("device", "Control device", [
-        f"Controls the display via esphome.{device}_device.", ""] + md_table(
-        ["cmd", "action", "uses"], device_rows))
+    out += script_head("device", "Control device",
+                       f"Switches display and night mode, sets brightness, shows alarm and "
+                       f"indicators (esphome.{device}_device).")
     out += select_field("cmd", "Command", device_cmds, "on",
-                        "What to do. See the script description.")
+                        "on/off, night_on/night_off, brightness, status, alarm(_off), indicator(_off).")
     out += number_field("value", "Value", 0, 0, 255,
                         "brightness: 0-255. alarm / indicators: size in pixels "
                         "(0 = default). Ignored by the other commands.")
@@ -390,6 +355,7 @@ CONF_ICINDICATOR = "icon_indicator"
 CONF_GAUGE = "gauge"
 CONF_FIRE = "fire_screen"
 CONF_COMPACT_SERVICES = "compact_services"
+CONF_EXPORT_SCRIPT = "export_script"
 
 EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_ID): cv.declare_id(EHMTX_),
@@ -521,6 +487,9 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.boolean,
     cv.Optional(
         CONF_COMPACT_SERVICES, default=False
+    ): cv.boolean,
+    cv.Optional(
+        CONF_EXPORT_SCRIPT, default=False
     ): cv.boolean,
     cv.Optional(CONF_ON_NEXT_SCREEN): automation.validate_automation(
         {
@@ -837,6 +806,19 @@ async def to_code(config):
                 logging.info(f"EsphoMaTrix: wrote html-file with icon preview: {htmlfn}")
         except:
             logging.warning(f"EsphoMaTrix: Error writing HTML file: {htmlfn}")    
+
+    if config[CONF_EXPORT_SCRIPT]:
+        if config[CONF_COMPACT_SERVICES]:
+            scriptfn = str(CORE.config_path).replace(".yaml", "") + "-script.yaml"
+            try:
+                with open(scriptfn, 'w', encoding='utf-8') as f:
+                    f.write(scripts)
+                logging.info(f"EsphoMaTrix: wrote Home Assistant scripts: {scriptfn}")
+            except OSError:
+                logging.warning(f"EsphoMaTrix: Error writing script file: {scriptfn}")
+        else:
+            logging.warning("EsphoMaTrix: export_script needs compact_services: true, "
+                            "no script file written")
 
     logging.info("List of icons for e.g. blueprint:\n\n\r["+yaml_string+"]\n")
 
