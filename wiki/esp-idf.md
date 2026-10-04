@@ -39,9 +39,6 @@ light:
     restore_mode: ALWAYS_OFF
 ```
 
-## Limitations
-the fire plugin and the rainbow shimmer text does not work with tthis settings
-
 **Use this hint at your own risk**
 
 Good luck!

@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased (ESP32-Fire)
+- fire screen now works with the `esp-idf` framework (uses `esphome::random_uint32()` instead of Arduino `random()`)
+- fixed possible division by zero in rainbow shimmer for single character texts
+
 ## 2026.9.1
 - fixed some cosmetic warnings and prepared upcoming neopixel removal.
 

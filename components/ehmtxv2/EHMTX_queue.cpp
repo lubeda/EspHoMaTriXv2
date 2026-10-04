@@ -1,6 +1,7 @@
 #include "EHMTX.h"
 
 #include "esphome/core/defines.h"
+#include "esphome/core/helpers.h"
 
 #ifdef EHMTXv2_MULTICOLOR_TEXT
 #include <regex>
@@ -32,6 +33,15 @@ namespace esphome::ehmtx
    * spectrum, but it's surprisingly close, and it's fast and small.
    */
   Color heatColor(uint8_t temperature);
+
+  /**
+   * Framework independent replacement for Arduino random(lo, hi).
+   * Returns a value in the range [lo, hi).
+   */
+  static inline uint8_t fire_random(uint8_t lo, uint8_t hi)
+  {
+    return lo + esphome::random_uint32() % (hi - lo);
+  }
 #endif
 #ifdef USE_Fireplugin
 
@@ -1168,7 +1178,7 @@ namespace esphome::ehmtx
           /* Step 1) Cool down every cell a little bit */
           for (y = 0; y < 8; ++y)
           {
-            uint8_t coolDownTemperature = random(0, ((COOLING * 10U) / 8)) + 2U;
+            uint8_t coolDownTemperature = fire_random(0, ((COOLING * 10U) / 8)) + 2U;
             uint32_t heatPos = x + y * 32;
 
             if (coolDownTemperature >= m_heat[heatPos])
@@ -1205,9 +1215,9 @@ namespace esphome::ehmtx
           }
 
           /* Step 3) Randomly ignite new 'sparks' of heat near the bottom */
-          if (random(0, 255) < SPARKING)
+          if (fire_random(0, 255) < SPARKING)
           {
-            uint8_t randValue = random(160, 255);
+            uint8_t randValue = fire_random(160, 255);
             uint32_t heatPos = x + (8 - 1U) * 32;
             uint16_t heat = m_heat[heatPos] + randValue;
 

@@ -3356,7 +3356,7 @@ namespace esphome::ehmtx
 
     for (uint16_t i = 0; i < str_len; i++)
     {
-      uint8_t hue = this->hue_ + remap((int)i, 0, (int)str_len - 1, 0, 255);
+      uint8_t hue = this->hue_ + (str_len > 1 ? remap((int)i, 0, (int)str_len - 1, 0, 255) : 0);
       Color color = esphome::light::ESPHSVColor(hue, 255, 240).to_rgb();
       this->display->printf(x + xpos, ypos, font,
                             color,
