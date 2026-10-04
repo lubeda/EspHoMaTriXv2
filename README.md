@@ -894,12 +894,26 @@ light:
 
 To hide the light component in Home Assistant use: `internal: true`
 
+**WARNING** 'neopixelbus' on ESP32 is deprecated. The upstream library (makuna/NeoPixelBus) is no longer actively maintained. Migrate to 'esp32_rmt_led_strip'. Removal is targeted for 2027.1 but may happen sooner once ESPHome moves to ESP-IDF 6.
+
 ```yaml
 light:
   - platform: neopixelbus
     id: ehmtx_light
     internal: true
     ...
+```
+so use 
+```yaml
+light:
+  - platform: esp32_rmt_led_strip
+    id: ehmtx_light
+    channel_colors: GRB
+    pin: $matrix_pin
+    num_leds: 256
+    chipset: ws2812
+    name: "$devicename Light"
+    restore_mode: ALWAYS_OFF
 ```
 
 #### Time component

@@ -31,7 +31,7 @@ and replace it with an `esp32_rmt_led_strip`
 light:
   - platform: esp32_rmt_led_strip
     id: ehmtx_light
-    rgb_order: GRB
+    channel_colors: GRB
     pin: $matrix_pin
     num_leds: 256
     chipset: ws2812
