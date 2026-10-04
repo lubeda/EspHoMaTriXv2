@@ -67,7 +67,7 @@ def screen_type_rows(fire):
     ]
     if fire:
         rows.append(("fire", "Fire animation", {L: 1, S: 1}))
-    return [I, T, L, S, F, C], rows
+    return [I, T, L, S, F, C], sorted(rows, key=lambda row: row[0])
 
 def ha_scripts_yaml(device, icon_ids, config):
     """Home Assistant script template for the compact services (shown in icons2html)."""
@@ -222,7 +222,6 @@ def ha_scripts_yaml(device, icon_ids, config):
 def screen_help_html(fire):
     """Help table for the screen script: which field each type uses."""
     cols, rows = screen_type_rows(fire)
-    rows = sorted(rows, key=lambda row: row[0])
     out = ("<table class=\"help\"><tr><th>type</th><th>Description</th>"
            + "".join(f"<th>{c}</th>" for c in cols) + "</tr>")
     for name, desc, used in rows:
