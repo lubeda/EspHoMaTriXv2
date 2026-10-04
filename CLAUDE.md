@@ -53,9 +53,9 @@ All component code lives in `components/ehmtxv2/`:
 
 ## Versioning
 
-CalVer format: `YYYY.MM.D` (e.g., `2026.4.1`). Version string is defined in `EHMTX.h`:
+CalVer format: `YYYY.MM.D` (e.g., `2026.9.1`). Version string is defined in `EHMTX.h`:
 ```cpp
-static const char *const EHMTX_VERSION = "2026.4.1";
+static const char *const EHMTX_VERSION = "2026.9.1";
 ```
 Update this when making breaking changes or significant new features.
 

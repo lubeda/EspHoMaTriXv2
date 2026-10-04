@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026.9.1
+- fixed some cosmetic warnings and prepared upcoming neopixel removal.
+
 ## 2026.7.1
 - fixed crash in `bitmap_stack` when the icons list contains the pseudo-icons `blank`, `solid` or `calendar`
 
