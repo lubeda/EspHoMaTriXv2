@@ -404,6 +404,14 @@ namespace esphome::ehmtx
     void rainbow_date_screen(int32_t lifetime = D_LIFETIME, int32_t screen_time = D_SCREEN_TIME, bool default_font = true);
     void del_screen(std::string icon, int32_t mode = MODE_ICON_SCREEN);
 
+  #ifdef EHMTXv2_COMPACT_SERVICES
+    void svc_screen(std::string type, std::string icon, std::string text, int32_t lifetime,
+                    int32_t screen_time, bool default_font, int32_t r, int32_t g, int32_t b);
+    void svc_queue(std::string cmd, std::string icon, int32_t mode, int32_t value);
+    void svc_color(std::string target, int32_t r, int32_t g, int32_t b);
+    void svc_device(std::string cmd, int32_t value, int32_t r, int32_t g, int32_t b);
+  #endif
+
     void draw_alarm();
   #ifdef EHMTXv2_RCINDICATOR
     void draw_rcindicator();

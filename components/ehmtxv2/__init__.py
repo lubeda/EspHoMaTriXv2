@@ -153,6 +153,7 @@ CONF_LBINDICATOR = "left_bottom_indicator"
 CONF_ICINDICATOR = "icon_indicator"
 CONF_GAUGE = "gauge"
 CONF_FIRE = "fire_screen"
+CONF_COMPACT_SERVICES = "compact_services"
 
 EHMTX_SCHEMA = cv.Schema({
     cv.Required(CONF_ID): cv.declare_id(EHMTX_),
@@ -281,6 +282,9 @@ EHMTX_SCHEMA = cv.Schema({
     ): cv.boolean,
     cv.Optional(
         CONF_FIRE, default=True
+    ): cv.boolean,
+    cv.Optional(
+        CONF_COMPACT_SERVICES, default=False
     ): cv.boolean,
     cv.Optional(CONF_ON_NEXT_SCREEN): automation.validate_automation(
         {
@@ -746,6 +750,9 @@ async def to_code(config):
     if config[CONF_FIRE]:
         cg.add_define("USE_Fireplugin")
         logging.info(f"[X] Fire screen")
+    if config[CONF_COMPACT_SERVICES]:
+        cg.add_define("EHMTXv2_COMPACT_SERVICES")
+        logging.info(f"[X] Compact services")
 
     for conf in config.get(CONF_ON_NEXT_SCREEN, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)

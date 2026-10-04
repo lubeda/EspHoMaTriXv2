@@ -432,6 +432,8 @@ Shows text in different colors, `Default Color Text` in the default color `#FFFF
 
 **fire_screen** (optional, boolean, default: true): Controls the ability to use the fire screen.
 
+**compact_services** (optional, boolean, default: false): Additionally registers four bundled dispatcher services (`screen`, `queue`, `color`, `device`). The regular services stay available. See [Compact services](#compact-services).
+
 #### Modes
 
 |mode|value|
@@ -588,6 +590,42 @@ You can call this from, e.g., the developer tools service. [![Open your Home Ass
 
 >[hint]
 >The rainbow_* variants don't display the day of week bar.
+
+#### Compact services
+
+With `compact_services: true` four bundled dispatcher services are registered **in addition** to the services above. One parameter selects the action, all other parameters must always be sent (unused ones are ignored).
+
+```
+  screen {"type", "icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"}
+  queue  {"cmd", "icon", "mode", "value"}
+  color  {"target", "r", "g", "b"}
+  device {"cmd", "value", "r", "g", "b"}
+```
+
+| Service | Selector | Values → regular service |
+|---------|----------|--------------------------|
+| `screen` | `type` | `icon`→icon_screen, `icon_text`→icon_text_screen, `text`→text_screen, `alert`→alert_screen, `alert_text`→alert_text_screen, `rainbow_icon`→rainbow_icon_screen, `rainbow_text`→rainbow_text_screen, `rainbow_alert`→rainbow_alert_screen, `clock`→clock_screen, `date`→date_screen, `icon_clock`→icon_clock, `icon_date`→icon_date, `full`→full_screen, `blank`→blank_screen, `color`→color_screen, `bitmap`→bitmap_screen (`icon` = bitmap string), `bitmap_small`→bitmap_small, `bitmap_stack`→bitmap_stack (`icon` = icon list), `fire`→fire_screen (needs `fire_screen: true`) |
+| `queue` | `cmd` | `del`→del_screen(icon, mode), `force`→force_screen(icon, mode), `hold`→hold_screen(value, default 30). `mode` ≤ 0 means icon screen (5) |
+| `color` | `target` | `clock`, `text`, `today`, `weekday`, `solid`, `calendar` → set_<target>_color(r, g, b) |
+| `device` | `cmd` | `on`/`off`→display_on/off, `night_on`/`night_off`→night_mode_on/off, `brightness`→brightness(value), `status`→get_status, `alarm`→show_alarm(r, g, b, value, default 2), `alarm_off`→hide_alarm, `rindicator`/`lindicator`/`rcindicator`/`lcindicator`/`ltindicator`→show_*(r, g, b, value, default 3), `*_off`→hide_* (only if the indicator is enabled) |
+
+Unknown selector values are logged as a warning.
+
+Example:
+
+```yaml
+action: esphome.ulanzi_screen
+data:
+  type: fire
+  icon: ""
+  text: ""
+  lifetime: 3
+  screen_time: 30
+  default_font: true
+  r: 0
+  g: 0
+  b: 0
+```
 
 #### Lambda
 
@@ -1067,6 +1105,8 @@ Each pixel is output depending on the bit that is set in its value byte, for exa
 **gauge** (optional, boolean, default: true): Controls the ability to use the gauge indicator.
 
 **fire_screen** (optional, boolean, default: true): Controls the ability to use the fire screen.
+
+**compact_services** (optional, boolean, default: false): Additionally registers four bundled dispatcher services (`screen`, `queue`, `color`, `device`). The regular services stay available. See [Compact services](#compact-services).
 
 ***Example output:***
 ![icon preview](./images/icons_preview.png)

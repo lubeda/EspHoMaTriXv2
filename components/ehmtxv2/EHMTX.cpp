@@ -1157,12 +1157,155 @@ namespace esphome::ehmtx
 
     register_service(&EHMTX::icon_prognosis_screen, "icon_prognosis_screen", {"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font"});
     register_service(&EHMTX::icon_prognosis_screen_rgb, "icon_prognosis_screen_rgb", {"icon_name", "text", "prognosis", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+
+#ifdef EHMTXv2_COMPACT_SERVICES
+    register_service(&EHMTX::svc_screen, "screen", {"type", "icon", "text", "lifetime", "screen_time", "default_font", "r", "g", "b"});
+    register_service(&EHMTX::svc_queue, "queue", {"cmd", "icon", "mode", "value"});
+    register_service(&EHMTX::svc_color, "color", {"target", "r", "g", "b"});
+    register_service(&EHMTX::svc_device, "device", {"cmd", "value", "r", "g", "b"});
+#endif
 #else
     ESP_LOGW(TAG, "API services disabled - no Home Assistant actions registered (set api: custom_services: true)");
 #endif
 
     ESP_LOGD(TAG, "Setup and running!");
   }
+
+#ifdef EHMTXv2_COMPACT_SERVICES
+  void EHMTX::svc_screen(std::string type, std::string icon, std::string text, int32_t lifetime,
+                         int32_t screen_time, bool default_font, int32_t r, int32_t g, int32_t b)
+  {
+    if (type == "icon")
+      this->icon_screen(icon, text, lifetime, screen_time, default_font, r, g, b);
+    else if (type == "icon_text")
+      this->icon_text_screen(icon, text, lifetime, screen_time, default_font, r, g, b);
+    else if (type == "text")
+      this->text_screen(text, lifetime, screen_time, default_font, r, g, b);
+    else if (type == "alert")
+      this->alert_screen(icon, text, screen_time, default_font, r, g, b);
+    else if (type == "alert_text")
+      this->alert_text_screen(text, screen_time, default_font, r, g, b);
+    else if (type == "rainbow_icon")
+      this->rainbow_icon_screen(icon, text, lifetime, screen_time, default_font);
+    else if (type == "rainbow_text")
+      this->rainbow_text_screen(text, lifetime, screen_time, default_font);
+    else if (type == "rainbow_alert")
+      this->rainbow_alert_screen(icon, text, screen_time, default_font);
+    else if (type == "clock")
+      this->clock_screen(lifetime, screen_time, default_font, r, g, b);
+    else if (type == "date")
+      this->date_screen(lifetime, screen_time, default_font, r, g, b);
+    else if (type == "icon_clock")
+      this->icon_clock(icon, lifetime, screen_time, default_font, r, g, b);
+    else if (type == "icon_date")
+      this->icon_date(icon, lifetime, screen_time, default_font, r, g, b);
+    else if (type == "full")
+      this->full_screen(icon, lifetime, screen_time);
+    else if (type == "blank")
+      this->blank_screen(lifetime, screen_time);
+    else if (type == "color")
+      this->color_screen(lifetime, screen_time, r, g, b);
+    else if (type == "bitmap")
+      this->bitmap_screen(icon, lifetime, screen_time);
+    else if (type == "bitmap_small")
+      this->bitmap_small(icon, text, lifetime, screen_time, default_font, r, g, b);
+    else if (type == "bitmap_stack")
+      this->bitmap_stack(icon, lifetime, screen_time);
+#ifdef USE_Fireplugin
+    else if (type == "fire")
+      this->fire_screen(lifetime, screen_time);
+#endif
+    else
+      ESP_LOGW(TAG, "screen: unknown type \"%s\"", type.c_str());
+  }
+
+  void EHMTX::svc_queue(std::string cmd, std::string icon, int32_t mode, int32_t value)
+  {
+    if (mode <= 0)
+      mode = MODE_ICON_SCREEN;
+
+    if (cmd == "del")
+      this->del_screen(icon, mode);
+    else if (cmd == "force")
+      this->force_screen(icon, mode);
+    else if (cmd == "hold")
+      this->hold_screen(value > 0 ? value : 30);
+    else
+      ESP_LOGW(TAG, "queue: unknown cmd \"%s\"", cmd.c_str());
+  }
+
+  void EHMTX::svc_color(std::string target, int32_t r, int32_t g, int32_t b)
+  {
+    if (target == "clock")
+      this->set_clock_color(r, g, b);
+    else if (target == "text")
+      this->set_text_color(r, g, b);
+    else if (target == "today")
+      this->set_today_color(r, g, b);
+    else if (target == "weekday")
+      this->set_weekday_color(r, g, b);
+    else if (target == "solid")
+      this->set_solid_color(r, g, b);
+    else if (target == "calendar")
+      this->set_calendar_color(r, g, b);
+    else
+      ESP_LOGW(TAG, "color: unknown target \"%s\"", target.c_str());
+  }
+
+  void EHMTX::svc_device(std::string cmd, int32_t value, int32_t r, int32_t g, int32_t b)
+  {
+    int32_t size = value > 0 ? value : 3;
+
+    if (cmd == "on")
+      this->set_display_on();
+    else if (cmd == "off")
+      this->set_display_off();
+    else if (cmd == "night_on")
+      this->set_night_mode_on();
+    else if (cmd == "night_off")
+      this->set_night_mode_off();
+    else if (cmd == "brightness")
+      this->set_brightness(value);
+    else if (cmd == "status")
+      this->get_status();
+    else if (cmd == "alarm")
+      this->show_alarm(r, g, b, value > 0 ? value : 2);
+    else if (cmd == "alarm_off")
+      this->hide_alarm();
+#ifdef EHMTXv2_RBINDICATOR
+    else if (cmd == "rindicator")
+      this->show_rindicator(r, g, b, size);
+    else if (cmd == "rindicator_off")
+      this->hide_rindicator();
+#endif
+#ifdef EHMTXv2_LBINDICATOR
+    else if (cmd == "lindicator")
+      this->show_lindicator(r, g, b, size);
+    else if (cmd == "lindicator_off")
+      this->hide_lindicator();
+#endif
+#ifdef EHMTXv2_RCINDICATOR
+    else if (cmd == "rcindicator")
+      this->show_rcindicator(r, g, b, size);
+    else if (cmd == "rcindicator_off")
+      this->hide_rcindicator();
+#endif
+#ifdef EHMTXv2_LCINDICATOR
+    else if (cmd == "lcindicator")
+      this->show_lcindicator(r, g, b, size);
+    else if (cmd == "lcindicator_off")
+      this->hide_lcindicator();
+#endif
+#ifdef EHMTXv2_LTINDICATOR
+    else if (cmd == "ltindicator")
+      this->show_ltindicator(r, g, b, size);
+    else if (cmd == "ltindicator_off")
+      this->hide_ltindicator();
+#endif
+    else
+      ESP_LOGW(TAG, "device: unknown cmd \"%s\"", cmd.c_str());
+  }
+#endif
 
   void EHMTX::set_clock_color(int32_t r, int32_t g, int32_t b)
   {
