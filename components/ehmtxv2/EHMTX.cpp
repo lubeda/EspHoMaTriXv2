@@ -3314,12 +3314,12 @@ namespace esphome::ehmtx
       {
         if (res.at(i).length() > 0)
         {
-          int32_t r, g, b;
-          if (res.at(i).length() == 7 && std::regex_match(res.at(i), is_color) && sscanf(&res.at(i).c_str()[1], "%02x%02x%02x", &r, &g, &b))
+          unsigned int r, g, b;
+          if (res.at(i).length() == 7 && std::regex_match(res.at(i), is_color) && sscanf(&res.at(i).c_str()[1], "%02x%02x%02x", &r, &g, &b) == 3)
           {
             if (r + g + b > 0)
             {
-              c = Color(r, g ,b);
+              c = Color((uint8_t) r, (uint8_t) g, (uint8_t) b);
             }
             else
             {

@@ -430,7 +430,7 @@ Shows text in different colors, `Default Color Text` in the default color `#FFFF
 
 **gauge** (optional, boolean, default: true): Controls the ability to use the gauge indicator.
 
-**fire_screen** (optional, boolean, default: true): Controls the ability to use the fire screen.
+**fire_screen** (optional, boolean, default: true): Controls the ability to use the fire screen. Not available with the `esp-idf` framework on `esp32`, `esp32c3` and `esp32s3`, there it is disabled automatically.
 
 #### Modes
 
@@ -1052,7 +1052,7 @@ Each pixel is output depending on the bit that is set in its value byte, for exa
 
 **gauge** (optional, boolean, default: true): Controls the ability to use the gauge indicator.
 
-**fire_screen** (optional, boolean, default: true): Controls the ability to use the fire screen.
+**fire_screen** (optional, boolean, default: true): Controls the ability to use the fire screen. Not available with the `esp-idf` framework on `esp32`, `esp32c3` and `esp32s3`, there it is disabled automatically.
 
 ***Example output:***
 ![icon preview](./images/icons_preview.png)

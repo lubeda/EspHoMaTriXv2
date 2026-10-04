@@ -11,9 +11,11 @@
 #include "esphome/components/time/real_time_clock.h"
 #include "esphome/components/web_server_base/web_server_base.h"
 
+// The fire plugin is not available with the IDF framework, see README.md.
+// fire_screen defaults to true, so this is silently disabled instead of
+// reported, otherwise every IDF build would log it for every source file.
 #if defined USE_Fireplugin 
   #if defined CONFIG_IDF_TARGET_ESP32 || defined CONFIG_IDF_TARGET_ESP32C3 || defined CONFIG_IDF_TARGET_ESP32S3
-    #pragma warning ( "With IDF-Framework no Fire") 
     #undef USE_Fireplugin
   #endif
 #endif
