@@ -1889,7 +1889,11 @@ namespace esphome::ehmtx
         empty++;
     }
     if (empty > 0)
+    {
+      // Braced: ESP_LOGI expands to nothing at log levels below INFO, which
+      // would leave this if with an empty body (-Wempty-body).
       ESP_LOGI(TAG, "queue: %d empty slots", empty);
+    }
   }
 
   void EHMTX::set_default_font(display::BaseFont *font)

@@ -12,7 +12,7 @@ No unit tests exist. Validation is done by building ESPHome firmware from the te
 
 ```bash
 # Build a specific test configuration
-esphome build tests/esp32-idf.yaml
+esphome compile tests/esp32-idf.yaml
 
 # Build and flash to device
 esphome run tests/esp32-idf.yaml
@@ -20,7 +20,7 @@ esphome run tests/esp32-idf.yaml
 # Build all test configs (mirrors CI)
 for f in tests/*.yaml; do
   [[ "$f" == *"secrets"* ]] && continue
-  esphome build "$f" || exit 1
+  esphome compile "$f" || exit 1
 done
 ```
 

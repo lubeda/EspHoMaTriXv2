@@ -7,11 +7,11 @@ The project uses ESPHome for building firmware. Test configurations are in the `
 
 #### Build a specific test
 ```bash
-esphome build tests/<test-name>.yaml
+esphome compile tests/<test-name>.yaml
 ```
 Example:
 ```bash
-esphome build tests/esp32-idf.yaml
+esphome compile tests/esp32-idf.yaml
 ```
 
 #### Build and upload to device
@@ -48,7 +48,7 @@ To verify a change builds successfully for all test configurations:
 for f in tests/*.yaml; do
   if [[ "$f" != *"secrets"* ]]; then
     echo "Building $f"
-    esphome build "$f" || exit 1
+    esphome compile "$f" || exit 1
   fi
 done
 ```
