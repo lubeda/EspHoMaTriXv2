@@ -71,7 +71,7 @@ def screen_type_rows(fire):
 
 def _yaml_block(lines, indent):
     pad = " " * indent
-    return "|\n" + "\n".join(pad + line for line in lines) + "\n"
+    return "|\n" + "\n".join(pad + line if line else "" for line in lines) + "\n"
 
 def ha_scripts_yaml(device, icon_ids, config):
     """Home Assistant script template for the compact services (shown in icons2html)."""
@@ -121,6 +121,10 @@ def ha_scripts_yaml(device, icon_ids, config):
             s += f'          unit_of_measurement: {unit}\n'
         return s
 
+    def md_table(header, rows):
+        lines = ["| " + " | ".join(header) + " |", "|" + "---|" * len(header)]
+        return lines + ["| " + " | ".join(row) + " |" for row in rows]
+
     def script_head(key, alias, desc_lines):
         return (f'{device}_{key}:\n'
                 f'  alias: "{device}: {alias}"\n'
@@ -133,11 +137,12 @@ def ha_scripts_yaml(device, icon_ids, config):
 
     # screen
     help_lines = [f"Shows a screen via esphome.{device}_screen.",
-                  "Fields used per type (all other fields are ignored):"]
-    for name, desc, used in type_rows:
-        fields = ", ".join(c if used[c] in (1, "Icon", "Text") else f"{c}={used[c]}"
-                           for c in cols if used.get(c))
-        help_lines.append(f"- {name}: {desc} ({fields})")
+                  "Fields used per type (all other fields are ignored):", ""]
+    help_lines += md_table(
+        ["type", "description"] + cols,
+        [[name, desc] + ["✓" if used.get(c) in (1, "Icon", "Text") else used.get(c, "–")
+                         for c in cols]
+         for name, desc, used in type_rows])
     out += script_head("screen", "Show screen", help_lines)
     out += select_field("type", "Type", screen_types, "icon",
                         "Kind of screen. See the script description for the fields each type uses.")
@@ -177,10 +182,11 @@ def ha_scripts_yaml(device, icon_ids, config):
 
     # queue
     out += script_head("queue", "Control queue", [
-        f"Manages the screen queue via esphome.{device}_queue.",
-        "- del: remove the screens of the given mode and icon",
-        "- force: show the screen of the given mode and icon next",
-        "- hold: keep the current screen for value seconds"])
+        f"Manages the screen queue via esphome.{device}_queue.", ""] + md_table(
+        ["cmd", "action", "uses"],
+        [["del", "remove the screens of the given mode and icon", "icon, mode"],
+         ["force", "show the screen of the given mode and icon next", "icon, mode"],
+         ["hold", "keep the current screen", "value (seconds)"]]))
     out += select_field("cmd", "Command", ["del", "force", "hold"], "del",
                         "del = remove screen, force = show next, hold = keep current screen.")
     out += select_field("icon", "Icon", icon_ids, "",
@@ -202,12 +208,14 @@ def ha_scripts_yaml(device, icon_ids, config):
 
     # color
     out += script_head("color", "Set color", [
-        f"Sets a default color via esphome.{device}_color.",
-        "- clock: clock and date screens (also icon_clock / icon_date)",
-        "- text: default text color",
-        "- today / weekday: day of week bar, current day and the other days",
-        "- solid: pseudo icon solid",
-        "- calendar: header of the pseudo icon calendar"])
+        f"Sets a default color via esphome.{device}_color.", ""] + md_table(
+        ["target", "colors"],
+        [["clock", "clock and date screens (also icon_clock / icon_date)"],
+         ["text", "default text color"],
+         ["today", "day of week bar: current day"],
+         ["weekday", "day of week bar: the other days"],
+         ["solid", "pseudo icon solid"],
+         ["calendar", "header of the pseudo icon calendar"]]))
     out += select_field("target", "Target",
                         ["clock", "text", "today", "weekday", "solid", "calendar"], "clock",
                         "Which default color to change.")
@@ -219,18 +227,19 @@ def ha_scripts_yaml(device, icon_ids, config):
     out += rgb + "\n"
 
     # device
-    device_help = [
-        f"Controls the display via esphome.{device}_device.",
-        "- on / off: display on or off",
-        "- night_on / night_off: night mode",
-        "- brightness: set brightness to value (0-255)",
-        "- status: log the current status",
-        "- alarm: show alarm corner in color, value = size (0 = 2)",
-        "- alarm_off: hide alarm"]
-    if indicators:
-        device_help.append(f"- {' / '.join(indicators)}: show indicator in color, "
-                           "value = size (0 = 3); *_off hides it")
-    out += script_head("device", "Control device", device_help)
+    device_rows = [
+        ["on / off", "display on or off", "–"],
+        ["night_on / night_off", "night mode on or off", "–"],
+        ["brightness", "set brightness", "value (0-255)"],
+        ["status", "log the current status", "–"],
+        ["alarm", "show alarm corner", "color, value = size (0 = 2)"],
+        ["alarm_off", "hide alarm", "–"]]
+    for name in indicators:
+        device_rows += [[name, "show indicator", "color, value = size (0 = 3)"],
+                        [name + "_off", "hide indicator", "–"]]
+    out += script_head("device", "Control device", [
+        f"Controls the display via esphome.{device}_device.", ""] + md_table(
+        ["cmd", "action", "uses"], device_rows))
     out += select_field("cmd", "Command", device_cmds, "on",
                         "What to do. See the script description.")
     out += number_field("value", "Value", 0, 0, 255,
@@ -621,7 +630,16 @@ async def to_code(config):
     table.help th { background-color: #333; }
     table.help td.on { color: #7f7; }
     table.help td.off { color: #666; }
-    </style><body>\
+    a { color: #6af; }
+    .links { margin-bottom: 12px; }
+    .links a { margin-right: 16px; }
+    </style><body>
+    <div class="links">
+    <a href="https://github.com/lubeda/EspHoMaTriXv2">EspHoMaTriXv2 on GitHub</a>
+    <a href="https://github.com/lubeda/EspHoMaTriXv2#readme">Documentation</a>
+    <a href="https://github.com/lubeda/EspHoMaTriXv2/wiki">Wiki</a>
+    <a href="https://github.com/lubeda/EspHoMaTriXv2/issues">Issues</a>
+    </div>\
 '''
     html_string = ""
     icon_ids = []
