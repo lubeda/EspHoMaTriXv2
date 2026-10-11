@@ -15,6 +15,8 @@
 > A big **thank you** to all users of EHMTX! Your feedback, bug reports, pull requests, icons, ideas and support over the years made this project what it is. 🙏
 >
 > If you are looking for an actively maintained firmware for your pixel clock (e.g. Ulanzi TC001), have a look at [**AWTRIX NG**](https://github.com/Blueforcer/awtrix-ng) ([documentation](https://blueforcer.github.io/awtrix-ng)), the successor of AWTRIX 3.
+>
+> See the [Migration Guide](./migration.md) for help moving from EHMTX to AWTRIX NG.
 
 > [!TIP]
 > If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me 🙏 !
