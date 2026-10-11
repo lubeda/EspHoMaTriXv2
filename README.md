@@ -9,6 +9,13 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/lubeda/EspHoMaTriXv2)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/lubeda/EspHoMaTriXv2)
 
+> [!IMPORTANT]
+> **End of development:** Version `2026.9.1` is the last release of EspHoMaTriXv2. There will be no further updates, features or bug fixes.
+>
+> A big **thank you** to all users of EHMTX! Your feedback, bug reports, pull requests, icons, ideas and support over the years made this project what it is. 🙏
+>
+> If you are looking for an actively maintained firmware for your pixel clock (e.g. Ulanzi TC001), have a look at [**AWTRIX NG**](https://github.com/Blueforcer/awtrix-ng) ([documentation](https://blueforcer.github.io/awtrix-ng)), the successor of AWTRIX 3.
+
 > [!TIP]
 > If you like this project, please donate a star on GitHub and consider [sponsoring](https://www.paypal.com/donate/?hosted_button_id=FZDKSLQ46HJTU) me 🙏 !
 
