@@ -116,3 +116,41 @@ OK    home_assistant.gif
 
 - If an upload fails, an error is printed and the remaining icons are still uploaded. The tool exits with code `1` if any upload failed.
 - Keep an eye on the storage: on boards with 4 MB flash, AWTRIX NG has about 512 KB for icons, melodies, palettes and scripts together.
+
+## Hint: Home Assistant script to send screens
+
+On EHMTXv2 you used actions like `esphome.<device>_icon_screen` to show a screen. With AWTRIX NG you can send a similar screen via MQTT. The following Home Assistant script is a starting point for that.
+
+Replace `a1b2c3d4e5f6` in the topic with the MQTT prefix of your AWTRIX NG device.
+
+```yaml
+description: Send a screen to all active ehmtx devices
+fields:
+  icon_name:
+    description: Name of the icons as defined in the yaml
+    example: lamp
+  text:
+    description: The message content
+    example: The light is on!
+sequence:
+  - action: mqtt.publish
+    continue_on_error: true
+    data:
+      topic: a1b2c3d4e5f6/cmd/apps/pushed/{{ icon_name }}
+      payload: >-
+        {"text":"{{ text }}","icon": "{{ icon_name
+        }}","repeat":2,"lifetimeMs":300000,"lifetimeExpiry":"remove"}
+mode: queued
+alias: EHMTX screen to all
+icon: mdi:arrange-bring-forward
+max: 10
+```
+
+Example call:
+
+```yaml
+action: script.ehmtx_screen_to_all
+data:
+  icon_name: lamp
+  text: The light is on!
+```
